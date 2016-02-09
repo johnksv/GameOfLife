@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gol.controller.MainController">
+   <center>
+      <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0">
+         <children>
+            <Button layoutX="229.0" layoutY="150.0" mnemonicParsing="false" onAction="#startGame" text="Start with empty board" />
+            <Button layoutX="136.0" layoutY="237.0" mnemonicParsing="false" text="Start with random pattern" />
+            <Button layoutX="300.0" layoutY="237.0" mnemonicParsing="false" text="Start with selected pattern" />
+            <Button layoutX="245.0" layoutY="187.0" mnemonicParsing="false" text="Load last game" />
+            <Label layoutX="213.0" layoutY="88.0" text="(Animasjon i bakgrunn (Hvis mulig))" />
+            <Text layoutX="164.0" layoutY="64.0" strokeType="OUTSIDE" strokeWidth="0.0" text="GAME OF LIFE">
+               <font>
+                  <Font size="46.0" />
+               </font>
+            </Text>
+            <Button layoutX="263.0" layoutY="289.0" mnemonicParsing="false" text="How to play" />
+         </children>
+      </Pane>
+   </center>
+</BorderPane>
