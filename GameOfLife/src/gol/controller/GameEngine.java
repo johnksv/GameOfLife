@@ -2,7 +2,6 @@ package gol.controller;
 
 import gol.model.Board.Board;
 import javafx.scene.paint.Color;
-import javafx.scene.transform.Rotate;
 
 /**
  * @author s305054, s305084, s305089
