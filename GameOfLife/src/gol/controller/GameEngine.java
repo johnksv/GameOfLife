@@ -1,6 +1,7 @@
 package gol.controller;
 
 import gol.model.Board.Board;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 
 /**
@@ -28,12 +29,50 @@ public class GameEngine {
     public void setAnimationSpeed(double animationSpeed) {
         this.animationSpeed = animationSpeed;
     }
+
+    /**
+     * @param cellColor the cellColor to set
+     */
+    public void setCellColor(Color cellColor) {
+        this.cellColor = cellColor;
+    }
+
+    /**
+     * @param backgroundColor the backgroundColor to set
+     */
+    public void setBackgroundColor(Color backgroundColor) {
+        this.backgroundColor = backgroundColor;
+    }
+
+    /**
+     * @return the activeBoard
+     */
+    public Board getActiveBoard() {
+        return activeBoard;
+    }
+
+    /**
+     * @param activeBoard the activeBoard to set
+     */
+    public void setActiveBoard(Board activeBoard) {
+        this.activeBoard = activeBoard;
+    }
     
+
+    public void draw(Canvas canvas){
+        
+    }
     
+    public void startAnimation(){
+        
+    }
     
+    public void stopAnimation(){
+        
+    }
     
-    
-    
-    
+    public void constructRule(byte[] cellsToLive, byte[] cellsToSpawn){
+        
+    }
     
 }

@@ -12,7 +12,7 @@ public abstract class Logic {
      */
     
     private Rule activeRule;
-    private List<Byte> nextGen;
+    private List<List<Byte>> nextGen;
     
     /**
      *  Methods

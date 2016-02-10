@@ -19,7 +19,6 @@ public abstract class Board extends Logic {
     public Board(int cellWidth, int gridSpacing) {
         setCellWidth(cellWidth);
         setGridSpacing(gridSpacing);
-
     }
 
     /**
@@ -32,7 +31,7 @@ public abstract class Board extends Logic {
     /**
      * @param cellWidth the cellWidth to set
      */
-    public void setCellWidth(int cellWidth) {
+    public final void setCellWidth(int cellWidth) {
         if (cellWidth == 0) {
             this.cellWidth = 10;
         } else if (cellWidth < 0) {
@@ -52,7 +51,7 @@ public abstract class Board extends Logic {
     /**
      * @param gridSpacing the gridSpacing to set
      */
-    public void setGridSpacing(int gridSpacing) {
+    public final void setGridSpacing(int gridSpacing) {
         if (gridSpacing == 0) {
             this.gridSpacing = 10;
         } else if (gridSpacing < 0) {
