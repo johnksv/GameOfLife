@@ -1,7 +1,7 @@
 package gol.model.Board;
 
 /**
- * @author John Kasper
+ * @author s305084, s305089, s305054
  */
 public class ArrayBoard {
 
