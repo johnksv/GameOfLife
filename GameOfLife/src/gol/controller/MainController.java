@@ -5,7 +5,10 @@
  */
 package gol.controller;
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> bb73f1c38b07d349b87fb0d7353af004b7cc6ac6
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -23,32 +26,31 @@ import javafx.stage.Stage;
  *
  * @author s305054, s305089, s305084
  */
+
+
 public class MainController implements Initializable {
-    
-    
+
     private static Stage primaryStage;
-    
+
     /**
-     * 
-     * @param stage 
+     *
+     * @param stage
      */
     public static void loadStage(Stage stage) {
         primaryStage = stage;
     }
 
-
     /**
-     * 
-     * @throws IOException 
+     *
+     * @throws IOException
      */
     @FXML
     public void startGame() throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("/gol/view/Game.fxml"));
         Scene scene = new Scene(root);
         primaryStage.setScene(scene);
-        
+
     }
-    
 
     /**
      * Initializes the controller class.

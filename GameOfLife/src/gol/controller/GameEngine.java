@@ -12,7 +12,8 @@ import javafx.scene.paint.Color;
 /**
  * @author s305054, s305084, s305089
  */
-public class GameEngine implements Initializable{
+public class GameEngine implements Initializable {
+
     @FXML
     private Canvas ca;
     //Variables
@@ -21,11 +22,11 @@ public class GameEngine implements Initializable{
     private Color backgroundColor;
     private Board activeBoard;
     private GraphicsContext gc;
+
     @FXML
-    public void draw(){
+    public void draw() {
         gc.fillRect(10, 10, 10, 10);
     }
-    
 
     public void startAnimation() {
 
@@ -82,9 +83,9 @@ public class GameEngine implements Initializable{
     }
 
     @Override
-    public void initialize(URL location, ResourceBundle resources) { 
-    gc= ca.getGraphicsContext2D();
-    System.out.println("hei");
+    public void initialize(URL location, ResourceBundle resources) {
+        gc = ca.getGraphicsContext2D();
+        System.out.println("hei");
     }
 
 }
