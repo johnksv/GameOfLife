@@ -6,11 +6,11 @@ package gol.model.Board;
 public class ArrayBoard extends Board {
 
     private byte[][] gameBoard = {
-                                    {1, 0, 0, 1},
-                                    {0, 1, 1, 0},
-                                    {0, 1, 1, 0},
-                                    {1, 0, 0, 1}
-                                };
+        {1, 0, 0, 1},
+        {0, 1, 1, 0},
+        {0, 1, 1, 0},
+        {1, 0, 0, 1}
+    };
 
     public ArrayBoard(int cellWidth, int gridSpacing) {
         super(cellWidth, gridSpacing);
@@ -22,8 +22,18 @@ public class ArrayBoard extends Board {
     }
 
     @Override
-    public Object getBoard() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public int length() {
+        return gameBoard.length;
+    }
+
+    @Override
+    public int length(int i) {
+        return gameBoard[i].length;
+    }
+
+    @Override
+    public byte[][] getGameBoard() {
+        return gameBoard;
     }
 
     @Override
@@ -33,7 +43,11 @@ public class ArrayBoard extends Board {
 
     @Override
     public boolean getCellState(int x, int y) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //TODO: Make with bit magic, not 1 and 0.
+        if (gameBoard[x][y] == 1) {
+            return true;
+        }
+        return false;
     }
 
 }

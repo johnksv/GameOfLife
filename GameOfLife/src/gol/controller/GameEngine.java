@@ -1,5 +1,6 @@
 package gol.controller;
 
+import gol.model.Board.ArrayBoard;
 import gol.model.Board.Board;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -23,9 +24,28 @@ public class GameEngine implements Initializable {
     private Board activeBoard;
     private GraphicsContext gc;
 
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        
+        gc = ca.getGraphicsContext2D();
+        activeBoard = new ArrayBoard(20, 20);
+        draw();
+
+    }
+
     @FXML
     public void draw() {
-        gc.fillRect(10, 10, 10, 10);
+
+        for (int i = 0; i < activeBoard.length(); i++) {
+            for (int j = 0; j < activeBoard.length(i); j++) {
+                if(activeBoard.getCellState(i, j)){
+                    gc.fillRect(i*activeBoard.getCellWidth()+i*activeBoard.getGridSpacing(), 
+                    j*activeBoard.getCellWidth()+j*activeBoard.getGridSpacing(),
+                    activeBoard.getCellWidth(), 
+                    activeBoard.getCellWidth());
+                }
+            }
+        }
     }
 
     public void startAnimation() {
@@ -80,12 +100,6 @@ public class GameEngine implements Initializable {
      */
     public void setActiveBoard(Board activeBoard) {
         this.activeBoard = activeBoard;
-    }
-
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        gc = ca.getGraphicsContext2D();
-        System.out.println("hei");
     }
 
 }

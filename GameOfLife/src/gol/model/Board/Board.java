@@ -70,6 +70,10 @@ public abstract class Board extends Logic {
 
     public abstract void clearBoard();
 
-    public abstract Object getBoard();
+    public abstract Object getGameBoard();
+
+    public abstract int length() ;
+    
+    public abstract int length(int i) ;
 
 }
