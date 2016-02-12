@@ -30,13 +30,13 @@
                                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                             <children>
                                                 <Slider layoutX="14.0" layoutY="33.0" value="25.0" />
-                                                <Slider fx:id="cellSizeSlider" layoutX="18.0" layoutY="71.0" onValueChange="#handelZoom"/>
+                                                <Slider fx:id="cellSizeSlider" value="20" layoutX="18.0" layoutY="71.0" min="1" onValueChange="#handleZoom"/>
                                                 <Label layoutX="8.0" layoutY="14.0" text="Speed/Itterations per second:" />
                                                 <Label layoutX="11.0" layoutY="54.0" text="Zoom:" />
                                                 <Label layoutX="168.0" layoutY="32.0" text="25 /s" />
                                                 <Button layoutX="6.0" layoutY="145.0" mnemonicParsing="false" text="Start simulering/spill" />
                                                 <Button layoutX="146.0" layoutY="145.0" mnemonicParsing="false"  text="Rydd brett" />
-                                                <Slider fx:id="gridSpacingSlider" layoutX="17.0" layoutY="118.0"  min="0.00001" max="50" onValueChange="#handleGridSpacingSlider" />
+                                                <Slider fx:id="gridSpacingSlider" value="3"  layoutX="17.0" layoutY="118.0"  min="0.001" max="5" onValueChange="#handleGridSpacingSlider" />
                                                 <Label layoutX="12.0" layoutY="98.0" text="Gridspacing" />
                                             </children>
                                         </AnchorPane>

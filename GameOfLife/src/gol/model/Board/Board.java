@@ -16,7 +16,7 @@ public abstract class Board extends Logic {
      * @param cellSize
      * @param gridSpacing
      */
-    public Board(int cellSize, int gridSpacing) {
+    public Board(double cellSize, double gridSpacing) {
         setCellSize(cellSize);
         setGridSpacing(gridSpacing);
     }

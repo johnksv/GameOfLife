@@ -32,25 +32,25 @@ public class GameEngine implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         gc = canvas.getGraphicsContext2D();
-        activeBoard = new ArrayBoard(20, 20);
+        activeBoard = new ArrayBoard(cellSizeSlider.getValue(), gridSpacingSlider.getValue());
         draw();
     }
 
     @FXML
-    public void  handelZoom() {
+    public void handleZoom() {
         activeBoard.setCellSize(cellSizeSlider.getValue());
-        draw();      
+        draw();
     }
-    
+
     @FXML
-    public void  handleGridSpacingSlider() {
+    public void handleGridSpacingSlider() {
         activeBoard.setGridSpacing(gridSpacingSlider.getValue());
-        draw();     
+        draw();
     }
-    
+
     @FXML
     public void draw() {
-        gc.clearRect(0,0, 1000, 1000);
+        gc.clearRect(0, 0, 1000, 1000);
         for (int i = 0; i < activeBoard.length(); i++) {
             for (int j = 0; j < activeBoard.length(i); j++) {
                 if (activeBoard.getCellState(i, j)) {

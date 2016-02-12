@@ -12,7 +12,7 @@ public class ArrayBoard extends Board {
         {1, 0, 0, 1}
     };
 
-    public ArrayBoard(int cellSize, int gridSpacing) {
+    public ArrayBoard(double cellSize, double gridSpacing) {
         super(cellSize, gridSpacing);
     }
 
