@@ -18,7 +18,7 @@ public class GameEngine {
     
     //Methods
     public void draw(Canvas canvas) {
-        GraphicsContext gc = canvas.getGraphicsContext2D();
+        //GraphicsContext gc = canvas.getGraphicsContext2D();
         
         
     }

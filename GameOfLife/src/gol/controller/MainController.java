@@ -5,7 +5,6 @@
  */
 package gol.controller;
 
-import gol.view;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -14,6 +13,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.stage.Stage;
 
 /**
@@ -22,8 +23,10 @@ import javafx.stage.Stage;
  * @author s305054, s305089, s305084
  */
 public class MainController implements Initializable {
+    
     @FXML
-    public canvas;
+    public Canvas canvas;
+    
     private static Stage primaryStage;
     
     /**
@@ -44,7 +47,7 @@ public class MainController implements Initializable {
         Parent root = FXMLLoader.load(getClass().getResource("/gol/view/Game.fxml"));
         Scene scene = new Scene(root);
         primaryStage.setScene(scene);
-
+        
     }
 
     /**
