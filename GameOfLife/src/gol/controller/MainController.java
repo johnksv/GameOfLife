@@ -5,10 +5,6 @@
  */
 package gol.controller;
 
-<<<<<<< HEAD
-
-=======
->>>>>>> bb73f1c38b07d349b87fb0d7353af004b7cc6ac6
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
