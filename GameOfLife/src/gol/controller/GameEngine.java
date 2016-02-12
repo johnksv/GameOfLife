@@ -34,8 +34,8 @@ public class GameEngine implements Initializable {
         
         gc = canvas.getGraphicsContext2D();
         activeBoard = new ArrayBoard(20, 20);
-        System.out.println("hei");
         draw();
+        System.out.println(activeBoard.toString());
 
     }
 
@@ -45,11 +45,10 @@ public class GameEngine implements Initializable {
         for (int i = 0; i < activeBoard.length(); i++) {
             for (int j = 0; j < activeBoard.length(i); j++) {
                 if(activeBoard.getCellState(i, j)){
-                    gc.fillRect(i*activeBoard.getCellSize()+i*activeBoard.getGridSpacing(), 
-                    j*activeBoard.getCellSize()+j*activeBoard.getGridSpacing(),
+                    gc.fillRect(j*activeBoard.getCellSize()+j*activeBoard.getGridSpacing(), 
+                    i*activeBoard.getCellSize()+i*activeBoard.getGridSpacing(),
                     activeBoard.getCellSize(), 
                     activeBoard.getCellSize());
-                    System.out.println("hei");
                 }
             }
         }

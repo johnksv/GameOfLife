@@ -8,7 +8,7 @@ public class ArrayBoard extends Board {
     private byte[][] gameBoard = {
         {1, 0, 0, 1},
         {0, 1, 1, 0},
-        {0, 1, 1, 0},
+        {0, 1, 1, 1},
         {1, 0, 0, 1}
     };
 
@@ -50,4 +50,15 @@ public class ArrayBoard extends Board {
         return false;
     }
 
+    @Override
+    public String toString() {
+        String result = "";
+        for (int i = 0; i < length(); i++) {
+            for (int j = 0; j < length(i); j++) {
+                result += gameBoard[i][j];
+            }
+            result += "\n";
+        }
+        return result;
+    }
 }
