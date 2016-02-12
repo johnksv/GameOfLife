@@ -12,8 +12,8 @@ public class ArrayBoard extends Board {
         {1, 0, 0, 1}
     };
 
-    public ArrayBoard(int cellWidth, int gridSpacing) {
-        super(cellWidth, gridSpacing);
+    public ArrayBoard(int cellSize, int gridSpacing) {
+        super(cellSize, gridSpacing);
     }
 
     @Override

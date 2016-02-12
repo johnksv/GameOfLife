@@ -8,36 +8,36 @@ import gol.model.Logic.Logic;
 public abstract class Board extends Logic {
 
     //Variabels
-    private int cellWidth;
+    private int cellSize;
     private int gridSpacing;
 
     /**
      *
-     * @param cellWidth
+     * @param cellSize
      * @param gridSpacing
      */
-    public Board(int cellWidth, int gridSpacing) {
-        setCellWidth(cellWidth);
+    public Board(int cellSize, int gridSpacing) {
+        setCellSize(cellSize);
         setGridSpacing(gridSpacing);
     }
 
     /**
-     * @return the cellWidth
+     * @return the cellSize
      */
-    public int getCellWidth() {
-        return cellWidth;
+    public int getCellSize() {
+        return cellSize;
     }
 
     /**
-     * @param cellWidth the cellWidth to set
+     * @param cellSize the cellSize to set
      */
-    public final void setCellWidth(int cellWidth) {
-        if (cellWidth == 0) {
-            this.cellWidth = 10;
-        } else if (cellWidth < 0) {
-            this.cellWidth = -cellWidth;
+    public final void setCellSize(int cellSize) {
+        if (cellSize == 0) {
+            this.cellSize = 10;
+        } else if (cellSize < 0) {
+            this.cellSize = Math.abs(cellSize);
         } else {
-            this.cellWidth = cellWidth;
+            this.cellSize = cellSize;
         }
     }
 

@@ -8,6 +8,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Slider;
 import javafx.scene.paint.Color;
 
 /**
@@ -16,8 +17,12 @@ import javafx.scene.paint.Color;
 public class GameEngine implements Initializable {
 
     @FXML
-    private Canvas ca;
-    //Variables
+    private Canvas canvas;
+    @FXML
+    private Slider gridSpacingSlider;
+    @FXML
+    private Slider cellSizeSlider;
+    
     private double animationSpeed;
     private Color cellColor;
     private Color backgroundColor;
@@ -27,8 +32,9 @@ public class GameEngine implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         
-        gc = ca.getGraphicsContext2D();
+        gc = canvas.getGraphicsContext2D();
         activeBoard = new ArrayBoard(20, 20);
+        System.out.println("hei");
         draw();
 
     }
@@ -39,10 +45,11 @@ public class GameEngine implements Initializable {
         for (int i = 0; i < activeBoard.length(); i++) {
             for (int j = 0; j < activeBoard.length(i); j++) {
                 if(activeBoard.getCellState(i, j)){
-                    gc.fillRect(i*activeBoard.getCellWidth()+i*activeBoard.getGridSpacing(), 
-                    j*activeBoard.getCellWidth()+j*activeBoard.getGridSpacing(),
-                    activeBoard.getCellWidth(), 
-                    activeBoard.getCellWidth());
+                    gc.fillRect(i*activeBoard.getCellSize()+i*activeBoard.getGridSpacing(), 
+                    j*activeBoard.getCellSize()+j*activeBoard.getGridSpacing(),
+                    activeBoard.getCellSize(), 
+                    activeBoard.getCellSize());
+                    System.out.println("hei");
                 }
             }
         }
