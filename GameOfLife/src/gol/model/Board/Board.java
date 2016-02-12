@@ -8,8 +8,8 @@ import gol.model.Logic.Logic;
 public abstract class Board extends Logic {
 
     //Variabels
-    private int cellSize;
-    private int gridSpacing;
+    private double cellSize;
+    private double gridSpacing;
 
     /**
      *
@@ -24,14 +24,14 @@ public abstract class Board extends Logic {
     /**
      * @return the cellSize
      */
-    public int getCellSize() {
+    public double getCellSize() {
         return cellSize;
     }
 
     /**
      * @param cellSize the cellSize to set
      */
-    public final void setCellSize(int cellSize) {
+    public final void setCellSize(double cellSize) {
         if (cellSize == 0) {
             this.cellSize = 10;
         } else if (cellSize < 0) {
@@ -44,14 +44,14 @@ public abstract class Board extends Logic {
     /**
      * @return the gridSpacing
      */
-    public int getGridSpacing() {
+    public double getGridSpacing() {
         return gridSpacing;
     }
 
     /**
      * @param gridSpacing the gridSpacing to set
      */
-    public final void setGridSpacing(int gridSpacing) {
+    public final void setGridSpacing(double gridSpacing) {
         if (gridSpacing == 0) {
             this.gridSpacing = 10;
         } else if (gridSpacing < 0) {

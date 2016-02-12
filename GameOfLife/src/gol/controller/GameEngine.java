@@ -39,8 +39,15 @@ public class GameEngine implements Initializable {
     }
 
     @FXML
+    public void  handelZoom() {
+        activeBoard.setCellSize(cellSizeSlider.getValue());
+        draw();
+        System.out.println(cellSizeSlider.getValue());
+        
+    }
+    @FXML
     public void draw() {
-
+        gc.clearRect(0,0, 1000, 1000);
         for (int i = 0; i < activeBoard.length(); i++) {
             for (int j = 0; j < activeBoard.length(i); j++) {
                 if (activeBoard.getCellState(i, j)) {
