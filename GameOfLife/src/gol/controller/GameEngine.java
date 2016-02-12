@@ -19,9 +19,9 @@ public class GameEngine implements Initializable {
     @FXML
     private Canvas canvas;
     @FXML
-    private Slider gridSpacingSlider;
-    @FXML
     private Slider cellSizeSlider;
+    @FXML
+    private Slider gridSpacingSlider;
 
     private double animationSpeed;
     private Color cellColor;
@@ -31,20 +31,23 @@ public class GameEngine implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
         gc = canvas.getGraphicsContext2D();
         activeBoard = new ArrayBoard(20, 20);
         draw();
-
     }
 
     @FXML
     public void  handelZoom() {
         activeBoard.setCellSize(cellSizeSlider.getValue());
-        draw();
-        System.out.println(cellSizeSlider.getValue());
-        
+        draw();      
     }
+    
+    @FXML
+    public void  handleGridSpacingSlider() {
+        activeBoard.setGridSpacing(gridSpacingSlider.getValue());
+        draw();     
+    }
+    
     @FXML
     public void draw() {
         gc.clearRect(0,0, 1000, 1000);

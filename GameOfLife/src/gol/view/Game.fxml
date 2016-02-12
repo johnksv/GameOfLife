@@ -8,27 +8,27 @@
 <?import javafx.scene.layout.*?>
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gol.controller.GameEngine">
-   <bottom>
-      <ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-         <items>
-            <Label text="Sekunder simulering har vært i gang:" />
-            <Region prefWidth="100.0" />
-            <Separator orientation="VERTICAL" />
-            <Label text="Høyeste antall levende celler" />
-         </items>
-      </ToolBar>
-   </bottom>
-   <right>
-      <TabPane prefHeight="400.0" prefWidth="250.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
-        <tabs>
-          <Tab text="Generelt">
-               <content>
-                  <VBox>
-                     <children>
-                                  <TitledPane collapsible="false" prefWidth="250.0">
+    <bottom>
+        <ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+            <items>
+                <Label text="Sekunder simulering har vært i gang:" />
+                <Region prefWidth="100.0" />
+                <Separator orientation="VERTICAL" />
+                <Label text="Høyeste antall levende celler" />
+            </items>
+        </ToolBar>
+    </bottom>
+    <right>
+        <TabPane prefHeight="400.0" prefWidth="250.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
+            <tabs>
+                <Tab text="Generelt">
+                    <content>
+                        <VBox>
+                            <children>
+                                <TitledPane collapsible="false" prefWidth="250.0">
                                     <content>
-                                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                                             <children>
+                                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                            <children>
                                                 <Slider layoutX="14.0" layoutY="33.0" value="25.0" />
                                                 <Slider fx:id="cellSizeSlider" layoutX="18.0" layoutY="71.0" onValueChange="#handelZoom"/>
                                                 <Label layoutX="8.0" layoutY="14.0" text="Speed/Itterations per second:" />
@@ -36,97 +36,97 @@
                                                 <Label layoutX="168.0" layoutY="32.0" text="25 /s" />
                                                 <Button layoutX="6.0" layoutY="145.0" mnemonicParsing="false" text="Start simulering/spill" />
                                                 <Button layoutX="146.0" layoutY="145.0" mnemonicParsing="false"  text="Rydd brett" />
-                                    <Slider fx:id="gridSpacingSlider" layoutX="17.0" layoutY="118.0"  min="0" max="50"    />
-                                    <Label layoutX="12.0" layoutY="98.0" text="Gridspacing" />
-                                             </children>
-                                          </AnchorPane>
+                                                <Slider fx:id="gridSpacingSlider" layoutX="17.0" layoutY="118.0"  min="0.00001" max="50" onValueChange="#handleGridSpacingSlider" />
+                                                <Label layoutX="12.0" layoutY="98.0" text="Gridspacing" />
+                                            </children>
+                                        </AnchorPane>
                                     </content>
-                                  </TitledPane>
-                     </children>
-                  </VBox>
-               </content>
-          </Tab>
-          <Tab text="Mønster">
-               <content>
-                  <VBox prefHeight="200.0" prefWidth="100.0">
-                     <children>
-                        <TitledPane animated="false" collapsible="false" text="Import">
-                          <content>
-                            <AnchorPane minHeight="0.0" minWidth="0.0" prefWidth="200.0">
-                                 <children>
-                                    <Button layoutX="25.0" layoutY="6.0" mnemonicParsing="false" text="Import pattern from file" />
-                                    <Button layoutX="25.0" layoutY="42.0" mnemonicParsing="false" text="Import/search pattern from internet" />
-                                 </children>
-                              </AnchorPane>
-                          </content>
-                        </TitledPane>
-                        <TitledPane animated="false" collapsible="false" text="Export">
-                          <content>
-                            <AnchorPane minHeight="0.0" minWidth="0.0" prefWidth="200.0">
-                                 <children>
-                                    <Button layoutX="24.0" layoutY="10.0" mnemonicParsing="false" text="Export pattern to file" />
-                                    <Button layoutX="24.0" layoutY="44.0" mnemonicParsing="false" text="Export to GIF" />
-                                 </children>
-                              </AnchorPane>
-                          </content>
-                        </TitledPane>
-                        <TitledPane animated="false" collapsible="false" text="Edit">
-                          <content>
-                            <AnchorPane minHeight="0.0" minWidth="0.0" prefWidth="200.0">
-                                 <children>
-                                    <Button layoutX="27.0" layoutY="14.0" mnemonicParsing="false" text="Open Pattern Editor" />
-                                    <Label layoutX="27.0" layoutY="50.0" text="PS: I redigering har du også &#10;mulighet til å importere mønster &#10;fra fil og internett" wrapText="true" />
-                                 </children>
-                              </AnchorPane>
-                          </content>
-                        </TitledPane>
-                     </children>
-                  </VBox>
-               </content>
-          </Tab>
-            <Tab text="Avansert">
-              <content>
-                  <VBox>
-                     <children>
-                      <TitledPane collapsible="false">
-                        <content>
-                          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="300.0" prefWidth="200.0">
-                               <children>
-                                  <RadioButton layoutX="14.0" layoutY="37.0" mnemonicParsing="false" selected="true" text="2D" />
-                                  <RadioButton layoutX="57.0" layoutY="37.0" mnemonicParsing="false" text="3D" />
-                                  <Label layoutX="14.0" layoutY="14.0" text="Visning av brett:" />
-                                  <ColorPicker layoutX="12.0" layoutY="111.0" prefWidth="176.0" />
-                                  <Label layoutX="12.0" layoutY="87.0" text="Farge til punkter:" />
-                                  <ColorPicker layoutX="14.0" layoutY="182.0" prefWidth="176.0" />
-                                  <Label layoutX="14.0" layoutY="159.0" text="Farge til bakgrunn:" />
-                                  <Separator layoutX="-4.0" layoutY="68.0" prefHeight="3.0" prefWidth="227.0" />
-                                  <Separator layoutX="-4.0" layoutY="146.0" prefHeight="3.0" prefWidth="227.0" />
-                               </children>
-                            </AnchorPane>
-                          </content>
-                        </TitledPane>
-                        <TitledPane collapsible="false" text="Spillregler">
+                                </TitledPane>
+                            </children>
+                        </VBox>
+                    </content>
+                </Tab>
+                <Tab text="Mønster">
+                    <content>
+                        <VBox prefHeight="200.0" prefWidth="100.0">
+                            <children>
+                                <TitledPane animated="false" collapsible="false" text="Import">
                                     <content>
-                                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="300.0" prefWidth="250.0">
-                                             <children>
+                                        <AnchorPane minHeight="0.0" minWidth="0.0" prefWidth="200.0">
+                                            <children>
+                                                <Button layoutX="25.0" layoutY="6.0" mnemonicParsing="false" text="Import pattern from file" />
+                                                <Button layoutX="25.0" layoutY="42.0" mnemonicParsing="false" text="Import/search pattern from internet" />
+                                            </children>
+                                        </AnchorPane>
+                                    </content>
+                                </TitledPane>
+                                <TitledPane animated="false" collapsible="false" text="Export">
+                                    <content>
+                                        <AnchorPane minHeight="0.0" minWidth="0.0" prefWidth="200.0">
+                                            <children>
+                                                <Button layoutX="24.0" layoutY="10.0" mnemonicParsing="false" text="Export pattern to file" />
+                                                <Button layoutX="24.0" layoutY="44.0" mnemonicParsing="false" text="Export to GIF" />
+                                            </children>
+                                        </AnchorPane>
+                                    </content>
+                                </TitledPane>
+                                <TitledPane animated="false" collapsible="false" text="Edit">
+                                    <content>
+                                        <AnchorPane minHeight="0.0" minWidth="0.0" prefWidth="200.0">
+                                            <children>
+                                                <Button layoutX="27.0" layoutY="14.0" mnemonicParsing="false" text="Open Pattern Editor" />
+                                                <Label layoutX="27.0" layoutY="50.0" text="PS: I redigering har du også &#10;mulighet til å importere mønster &#10;fra fil og internett" wrapText="true" />
+                                            </children>
+                                        </AnchorPane>
+                                    </content>
+                                </TitledPane>
+                            </children>
+                        </VBox>
+                    </content>
+                </Tab>
+                <Tab text="Avansert">
+                    <content>
+                        <VBox>
+                            <children>
+                                <TitledPane collapsible="false">
+                                    <content>
+                                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="300.0" prefWidth="200.0">
+                                            <children>
+                                                <RadioButton layoutX="14.0" layoutY="37.0" mnemonicParsing="false" selected="true" text="2D" />
+                                                <RadioButton layoutX="57.0" layoutY="37.0" mnemonicParsing="false" text="3D" />
+                                                <Label layoutX="14.0" layoutY="14.0" text="Visning av brett:" />
+                                                <ColorPicker layoutX="12.0" layoutY="111.0" prefWidth="176.0" />
+                                                <Label layoutX="12.0" layoutY="87.0" text="Farge til punkter:" />
+                                                <ColorPicker layoutX="14.0" layoutY="182.0" prefWidth="176.0" />
+                                                <Label layoutX="14.0" layoutY="159.0" text="Farge til bakgrunn:" />
+                                                <Separator layoutX="-4.0" layoutY="68.0" prefHeight="3.0" prefWidth="227.0" />
+                                                <Separator layoutX="-4.0" layoutY="146.0" prefHeight="3.0" prefWidth="227.0" />
+                                            </children>
+                                        </AnchorPane>
+                                    </content>
+                                </TitledPane>
+                                <TitledPane collapsible="false" text="Spillregler">
+                                    <content>
+                                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="300.0" prefWidth="250.0">
+                                            <children>
                                                 <ComboBox layoutX="2.0" layoutY="14.0" prefWidth="150.0" promptText="Standard" />
                                                 <Label layoutX="7.0" layoutY="53.0" text="Naboer for å leve" />
                                                 <Label layoutX="7.0" layoutY="84.0" text="Naboer for å våkne" />
                                                 <TextField disable="true" layoutX="123.0" layoutY="49.0" prefHeight="25.0" prefWidth="92.0" text="2,3" />
                                                 <TextField disable="true" layoutX="123.0" layoutY="80.0" prefHeight="25.0" prefWidth="92.0" text="3" />
                                                 <Button disable="true" layoutX="68.0" layoutY="120.0" mnemonicParsing="false" text="Lagre regler" />
-                                             </children>
-                                          </AnchorPane>
-                                 </content>
-                        </TitledPane>
-                     </children>
-                  </VBox>
-              </content>
-            </Tab>
-        </tabs>
-      </TabPane>
-   </right>
-   <center>
-      <Canvas fx:id="canvas" height="561.0" width="549.0" BorderPane.alignment="CENTER" />
-   </center>
+                                            </children>
+                                        </AnchorPane>
+                                    </content>
+                                </TitledPane>
+                            </children>
+                        </VBox>
+                    </content>
+                </Tab>
+            </tabs>
+        </TabPane>
+    </right>
+    <center>
+        <Canvas fx:id="canvas" height="561.0" width="549.0" BorderPane.alignment="CENTER" />
+    </center>
 </BorderPane>
