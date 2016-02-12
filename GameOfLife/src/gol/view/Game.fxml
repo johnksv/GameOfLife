@@ -7,11 +7,11 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gol.controller.GameEngine">
    <center>
       <VBox prefHeight="200.0" prefWidth="100.0" style="-fx-border-color: transparent #BABABA transparent #BABABA;" BorderPane.alignment="CENTER">
          <children>
-            <Canvas fx:id="canvas" height="573.0" width="549.0" />
+            <Canvas fx:id="ca" height="573.0" width="549.0" />
          </children>
       </VBox>
    </center>
@@ -42,7 +42,7 @@
                                                 <Label layoutX="11.0" layoutY="59.0" text="Zoom:" />
                                                 <Label layoutX="168.0" layoutY="32.0" text="25 /s" />
                                                 <Button layoutX="6.0" layoutY="100.0" mnemonicParsing="false" text="Start simulering/spill" />
-                                                <Button layoutX="146.0" layoutY="100.0" mnemonicParsing="false" text="Rydd brett" />
+                                                <Button layoutX="146.0" layoutY="100.0" mnemonicParsing="false" onAction="#draw"  text="Rydd brett" />
                                              </children>
                                           </AnchorPane>
                                     </content>
