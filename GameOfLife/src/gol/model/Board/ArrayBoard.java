@@ -6,14 +6,24 @@ package gol.model.Board;
 public class ArrayBoard extends Board {
 
     private byte[][] gameBoard = {
-                                 {1, 0, 0, 1},
-                                 {0, 1, 1, 0},
-                                 {0, 1, 1, 0},
-                                 {1, 0, 0, 1}
+                                    {1, 0, 0, 1},
+                                    {0, 1, 1, 0},
+                                    {0, 1, 1, 0},
+                                    {1, 0, 0, 1}
                                 };
 
     public ArrayBoard(int cellWidth, int gridSpacing) {
         super(cellWidth, gridSpacing);
+    }
+
+    @Override
+    public void clearBoard() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object getBoard() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
@@ -26,13 +36,4 @@ public class ArrayBoard extends Board {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    @Override
-    public void clearBoard() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public Object getBoard() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 }

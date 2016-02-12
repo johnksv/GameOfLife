@@ -6,34 +6,27 @@ import java.util.List;
  * @author s305084, s305089, s305054
  */
 public abstract class Logic {
-    
-    /**
-     * Variables
-     */
-    
+
+    //Variables
     private Rule activeRule;
     private List<List<Byte>> nextGen;
-    
-    /**
-     *  Methods
-     */
-    
+
+    //Methods
+    public void nextGeneration() {
+        //TODO
+    }
+
+    private void checkRule() {
+        //TODO
+    }
+
     public void setGameRule(Rule activeRule) {
         //TODO
         this.activeRule = activeRule;
     }
-    
+
     public void setNextGen() {
         //TODO
     }
-    
-    public void nextGeneration() {
-        //TODO
-    }
-    
-    private void checkRule() {
-        //TODO
-    }
-    
 
 }

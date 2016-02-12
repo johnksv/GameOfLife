@@ -5,6 +5,7 @@
  */
 package gol.controller;
 
+import gol.view;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -21,7 +22,8 @@ import javafx.stage.Stage;
  * @author s305054, s305089, s305084
  */
 public class MainController implements Initializable {
-
+    @FXML
+    public canvas;
     private static Stage primaryStage;
     
     /**

@@ -11,7 +11,7 @@
    <center>
       <VBox prefHeight="200.0" prefWidth="100.0" style="-fx-border-color: transparent #BABABA transparent #BABABA;" BorderPane.alignment="CENTER">
          <children>
-            <Canvas height="200.0" width="200.0" />
+            <Canvas fx:id="canvas" height="573.0" width="549.0" />
          </children>
       </VBox>
    </center>

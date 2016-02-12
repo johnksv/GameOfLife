@@ -2,20 +2,39 @@ package gol.controller;
 
 import gol.model.Board.Board;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
 /**
  * @author s305054, s305084, s305089
  */
 public class GameEngine {
- 
+
     //Variables
     private double animationSpeed;
     private Color cellColor;
     private Color backgroundColor;
     private Board activeBoard;
     
-    
+    //Methods
+    public void draw(Canvas canvas) {
+        GraphicsContext gc = canvas.getGraphicsContext2D();
+        
+        
+    }
+
+    public void startAnimation() {
+
+    }
+
+    public void stopAnimation() {
+
+    }
+
+    public void constructRule(byte[] cellsToLive, byte[] cellsToSpawn) {
+
+    }
+
     /**
      * @return the animationSpeed
      */
@@ -57,22 +76,5 @@ public class GameEngine {
     public void setActiveBoard(Board activeBoard) {
         this.activeBoard = activeBoard;
     }
-    
 
-    public void draw(Canvas canvas){
-        
-    }
-    
-    public void startAnimation(){
-        
-    }
-    
-    public void stopAnimation(){
-        
-    }
-    
-    public void constructRule(byte[] cellsToLive, byte[] cellsToSpawn){
-        
-    }
-    
 }
