@@ -22,7 +22,7 @@ public class GameEngine implements Initializable {
     private Slider gridSpacingSlider;
     @FXML
     private Slider cellSizeSlider;
-    
+
     private double animationSpeed;
     private Color cellColor;
     private Color backgroundColor;
@@ -31,11 +31,10 @@ public class GameEngine implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        
+
         gc = canvas.getGraphicsContext2D();
         activeBoard = new ArrayBoard(20, 20);
         draw();
-        System.out.println(activeBoard.toString());
 
     }
 
@@ -44,11 +43,11 @@ public class GameEngine implements Initializable {
 
         for (int i = 0; i < activeBoard.length(); i++) {
             for (int j = 0; j < activeBoard.length(i); j++) {
-                if(activeBoard.getCellState(i, j)){
-                    gc.fillRect(j*activeBoard.getCellSize()+j*activeBoard.getGridSpacing(), 
-                    i*activeBoard.getCellSize()+i*activeBoard.getGridSpacing(),
-                    activeBoard.getCellSize(), 
-                    activeBoard.getCellSize());
+                if (activeBoard.getCellState(i, j)) {
+                    gc.fillRect(j * activeBoard.getCellSize() + j * activeBoard.getGridSpacing(),
+                            i * activeBoard.getCellSize() + i * activeBoard.getGridSpacing(),
+                            activeBoard.getCellSize(),
+                            activeBoard.getCellSize());
                 }
             }
         }
