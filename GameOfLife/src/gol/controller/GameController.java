@@ -4,17 +4,19 @@ import gol.model.Board.ArrayBoard;
 import gol.model.Board.Board;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Slider;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 
 /**
  * @author s305054, s305084, s305089
  */
-public class GameEngine implements Initializable {
+public class GameController implements Initializable {
 
     @FXML
     private Canvas canvas;
@@ -34,6 +36,18 @@ public class GameEngine implements Initializable {
         gc = canvas.getGraphicsContext2D();
         activeBoard = new ArrayBoard(cellSizeSlider.getValue(), gridSpacingSlider.getValue());
         draw();
+        
+        //Registers clicks on scene
+        
+        canvas.addEventHandler(MouseEvent.MOUSE_PRESSED,
+            new EventHandler<MouseEvent>() {
+                
+                @Override
+                public void handle(MouseEvent e) {
+                    activeBoard.setCellState(e.getX(), e.getY(), true);
+                }
+        });
+        
     }
 
     @FXML
@@ -62,6 +76,8 @@ public class GameEngine implements Initializable {
             }
         }
     }
+    
+    
 
     public void startAnimation() {
 

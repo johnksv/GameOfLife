@@ -37,7 +37,7 @@ public class ArrayBoard extends Board {
     }
 
     @Override
-    public void setCellState(int x, int y, boolean alive) {
+    public void setCellState(double x, double y, boolean alive) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

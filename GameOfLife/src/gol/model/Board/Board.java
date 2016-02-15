@@ -64,7 +64,7 @@ public abstract class Board extends Logic {
     /*
      * Abstract Methods
      */
-    public abstract void setCellState(int x, int y, boolean alive);
+    public abstract void setCellState(double x, double y, boolean alive);
 
     public abstract boolean getCellState(int x, int y);
 
