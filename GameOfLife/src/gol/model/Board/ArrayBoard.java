@@ -38,7 +38,16 @@ public class ArrayBoard extends Board {
 
     @Override
     public void setCellState(double x, double y, boolean alive) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
+        /*
+         * y is position of the first index of the matrix (column)
+         * x is position of the second index of the matrix (row)
+         */
+        
+        int iy=(int)(y/(cellSize+gridSpacing));
+        int ix=(int)(x/(cellSize+gridSpacing));
+        System.out.println(iy+"  "+ix);
+        gameBoard[iy][ix] = 1;
     }
 
     @Override

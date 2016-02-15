@@ -8,8 +8,8 @@ import gol.model.Logic.Logic;
 public abstract class Board extends Logic {
 
     //Variabels
-    private double cellSize;
-    private double gridSpacing;
+    protected double cellSize;
+    protected double gridSpacing;
 
     /**
      *

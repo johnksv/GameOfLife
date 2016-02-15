@@ -45,6 +45,7 @@ public class GameController implements Initializable {
                 @Override
                 public void handle(MouseEvent e) {
                     activeBoard.setCellState(e.getX(), e.getY(), true);
+                    draw();
                 }
         });
         
