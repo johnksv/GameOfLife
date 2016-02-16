@@ -10,7 +10,7 @@ import javafx.stage.Stage;
 
 /**
  *
- * @author s305084, s305089, s305054
+ * @author s305054, s305084, s305089
  */
 public class Main extends Application {
 
