@@ -5,7 +5,8 @@ package gol.model.Board;
  */
 public class ArrayBoard extends Board {
 
-    private byte[][] gameBoard = {
+    private byte[][] gameBoard = new byte[][] {
+            
         {1, 0, 0, 1},
         {0, 1, 1, 0},
         {0, 1, 1, 0},
