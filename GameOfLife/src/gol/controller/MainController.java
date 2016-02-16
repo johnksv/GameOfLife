@@ -29,16 +29,16 @@ public class MainController implements Initializable {
     private static Stage primaryStage;
     private static List<String> input = new ArrayList<String>();
 
-    public static boolean inputContains(String keyInput) {
-        return input.contains(keyInput);
-    }
-
     /**
      *
      * @param stage
      */
     public static void loadStage(Stage stage) {
         primaryStage = stage;
+    }
+
+    public static boolean inputContains(String keyInput) {
+        return input.contains(keyInput);
     }
 
     /**
