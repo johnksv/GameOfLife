@@ -53,7 +53,6 @@ public class GameController implements Initializable {
                 draw();
             }
         });
-
         canvas.addEventHandler(MouseEvent.MOUSE_DRAGGED,
             new EventHandler<MouseEvent>() {
 
@@ -64,6 +63,7 @@ public class GameController implements Initializable {
             }
         });
     }
+    
 
     @FXML
     public void handleZoom() {
@@ -93,7 +93,9 @@ public class GameController implements Initializable {
     }
 
     public void startAnimation() {
-
+        if(MainController.inputContains("G")) {
+            
+        }
     }
 
     public void stopAnimation() {

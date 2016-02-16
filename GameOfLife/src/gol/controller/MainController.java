@@ -7,6 +7,8 @@ package gol.controller;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -14,7 +16,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 
 /**
@@ -25,6 +27,11 @@ import javafx.stage.Stage;
 public class MainController implements Initializable {
 
     private static Stage primaryStage;
+    private static List<String> input = new ArrayList<String>();
+
+    public static boolean inputContains(String keyInput) {
+        return input.contains(keyInput);
+    }
 
     /**
      *
@@ -42,9 +49,33 @@ public class MainController implements Initializable {
     public void startGame() throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("/gol/view/Game.fxml"));
         Scene scene = new Scene(root);
-        
+
+        setKeyEvents(scene);
         primaryStage.setScene(scene);
 
+    }
+
+    public void setKeyEvents(Scene scene) {
+        scene.setOnKeyPressed(
+                new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent e) {
+                if (!input.contains(e.getText())) {
+                    input.add(e.getText());
+                }
+
+            }
+
+        });
+
+        scene.setOnKeyReleased(
+                new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent e) {
+                input.remove(e.getText());
+            }
+
+        });
     }
 
     /**
