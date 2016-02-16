@@ -36,19 +36,33 @@ public class GameController implements Initializable {
         gc = canvas.getGraphicsContext2D();
         activeBoard = new ArrayBoard(cellSizeSlider.getValue(), gridSpacingSlider.getValue());
         draw();
+        mouseInit();
+    }
+
+    //MouseEvent
+    public void mouseInit() {
         
         //Registers clicks on scene
-        
+
         canvas.addEventHandler(MouseEvent.MOUSE_PRESSED,
             new EventHandler<MouseEvent>() {
-                
-                @Override
-                public void handle(MouseEvent e) {
-                    activeBoard.setCellState(e.getX(), e.getY(), true);
-                    draw();
-                }
+
+            @Override
+            public void handle(MouseEvent e) {
+                activeBoard.setCellState(e.getX(), e.getY(), true);
+                draw();
+            }
         });
-        
+
+        canvas.addEventHandler(MouseEvent.MOUSE_DRAGGED,
+            new EventHandler<MouseEvent>() {
+
+            @Override
+            public void handle(MouseEvent e) {
+                activeBoard.setCellState(e.getX(), e.getY(), true);
+                draw();
+            }
+        });
     }
 
     @FXML
@@ -77,8 +91,6 @@ public class GameController implements Initializable {
             }
         }
     }
-    
-    
 
     public void startAnimation() {
 
