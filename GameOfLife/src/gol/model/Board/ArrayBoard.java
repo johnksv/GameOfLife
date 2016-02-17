@@ -80,7 +80,7 @@ public class ArrayBoard extends Board {
                                 try {
                                     gameBoard[i + k][j + l] += 1;
                                 } catch (ArrayIndexOutOfBoundsException exception) {
-                                    System.out.println("Out of bounds " + exception);
+                                    System.out.println("Position is out of bounds");
                                 }
                             }
                         }
