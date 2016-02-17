@@ -3,7 +3,7 @@ package gol.model.Board;
 import gol.model.Logic.Logic;
 
 /**
- * @author s305084, s305089, s305054
+ * @author s305054, s305084, s305089
  */
 public abstract class Board extends Logic {
 
