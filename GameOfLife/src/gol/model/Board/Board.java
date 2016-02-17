@@ -75,5 +75,7 @@ public abstract class Board extends Logic {
     public abstract int length() ;
     
     public abstract int length(int i) ;
+    
+    public abstract void countNeighbors();
 
 }

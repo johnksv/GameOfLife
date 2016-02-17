@@ -6,11 +6,10 @@ package gol.model.Board;
 public class ArrayBoard extends Board {
 
     private byte[][] gameBoard = {
-            
-        {1, 0, 0, 1},
-        {0, 1, 1, 0},
-        {0, 1, 1, 0},
-        {1, 0, 0, 1}
+        {0, 0, 0, 0},
+        {0, 0, 64, 0},
+        {0, 0, 0, 0},
+        {64, 0, 0, 0}
     };
 
     public ArrayBoard(double cellSize, double gridSpacing) {
@@ -52,10 +51,45 @@ public class ArrayBoard extends Board {
     @Override
     public boolean getCellState(int x, int y) {
         //TODO: Make with bit magic, not 1 and 0.
-        if (gameBoard[x][y] == 1) {
+        if (gameBoard[x][y] >= 64) {
             return true;
         }
         return false;
+    }
+
+    /**
+     * Goes thorugh each living cell, and increments each neighbor
+     * neighbors-count.
+     */
+    @Override
+    public void countNeighbors() {
+        
+        //Goes through the board
+        for (int i = 0; i < gameBoard.length; i++) {
+            for (int j = 0; j < gameBoard[i].length; j++) {
+                
+                //If cell is alive
+                if (gameBoard[i][j] >= 64) {
+                    
+                    //Goes through surrounding neighbors
+                    for (int k = -1; k <= 1; k++) {
+                        for (int l = -1; l <= 1; l++) {
+                            
+                            //To not count itself
+                            if (!(k == 0 && l == 0)) {
+                                try {
+                                    gameBoard[i + k][j + l] += 1;
+                                } catch (ArrayIndexOutOfBoundsException exception) {
+                                    System.out.println("Out of bounds " + exception);
+                                }
+                            }
+                        }
+                    }
+
+                }
+
+            }
+        }
     }
 
     @Override

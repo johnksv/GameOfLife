@@ -9,7 +9,6 @@ public abstract class Logic {
 
     //Variables
     private Rule activeRule;
-    private List<List<Byte>> nextGen;
 
     //Methods
     public void nextGeneration() {

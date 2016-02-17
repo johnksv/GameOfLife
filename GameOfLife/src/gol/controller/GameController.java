@@ -35,6 +35,8 @@ public class GameController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         gc = canvas.getGraphicsContext2D();
         activeBoard = new ArrayBoard(cellSizeSlider.getValue(), gridSpacingSlider.getValue());
+        activeBoard.countNeighbors();
+        System.out.println(activeBoard);
         draw();
         mouseInit();
     }
