@@ -45,7 +45,7 @@ public class ArrayBoard extends Board {
          */
         y = y / (cellSize + gridSpacing);
         x = x / (cellSize + gridSpacing);
-        gameBoard[(int) y][(int) x] = 1;
+        gameBoard[(int) y][(int) x] = 64;
     }
 
     @Override
