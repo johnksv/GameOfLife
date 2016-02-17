@@ -1,7 +1,7 @@
 package gol.model.Board;
 
 /**
- * @author  s305054, s305084, s305089
+ * @author s305054, s305084, s305089
  */
 public class ArrayBoard extends Board {
 
@@ -63,18 +63,18 @@ public class ArrayBoard extends Board {
      */
     @Override
     public void countNeighbors() {
-        
+
         //Goes through the board
         for (int i = 0; i < gameBoard.length; i++) {
             for (int j = 0; j < gameBoard[i].length; j++) {
-                
+
                 //If cell is alive
                 if (gameBoard[i][j] >= 64) {
-                    
+
                     //Goes through surrounding neighbors
                     for (int k = -1; k <= 1; k++) {
                         for (int l = -1; l <= 1; l++) {
-                            
+
                             //To not count itself
                             if (!(k == 0 && l == 0)) {
                                 try {
@@ -95,12 +95,17 @@ public class ArrayBoard extends Board {
     @Override
     public String toString() {
         String result = "";
-        for (int i = 0; i < length(); i++) {
-            for (int j = 0; j < length(i); j++) {
-                result += gameBoard[i][j];
+        for (byte row[] : gameBoard) {
+            for (byte cell : row) {
+                if (cell >= 64) {
+                    result += 1;
+                } else {
+                    result += 0;
+                }
             }
             result += "\n";
         }
+
         return result;
     }
 }
