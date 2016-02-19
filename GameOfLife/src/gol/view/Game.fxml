@@ -30,7 +30,7 @@
                                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                             <children>
                                                 <Label layoutX="8.0" layoutY="14.0" text="Speed/Itterations per second:" />
-                                                <Label fx:id="animationSpeedLabel" layoutX="168.0" layoutY="32.0" text="25 /s" />
+                                                <Label fx:id="animationSpeedLabel" layoutX="168.0" layoutY="32.0" text="1,00" />
                                                 <Slider fx:id="animationSpeedSlider" onValueChange="#handleAnimationSpeedSlider" min="1"  layoutX="14.0" layoutY="33.0" value="2.0" />
                                                 <Label layoutX="11.0" layoutY="54.0" text="Zoom:" />
                                                 <Slider fx:id="cellSizeSlider" layoutX="18.0" layoutY="71.0" min="1" onValueChange="#handleZoom" value="20" />
