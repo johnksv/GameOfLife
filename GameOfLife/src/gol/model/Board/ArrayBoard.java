@@ -20,12 +20,12 @@ public class ArrayBoard extends Board {
 
     @Override
     public int getArrayLength() {
-        return gameBoard.length-1;
+        return gameBoard.length - 1;
     }
 
     @Override
     public int getArrayLength(int i) {
-        return gameBoard[i].length-1;
+        return gameBoard[i].length - 1;
     }
 
     @Override
@@ -42,8 +42,12 @@ public class ArrayBoard extends Board {
          */
         y = y / (cellSize + gridSpacing);
         x = x / (cellSize + gridSpacing);
+        byte value = 0;
+        if (alive) {
+            value = 64;
+        }
         try {
-            gameBoard[(int) y][(int) x] = 64;
+            gameBoard[(int) y][(int) x] = value;
         } catch (ArrayIndexOutOfBoundsException e) {
             System.err.println("Click was outside canvas");
         }
@@ -51,8 +55,18 @@ public class ArrayBoard extends Board {
 
     @Override
     public boolean getCellState(int x, int y) {
-        //TODO: Make with bit magic, not 1 and 0.
         if (gameBoard[x][y] >= 64) {
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean getCellStateFromMouseClick(double x, double y) {
+        y = y / (cellSize + gridSpacing);
+        x = x / (cellSize + gridSpacing);
+
+        if (gameBoard[(int) y][(int) x] >= 64) {
             return true;
         }
         return false;

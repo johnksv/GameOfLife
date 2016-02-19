@@ -66,8 +66,7 @@ public class GameController implements Initializable {
 
                     @Override
                     public void handle(MouseEvent e) {
-                        activeBoard.setCellState(e.getX(), e.getY(), true);
-                        draw();
+                        handleMouseClick(e);
                     }
                 });
         canvas.addEventHandler(MouseEvent.MOUSE_DRAGGED,
@@ -75,10 +74,19 @@ public class GameController implements Initializable {
 
                     @Override
                     public void handle(MouseEvent e) {
-                        activeBoard.setCellState(e.getX(), e.getY(), true);
-                        draw();
+                        handleMouseClick(e);
                     }
                 });
+    }
+
+    private void handleMouseClick(MouseEvent e) {
+        double x = e.getX();
+        double y = e.getY();
+        // @TODO
+        // boolean alive = activeBoard.getCellStateFromMouseClick(x, y);
+        //System.out.println(alive);
+        activeBoard.setCellState(x, y, true);
+        draw();
     }
 
     private void initAnimation() {
@@ -86,7 +94,7 @@ public class GameController implements Initializable {
         KeyFrame keyframe = new KeyFrame(duration, e -> {
             activeBoard.nextGen();
             draw();
-            
+
         });
         timeline.setCycleCount(Animation.INDEFINITE);
         timeline.getKeyFrames().add(keyframe);
