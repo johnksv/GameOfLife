@@ -1,15 +1,17 @@
 package gol.model.Board;
 
-import gol.model.Logic.Logic;
+import gol.model.Logic.ConwaysRule;
+import gol.model.Logic.Rule;
 
 /**
  * @author s305054, s305084, s305089
  */
-public abstract class Board extends Logic {
+public abstract class Board {
 
     //Variabels
     protected double cellSize;
     protected double gridSpacing;
+    private Rule activeRule;
 
     /**
      *
@@ -19,21 +21,17 @@ public abstract class Board extends Logic {
     public Board(double cellSize, double gridSpacing) {
         setCellSize(cellSize);
         setGridSpacing(gridSpacing);
+        activeRule = new ConwaysRule();
     }
 
-    /**
-     * @return the cellSize
-     */
-    public double getCellSize() {
-        return cellSize;
+    public void nextGen() {
+        countNeigh();
+        checkRules(activeRule);
     }
 
-    /**
-     * @param cellSize the cellSize to set
-     */
     public final void setCellSize(double cellSize) {
         if (cellSize == 0) {
-            this.cellSize = 10;
+            this.cellSize = 0.001;
         } else if (cellSize < 0) {
             this.cellSize = Math.abs(cellSize);
         } else {
@@ -41,29 +39,30 @@ public abstract class Board extends Logic {
         }
     }
 
-    /**
-     * @return the gridSpacing
-     */
     public double getGridSpacing() {
         return gridSpacing;
     }
 
-    /**
-     * @param gridSpacing the gridSpacing to set
-     */
     public final void setGridSpacing(double gridSpacing) {
-        if (gridSpacing == 0) {
-            this.gridSpacing = 10;
-        } else if (gridSpacing < 0) {
-            this.gridSpacing = -gridSpacing;
+        if (gridSpacing < 0) {
+            this.gridSpacing = Math.abs(gridSpacing);
         } else {
             this.gridSpacing = gridSpacing;
         }
     }
 
-    /*
-     * Abstract Methods
-     */
+    public double getCellSize() {
+        return cellSize;
+    }
+
+    public void setGameRule(Rule activeRule) {
+        this.activeRule = activeRule;
+    }
+    
+    
+
+    // Abstract Methods 
+
     public abstract void setCellState(double x, double y, boolean alive);
 
     public abstract boolean getCellState(int x, int y);
@@ -72,10 +71,12 @@ public abstract class Board extends Logic {
 
     public abstract Object getGameBoard();
 
-    public abstract int length() ;
+    public abstract int getArrayLength();
+
+    public abstract int getArrayLength(int i);
+
+    protected abstract void countNeigh();
     
-    public abstract int length(int i) ;
-    
-    public abstract void countNeighbors();
+    protected abstract void checkRules(Rule activeRule);
 
 }

@@ -1,16 +1,13 @@
 package gol.model.Board;
 
+import gol.model.Logic.Rule;
+
 /**
  * @author s305054, s305084, s305089
  */
 public class ArrayBoard extends Board {
 
-    private byte[][] gameBoard = {
-        {0, 0, 0, 0},
-        {0, 0, 64, 0},
-        {0, 0, 0, 0},
-        {64, 0, 0, 0}
-    };
+    private byte[][] gameBoard = new byte[100][100];
 
     public ArrayBoard(double cellSize, double gridSpacing) {
         super(cellSize, gridSpacing);
@@ -22,13 +19,13 @@ public class ArrayBoard extends Board {
     }
 
     @Override
-    public int length() {
-        return gameBoard.length;
+    public int getArrayLength() {
+        return gameBoard.length-1;
     }
 
     @Override
-    public int length(int i) {
-        return gameBoard[i].length;
+    public int getArrayLength(int i) {
+        return gameBoard[i].length-1;
     }
 
     @Override
@@ -45,7 +42,11 @@ public class ArrayBoard extends Board {
          */
         y = y / (cellSize + gridSpacing);
         x = x / (cellSize + gridSpacing);
-        gameBoard[(int) y][(int) x] = 64;
+        try {
+            gameBoard[(int) y][(int) x] = 64;
+        } catch (ArrayIndexOutOfBoundsException e) {
+            System.err.println("Click was outside canvas");
+        }
     }
 
     @Override
@@ -58,20 +59,20 @@ public class ArrayBoard extends Board {
     }
 
     /**
-     * Goes thorugh each living cell, and increments each neighbor
-     * neighbors-count.
+     * Goes thorugh each living cell, and increments each neighbour
+     * neighbours-count.
      */
     @Override
-    public void countNeighbors() {
+    protected void countNeigh() {
 
         //Goes through the board
-        for (int i = 0; i < gameBoard.length; i++) {
-            for (int j = 0; j < gameBoard[i].length; j++) {
+        for (int i = 1; i < getArrayLength(); i++) {
+            for (int j = 1; j < getArrayLength(i); j++) {
 
                 //If cell is alive
                 if (gameBoard[i][j] >= 64) {
 
-                    //Goes through surrounding neighbors
+                    //Goes through surrounding neighbours
                     for (int k = -1; k <= 1; k++) {
                         for (int l = -1; l <= 1; l++) {
 
@@ -85,11 +86,23 @@ public class ArrayBoard extends Board {
                             }
                         }
                     }
-
                 }
 
             }
         }
+    }
+
+    @Override
+    protected void checkRules(Rule activeRule) {
+        for (int i = 1; i < (gameBoard.length - 1); i++) {
+            for (int j = 1; j < (gameBoard[i].length - 1); j++) {
+                if (gameBoard[i][j] != 0) {
+                    gameBoard[i][j] = activeRule.setLife(gameBoard[i][j]);
+                }
+            }
+
+        }
+
     }
 
     @Override
@@ -108,4 +121,5 @@ public class ArrayBoard extends Board {
 
         return result;
     }
+
 }

@@ -3,15 +3,23 @@ package gol.controller;
 import gol.model.Board.ArrayBoard;
 import gol.model.Board.Board;
 import java.net.URL;
+
 import java.util.ResourceBundle;
+import javafx.animation.Animation;
+import javafx.animation.Animation.Status;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
+import javafx.util.Duration;
 
 /**
  * @author s305054, s305084, s305089
@@ -24,48 +32,59 @@ public class GameController implements Initializable {
     private Slider cellSizeSlider;
     @FXML
     private Slider gridSpacingSlider;
+    @FXML
+    private Button startPauseBtn;
 
-    private double animationSpeed;
+    private Board activeBoard;
     private Color cellColor;
     private Color backgroundColor;
-    private Board activeBoard;
     private GraphicsContext gc;
+    private double animationSpeed = 2;
+    private Timeline timeline;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         gc = canvas.getGraphicsContext2D();
         activeBoard = new ArrayBoard(cellSizeSlider.getValue(), gridSpacingSlider.getValue());
-        activeBoard.countNeighbors();
-        System.out.println(activeBoard);
-        draw();
+
         mouseInit();
+        initAnimation();
     }
 
     //MouseEvent
     public void mouseInit() {
-        
+
         //Registers clicks on scene
-
         canvas.addEventHandler(MouseEvent.MOUSE_PRESSED,
-            new EventHandler<MouseEvent>() {
+                new EventHandler<MouseEvent>() {
 
-            @Override
-            public void handle(MouseEvent e) {
-                activeBoard.setCellState(e.getX(), e.getY(), true);
-                draw();
-            }
-        });
+                    @Override
+                    public void handle(MouseEvent e) {
+                        activeBoard.setCellState(e.getX(), e.getY(), true);
+                        draw();
+                    }
+                });
         canvas.addEventHandler(MouseEvent.MOUSE_DRAGGED,
-            new EventHandler<MouseEvent>() {
+                new EventHandler<MouseEvent>() {
 
-            @Override
-            public void handle(MouseEvent e) {
-                activeBoard.setCellState(e.getX(), e.getY(), true);
-                draw();
-            }
-        });
+                    @Override
+                    public void handle(MouseEvent e) {
+                        activeBoard.setCellState(e.getX(), e.getY(), true);
+                        draw();
+                    }
+                });
     }
-    
+
+    private void initAnimation() {
+        Duration duration = Duration.millis(1000 / animationSpeed);
+        KeyFrame keyframe = new KeyFrame(duration, (ActionEvent e) -> {
+            activeBoard.nextGen();
+            draw();
+        });
+        timeline = new Timeline();
+        timeline.setCycleCount(Animation.INDEFINITE);
+        timeline.getKeyFrames().add(keyframe);
+    }
 
     @FXML
     public void handleZoom() {
@@ -82,8 +101,8 @@ public class GameController implements Initializable {
     @FXML
     public void draw() {
         gc.clearRect(0, 0, 1000, 1000);
-        for (int i = 0; i < activeBoard.length(); i++) {
-            for (int j = 0; j < activeBoard.length(i); j++) {
+        for (int i = 1; i < activeBoard.getArrayLength(); i++) {
+            for (int j = 1; j < activeBoard.getArrayLength(i); j++) {
                 if (activeBoard.getCellState(i, j)) {
                     gc.fillRect(j * activeBoard.getCellSize() + j * activeBoard.getGridSpacing(),
                             i * activeBoard.getCellSize() + i * activeBoard.getGridSpacing(),
@@ -94,17 +113,19 @@ public class GameController implements Initializable {
         }
     }
 
-    public void startAnimation() {
-        if(MainController.inputContains("G")) {
-            
+    @FXML
+    public void handleAnimation() {
+        if (timeline.getStatus() == Status.RUNNING) {
+            timeline.pause();
+            startPauseBtn.setText("Start animation");
+        } else {
+            timeline.play();
+            startPauseBtn.setText("Pause animation");
         }
     }
 
-    public void stopAnimation() {
-
-    }
-
     public void constructRule(byte[] cellsToLive, byte[] cellsToSpawn) {
+        //@TODO implement costume rules
 
     }
 
