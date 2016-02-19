@@ -57,8 +57,13 @@ public class GameController implements Initializable {
         gc = canvas.getGraphicsContext2D();
         activeBoard = new ArrayBoard(cellSizeSlider.getValue(), gridSpacingSlider.getValue());
         setAnimationSpeed(animationSpeedSlider.getValue());
+        cellCP.setValue(Color.BLACK);
+        backgroundCP.setValue(Color.web("#F4F4F4"));
+        handleColor();
+
         mouseInit();
         initAnimation();
+
     }
 
     //MouseEvent
@@ -81,16 +86,6 @@ public class GameController implements Initializable {
                         handleMouseClick(e);
                     }
                 });
-    }
-
-    private void handleMouseClick(MouseEvent e) {
-        double x = e.getX();
-        double y = e.getY();
-        // @TODO
-        // boolean alive = activeBoard.getCellStateFromMouseClick(x, y);
-        //System.out.println(alive);
-        activeBoard.setCellState(x, y, true);
-        draw();
     }
 
     private void initAnimation() {
@@ -136,6 +131,23 @@ public class GameController implements Initializable {
         draw();
     }
 
+    @FXML
+    public void handleColor() {
+        cellColor = cellCP.getValue();
+        backgroundColor = backgroundCP.getValue();
+        draw();
+    }
+
+    private void handleMouseClick(MouseEvent e) {
+        double x = e.getX();
+        double y = e.getY();
+        // @TODO
+        // boolean alive = activeBoard.getCellStateFromMouseClick(x, y);
+        //System.out.println(alive);
+        activeBoard.setCellState(x, y, true);
+        draw();
+    }
+
     public void draw() {
         gc.setFill(backgroundColor);
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
@@ -151,13 +163,6 @@ public class GameController implements Initializable {
                 }
             }
         }
-    }
-
-    @FXML
-    public void handleColor() {
-        cellColor = cellCP.getValue();
-        backgroundColor = backgroundCP.getValue();
-        draw();
     }
 
     public void constructRule(byte[] cellsToLive, byte[] cellsToSpawn) {
