@@ -16,6 +16,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
@@ -33,20 +34,25 @@ public class GameController implements Initializable {
     @FXML
     private Slider gridSpacingSlider;
     @FXML
+    private Slider animationSpeedSlider;
+    @FXML
+    private Label animationSpeedLabel;
+    @FXML
     private Button startPauseBtn;
 
     private Board activeBoard;
     private Color cellColor;
     private Color backgroundColor;
     private GraphicsContext gc;
-    private double animationSpeed = 2;
-    private Timeline timeline;
+    private double animationSpeed;
+    private final Timeline timeline = new Timeline();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         gc = canvas.getGraphicsContext2D();
         activeBoard = new ArrayBoard(cellSizeSlider.getValue(), gridSpacingSlider.getValue());
-
+        setAnimationSpeed(animationSpeedSlider.getValue());
+        System.out.println(animationSpeedSlider.getValue());
         mouseInit();
         initAnimation();
     }
@@ -77,13 +83,33 @@ public class GameController implements Initializable {
 
     private void initAnimation() {
         Duration duration = Duration.millis(1000 / animationSpeed);
-        KeyFrame keyframe = new KeyFrame(duration, (ActionEvent e) -> {
+        KeyFrame keyframe = new KeyFrame(duration, e -> {
             activeBoard.nextGen();
             draw();
+            
         });
-        timeline = new Timeline();
         timeline.setCycleCount(Animation.INDEFINITE);
         timeline.getKeyFrames().add(keyframe);
+
+    }
+
+    @FXML
+    public void handleAnimation() {
+
+        if (timeline.getStatus() == Status.RUNNING) {
+            timeline.pause();
+            startPauseBtn.setText("Start game");
+        } else {
+            timeline.play();
+            startPauseBtn.setText("Pause game");
+        }
+    }
+
+    @FXML
+    public void handleAnimationSpeedSlider() {
+        setAnimationSpeed(animationSpeedSlider.getValue());
+        timeline.setRate(animationSpeed);
+        animationSpeedLabel.setText(String.format("%.2f %s", animationSpeed, " "));
     }
 
     @FXML
@@ -110,17 +136,6 @@ public class GameController implements Initializable {
                             activeBoard.getCellSize());
                 }
             }
-        }
-    }
-
-    @FXML
-    public void handleAnimation() {
-        if (timeline.getStatus() == Status.RUNNING) {
-            timeline.pause();
-            startPauseBtn.setText("Start animation");
-        } else {
-            timeline.play();
-            startPauseBtn.setText("Pause animation");
         }
     }
 

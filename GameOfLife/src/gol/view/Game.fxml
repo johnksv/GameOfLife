@@ -30,13 +30,13 @@
                                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                             <children>
                                                 <Label layoutX="8.0" layoutY="14.0" text="Speed/Itterations per second:" />
-                                                <Label layoutX="168.0" layoutY="32.0" text="25 /s" />
-                                                <Slider fx:id="animationSpeedSlider"  layoutX="14.0" layoutY="33.0" value="25.0" />
+                                                <Label fx:id="animationSpeedLabel" layoutX="168.0" layoutY="32.0" text="25 /s" />
+                                                <Slider fx:id="animationSpeedSlider" onValueChange="#handleAnimationSpeedSlider" min="1"  layoutX="14.0" layoutY="33.0" value="2.0" />
                                                 <Label layoutX="11.0" layoutY="54.0" text="Zoom:" />
                                                 <Slider fx:id="cellSizeSlider" layoutX="18.0" layoutY="71.0" min="1" onValueChange="#handleZoom" value="20" />
                                                 <Label layoutX="12.0" layoutY="98.0" text="Gridspacing" />
-                                                <Slider fx:id="gridSpacingSlider" layoutX="17.0" layoutY="118.0" max="5" min="0" onValueChange="#handleGridSpacingSlider" value="3" />
-                                                <Button fx:id="startPauseBtn" layoutX="6.0" layoutY="145.0" onAction="#handleAnimation"  mnemonicParsing="false" text="Start simulering/spill" />
+                                                <Slider fx:id="gridSpacingSlider" onValueChange="#handleGridSpacingSlider" layoutX="17.0" layoutY="118.0" max="5" min="0"  value="3" />
+                                                <Button fx:id="startPauseBtn" onAction="#handleAnimation"  layoutX="6.0" layoutY="145.0"  mnemonicParsing="false" text="Start game" />
                                                 <Button layoutX="146.0" layoutY="145.0" mnemonicParsing="false" text="Rydd brett" />
                                             </children>
                                         </AnchorPane>
