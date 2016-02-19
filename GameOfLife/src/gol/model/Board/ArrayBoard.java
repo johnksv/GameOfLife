@@ -1,16 +1,13 @@
 package gol.model.Board;
 
+import gol.model.Logic.Rule;
+
 /**
  * @author s305054, s305084, s305089
  */
 public class ArrayBoard extends Board {
 
-    private byte[][] gameBoard = {
-        {0, 0, 0, 0},
-        {0, 0, 64, 0},
-        {0, 0, 0, 0},
-        {64, 0, 0, 0}
-    };
+    private byte[][] gameBoard = new byte[100][100];
 
     public ArrayBoard(double cellSize, double gridSpacing) {
         super(cellSize, gridSpacing);
@@ -23,20 +20,19 @@ public class ArrayBoard extends Board {
 
     @Override
     public int getArrayLength() {
-        return gameBoard.length;
+        return gameBoard.length-1;
     }
 
     @Override
     public int getArrayLength(int i) {
-        return gameBoard[i].length;
+        return gameBoard[i].length-1;
     }
 
     @Override
     public byte[][] getGameBoard() {
         return gameBoard;
     }
-    
-    
+
     @Override
     public void setCellState(double x, double y, boolean alive) {
 
@@ -46,9 +42,9 @@ public class ArrayBoard extends Board {
          */
         y = y / (cellSize + gridSpacing);
         x = x / (cellSize + gridSpacing);
-        try{
-        gameBoard[(int) y][(int) x] = 64;
-        }catch (ArrayIndexOutOfBoundsException e){
+        try {
+            gameBoard[(int) y][(int) x] = 64;
+        } catch (ArrayIndexOutOfBoundsException e) {
             System.err.println("Click was outside canvas");
         }
     }
@@ -70,8 +66,8 @@ public class ArrayBoard extends Board {
     protected void countNeigh() {
 
         //Goes through the board
-        for (int i = 0; i < gameBoard.length; i++) {
-            for (int j = 0; j < gameBoard[i].length; j++) {
+        for (int i = 1; i < getArrayLength(); i++) {
+            for (int j = 1; j < getArrayLength(i); j++) {
 
                 //If cell is alive
                 if (gameBoard[i][j] >= 64) {
@@ -97,6 +93,19 @@ public class ArrayBoard extends Board {
     }
 
     @Override
+    protected void checkRules(Rule activeRule) {
+        for (int i = 1; i < (gameBoard.length - 1); i++) {
+            for (int j = 1; j < (gameBoard[i].length - 1); j++) {
+                if (gameBoard[i][j] != 0) {
+                    gameBoard[i][j] = activeRule.setLife(gameBoard[i][j]);
+                }
+            }
+
+        }
+
+    }
+
+    @Override
     public String toString() {
         String result = "";
         for (byte row[] : gameBoard) {
@@ -112,4 +121,5 @@ public class ArrayBoard extends Board {
 
         return result;
     }
+
 }

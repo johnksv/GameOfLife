@@ -1,5 +1,6 @@
 package gol.model.Board;
 
+import gol.model.Logic.ConwaysRule;
 import gol.model.Logic.Rule;
 
 /**
@@ -20,11 +21,12 @@ public abstract class Board {
     public Board(double cellSize, double gridSpacing) {
         setCellSize(cellSize);
         setGridSpacing(gridSpacing);
+        activeRule = new ConwaysRule();
     }
 
     public void nextGen() {
         countNeigh();
-        checkRules();
+        checkRules(activeRule);
     }
 
     public final void setCellSize(double cellSize) {
@@ -56,9 +58,10 @@ public abstract class Board {
     public void setGameRule(Rule activeRule) {
         this.activeRule = activeRule;
     }
-    /*
-     * Abstract Methods
-     */
+    
+    
+
+    // Abstract Methods 
 
     public abstract void setCellState(double x, double y, boolean alive);
 
@@ -73,5 +76,7 @@ public abstract class Board {
     public abstract int getArrayLength(int i);
 
     protected abstract void countNeigh();
+    
+    protected abstract void checkRules(Rule activeRule);
 
 }

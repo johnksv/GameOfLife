@@ -2,6 +2,7 @@ package gol.controller;
 
 import gol.model.Board.ArrayBoard;
 import gol.model.Board.Board;
+import gol.model.Logic.ConwaysRule;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.EventHandler;
@@ -35,9 +36,6 @@ public class GameController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         gc = canvas.getGraphicsContext2D();
         activeBoard = new ArrayBoard(cellSizeSlider.getValue(), gridSpacingSlider.getValue());
-        activeBoard.countNeigh();
-        System.out.println(activeBoard);
-        draw();
         mouseInit();
     }
 
@@ -82,8 +80,8 @@ public class GameController implements Initializable {
     @FXML
     public void draw() {
         gc.clearRect(0, 0, 1000, 1000);
-        for (int i = 0; i < activeBoard.getArrayLength(); i++) {
-            for (int j = 0; j < activeBoard.getArrayLength(i); j++) {
+        for (int i = 1; i < activeBoard.getArrayLength(); i++) {
+            for (int j = 1; j < activeBoard.getArrayLength(i); j++) {
                 if (activeBoard.getCellState(i, j)) {
                     gc.fillRect(j * activeBoard.getCellSize() + j * activeBoard.getGridSpacing(),
                             i * activeBoard.getCellSize() + i * activeBoard.getGridSpacing(),
@@ -103,9 +101,10 @@ public class GameController implements Initializable {
     public void stopAnimation() {
 
     }
-
+    
     public void constructRule(byte[] cellsToLive, byte[] cellsToSpawn) {
-
+        //@TODO implement costume rules
+        
     }
 
     /**
