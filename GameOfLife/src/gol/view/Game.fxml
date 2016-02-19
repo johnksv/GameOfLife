@@ -36,7 +36,7 @@
                                                 <Label layoutX="168.0" layoutY="32.0" text="25 /s" />
                                                 <Button layoutX="6.0" layoutY="145.0" mnemonicParsing="false" text="Start simulering/spill" />
                                                 <Button layoutX="146.0" layoutY="145.0" mnemonicParsing="false" text="Rydd brett" />
-                                                <Slider fx:id="gridSpacingSlider" layoutX="17.0" layoutY="118.0" max="5" min="0.001" onValueChange="#handleGridSpacingSlider" value="3" />
+                                                <Slider fx:id="gridSpacingSlider" layoutX="17.0" layoutY="118.0" max="5" min="0" onValueChange="#handleGridSpacingSlider" value="3" />
                                                 <Label layoutX="12.0" layoutY="98.0" text="Gridspacing" />
                                             </children>
                                         </AnchorPane>

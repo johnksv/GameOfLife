@@ -22,12 +22,12 @@ public class ArrayBoard extends Board {
     }
 
     @Override
-    public int length() {
+    public int getArrayLength() {
         return gameBoard.length;
     }
 
     @Override
-    public int length(int i) {
+    public int getArrayLength(int i) {
         return gameBoard[i].length;
     }
 
@@ -35,7 +35,8 @@ public class ArrayBoard extends Board {
     public byte[][] getGameBoard() {
         return gameBoard;
     }
-
+    
+    
     @Override
     public void setCellState(double x, double y, boolean alive) {
 
@@ -45,7 +46,11 @@ public class ArrayBoard extends Board {
          */
         y = y / (cellSize + gridSpacing);
         x = x / (cellSize + gridSpacing);
+        try{
         gameBoard[(int) y][(int) x] = 64;
+        }catch (ArrayIndexOutOfBoundsException e){
+            System.err.println("Click was outside canvas");
+        }
     }
 
     @Override
@@ -58,11 +63,11 @@ public class ArrayBoard extends Board {
     }
 
     /**
-     * Goes thorugh each living cell, and increments each neighbor
-     * neighbors-count.
+     * Goes thorugh each living cell, and increments each neighbour
+     * neighbours-count.
      */
     @Override
-    public void countNeighbors() {
+    protected void countNeigh() {
 
         //Goes through the board
         for (int i = 0; i < gameBoard.length; i++) {
@@ -71,7 +76,7 @@ public class ArrayBoard extends Board {
                 //If cell is alive
                 if (gameBoard[i][j] >= 64) {
 
-                    //Goes through surrounding neighbors
+                    //Goes through surrounding neighbours
                     for (int k = -1; k <= 1; k++) {
                         for (int l = -1; l <= 1; l++) {
 
@@ -85,7 +90,6 @@ public class ArrayBoard extends Board {
                             }
                         }
                     }
-
                 }
 
             }

@@ -35,7 +35,7 @@ public class GameController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         gc = canvas.getGraphicsContext2D();
         activeBoard = new ArrayBoard(cellSizeSlider.getValue(), gridSpacingSlider.getValue());
-        activeBoard.countNeighbors();
+        activeBoard.countNeigh();
         System.out.println(activeBoard);
         draw();
         mouseInit();
@@ -82,8 +82,8 @@ public class GameController implements Initializable {
     @FXML
     public void draw() {
         gc.clearRect(0, 0, 1000, 1000);
-        for (int i = 0; i < activeBoard.length(); i++) {
-            for (int j = 0; j < activeBoard.length(i); j++) {
+        for (int i = 0; i < activeBoard.getArrayLength(); i++) {
+            for (int j = 0; j < activeBoard.getArrayLength(i); j++) {
                 if (activeBoard.getCellState(i, j)) {
                     gc.fillRect(j * activeBoard.getCellSize() + j * activeBoard.getGridSpacing(),
                             i * activeBoard.getCellSize() + i * activeBoard.getGridSpacing(),
