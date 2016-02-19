@@ -16,6 +16,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
+import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.input.MouseEvent;
@@ -39,6 +40,10 @@ public class GameController implements Initializable {
     private Label animationSpeedLabel;
     @FXML
     private Button startPauseBtn;
+    @FXML
+    private ColorPicker cellCP;
+    @FXML
+    private ColorPicker backgroundCP;
 
     private Board activeBoard;
     private Color cellColor;
@@ -132,9 +137,11 @@ public class GameController implements Initializable {
         draw();
     }
 
-    @FXML
     public void draw() {
-        gc.clearRect(0, 0, 1000, 1000);
+        gc.setFill(backgroundColor);
+        gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+        gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+        gc.setFill(cellColor);
         for (int i = 1; i < activeBoard.getArrayLength(); i++) {
             for (int j = 1; j < activeBoard.getArrayLength(i); j++) {
                 if (activeBoard.getCellState(i, j)) {
@@ -145,6 +152,13 @@ public class GameController implements Initializable {
                 }
             }
         }
+    }
+
+    @FXML
+    public void handleColor() {
+        cellColor = cellCP.getValue();
+        backgroundColor = backgroundCP.getValue();
+        draw();
     }
 
     public void constructRule(byte[] cellsToLive, byte[] cellsToSpawn) {
