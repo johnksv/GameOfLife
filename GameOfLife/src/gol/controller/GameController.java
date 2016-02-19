@@ -57,7 +57,6 @@ public class GameController implements Initializable {
         gc = canvas.getGraphicsContext2D();
         activeBoard = new ArrayBoard(cellSizeSlider.getValue(), gridSpacingSlider.getValue());
         setAnimationSpeed(animationSpeedSlider.getValue());
-        System.out.println(animationSpeedSlider.getValue());
         mouseInit();
         initAnimation();
     }
