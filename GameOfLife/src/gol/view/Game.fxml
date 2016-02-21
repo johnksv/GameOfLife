@@ -21,7 +21,7 @@
     <right>
         <TabPane prefHeight="400.0" prefWidth="250.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
             <tabs>
-                <Tab text="Generelt">
+                <Tab text="General">
                     <content>
                         <VBox>
                             <children>
@@ -31,22 +31,33 @@
                                             <children>
                                                 <Label layoutX="8.0" layoutY="14.0" text="Speed/Itterations per second:" />
                                                 <Label fx:id="animationSpeedLabel" layoutX="168.0" layoutY="32.0" text="1,00" />
-                                                <Slider fx:id="animationSpeedSlider" onValueChange="#handleAnimationSpeedSlider" min="1"  layoutX="14.0" layoutY="33.0" value="2.0" />
+                                                <Slider fx:id="animationSpeedSlider" layoutX="14.0" layoutY="33.0" min="1" onValueChange="#handleAnimationSpeedSlider" value="2.0" />
                                                 <Label layoutX="11.0" layoutY="54.0" text="Zoom:" />
                                                 <Slider fx:id="cellSizeSlider" layoutX="18.0" layoutY="71.0" min="1" onValueChange="#handleZoom" value="20" />
                                                 <Label layoutX="12.0" layoutY="98.0" text="Gridspacing" />
-                                                <Slider fx:id="gridSpacingSlider" onValueChange="#handleGridSpacingSlider" layoutX="17.0" layoutY="118.0" max="5" min="0"  value="3" />
-                                                <Button fx:id="startPauseBtn" onAction="#handleAnimation"  layoutX="6.0" layoutY="145.0"  mnemonicParsing="false" text="Start game" />
-                                                <Button layoutX="146.0" layoutY="145.0" mnemonicParsing="false" text="Rydd brett" />
+                                                <Slider fx:id="gridSpacingSlider" layoutX="17.0" layoutY="118.0" max="5" min="0" onValueChange="#handleGridSpacingSlider" value="3" />
+                                                <Button fx:id="startPauseBtn" layoutX="6.0" layoutY="145.0" mnemonicParsing="false" onAction="#handleAnimation" text="Start game" />
+                                                <Button layoutX="146.0" layoutY="145.0" mnemonicParsing="false" text="Clean board" />
                                             </children>
                                         </AnchorPane>
                                     </content>
                                 </TitledPane>
+                        <TitledPane animated="false" collapsible="false">
+                           <content>
+                              <AnchorPane prefWidth="200.0">
+                                 <children>
+                                    <RadioButton layoutX="14.0" layoutY="14.0" mnemonicParsing="false" text="Add cells" />
+                                    <RadioButton layoutX="14.0" layoutY="45.0" mnemonicParsing="false" text="Remove cells" />
+                                    <RadioButton layoutX="14.0" layoutY="74.0" mnemonicParsing="false" text="Move grid" />
+                                 </children>
+                              </AnchorPane>
+                           </content>
+                        </TitledPane>
                             </children>
                         </VBox>
                     </content>
                 </Tab>
-                <Tab text="Mønster">
+                <Tab text="Pattern">
                     <content>
                         <VBox prefHeight="200.0" prefWidth="100.0">
                             <children>
@@ -84,7 +95,7 @@
                         </VBox>
                     </content>
                 </Tab>
-                <Tab text="Avansert">
+                <Tab text="Advanced">
                     <content>
                         <VBox>
                             <children>
@@ -95,9 +106,9 @@
                                                 <RadioButton layoutX="14.0" layoutY="37.0" mnemonicParsing="false" selected="true" text="2D" />
                                                 <RadioButton layoutX="57.0" layoutY="37.0" mnemonicParsing="false" text="3D" />
                                                 <Label layoutX="14.0" layoutY="14.0" text="Visning av brett:" />
-                                                <ColorPicker fx:id="cellCP" onValueChange="#handleColor" layoutX="12.0" layoutY="111.0" prefWidth="176.0" />
+                                                <ColorPicker fx:id="cellCP" layoutX="12.0" layoutY="111.0" onValueChange="#handleColor" prefWidth="176.0" />
                                                 <Label layoutX="12.0" layoutY="87.0" text="Farge til punkter:" />
-                                                <ColorPicker fx:id="backgroundCP" onValueChange="#handleColor"  layoutX="14.0" layoutY="182.0" prefWidth="176.0" />
+                                                <ColorPicker fx:id="backgroundCP" layoutX="14.0" layoutY="182.0" onValueChange="#handleColor" prefWidth="176.0" />
                                                 <Label layoutX="14.0" layoutY="159.0" text="Farge til bakgrunn:" />
                                                 <Separator layoutX="-4.0" layoutY="68.0" prefHeight="3.0" prefWidth="227.0" />
                                                 <Separator layoutX="-4.0" layoutY="146.0" prefHeight="3.0" prefWidth="227.0" />
