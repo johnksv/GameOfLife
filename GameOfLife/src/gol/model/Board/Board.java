@@ -13,11 +13,6 @@ public abstract class Board {
     protected double gridSpacing;
     private Rule activeRule;
 
-    /**
-     *
-     * @param cellSize
-     * @param gridSpacing
-     */
     public Board(double cellSize, double gridSpacing) {
         setCellSize(cellSize);
         setGridSpacing(gridSpacing);

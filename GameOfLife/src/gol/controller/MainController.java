@@ -56,25 +56,14 @@ public class MainController implements Initializable {
     }
 
     public void setKeyEvents(Scene scene) {
-        scene.setOnKeyPressed(
-                new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent e) {
-                if (!input.contains(e.getText())) {
-                    input.add(e.getText());
-                }
-
+        scene.setOnKeyPressed((KeyEvent e) -> {
+            if (!input.contains(e.getText())) {
+                input.add(e.getText());
             }
-
         });
 
-        scene.setOnKeyReleased(
-                new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent e) {
-                input.remove(e.getText());
-            }
-
+        scene.setOnKeyReleased((KeyEvent e) -> {
+            input.remove(e.getText());
         });
     }
 

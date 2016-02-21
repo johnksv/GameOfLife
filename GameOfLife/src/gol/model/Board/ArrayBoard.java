@@ -46,6 +46,7 @@ public class ArrayBoard extends Board {
         if (alive) {
             value = 64;
         }
+
         try {
             gameBoard[(int) y][(int) x] = value;
         } catch (ArrayIndexOutOfBoundsException e) {
@@ -55,10 +56,7 @@ public class ArrayBoard extends Board {
 
     @Override
     public boolean getCellState(int x, int y) {
-        if (gameBoard[x][y] >= 64) {
-            return true;
-        }
-        return false;
+        return gameBoard[x][y] >= 64;
     }
 
     @Override
@@ -66,10 +64,7 @@ public class ArrayBoard extends Board {
         y = y / (cellSize + gridSpacing);
         x = x / (cellSize + gridSpacing);
 
-        if (gameBoard[(int) y][(int) x] >= 64) {
-            return true;
-        }
-        return false;
+        return gameBoard[(int) y][(int) x] >= 64;
     }
 
     /**
@@ -92,11 +87,7 @@ public class ArrayBoard extends Board {
 
                             //To not count itself
                             if (!(k == 0 && l == 0)) {
-                                try {
-                                    gameBoard[i + k][j + l] += 1;
-                                } catch (ArrayIndexOutOfBoundsException exception) {
-                                    System.out.println("Position is out of bounds");
-                                }
+                                gameBoard[i + k][j + l] += 1;
                             }
                         }
                     }
@@ -114,9 +105,7 @@ public class ArrayBoard extends Board {
                     gameBoard[i][j] = activeRule.setLife(gameBoard[i][j]);
                 }
             }
-
         }
-
     }
 
     @Override

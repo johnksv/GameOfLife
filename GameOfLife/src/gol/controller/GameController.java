@@ -49,18 +49,16 @@ public class GameController implements Initializable {
     private Color cellColor;
     private Color backgroundColor;
     private GraphicsContext gc;
-    private double animationSpeed;
     private final Timeline timeline = new Timeline();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         gc = canvas.getGraphicsContext2D();
         activeBoard = new ArrayBoard(cellSizeSlider.getValue(), gridSpacingSlider.getValue());
-        setAnimationSpeed(animationSpeedSlider.getValue());
         cellCP.setValue(Color.BLACK);
         backgroundCP.setValue(Color.web("#F4F4F4"));
         handleColor();
-
+        handleAnimationSpeedSlider();
         mouseInit();
         initAnimation();
 
@@ -71,29 +69,20 @@ public class GameController implements Initializable {
 
         //Registers clicks on scene
         canvas.addEventHandler(MouseEvent.MOUSE_PRESSED,
-                new EventHandler<MouseEvent>() {
-
-                    @Override
-                    public void handle(MouseEvent e) {
-                        handleMouseClick(e);
-                    }
+                (MouseEvent e) -> {
+                    handleMouseClick(e);
                 });
         canvas.addEventHandler(MouseEvent.MOUSE_DRAGGED,
-                new EventHandler<MouseEvent>() {
-
-                    @Override
-                    public void handle(MouseEvent e) {
-                        handleMouseClick(e);
-                    }
+                (MouseEvent e) -> {
+                    handleMouseClick(e);
                 });
     }
 
     private void initAnimation() {
-        Duration duration = Duration.millis(1000 / animationSpeed);
-        KeyFrame keyframe = new KeyFrame(duration, e -> {
+        Duration duration = Duration.millis(1000);
+        KeyFrame keyframe = new KeyFrame(duration, (ActionEvent e) -> {
             activeBoard.nextGen();
             draw();
-
         });
         timeline.setCycleCount(Animation.INDEFINITE);
         timeline.getKeyFrames().add(keyframe);
@@ -114,7 +103,7 @@ public class GameController implements Initializable {
 
     @FXML
     public void handleAnimationSpeedSlider() {
-        setAnimationSpeed(animationSpeedSlider.getValue());
+        double animationSpeed = animationSpeedSlider.getValue();
         timeline.setRate(animationSpeed);
         animationSpeedLabel.setText(String.format("%.2f %s", animationSpeed, " "));
     }
@@ -167,47 +156,20 @@ public class GameController implements Initializable {
 
     public void constructRule(byte[] cellsToLive, byte[] cellsToSpawn) {
         //@TODO implement costume rules
-
     }
 
-    /**
-     * @return the animationSpeed
-     */
-    public double getAnimationSpeed() {
-        return animationSpeed;
-    }
-
-    /**
-     * @param animationSpeed the animationSpeed to set
-     */
-    public void setAnimationSpeed(double animationSpeed) {
-        this.animationSpeed = animationSpeed;
-    }
-
-    /**
-     * @param cellColor the cellColor to set
-     */
     public void setCellColor(Color cellColor) {
         this.cellColor = cellColor;
     }
 
-    /**
-     * @param backgroundColor the backgroundColor to set
-     */
     public void setBackgroundColor(Color backgroundColor) {
         this.backgroundColor = backgroundColor;
     }
 
-    /**
-     * @return the activeBoard
-     */
     public Board getActiveBoard() {
         return activeBoard;
     }
 
-    /**
-     * @param activeBoard the activeBoard to set
-     */
     public void setActiveBoard(Board activeBoard) {
         this.activeBoard = activeBoard;
     }
