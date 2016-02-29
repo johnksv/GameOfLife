@@ -29,10 +29,6 @@ public class MainController implements Initializable {
     private static Stage primaryStage;
     private static List<String> input = new ArrayList<String>();
 
-    /**
-     *
-     * @param stage
-     */
     public static void loadStage(Stage stage) {
         primaryStage = stage;
     }
@@ -41,10 +37,6 @@ public class MainController implements Initializable {
         return input.contains(keyInput);
     }
 
-    /**
-     *
-     * @throws IOException
-     */
     @FXML
     public void startGame() throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("/gol/view/Game.fxml"));
@@ -67,9 +59,6 @@ public class MainController implements Initializable {
         });
     }
 
-    /**
-     * Initializes the controller class.
-     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         //TODO
