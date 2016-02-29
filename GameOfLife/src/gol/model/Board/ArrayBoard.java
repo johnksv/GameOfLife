@@ -59,14 +59,6 @@ public class ArrayBoard extends Board {
         return gameBoard[x][y] >= 64;
     }
 
-    @Override
-    public boolean getCellStateFromMouseClick(double x, double y) {
-        y = y / (cellSize + gridSpacing);
-        x = x / (cellSize + gridSpacing);
-
-        return gameBoard[(int) y][(int) x] >= 64;
-    }
-
     /**
      * Goes thorugh each living cell, and increments each neighbour
      * neighbours-count.

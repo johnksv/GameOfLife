@@ -61,8 +61,6 @@ public abstract class Board {
     public abstract void setCellState(double x, double y, boolean alive);
 
     public abstract boolean getCellState(int x, int y);
-    
-    public abstract boolean getCellStateFromMouseClick (double x, double y);
 
     public abstract void clearBoard();
 

@@ -130,9 +130,6 @@ public class GameController implements Initializable {
     private void handleMouseClick(MouseEvent e) {
         double x = e.getX();
         double y = e.getY();
-        // @TODO
-        // boolean alive = activeBoard.getCellStateFromMouseClick(x, y);
-        //System.out.println(alive);
         activeBoard.setCellState(x, y, true);
         draw();
     }
