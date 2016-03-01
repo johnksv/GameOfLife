@@ -15,7 +15,11 @@ public class ArrayBoard extends Board {
 
     @Override
     public void clearBoard() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+         for (int i = 1; i < getArrayLength(); i++) {
+            for (int j = 1; j < getArrayLength(i); j++) {
+                gameBoard[i][j]=0;
+            }
+         }
     }
 
     @Override
@@ -51,6 +55,13 @@ public class ArrayBoard extends Board {
             gameBoard[(int) y][(int) x] = value;
         } catch (ArrayIndexOutOfBoundsException e) {
             System.err.println("Click was outside canvas");
+        }
+    }
+
+    @Override
+    protected void setGameBoard(Object gameBoard) {
+        if (gameBoard instanceof byte[][]) {
+            this.gameBoard = (byte[][]) gameBoard;
         }
     }
 
@@ -111,7 +122,7 @@ public class ArrayBoard extends Board {
                     result += 0;
                 }
             }
-            result += "\n";
+            //result += "\n";
         }
 
         return result;

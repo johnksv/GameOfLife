@@ -71,5 +71,7 @@ public abstract class Board {
     protected abstract void countNeigh();
     
     protected abstract void checkRules(Rule activeRule);
+    
+    protected abstract void setGameBoard(Object gameBoard);
 
 }

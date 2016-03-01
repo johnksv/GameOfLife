@@ -126,7 +126,12 @@ public class GameController implements Initializable {
         backgroundColor = backgroundCP.getValue();
         draw();
     }
-
+    @FXML
+    public void handleClearBtn(){
+        activeBoard.clearBoard();
+        draw();
+    }
+    
     private void handleMouseClick(MouseEvent e) {
         double x = e.getX();
         double y = e.getY();
