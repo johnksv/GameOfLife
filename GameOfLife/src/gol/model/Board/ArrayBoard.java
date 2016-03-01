@@ -7,11 +7,22 @@ import gol.model.Logic.Rule;
  */
 public class ArrayBoard extends Board {
 
-    private final int WIDTH = 4, HEIGHT = 4;
-    private byte[][] gameBoard = new byte[WIDTH][HEIGHT];
+    private final int WIDTH, HEIGHT;
+    private byte[][] gameBoard;
 
-    public ArrayBoard(double cellSize, double gridSpacing) {
-        super(cellSize, gridSpacing);
+    public ArrayBoard() {
+        super();
+        WIDTH = 100;
+        HEIGHT = 100;
+        gameBoard = new byte[WIDTH][HEIGHT];
+    }
+
+    public ArrayBoard(int width, int height) {
+        super();
+        this.WIDTH = width;
+        this.HEIGHT = height;
+        gameBoard = new byte[WIDTH][HEIGHT];
+
     }
 
     @Override

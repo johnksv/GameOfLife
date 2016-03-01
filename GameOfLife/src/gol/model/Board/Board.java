@@ -13,7 +13,7 @@ public abstract class Board {
     protected double gridSpacing;
     private Rule activeRule;
 
-    public Board(double cellSize, double gridSpacing) {
+    public Board() {
         setCellSize(cellSize);
         setGridSpacing(gridSpacing);
         activeRule = new ConwaysRule();

@@ -54,7 +54,11 @@ public class GameController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         gc = canvas.getGraphicsContext2D();
-        activeBoard = new ArrayBoard(cellSizeSlider.getValue(), gridSpacingSlider.getValue());
+        
+        activeBoard = new ArrayBoard();
+        activeBoard.setCellSize(cellSizeSlider.getValue());
+        activeBoard.setGridSpacing(gridSpacingSlider.getValue());
+        
         cellCP.setValue(Color.BLACK);
         backgroundCP.setValue(Color.web("#F4F4F4"));
         handleColor();
