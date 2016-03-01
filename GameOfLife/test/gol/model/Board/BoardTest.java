@@ -246,42 +246,4 @@ public class BoardTest {
         fail("The test case is a prototype.");
     }
 
-    public class BoardImpl extends Board {
-
-        public BoardImpl() {
-            super(0.0, 0.0);
-        }
-
-        public void setCellState(double x, double y, boolean alive) {
-        }
-
-        public boolean getCellState(int x, int y) {
-            return false;
-        }
-
-        public void clearBoard() {
-        }
-
-        public Object getGameBoard() {
-            return null;
-        }
-
-        public int getArrayLength() {
-            return 0;
-        }
-
-        public int getArrayLength(int i) {
-            return 0;
-        }
-
-        public void countNeigh() {
-        }
-
-        public void checkRules(Rule activeRule) {
-        }
-
-        public void setGameBoard(Object gameBoard) {
-        }
-    }
-
 }

@@ -129,6 +129,8 @@ public class GameController implements Initializable {
     @FXML
     public void handleClearBtn(){
         activeBoard.clearBoard();
+        timeline.pause();
+        startPauseBtn.setText("Start game");
         draw();
     }
     

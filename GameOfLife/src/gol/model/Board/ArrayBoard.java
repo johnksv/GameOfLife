@@ -54,7 +54,7 @@ public class ArrayBoard extends Board {
         try {
             gameBoard[(int) y][(int) x] = value;
         } catch (ArrayIndexOutOfBoundsException e) {
-            System.err.println("Click was outside canvas");
+            System.err.println("Click was outside array");
         }
     }
 
