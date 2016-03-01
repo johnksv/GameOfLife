@@ -7,7 +7,8 @@ import gol.model.Logic.Rule;
  */
 public class ArrayBoard extends Board {
 
-    private byte[][] gameBoard = new byte[100][100];
+    private final int WIDTH = 4, HEIGHT = 4;
+    private byte[][] gameBoard = new byte[WIDTH][HEIGHT];
 
     public ArrayBoard(double cellSize, double gridSpacing) {
         super(cellSize, gridSpacing);
@@ -15,11 +16,11 @@ public class ArrayBoard extends Board {
 
     @Override
     public void clearBoard() {
-         for (int i = 1; i < getArrayLength(); i++) {
+        for (int i = 1; i < getArrayLength(); i++) {
             for (int j = 1; j < getArrayLength(i); j++) {
-                gameBoard[i][j]=0;
+                gameBoard[i][j] = 0;
             }
-         }
+        }
     }
 
     @Override
