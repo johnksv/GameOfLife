@@ -2,9 +2,15 @@ package gol.controller;
 
 import gol.model.Board.ArrayBoard;
 import gol.model.Board.Board;
+import gol.model.FileIO.PatternFormatException;
+import gol.model.FileIO.ReadFile;
+import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.animation.Animation;
 import javafx.animation.Animation.Status;
 import javafx.animation.KeyFrame;
@@ -15,12 +21,15 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
+import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.util.Duration;
 
 /**
@@ -54,11 +63,11 @@ public class GameController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         gc = canvas.getGraphicsContext2D();
-        
+
         activeBoard = new ArrayBoard();
         activeBoard.setCellSize(cellSizeSlider.getValue());
         activeBoard.setGridSpacing(gridSpacingSlider.getValue());
-        
+
         cellCP.setValue(Color.BLACK);
         backgroundCP.setValue(Color.web("#F4F4F4"));
         handleColor();
@@ -130,14 +139,34 @@ public class GameController implements Initializable {
         backgroundColor = backgroundCP.getValue();
         draw();
     }
+
     @FXML
-    public void handleClearBtn(){
+    public void handleClearBtn() {
         activeBoard.clearBoard();
         timeline.pause();
         startPauseBtn.setText("Start game");
         draw();
     }
-    
+
+    @FXML
+    public void handleImportFileBtn() {
+        try {
+            FileChooser fileChooser = new FileChooser();
+
+            fileChooser.getExtensionFilters().addAll(
+                    new ExtensionFilter("Game of Life Files", "*.rle", "*.lif", "*.cells"),
+                    new ExtensionFilter("All Files", "*.*"));
+
+            File selected = fileChooser.showOpenDialog(null);
+            if (selected != null) {
+                ReadFile.readGameBoardFromDisk(selected.toPath());
+            }
+
+        } catch (IOException ex) {
+            Alert alert = new Alert(Alert.AlertType.ERROR, "There was an error reading the file");
+        }
+    }
+
     private void handleMouseClick(MouseEvent e) {
         double x = e.getX();
         double y = e.getY();

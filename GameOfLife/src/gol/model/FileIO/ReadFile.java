@@ -1,8 +1,8 @@
 package gol.model.FileIO;
 
-import java.io.FileReader;
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.Reader;
+import java.nio.file.Files;
 import java.nio.file.Path;
 
 /**
@@ -10,11 +10,22 @@ import java.nio.file.Path;
  */
 public class ReadFile {
 
-    public void readGameBoard(Reader r) throws IOException {
     
+    /**
+     *Leser filen, lagerer en array. Sjekker format, 
+     *      og kaller på metode for parsing
+     * 
+     * 
+     */
+    public static void readGameBoard(BufferedReader r) throws IOException {
+        String line = null;
+        while ((line = r.readLine()) != null) {
+            System.out.println(line);
+        }
+        
     }
 
-    public void readGameBoardFromDisk(Path file) throws IOException {
-        
+    public static void readGameBoardFromDisk(Path file) throws IOException {
+        readGameBoard(Files.newBufferedReader(file));
     }
 }

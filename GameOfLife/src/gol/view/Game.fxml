@@ -37,7 +37,7 @@
                                                 <Label layoutX="12.0" layoutY="98.0" text="Gridspacing" />
                                                 <Slider fx:id="gridSpacingSlider" layoutX="17.0" layoutY="118.0" max="5" min="0" onValueChange="#handleGridSpacingSlider" value="3" />
                                                 <Button fx:id="startPauseBtn" layoutX="6.0" layoutY="145.0" mnemonicParsing="false" onAction="#handleAnimation" text="Start game" />
-                                                <Button onAction="#handleClearBtn"  layoutX="146.0" layoutY="145.0" mnemonicParsing="false" text="Clean board" />
+                                                <Button layoutX="146.0" layoutY="145.0" mnemonicParsing="false" onAction="#handleClearBtn" text="Clean board" />
                                             </children>
                                         </AnchorPane>
                                     </content>
@@ -65,7 +65,7 @@
                                     <content>
                                         <AnchorPane minHeight="0.0" minWidth="0.0" prefWidth="200.0">
                                             <children>
-                                                <Button layoutX="25.0" layoutY="6.0" mnemonicParsing="false" text="Import pattern from file" />
+                                                <Button layoutX="25.0" layoutY="6.0" mnemonicParsing="false" onAction="#handleImportFileBtn" text="Import pattern from file" />
                                                 <Button layoutX="25.0" layoutY="42.0" mnemonicParsing="false" text="Import/search pattern from internet" />
                                             </children>
                                         </AnchorPane>
