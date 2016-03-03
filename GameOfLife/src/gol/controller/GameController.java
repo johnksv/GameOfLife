@@ -159,7 +159,11 @@ public class GameController implements Initializable {
 
             File selected = fileChooser.showOpenDialog(null);
             if (selected != null) {
-                ReadFile.readGameBoardFromDisk(selected.toPath());
+                try {
+                    ReadFile.readFileFromDisk(selected.toPath());
+                } catch (PatternFormatException ex) {
+                    Logger.getLogger(GameController.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
 
         } catch (IOException ex) {

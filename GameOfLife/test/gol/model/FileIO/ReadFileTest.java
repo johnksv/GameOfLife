@@ -1,8 +1,12 @@
+/*
+ * Here comes the text of your license
+ * Each line should be prefixed with  * 
+ */
 package gol.model.FileIO;
 
-import java.io.BufferedReader;
+import java.net.URI;
 import java.nio.file.Path;
-import javafx.stage.FileChooser;
+import java.nio.file.Paths;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -12,7 +16,7 @@ import static org.junit.Assert.*;
 
 /**
  *
- * @author s305054, s305084, s305089
+ * @author Stian
  */
 public class ReadFileTest {
     
@@ -35,31 +39,31 @@ public class ReadFileTest {
     public void tearDown() {
     }
 
-    /**
-     * Test of readGameBoard method, of class ReadFile.
-     */
     @Test
-    public void testReadGameBoard() throws Exception {
-        System.out.println("readGameBoard");
-        BufferedReader r = null;
-        ReadFile.readGameBoard(r);
-
-        fail("The test case is a prototype.");
+    public void testReadFileFromDisk() throws Exception {
+        System.out.println("readFileFromDisk");
+        String url = "file:///Users/Stian/Documents/glider.cells";
+        Path file= Paths.get(URI.create(url));
+        byte[][] expResult = {{0,64,0},{0,0,64},{64,64,64}};
+        byte[][] result = ReadFile.readFileFromDisk(file);
+        assertArrayEquals(expResult, result);
     }
-
-    /**
-     * Test of readGameBoardFromDisk method, of class ReadFile.
-     */
-    @Test
-    public void testReadGameBoardFromDisk() throws Exception {
-        System.out.println("readGameBoardFromDisk");
-        Path file = new FileChooser().showOpenDialog(null).toPath();       
-        ReadFile.readGameBoardFromDisk(file);
+        @Test
+    public void testReadFileFromDisk2() throws Exception {
+        System.out.println("readFileFromDisk");
+        String url = "file:///Users/Stian/Documents/glider.cell";
+        Path file= Paths.get(URI.create(url));
+        byte[][] expResult = {{0,64,0},{0,0,64},{64,64,64}};
+        byte[][] result = ReadFile.readFileFromDisk(file);
+    }
+        @Test
+    public void testReadFileFromDisk3() throws Exception {
+        System.out.println("readFileFromDisk");
+        String url = "file:///Users/Stian/Documents/glider2.cells";
+        Path file= Paths.get(URI.create(url));
+        byte[][] expResult = {{0,64,0},{0,0,64},{64,64,64}};
+        byte[][] result = ReadFile.readFileFromDisk(file);
         
-        String expected = "010001111";
-        
-        
-        fail("The test case is a prototype.");
     }
     
 }
