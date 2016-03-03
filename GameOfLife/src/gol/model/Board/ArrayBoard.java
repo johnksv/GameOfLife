@@ -36,6 +36,19 @@ public class ArrayBoard extends Board {
     public byte[][] getGameBoard() {
         return gameBoard;
     }
+    @Override
+    public void setCellState(int x, int y, boolean alive) {
+        byte value = 0;
+        if (alive) {
+            value = 64;
+        }
+        
+        try {
+            gameBoard[y][x] = value;
+        } catch (ArrayIndexOutOfBoundsException e) {
+            System.err.println("Click was outside canvas");
+        }
+    }
 
     @Override
     public void setCellState(double x, double y, boolean alive) {

@@ -65,7 +65,7 @@
                                     <content>
                                         <AnchorPane minHeight="0.0" minWidth="0.0" prefWidth="200.0">
                                             <children>
-                                                <Button layoutX="25.0" layoutY="6.0" mnemonicParsing="false" text="Import pattern from file" />
+                                                <Button onAction="#stianTest"  layoutX="25.0" layoutY="6.0" mnemonicParsing="false" text="Import pattern from file" />
                                                 <Button layoutX="25.0" layoutY="42.0" mnemonicParsing="false" text="Import/search pattern from internet" />
                                             </children>
                                         </AnchorPane>

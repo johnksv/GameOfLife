@@ -126,12 +126,41 @@ public class GameController implements Initializable {
         backgroundColor = backgroundCP.getValue();
         draw();
     }
+
     @FXML
-    public void handleClearBtn(){
+    public void stianTest() {
+        int ex = 4;
+        int ey = 4;
+
+        int tx = 6;
+        int ty = 53;
+
+            int length = tx - ex;
+            int yLength = ty - ey;
+
+            double climb = yLength / length;
+            double restClimb=climb;
+            for (int i = ex; i <= tx; i++) {
+                int counter=0;
+                while( counter < restClimb) {
+                   counter++;
+                   ey+=counter;
+                   ex++;
+                    activeBoard.setCellState(ex, ey, true);
+                    
+                }
+
+            }
+        
+        draw();
+    }
+
+    @FXML
+    public void handleClearBtn() {
         activeBoard.clearBoard();
         draw();
     }
-    
+
     private void handleMouseClick(MouseEvent e) {
         double x = e.getX();
         double y = e.getY();

@@ -58,6 +58,8 @@ public abstract class Board {
 
     public abstract void setCellState(double x, double y, boolean alive);
 
+    public abstract void setCellState(int x, int y, boolean alive);
+    
     public abstract boolean getCellState(int x, int y);
 
     public abstract void clearBoard();
@@ -73,5 +75,5 @@ public abstract class Board {
     protected abstract void checkRules(Rule activeRule);
     
     protected abstract void setGameBoard(Object gameBoard);
-
+    
 }
