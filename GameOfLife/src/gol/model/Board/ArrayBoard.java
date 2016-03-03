@@ -140,4 +140,18 @@ public class ArrayBoard extends Board {
         return result;
     }
 
+    @Override
+    public void insertArray(byte[][] boardFromFile, int x, int y) {
+        for (int i = 0; i < boardFromFile.length; i++) {
+            for (int j = 0; j < boardFromFile[i].length; j++) {
+                try{
+                    gameBoard[i+x][j+y]=boardFromFile[i][j];
+                }catch(ArrayIndexOutOfBoundsException e){
+                    System.err.println("OUT OF BOUNDS");
+                }
+                        
+            }
+        }
+    }
+
 }

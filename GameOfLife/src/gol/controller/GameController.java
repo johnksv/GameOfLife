@@ -16,7 +16,6 @@ import javafx.animation.Animation.Status;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
@@ -59,6 +58,7 @@ public class GameController implements Initializable {
     private Color backgroundColor;
     private GraphicsContext gc;
     private final Timeline timeline = new Timeline();
+    private byte[][] boardFromFile;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -89,6 +89,7 @@ public class GameController implements Initializable {
                 (MouseEvent e) -> {
                     handleMouseClick(e);
                 });
+       
     }
 
     private void initAnimation() {
@@ -159,15 +160,17 @@ public class GameController implements Initializable {
 
             File selected = fileChooser.showOpenDialog(null);
             if (selected != null) {
-                try {
-                    ReadFile.readFileFromDisk(selected.toPath());
-                } catch (PatternFormatException ex) {
-                    Logger.getLogger(GameController.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                boardFromFile = ReadFile.readFileFromDisk(selected.toPath());
+                
+                //no ghosttiles yet
+                activeBoard.insertArray(boardFromFile,1,1);
+                draw();
             }
 
         } catch (IOException ex) {
             Alert alert = new Alert(Alert.AlertType.ERROR, "There was an error reading the file");
+        } catch (PatternFormatException ex) {
+            Logger.getLogger(GameController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -193,7 +196,10 @@ public class GameController implements Initializable {
                 }
             }
         }
+        
     }
+
+    
 
     public void constructRule(byte[] cellsToLive, byte[] cellsToSpawn) {
         //@TODO implement costume rules

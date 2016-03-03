@@ -1,6 +1,5 @@
 package gol.model.FileIO;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -38,19 +37,29 @@ public class ReadFile {
     }
 
     private static byte[][] readPlainText(String[] file) throws IOException, PatternFormatException {
-
-        byte[][] activeBoard = new byte[file.length][file.length];
+        int greatestlength = 0;
+        for (int i = 0; i < file.length; i++) {
+            if (file[i].length() > greatestlength) {
+                greatestlength = file[i].length();
+            }
+        }
+        byte[][] activeBoard = new byte[file.length][greatestlength];
 
         for (int i = 0; i < file.length; i++) {
             char[] charArray = file[i].toCharArray();
 
-            for (int j = 0; j < charArray.length; j++) {
-                if (Character.toLowerCase(charArray[j]) == 'o') {
-                    activeBoard[i][j] = 64;
-                } else if (charArray[j] == '.') {
-                    activeBoard[i][j] = 0;
+            for (int j = 0; j < greatestlength; j++) {
+                if (j < charArray.length) {
+                    if (Character.toLowerCase(charArray[j]) == 'o') {
+                        activeBoard[i][j] = 64;
+                    } else if (charArray[j] == '.') {
+                        activeBoard[i][j] = 0;
+
+                    } else {
+                        throw new PatternFormatException("Error in file");
+                    }
                 } else {
-                    throw new PatternFormatException("Error in file");
+                    activeBoard[i][j] = 0;
                 }
             }
         }

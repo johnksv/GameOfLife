@@ -74,4 +74,6 @@ public abstract class Board {
     
     protected abstract void setGameBoard(Object gameBoard);
 
+    public abstract void insertArray(byte[][] boardFromFile, int i, int i0);
+
 }
