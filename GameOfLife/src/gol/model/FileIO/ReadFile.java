@@ -19,6 +19,8 @@ public class ReadFile {
      *
      */
     public static byte[][] readFileFromDisk(Path file) throws IOException, PatternFormatException {
+        metadata.delete(0, metadata.length());
+        
         String path = file.toString();
         String[] token = path.split("\\.");
         String fileExt = token[token.length - 1];
@@ -50,7 +52,7 @@ public class ReadFile {
 
         for (int i = 0; i < file.length; i++) {
             if (file[i].startsWith("!")) {
-                appendMetadata(file[i]);
+                appendMetadata(file[i].substring(1));
             } else {
 
                 char[] charArray = file[i].toCharArray();
@@ -80,8 +82,11 @@ public class ReadFile {
         metadata.append(metadataLine).append("\n");
     }
 
-    private static String getMetadata() {
-        return metadata.toString();
+    public static String getMetadata() {
+        if (metadata.toString().equals("")) {
+            return "Metadata empty. Read a file first";
+        } else {
+            return metadata.toString();
+        }
     }
-
 }

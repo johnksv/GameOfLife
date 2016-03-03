@@ -162,7 +162,10 @@ public class GameController implements Initializable {
             if (selected != null) {
                 boardFromFile = ReadFile.readFileFromDisk(selected.toPath());
                 
+                
+                //TODO Support for GhostTiles
                 //no ghosttiles yet
+                System.out.println(ReadFile.getMetadata());
                 activeBoard.insertArray(boardFromFile,1,1);
                 draw();
             }
@@ -170,7 +173,7 @@ public class GameController implements Initializable {
         } catch (IOException ex) {
             Alert alert = new Alert(Alert.AlertType.ERROR, "There was an error reading the file");
         } catch (PatternFormatException ex) {
-            Logger.getLogger(GameController.class.getName()).log(Level.SEVERE, null, ex);
+            //TODO Implement excpetion handling
         }
     }
 
