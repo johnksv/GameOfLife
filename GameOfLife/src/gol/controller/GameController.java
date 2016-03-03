@@ -4,17 +4,19 @@ import gol.model.Board.ArrayBoard;
 import gol.model.Board.Board;
 import gol.model.FileIO.PatternFormatException;
 import gol.model.FileIO.ReadFile;
+import gol.model.Logic.CustomRule;
+import gol.model.Logic.Rule;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.animation.Animation;
 import javafx.animation.Animation.Status;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -23,8 +25,10 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
+import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
@@ -52,6 +56,14 @@ public class GameController implements Initializable {
     private ColorPicker cellCP;
     @FXML
     private ColorPicker backgroundCP;
+    @FXML
+    private ComboBox gameRulesComboBox;
+    @FXML
+    private TextField neigToLiveTextField;
+    @FXML
+    private TextField neigToSpawnTextField;
+    @FXML
+    private Button saveRulesBtn;
 
     private Board activeBoard;
     private Color cellColor;
@@ -70,15 +82,23 @@ public class GameController implements Initializable {
 
         cellCP.setValue(Color.BLACK);
         backgroundCP.setValue(Color.web("#F4F4F4"));
+
         handleColor();
         handleAnimationSpeedSlider();
-        mouseInit();
+        initGameRulesComboBox();
+        initMouse();
         initAnimation();
 
     }
 
+    public void initGameRulesComboBox() {
+        gameRulesComboBox.getItems().addAll("Standard", "Custom Rules");
+        gameRulesComboBox.valueProperty().set("Standard");
+
+    }
+
     //MouseEvent
-    public void mouseInit() {
+    public void initMouse() {
 
         //Registers clicks on scene
         canvas.addEventHandler(MouseEvent.MOUSE_PRESSED,
@@ -89,7 +109,7 @@ public class GameController implements Initializable {
                 (MouseEvent e) -> {
                     handleMouseClick(e);
                 });
-       
+
     }
 
     private void initAnimation() {
@@ -147,6 +167,7 @@ public class GameController implements Initializable {
         timeline.pause();
         startPauseBtn.setText("Start game");
         draw();
+        constructRule(null, null);
     }
 
     @FXML
@@ -161,12 +182,11 @@ public class GameController implements Initializable {
             File selected = fileChooser.showOpenDialog(null);
             if (selected != null) {
                 boardFromFile = ReadFile.readFileFromDisk(selected.toPath());
-                
-                
+
                 //TODO Support for GhostTiles
                 //no ghosttiles yet
                 System.out.println(ReadFile.getMetadata());
-                activeBoard.insertArray(boardFromFile,1,1);
+                activeBoard.insertArray(boardFromFile, 1, 1);
                 draw();
             }
 
@@ -199,13 +219,14 @@ public class GameController implements Initializable {
                 }
             }
         }
-        
-    }
 
-    
+    }
 
     public void constructRule(byte[] cellsToLive, byte[] cellsToSpawn) {
         //@TODO implement costume rules
+        cellsToLive = new byte[]{0, 1, 2, 3, 4, 5, 6, 8};
+        cellsToSpawn = new byte[]{2};
+        activeBoard.setGameRule(new CustomRule(cellsToLive, cellsToSpawn));
     }
 
     public void setCellColor(Color cellColor) {

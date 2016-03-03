@@ -53,6 +53,7 @@ public abstract class Board {
     public void setGameRule(Rule activeRule) {
         this.activeRule = activeRule;
     }
+    
 
     // Abstract Methods 
 

@@ -120,10 +120,10 @@
                                     <content>
                                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="300.0" prefWidth="250.0">
                                             <children>
-                                                <ComboBox layoutX="2.0" layoutY="14.0" prefWidth="150.0" promptText="Standard" />
+                                                <ComboBox fx:id="gameRulesComboBox" layoutX="2.0" layoutY="14.0" prefWidth="150.0" promptText="Standard" />
                                                 <Label layoutX="7.0" layoutY="53.0" text="Naboer for å leve" />
                                                 <Label layoutX="7.0" layoutY="84.0" text="Naboer for å våkne" />
-                                                <TextField disable="true" layoutX="123.0" layoutY="49.0" prefHeight="25.0" prefWidth="92.0" text="2,3" />
+                                                <TextField fx:id="neigToLiveTextField" disable="true" layoutX="123.0" layoutY="49.0" prefHeight="25.0" prefWidth="92.0" text="2,3" />
                                                 <TextField disable="true" layoutX="123.0" layoutY="80.0" prefHeight="25.0" prefWidth="92.0" text="3" />
                                                 <Button disable="true" layoutX="68.0" layoutY="120.0" mnemonicParsing="false" text="Lagre regler" />
                                             </children>

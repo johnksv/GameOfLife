@@ -49,13 +49,15 @@ public class ReadFile {
             }
         }
         byte[][] activeBoard = new byte[file.length][greatestlength];
-
+        
+        int linesOfComment =0;
         for (int i = 0; i < file.length; i++) {
             if (file[i].startsWith("!")) {
                 appendMetadata(file[i].substring(1));
+                linesOfComment = i;
             } else {
-
-                char[] charArray = file[i].toCharArray();
+                
+                char[] charArray = file[i-linesOfComment].toCharArray();
 
                 for (int j = 0; j < greatestlength; j++) {
                     if (j < charArray.length) {
