@@ -19,22 +19,22 @@ import static org.junit.Assert.*;
  * @author Stian
  */
 public class ReadFileTest {
-    
+
     public ReadFileTest() {
     }
-    
+
     @BeforeClass
     public static void setUpClass() {
     }
-    
+
     @AfterClass
     public static void tearDownClass() {
     }
-    
+
     @Before
     public void setUp() {
     }
-    
+
     @After
     public void tearDown() {
     }
@@ -42,30 +42,47 @@ public class ReadFileTest {
     @Test
     public void testReadFileFromDisk() throws Exception {
         System.out.println("readFileFromDisk");
-        String url = "file:///Users/Stian/Documents/glider.cells";
-        Path file= Paths.get(URI.create(url));
-        byte[][] expResult = {{0,64,0},{0,0,64},{64,64,64}};
+        String url = "file:///glider.cells";
+        Path file = Paths.get(URI.create(url));
+        byte[][] expResult = {{0, 64, 0}, {0, 0, 64}, {64, 64, 64}};
         byte[][] result = ReadFile.readFileFromDisk(file);
         assertArrayEquals(expResult, result);
     }
-        @Test
+
+    @Test
     public void testReadFileFromDisk2() throws Exception {
         System.out.println("readFileFromDisk");
         String url = "file:///Users/Stian/Documents/glider.cell";
-        Path file= Paths.get(URI.create(url));
-        byte[][] expResult = {{0,64,0},{0,0,64},{64,64,64}};
+        Path file = Paths.get(URI.create(url));
+        byte[][] expResult = {{0, 64, 0}, {0, 0, 64}, {64, 64, 64}};
         byte[][] result = ReadFile.readFileFromDisk(file);
     }
-        @Test
+
+    @Test
     public void testReadFileFromDisk3() throws Exception {
         System.out.println("readFileFromDisk");
         String url = "file:///Users/Stian/Documents/glider2.cells";
-        Path file= Paths.get(URI.create(url));
-        byte[][] expResult = {{0,64,0},{0,0,64},{64,64,64}};
+        Path file = Paths.get(URI.create(url));
+        byte[][] expResult = {{0, 64, 0}, {0, 0, 64}, {64, 64, 64}};
         byte[][] result = ReadFile.readFileFromDisk(file);
-        
+
     }
-    
-    
-    
+
+    @Test
+    public void testGetMetadata() throws Exception {
+        String exp = "Metadata empty. Read a file first";
+        String result = ReadFile.getMetadata();
+        assertEquals(exp, result);
+    }
+
+    @Test
+    public void testGetMetadata2() throws Exception {
+        String url = "file:///glider.cells";
+        Path file = Paths.get(URI.create(url));
+        ReadFile.readFileFromDisk(file);
+        String exp = "Comment";
+        String result = ReadFile.getMetadata();
+        assertEquals(exp, result);
+    }
+
 }
