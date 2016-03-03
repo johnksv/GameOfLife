@@ -10,6 +10,8 @@ import java.util.List;
  */
 public class ReadFile {
 
+    private static final StringBuilder metadata = new StringBuilder();
+
     /**
      * Leser filen, lagerer en array. Sjekker format, og kaller på metode for
      * parsing
@@ -20,9 +22,10 @@ public class ReadFile {
         String path = file.toString();
         String[] token = path.split("\\.");
         String fileExt = token[token.length - 1];
-        List<String> list = Files.readAllLines(file);
 
-        String[] readFile = list.toArray(new String[0]);
+        List<String> readFileList = Files.readAllLines(file);
+
+        String[] readFile = readFileList.toArray(new String[0]);
 
         switch (fileExt) {
             case "cells":
@@ -38,31 +41,47 @@ public class ReadFile {
 
     private static byte[][] readPlainText(String[] file) throws IOException, PatternFormatException {
         int greatestlength = 0;
-        for (int i = 0; i < file.length; i++) {
-            if (file[i].length() > greatestlength) {
-                greatestlength = file[i].length();
+        for (String line : file) {
+            if (line.length() > greatestlength && !(line.startsWith("!"))) {
+                greatestlength = line.length();
             }
         }
         byte[][] activeBoard = new byte[file.length][greatestlength];
 
         for (int i = 0; i < file.length; i++) {
-            char[] charArray = file[i].toCharArray();
+            if (file[i].startsWith("!")) {
+                appendMetadata(file[i]);
+            } else {
 
-            for (int j = 0; j < greatestlength; j++) {
-                if (j < charArray.length) {
-                    if (Character.toLowerCase(charArray[j]) == 'o') {
-                        activeBoard[i][j] = 64;
-                    } else if (charArray[j] == '.') {
-                        activeBoard[i][j] = 0;
+                char[] charArray = file[i].toCharArray();
 
+                for (int j = 0; j < greatestlength; j++) {
+                    if (j < charArray.length) {
+                        switch (Character.toLowerCase(charArray[j])) {
+                            case 'o':
+                                activeBoard[i][j] = 64;
+                                break;
+                            case '.':
+                                activeBoard[i][j] = 0;
+                                break;
+                            default:
+                                throw new PatternFormatException("Error in file");
+                        }
                     } else {
-                        throw new PatternFormatException("Error in file");
+                        activeBoard[i][j] = 0;
                     }
-                } else {
-                    activeBoard[i][j] = 0;
                 }
             }
         }
         return activeBoard;
     }
+
+    private static void appendMetadata(String metadataLine) {
+        metadata.append(metadataLine).append("\n");
+    }
+
+    private static String getMetadata() {
+        return metadata.toString();
+    }
+
 }
