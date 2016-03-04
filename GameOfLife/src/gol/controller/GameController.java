@@ -5,7 +5,6 @@ import gol.model.Board.Board;
 import gol.model.FileIO.PatternFormatException;
 import gol.model.FileIO.ReadFile;
 import gol.model.Logic.CustomRule;
-import gol.model.Logic.Rule;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -15,8 +14,6 @@ import javafx.animation.Animation;
 import javafx.animation.Animation.Status;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -94,7 +91,7 @@ public class GameController implements Initializable {
     public void initGameRulesComboBox() {
         gameRulesComboBox.getItems().addAll("Standard", "Custom Rules");
         gameRulesComboBox.valueProperty().set("Standard");
-
+        
     }
 
     //MouseEvent
