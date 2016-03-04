@@ -15,14 +15,18 @@ public class CustomRule implements Rule {
     private boolean toLive(byte cellToCheck) {
 
         for (byte value : cellsToLive) {
-            return cellToCheck == value + 64;
+            if (cellToCheck == value + 64) {
+                return true;
+            }
         }
         return false;
     }
 
     private boolean toSpawn(byte cellToCheck) {
         for (byte value : cellsToSpawn) {
-            return cellToCheck == value + 64;
+            if (cellToCheck == value) {
+                return true;
+            }
         }
         return false;
     }

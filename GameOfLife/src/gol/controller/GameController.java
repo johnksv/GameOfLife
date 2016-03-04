@@ -224,7 +224,7 @@ public class GameController implements Initializable {
 
     public void constructRule(byte[] cellsToLive, byte[] cellsToSpawn) {
         //@TODO implement costume rules
-        cellsToLive = new byte[]{0, 1, 2, 3, 4, 5, 6, 8};
+        cellsToLive = new byte[]{0, 1, 2, 3, 4, 5, 6, 7,8};
         cellsToSpawn = new byte[]{2};
         activeBoard.setGameRule(new CustomRule(cellsToLive, cellsToSpawn));
     }
