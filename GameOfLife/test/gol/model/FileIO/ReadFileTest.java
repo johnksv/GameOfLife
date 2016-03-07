@@ -48,8 +48,10 @@ public class ReadFileTest {
         byte[][] result = ReadFile.readFileFromDisk(file);
         assertArrayEquals(expResult, result);
     }
+    
         @Test
     public void testReadFileFromDisk2() throws Exception {
+        //Forventer exception
         System.out.println("readFileFromDisk");
         String url = "file:///Users/Stian/Documents/glider.cell";
         Path file= Paths.get(URI.create(url));

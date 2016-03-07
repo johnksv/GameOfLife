@@ -28,7 +28,7 @@ public class ReadFile {
             case "cells":
                 return readPlainText(readFile);
             case "rle":
-                return null;
+                return readRLE(readFile);
             case "life":
                 return null;
             default:
@@ -62,7 +62,7 @@ public class ReadFile {
                         parsedBoard[i][j] = 0;
 
                     } else {
-                        throw new PatternFormatException("Error in file");
+                        throw new PatternFormatException("Error in file.");
                     }
                 } else {
                     parsedBoard[i][j] = 0;
@@ -73,17 +73,42 @@ public class ReadFile {
     }
 
     private static byte[][] readRLE(String[] file) throws IOException, PatternFormatException {
-
+        //TODO commentHandling
         StringBuilder pattern = new StringBuilder();
+        int xLength = 0;
+        int yLength = 0;
 
-        for (String line : file) {
-            pattern.append(line);
+        //Reads x and y value from file.
+        String[] attributes = file[0].replaceAll("\\s", "").split(",");
+        for (String line : attributes) {
+            if (line.matches("x=\\d+")) {
+                xLength = Integer.parseInt(line.replaceAll("\\D", ""));
+            } else if (line.matches("y=\\d+")) {
+                yLength = Integer.parseInt(line.replaceAll("\\D", ""));
+            }
         }
+        if (xLength == 0 || yLength == 0) {
+            throw new PatternFormatException("Error in file. x or y is not found.");
+        }
+
+        byte[][] parsedBoard = new byte[yLength][xLength];
+
+        //Appends the whole file to one line.
+        for (int i = 1; i < file.length; i++) {
+            pattern.append(file[i]);
+        }
+
+        String[] lines = pattern.toString().split("\\$");
         
-        String[] lines = pattern.toString().split("$");
-        
-        byte[][] parsedBoard;
-        
+        for (int i = 0; i < xLength; i++) {
+            String[] numbers = lines[i].split("\\D+");
+            String[] letters = lines[i].split("\\d+");
+            
+            for (int j = 0; j < yLength; j++) {
+                
+            }
+
+        }
 
         return parsedBoard;
     }
