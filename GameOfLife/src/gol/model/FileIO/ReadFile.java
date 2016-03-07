@@ -103,23 +103,26 @@ public class ReadFile {
         for (int i = 0; i < xLength; i++) {
             String[] numbers = lines[i].split("\\D+");
             String[] letters = lines[i].split("\\d+");
-            int cellPosition=0;
+            int cellPosition = 0;
 
             int letterPosition = 0;
             for (String letter : letters) {
                 if (letter.length() != 0) {
-                    
-                        for (int k = 0; k < Integer.parseInt(numbers[letterPosition]); k++) {
-                            if (letter.startsWith("b")) {
-                                parsedBoard[i][cellPosition] = 0;
-                                
-                            } else if (letter.startsWith("o")) {
-                                parsedBoard[i][cellPosition] = 64;
-                                
-                            } 
-                            cellPosition++;
+
+                    for (int k = 0; k < Integer.parseInt(numbers[letterPosition]); k++) {
+                        if (letter.startsWith("b")) {
+                            parsedBoard[i][cellPosition] = 0;
+
+                        } else if (letter.startsWith("o")) {
+                            parsedBoard[i][cellPosition] = 64;
+
                         }
-                    
+                        cellPosition++;
+                    }
+                    if (letter.length() > 1) {
+                        //TODO add 1 verdier
+                    }
+
                     letterPosition++;
                 }
             }
