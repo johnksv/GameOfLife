@@ -106,24 +106,20 @@ public class ReadFile {
             int cellPosition=0;
 
             int letterPosition = 0;
-            for (int j = 0; j < letters.length; j++) {
-                if (letters[j].length() != 0) {
-
-                    if (letters[j].length() > 1) {
-
-                    } else {
+            for (String letter : letters) {
+                if (letter.length() != 0) {
+                    
                         for (int k = 0; k < Integer.parseInt(numbers[letterPosition]); k++) {
-                            if(letters[j].equals("b")){
+                            if (letter.startsWith("b")) {
                                 parsedBoard[i][cellPosition] = 0;
-                                cellPosition++; 
-                            }else if(letters[j].equals("o")){
-                                parsedBoard[i][cellPosition] = 64;
-                                cellPosition++;
-                            }else{
                                 
-                            }
+                            } else if (letter.startsWith("o")) {
+                                parsedBoard[i][cellPosition] = 64;
+                                
+                            } 
+                            cellPosition++;
                         }
-                    }
+                    
                     letterPosition++;
                 }
             }
