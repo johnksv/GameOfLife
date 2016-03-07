@@ -99,13 +99,33 @@ public class ReadFile {
         }
 
         String[] lines = pattern.toString().split("\\$");
-        
+
         for (int i = 0; i < xLength; i++) {
             String[] numbers = lines[i].split("\\D+");
             String[] letters = lines[i].split("\\d+");
-            
-            for (int j = 0; j < yLength; j++) {
-                
+            int cellPosition=0;
+
+            int letterPosition = 0;
+            for (int j = 0; j < letters.length; j++) {
+                if (letters[j].length() != 0) {
+
+                    if (letters[j].length() > 1) {
+
+                    } else {
+                        for (int k = 0; k < Integer.parseInt(numbers[letterPosition]); k++) {
+                            if(letters[j].equals("b")){
+                                parsedBoard[i][cellPosition] = 0;
+                                cellPosition++; 
+                            }else if(letters[j].equals("o")){
+                                parsedBoard[i][cellPosition] = 64;
+                                cellPosition++;
+                            }else{
+                                
+                            }
+                        }
+                    }
+                    letterPosition++;
+                }
             }
 
         }
