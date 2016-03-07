@@ -42,7 +42,7 @@ public class ReadFileTest {
     @Test
     public void testReadFileFromDisk() throws Exception {
         System.out.println("readFileFromDisk");
-        String url = "file:///Users/Stian/Documents/glider.cells";
+        String url = "file:///glider.cells";
         Path file= Paths.get(URI.create(url));
         byte[][] expResult = {{0,64,0},{0,0,64},{64,64,64}};
         byte[][] result = ReadFile.readFileFromDisk(file);

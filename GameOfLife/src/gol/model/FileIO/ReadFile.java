@@ -49,7 +49,7 @@ public class ReadFile {
             }
 
         }
-        byte[][] activeBoard = new byte[file.length - commentLines][greatestlength];
+        byte[][] parsedBoard = new byte[file.length - commentLines][greatestlength];
 
         for (int i = 0; i < file.length - commentLines; i++) {
             char[] charArray = file[i + commentLines].toCharArray();
@@ -57,18 +57,34 @@ public class ReadFile {
             for (int j = 0; j < greatestlength; j++) {
                 if (j < charArray.length) {
                     if (Character.toLowerCase(charArray[j]) == 'o') {
-                        activeBoard[i][j] = 64;
+                        parsedBoard[i][j] = 64;
                     } else if (charArray[j] == '.') {
-                        activeBoard[i][j] = 0;
+                        parsedBoard[i][j] = 0;
 
                     } else {
                         throw new PatternFormatException("Error in file");
                     }
                 } else {
-                    activeBoard[i][j] = 0;
+                    parsedBoard[i][j] = 0;
                 }
             }
         }
-        return activeBoard;
+        return parsedBoard;
+    }
+
+    private static byte[][] readRLE(String[] file) throws IOException, PatternFormatException {
+
+        StringBuilder pattern = new StringBuilder();
+
+        for (String line : file) {
+            pattern.append(line);
+        }
+        
+        String[] lines = pattern.toString().split("$");
+        
+        byte[][] parsedBoard;
+        
+
+        return parsedBoard;
     }
 }
