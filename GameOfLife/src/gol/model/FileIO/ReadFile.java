@@ -37,27 +37,22 @@ public class ReadFile {
     }
 
     private static byte[][] readPlainText(String[] file) throws IOException, PatternFormatException {
-        
-        short linesOfComments = 0;
-        //counts the number of comment lines
-        for (String line : file) {
-            if (line.startsWith("!")) {
-                linesOfComments++;
-            }
-        }
-
         int greatestlength = 0;
+        int commentLines = 0;
         for (int i = 0; i < file.length; i++) {
-            if (file[i].length() > greatestlength) {
-                greatestlength = file[i].length();
+            if (!file[i].startsWith("!")) {
+                if (file[i].length() > greatestlength) {
+                    greatestlength = file[i].length();
+                }
+            } else {
+                commentLines++;
             }
-        }
-        
-        //the nummber of lines is removed from the total length
-        byte[][] activeBoard = new byte[file.length - linesOfComments][greatestlength];
 
-        for (int i = 0; i < (file.length - linesOfComments); i++) {
-            char[] charArray = file[i + linesOfComments].toCharArray();
+        }
+        byte[][] activeBoard = new byte[file.length - commentLines][greatestlength];
+
+        for (int i = 0; i < file.length - commentLines; i++) {
+            char[] charArray = file[i + commentLines].toCharArray();
 
             for (int j = 0; j < greatestlength; j++) {
                 if (j < charArray.length) {
