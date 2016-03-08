@@ -39,15 +39,15 @@ public class ReadFile {
     private static byte[][] readPlainText(String[] file) throws IOException, PatternFormatException {
         int greatestlength = 0;
         int commentLines = 0;
-        for (int i = 0; i < file.length; i++) {
-            if (!file[i].startsWith("!")) {
-                if (file[i].length() > greatestlength) {
-                    greatestlength = file[i].length();
+        for (String line : file) {
+            if (!line.startsWith("!")) {
+                if (line.length() > greatestlength) {
+                    greatestlength = line.length();
                 }
             } else {
+                //TODO appendMetaData(line);
                 commentLines++;
             }
-
         }
         byte[][] parsedBoard = new byte[file.length - commentLines][greatestlength];
 
@@ -73,13 +73,22 @@ public class ReadFile {
     }
 
     private static byte[][] readRLE(String[] file) throws IOException, PatternFormatException {
-        //TODO commentHandling
+        int commentLines=0;
+        for(String line :file){
+            if(line.startsWith("#")){
+                commentLines++;
+                //TODO appendMetaData(line);
+            }
+        }
+        
+        
+        
         StringBuilder pattern = new StringBuilder();
         int xLength = 0;
         int yLength = 0;
 
         //Reads x and y value from file.
-        String[] attributes = file[0].replaceAll("\\s", "").split(",");
+        String[] attributes = file[commentLines].replaceAll("\\s", "").split(",");
         for (String line : attributes) {
             if (line.matches("x=\\d+")) {
                 xLength = Integer.parseInt(line.replaceAll("\\D", ""));
@@ -94,7 +103,7 @@ public class ReadFile {
         byte[][] parsedBoard = new byte[yLength][xLength];
 
         //Appends the whole file to one line.
-        for (int i = 1; i < file.length; i++) {
+        for (int i = commentLines + 1; i < file.length; i++) {
             pattern.append(file[i]);
         }
         String[] lines = pattern.toString().split("\\$");
