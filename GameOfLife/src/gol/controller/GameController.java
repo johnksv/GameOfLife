@@ -65,11 +65,10 @@ public class GameController implements Initializable {
         gc = canvas.getGraphicsContext2D();
 
         activeBoard = new ArrayBoard();
-        activeBoard.setCellSize(cellSizeSlider.getValue());
-        activeBoard.setGridSpacing(gridSpacingSlider.getValue());
-
         cellCP.setValue(Color.BLACK);
         backgroundCP.setValue(Color.web("#F4F4F4"));
+
+        handleZoom();
         handleColor();
         handleAnimationSpeedSlider();
         mouseInit();
@@ -89,7 +88,7 @@ public class GameController implements Initializable {
                 (MouseEvent e) -> {
                     handleMouseClick(e);
                 });
-       
+
     }
 
     private void initAnimation() {
@@ -124,13 +123,15 @@ public class GameController implements Initializable {
 
     @FXML
     public void handleZoom() {
-        activeBoard.setCellSize(cellSizeSlider.getValue());
+        double x = cellSizeSlider.getValue();
+        activeBoard.setCellSize(0.2 * Math.exp(0.05 * x));
+        handleGridSpacingSlider();
         draw();
     }
 
     @FXML
     public void handleGridSpacingSlider() {
-        activeBoard.setGridSpacing(gridSpacingSlider.getValue());
+        activeBoard.setGridSpacing(activeBoard.getCellSize() * gridSpacingSlider.getValue() / 100);
         draw();
     }
 
@@ -161,9 +162,9 @@ public class GameController implements Initializable {
             File selected = fileChooser.showOpenDialog(null);
             if (selected != null) {
                 boardFromFile = ReadFile.readFileFromDisk(selected.toPath());
-                
+
                 //no ghosttiles yet
-                activeBoard.insertArray(boardFromFile,1,1);
+                activeBoard.insertArray(boardFromFile, 1, 1);
                 draw();
             }
 
@@ -177,7 +178,7 @@ public class GameController implements Initializable {
             alert.setTitle("Error");
             alert.setHeaderText("Pattern Error");
             alert.showAndWait();
-            
+
         }
     }
 
@@ -190,12 +191,17 @@ public class GameController implements Initializable {
 
     public void draw() {
         gc.setFill(backgroundColor);
-        gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
         gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
         gc.setFill(cellColor);
         for (int i = 1; i < activeBoard.getArrayLength(); i++) {
+            if (canvas.getHeight() < i * activeBoard.getCellSize() + i * activeBoard.getGridSpacing()) {
+                break;
+            }
             for (int j = 1; j < activeBoard.getArrayLength(i); j++) {
                 if (activeBoard.getCellState(i, j)) {
+                    if (canvas.getWidth() < j * activeBoard.getCellSize() + j * activeBoard.getGridSpacing()) {
+                        break;
+                    }
                     gc.fillRect(j * activeBoard.getCellSize() + j * activeBoard.getGridSpacing(),
                             i * activeBoard.getCellSize() + i * activeBoard.getGridSpacing(),
                             activeBoard.getCellSize(),
@@ -203,10 +209,8 @@ public class GameController implements Initializable {
                 }
             }
         }
-        
-    }
 
-    
+    }
 
     public void constructRule(byte[] cellsToLive, byte[] cellsToSpawn) {
         //@TODO implement costume rules
