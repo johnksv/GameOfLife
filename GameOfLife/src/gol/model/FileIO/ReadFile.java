@@ -106,24 +106,52 @@ public class ReadFile {
             int cellPosition = 0;
 
             int letterPosition = 0;
-            for (String letter : letters) {
-                if (letter.length() != 0) {
+            for (int j = 0; j < letters.length; j++) {
+                if (letters[j].length() != 0) {
+                    if (j != 0 ) {
+                        //nå starter det å bli mye tull :(
+                        if(numbers[letterPosition].equals("")){
+                            letterPosition++;
+                        }
+                        for (int k = 0; k < Integer.parseInt(numbers[letterPosition]); k++) {
+                            if (letters[j].startsWith("b")) {
+                                parsedBoard[i][cellPosition] = 0;
 
-                    for (int k = 0; k < Integer.parseInt(numbers[letterPosition]); k++) {
-                        if (letter.startsWith("b")) {
+                            } else if (letters[j].startsWith("o")) {
+                                parsedBoard[i][cellPosition] = 64;
+
+                            }
+                            cellPosition++;
+                            
+                        }
+                        letterPosition++;
+                    } else {
+                        if (letters[j].startsWith("b")) {
                             parsedBoard[i][cellPosition] = 0;
 
-                        } else if (letter.startsWith("o")) {
+                        } else if (letters[j].startsWith("o")) {
                             parsedBoard[i][cellPosition] = 64;
 
                         }
                         cellPosition++;
                     }
-                    if (letter.length() > 1) {
-                        //TODO add 1 verdier
+                }
+                if (letters[j].length() > 1) {
+                    char[] chars = letters[j].toCharArray();
+                    for (int k = 1; k < letters[j].length(); k++) {
+                        if (chars[k] == 'b') {
+                            parsedBoard[i][cellPosition] = 0;
+
+                        } else if (chars[k] == 'o') {
+                            parsedBoard[i][cellPosition] = 64;
+
+                        } else if (chars[k] == '!') {
+                            return parsedBoard;
+
+                        }
+                        cellPosition++;
                     }
 
-                    letterPosition++;
                 }
             }
 

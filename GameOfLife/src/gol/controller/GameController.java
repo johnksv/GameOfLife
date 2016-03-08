@@ -57,7 +57,9 @@ public class GameController implements Initializable {
     private Color cellColor;
     private Color backgroundColor;
     private GraphicsContext gc;
-    private final Timeline timeline = new Timeline();
+    private final Timeline timelineDraw = new Timeline();
+    private final Timeline timelineNxGen = new Timeline();
+    
     private byte[][] boardFromFile;
 
     @Override
@@ -89,28 +91,36 @@ public class GameController implements Initializable {
                 (MouseEvent e) -> {
                     handleMouseClick(e);
                 });
-       
+
     }
 
     private void initAnimation() {
         Duration duration = Duration.millis(1000);
-        KeyFrame keyframe = new KeyFrame(duration, (ActionEvent e) -> {
-            activeBoard.nextGen();
+        KeyFrame keyframeDraw = new KeyFrame(duration, (ActionEvent e) -> {
             draw();
         });
-        timeline.setCycleCount(Animation.INDEFINITE);
-        timeline.getKeyFrames().add(keyframe);
+        timelineDraw.setCycleCount(Animation.INDEFINITE);
+        timelineDraw.getKeyFrames().add(keyframeDraw);
+        
+        KeyFrame keyframeGen = new KeyFrame(duration, (ActionEvent e) -> {
+            activeBoard.nextGen();
+        });
+        timelineNxGen.setCycleCount(Animation.INDEFINITE);
+        timelineNxGen.getKeyFrames().add(keyframeGen);
 
     }
 
     @FXML
     public void handleAnimation() {
 
-        if (timeline.getStatus() == Status.RUNNING) {
-            timeline.pause();
+        if (timelineDraw.getStatus() == Status.RUNNING) {
+            timelineDraw.pause();
+            timelineNxGen.pause();
             startPauseBtn.setText("Start game");
+           
         } else {
-            timeline.play();
+            timelineDraw.play();
+            timelineNxGen.play();
             startPauseBtn.setText("Pause game");
         }
     }
@@ -118,7 +128,13 @@ public class GameController implements Initializable {
     @FXML
     public void handleAnimationSpeedSlider() {
         double animationSpeed = animationSpeedSlider.getValue();
-        timeline.setRate(animationSpeed);
+        if(animationSpeed >= 24){
+            timelineDraw.setRate(24);
+        }else{
+            timelineDraw.setRate(animationSpeed);
+        }
+            
+        timelineNxGen.setRate(animationSpeed);
         animationSpeedLabel.setText(String.format("%.2f %s", animationSpeed, " "));
     }
 
@@ -144,7 +160,8 @@ public class GameController implements Initializable {
     @FXML
     public void handleClearBtn() {
         activeBoard.clearBoard();
-        timeline.pause();
+        timelineDraw.pause();
+        timelineNxGen.pause();
         startPauseBtn.setText("Start game");
         draw();
     }
@@ -161,9 +178,9 @@ public class GameController implements Initializable {
             File selected = fileChooser.showOpenDialog(null);
             if (selected != null) {
                 boardFromFile = ReadFile.readFileFromDisk(selected.toPath());
-                
+
                 //no ghosttiles yet
-                activeBoard.insertArray(boardFromFile,1,1);
+                activeBoard.insertArray(boardFromFile, 1, 1);
                 draw();
             }
 
@@ -189,6 +206,17 @@ public class GameController implements Initializable {
         for (int i = 1; i < activeBoard.getArrayLength(); i++) {
             for (int j = 1; j < activeBoard.getArrayLength(i); j++) {
                 if (activeBoard.getCellState(i, j)) {
+                    if ((j * activeBoard.getCellSize() + j * activeBoard.getGridSpacing()) > canvas.getWidth()) {
+
+                        break;
+
+                    }
+                    if ((i * activeBoard.getCellSize() + i * activeBoard.getGridSpacing()) > canvas.getWidth()) {
+
+                        break;
+
+                    }
+
                     gc.fillRect(j * activeBoard.getCellSize() + j * activeBoard.getGridSpacing(),
                             i * activeBoard.getCellSize() + i * activeBoard.getGridSpacing(),
                             activeBoard.getCellSize(),
@@ -196,10 +224,8 @@ public class GameController implements Initializable {
                 }
             }
         }
-        
-    }
 
-    
+    }
 
     public void constructRule(byte[] cellsToLive, byte[] cellsToSpawn) {
         //@TODO implement costume rules
