@@ -119,6 +119,8 @@ public class ReadFile {
                             setCellStateRLE(parsedBoard, letters[j].charAt(0), i, cellPosition);
                             cellPosition++;
                         }
+
+                        letterPosition++;
                     } else {
                         setCellStateRLE(parsedBoard, letters[j].charAt(0), i, cellPosition);
                         cellPosition++;
@@ -126,19 +128,21 @@ public class ReadFile {
 
                     if (letters[j].length() > 1) {
                         for (int k = 1; k < letters[j].length(); k++) {
+                            if (letters[j].charAt(k) == '!') {
+                                return parsedBoard;
+                            }
                             setCellStateRLE(parsedBoard, letters[j].charAt(k), i, cellPosition);
                             cellPosition++;
+
                         }
 
                     }
 
-                    letterPosition++;
                 }
             }
 
         }
-
-        return parsedBoard;
+        throw new PatternFormatException("Error in file. End of file not defined.");
     }
 
     private static void setCellStateRLE(byte[][] parsedBoard, char letter, int x, int y) throws PatternFormatException {
@@ -148,9 +152,6 @@ public class ReadFile {
         } else if (letter == 'o') {
             parsedBoard[x][y] = 64;
 
-        } else if (letter == '!') {
-            //TODO
-            System.out.println("done");
         } else {
             throw new PatternFormatException("Error in file. Invalid letter.");
         }
