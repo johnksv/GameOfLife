@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 /**
@@ -20,6 +21,10 @@ public class Main extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
         
+        //klarte ikke med path :(
+        //primaryStage.getIcons().add(new Image("file:gen1.PNG"));
+        primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("gen1.PNG")));
+        primaryStage.setTitle(" Game of Life");
         //Passing the stage to main controller for later use.
         MainController.loadStage(primaryStage);
     }

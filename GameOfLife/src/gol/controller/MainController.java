@@ -44,7 +44,7 @@ public class MainController implements Initializable {
 
         setKeyEvents(scene);
         primaryStage.setScene(scene);
-
+        
     }
 
     public void setKeyEvents(Scene scene) {
