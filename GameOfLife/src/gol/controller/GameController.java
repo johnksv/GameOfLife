@@ -169,8 +169,15 @@ public class GameController implements Initializable {
 
         } catch (IOException ex) {
             Alert alert = new Alert(Alert.AlertType.ERROR, "There was an error reading the file");
+            alert.setTitle("Error");
+            alert.setHeaderText("Reading File Error");
+            alert.showAndWait();
         } catch (PatternFormatException ex) {
-            Logger.getLogger(GameController.class.getName()).log(Level.SEVERE, null, ex);
+            Alert alert = new Alert(Alert.AlertType.ERROR, ex.getMessage());
+            alert.setTitle("Error");
+            alert.setHeaderText("Pattern Error");
+            alert.showAndWait();
+            
         }
     }
 

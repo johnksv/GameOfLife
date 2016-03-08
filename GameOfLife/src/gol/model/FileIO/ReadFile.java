@@ -32,7 +32,7 @@ public class ReadFile {
             case "life":
                 return null;
             default:
-                throw new PatternFormatException("Wrong pattern format");
+                throw new PatternFormatException("Pattern format is not supported");
         }
     }
 
@@ -62,7 +62,7 @@ public class ReadFile {
                         parsedBoard[i][j] = 0;
 
                     } else {
-                        throw new PatternFormatException("Error in file.");
+                        throw new PatternFormatException("Unknow character at line: " + i);
                     }
                 } else {
                     parsedBoard[i][j] = 0;
@@ -72,17 +72,15 @@ public class ReadFile {
         return parsedBoard;
     }
 
-    private static byte[][] readRLE(String[] file) throws IOException, PatternFormatException {
-        int commentLines=0;
-        for(String line :file){
-            if(line.startsWith("#")){
+    private static byte[][] readRLE(String[] file) throws IOException, PatternFormatException, ArrayIndexOutOfBoundsException {
+        int commentLines = 0;
+        for (String line : file) {
+            if (line.startsWith("#")) {
                 commentLines++;
                 //TODO appendMetaData(line);
             }
         }
-        
-        
-        
+
         StringBuilder pattern = new StringBuilder();
         int xLength = 0;
         int yLength = 0;
@@ -97,7 +95,7 @@ public class ReadFile {
             }
         }
         if (xLength == 0 || yLength == 0) {
-            throw new PatternFormatException("Error in file. x or y is not found.");
+            throw new PatternFormatException("x or y in file is not found.");
         }
 
         byte[][] parsedBoard = new byte[yLength][xLength];
@@ -109,6 +107,9 @@ public class ReadFile {
         String[] lines = pattern.toString().split("\\$");
 
         for (int i = 0; i < xLength; i++) {
+            if (i >= lines.length) {
+                throw new PatternFormatException("Missing end of file symbol");
+            }
             String[] numbers = lines[i].split("\\D+");
             String[] letters = lines[i].split("\\d+");
 
@@ -151,18 +152,22 @@ public class ReadFile {
             }
 
         }
-        throw new PatternFormatException("Error in file. End of file not defined.");
+        throw new PatternFormatException("Missing end of file symbol.");
     }
 
     private static void setCellStateRLE(byte[][] parsedBoard, char letter, int x, int y) throws PatternFormatException {
-        if (letter == 'b') {
-            parsedBoard[x][y] = 0;
-
-        } else if (letter == 'o') {
-            parsedBoard[x][y] = 64;
-
+        if (x >= parsedBoard.length || y >= parsedBoard[x].length) {
+            throw new PatternFormatException("Line exceeds the defined width. After line/\"$ number\": " + x );
         } else {
-            throw new PatternFormatException("Error in file. Invalid letter.");
+            if (letter == 'b') {
+                parsedBoard[x][y] = 0;
+
+            } else if (letter == 'o') {
+                parsedBoard[x][y] = 64;
+
+            } else {
+                throw new PatternFormatException("Unknow character at line: " + x);
+            }
         }
 
     }
