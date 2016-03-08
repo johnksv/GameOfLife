@@ -97,30 +97,39 @@ public class ReadFile {
         for (int i = 1; i < file.length; i++) {
             pattern.append(file[i]);
         }
-
         String[] lines = pattern.toString().split("\\$");
 
         for (int i = 0; i < xLength; i++) {
             String[] numbers = lines[i].split("\\D+");
             String[] letters = lines[i].split("\\d+");
+
             int cellPosition = 0;
-
             int letterPosition = 0;
-            for (String letter : letters) {
-                if (letter.length() != 0) {
 
-                    for (int k = 0; k < Integer.parseInt(numbers[letterPosition]); k++) {
-                        if (letter.startsWith("b")) {
-                            parsedBoard[i][cellPosition] = 0;
+            for (int j = 0; j < letters.length; j++) {
 
-                        } else if (letter.startsWith("o")) {
-                            parsedBoard[i][cellPosition] = 64;
+                if (letters[j].length() != 0) {
+                    if (j != 0) {
 
+                        if (numbers[letterPosition].equals("")) {
+                            letterPosition++;
                         }
+
+                        for (int k = 0; k < Integer.parseInt(numbers[letterPosition]); k++) {
+                            setCellStateRLE(parsedBoard, letters[j].charAt(0), i, cellPosition);
+                            cellPosition++;
+                        }
+                    } else {
+                        setCellStateRLE(parsedBoard, letters[j].charAt(0), i, cellPosition);
                         cellPosition++;
                     }
-                    if (letter.length() > 1) {
-                        //TODO add 1 verdier
+
+                    if (letters[j].length() > 1) {
+                        for (int k = 1; k < letters[j].length(); k++) {
+                            setCellStateRLE(parsedBoard, letters[j].charAt(k), i, cellPosition);
+                            cellPosition++;
+                        }
+
                     }
 
                     letterPosition++;
@@ -130,5 +139,21 @@ public class ReadFile {
         }
 
         return parsedBoard;
+    }
+
+    private static void setCellStateRLE(byte[][] parsedBoard, char letter, int x, int y) throws PatternFormatException {
+        if (letter == 'b') {
+            parsedBoard[x][y] = 0;
+
+        } else if (letter == 'o') {
+            parsedBoard[x][y] = 64;
+
+        } else if (letter == '!') {
+            //TODO
+            System.out.println("done");
+        } else {
+            throw new PatternFormatException("Error in file. Invalid letter.");
+        }
+
     }
 }
