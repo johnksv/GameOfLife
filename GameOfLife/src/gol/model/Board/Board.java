@@ -34,8 +34,8 @@ public abstract class Board {
         }
     }
 
-    public double getGridSpacing() {
-        return gridSpacing;
+    public void setGameRule(Rule activeRule) {
+        this.activeRule = activeRule;
     }
 
     public final void setGridSpacing(double gridSpacing) {
@@ -50,30 +50,33 @@ public abstract class Board {
         return cellSize;
     }
 
-    public void setGameRule(Rule activeRule) {
-        this.activeRule = activeRule;
+    public double getGridSpacing() {
+        return gridSpacing;
     }
 
     // Abstract Methods 
+    public abstract void clearBoard();
+
+    protected abstract void countNeigh();
+
+    protected abstract void checkRules(Rule activeRule);
+
+    public abstract void insertArray(byte[][] boardFromFile, int i, int i0);
+
+    public abstract void setCellState(int x, int y, boolean alive);
 
     public abstract void setCellState(double x, double y, boolean alive);
 
-    public abstract boolean getCellState(int x, int y);
-
-    public abstract void clearBoard();
-
-    public abstract Object getGameBoard();
+    protected abstract void setGameBoard(Object gameBoard);
 
     public abstract int getArrayLength();
 
     public abstract int getArrayLength(int i);
 
-    protected abstract void countNeigh();
-    
-    protected abstract void checkRules(Rule activeRule);
-    
-    protected abstract void setGameBoard(Object gameBoard);
+    public abstract boolean getCellState(int x, int y);
 
-    public abstract void insertArray(byte[][] boardFromFile, int i, int i0);
+    public abstract boolean getCellState(double x, double y);
+
+    public abstract Object getGameBoard();
 
 }
