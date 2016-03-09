@@ -24,18 +24,10 @@ import javafx.stage.Stage;
  *
  * @author s305054, s305084, s305089
  */
-public class MainController implements Initializable {
+public class MainController {
 
     private static Stage primaryStage;
     private static List<String> input = new ArrayList<String>();
-
-    public static void loadStage(Stage stage) {
-        primaryStage = stage;
-    }
-
-    public static boolean inputContains(String keyInput) {
-        return input.contains(keyInput);
-    }
 
     @FXML
     public void startGame() throws IOException {
@@ -44,7 +36,15 @@ public class MainController implements Initializable {
 
         setKeyEvents(scene);
         primaryStage.setScene(scene);
-        
+
+    }
+
+    public static boolean inputContains(String keyInput) {
+        return input.contains(keyInput);
+    }
+
+    public static void loadStage(Stage stage) {
+        primaryStage = stage;
     }
 
     public void setKeyEvents(Scene scene) {
@@ -57,11 +57,6 @@ public class MainController implements Initializable {
         scene.setOnKeyReleased((KeyEvent e) -> {
             input.remove(e.getText());
         });
-    }
-
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        //TODO
     }
 
 }
