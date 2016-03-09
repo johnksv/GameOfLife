@@ -34,10 +34,7 @@ public class ArrayBoard extends Board {
         }
     }
 
-    /**
-     * Goes thorugh each living cell, and increments each neighbour
-     * neighbours-count.
-     */
+
     @Override
     protected void countNeigh() {
 

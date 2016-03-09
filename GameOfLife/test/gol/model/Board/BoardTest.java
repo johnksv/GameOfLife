@@ -15,7 +15,7 @@ import static org.junit.Assert.*;
 
 /**
  *
- * @author Stian
+ * @author 
  */
 public class BoardTest {
 
@@ -32,11 +32,14 @@ public class BoardTest {
 
     @Before
     public void setUp() {
+        Board instance = new ArrayBoard();
     }
 
     @After
     public void tearDown() {
     }
+    
+    Board instance;
 
     /**
      * Test of nextGen method, of class Board.
@@ -62,7 +65,6 @@ public class BoardTest {
     public void testSetCellSize() {
         System.out.println("setCellSize");
         double cellSize = 0.0;
-        Board instance = null;
         instance.setCellSize(cellSize);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
@@ -74,7 +76,6 @@ public class BoardTest {
     @Test
     public void testGetGridSpacing() {
         System.out.println("getGridSpacing");
-        Board instance = null;
         double expResult = 0.0;
         double result = instance.getGridSpacing();
         assertEquals(expResult, result, 0.0);
@@ -89,7 +90,6 @@ public class BoardTest {
     public void testSetGridSpacing() {
         System.out.println("setGridSpacing");
         double gridSpacing = 0.0;
-        Board instance = null;
         instance.setGridSpacing(gridSpacing);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
@@ -101,7 +101,7 @@ public class BoardTest {
     @Test
     public void testGetCellSize() {
         System.out.println("getCellSize");
-        Board instance = null;
+
         double expResult = 0.0;
         double result = instance.getCellSize();
         assertEquals(expResult, result, 0.0);
@@ -116,7 +116,7 @@ public class BoardTest {
     public void testSetGameRule() {
         System.out.println("setGameRule");
         Rule activeRule = null;
-        Board instance = null;
+
         instance.setGameRule(activeRule);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
@@ -131,7 +131,7 @@ public class BoardTest {
         double x = 0.0;
         double y = 0.0;
         boolean alive = false;
-        Board instance = null;
+
         instance.setCellState(x, y, alive);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
@@ -145,7 +145,7 @@ public class BoardTest {
         System.out.println("getCellState");
         int x = 0;
         int y = 0;
-        Board instance = null;
+
         boolean expResult = false;
         boolean result = instance.getCellState(x, y);
         assertEquals(expResult, result);
@@ -159,7 +159,7 @@ public class BoardTest {
     @Test
     public void testClearBoard() {
         System.out.println("clearBoard");
-        Board instance = null;
+
         instance.clearBoard();
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
@@ -171,7 +171,7 @@ public class BoardTest {
     @Test
     public void testGetGameBoard() {
         System.out.println("getGameBoard");
-        Board instance = null;
+
         Object expResult = null;
         Object result = instance.getGameBoard();
         assertEquals(expResult, result);
@@ -185,7 +185,7 @@ public class BoardTest {
     @Test
     public void testGetArrayLength_0args() {
         System.out.println("getArrayLength");
-        Board instance = null;
+
         int expResult = 0;
         int result = instance.getArrayLength();
         assertEquals(expResult, result);
@@ -200,7 +200,6 @@ public class BoardTest {
     public void testGetArrayLength_int() {
         System.out.println("getArrayLength");
         int i = 0;
-        Board instance = null;
         int expResult = 0;
         int result = instance.getArrayLength(i);
         assertEquals(expResult, result);
@@ -214,7 +213,6 @@ public class BoardTest {
     @Test
     public void testCountNeigh() {
         System.out.println("countNeigh");
-        Board instance = null;
         instance.countNeigh();
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
@@ -227,7 +225,6 @@ public class BoardTest {
     public void testCheckRules() {
         System.out.println("checkRules");
         Rule activeRule = null;
-        Board instance = null;
         instance.checkRules(activeRule);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
@@ -240,7 +237,6 @@ public class BoardTest {
     public void testSetGameBoard() {
         System.out.println("setGameBoard");
         Object gameBoard = null;
-        Board instance = null;
         instance.setGameBoard(gameBoard);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
