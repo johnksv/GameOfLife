@@ -72,7 +72,8 @@ public class ReadFile {
         return parsedBoard;
     }
     /**
-     * @bug number then $ is to say that there is that number of lines between this line and the next
+     * @bug number then $ is to say that there is that number of lines between this line and the next 
+     * 264bobo1447b6$ the last part is saying that there is 6 blank lines before the next line
      * 
      * @param file
      * @return
