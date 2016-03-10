@@ -71,7 +71,15 @@ public class ReadFile {
         }
         return parsedBoard;
     }
-
+    /**
+     * @bug number then $ is to say that there is that number of lines between this line and the next
+     * 
+     * @param file
+     * @return
+     * @throws IOException
+     * @throws PatternFormatException
+     * @throws ArrayIndexOutOfBoundsException 
+     */
     private static byte[][] readRLE(String[] file) throws IOException, PatternFormatException, ArrayIndexOutOfBoundsException {
         int commentLines = 0;
         for (String line : file) {
