@@ -74,7 +74,7 @@ public class MainController implements Initializable {
      * Loads the primaryStage to be stored.
      * The stage is stored as a static private variable.
      * Needs to be done first in {@link Main#start  }.
-     * This is because of {@link #initialize()}. 
+     * This is because of {@link #initialize}. 
      * @param stage
      */
     public static void loadStage(Stage stage) {
