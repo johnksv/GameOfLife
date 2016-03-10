@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package gol.controller;
 
 import java.io.IOException;
@@ -22,7 +17,7 @@ import javafx.stage.Stage;
 /**
  * FXML Controller, controls the splash screen. 
  * This class is where the stage is stored.
- *
+ *  
  * @author s305054, s305084, s305089
  */
 public class MainController implements Initializable {
