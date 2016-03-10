@@ -24,18 +24,15 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-
+        //Passing the stage to main controller for later use.
+        //must be done first
+        MainController.loadStage(primaryStage);
+        
         Parent root = FXMLLoader.load(getClass().getResource("/gol/view/StartScreen.fxml"));
         Scene scene = new Scene(root);
         primaryStage.setScene(scene);
         primaryStage.show();
         
-        //klarte ikke med path :(
-        //primaryStage.getIcons().add(new Image("file:gen1.PNG"));
-        primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("gen1.PNG")));
-        primaryStage.setTitle(" Game of Life");
-        //Passing the stage to main controller for later use.
-        MainController.loadStage(primaryStage);
    
 //        test100NextGen();
 //        Platform.exit();

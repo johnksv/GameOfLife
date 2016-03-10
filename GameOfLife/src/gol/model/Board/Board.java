@@ -44,8 +44,8 @@ public abstract class Board {
     }
 
     /**
-     * Sets the width and height of all cells. If input is less than 0.2, then
-     * set to default value 0.2.
+     * Sets the width and height of all cells. 
+     * If input is less than 0.2, then set to default value 0.2.
      *
      * @param cellSize Cell size in pixels
      *
