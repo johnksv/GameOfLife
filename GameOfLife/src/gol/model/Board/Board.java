@@ -13,7 +13,7 @@ import gol.model.Logic.Rule;
 public abstract class Board {
 
     /**
-     * Width and heigth of all cells, defined in pixels
+     * Width and height of all cells, defined in pixels
      */
     protected double cellSize;
 
