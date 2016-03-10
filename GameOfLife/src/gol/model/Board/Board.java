@@ -13,7 +13,7 @@ import gol.model.Logic.Rule;
 public abstract class Board {
 
     /**
-     * Width and heigth of all cells, defined in pixels
+     * Width and height of all cells, defined in pixels
      */
     protected double cellSize;
 
@@ -44,8 +44,8 @@ public abstract class Board {
     }
 
     /**
-     * Sets the width and height of all cells. If input is less than 0.2, then
-     * set to default value 0.2.
+     * Sets the width and height of all cells. 
+     * If input is less than 0.2, then set to default value 0.2.
      *
      * @param cellSize Cell size in pixels
      *
