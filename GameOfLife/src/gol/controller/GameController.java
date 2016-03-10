@@ -58,7 +58,54 @@ public class GameController implements Initializable {
     private final Timeline timeline = new Timeline();
     private byte[][] boardFromFile;
 
-    
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        gc = canvas.getGraphicsContext2D();
+
+        activeBoard = new ArrayBoard();
+        cellCP.setValue(Color.BLACK);
+        backgroundCP.setValue(Color.web("#F4F4F4"));
+
+        handleZoom();
+        handleColor();
+        handleAnimationSpeedSlider();
+        mouseInit();
+        initAnimation();
+
+    }
+
+    //MouseEvent
+    public void mouseInit() {
+
+        //Registers clicks on scene
+        canvas.addEventHandler(MouseEvent.MOUSE_PRESSED,
+                (MouseEvent e) -> {
+                    handleMouseClick(e);
+                });
+        canvas.addEventHandler(MouseEvent.MOUSE_DRAGGED,
+                (MouseEvent e) -> {
+                    handleMouseClick(e);
+                });
+
+    }
+
+    private void initAnimation() {
+        Duration duration = Duration.millis(1000);
+        KeyFrame keyframe = new KeyFrame(duration, (ActionEvent e) -> {
+            activeBoard.nextGen();
+            draw();
+        });
+        timeline.setCycleCount(Animation.INDEFINITE);
+        timeline.getKeyFrames().add(keyframe);
+
+    }
+
+    private void handleMouseClick(MouseEvent e) {
+        double x = e.getX();
+        double y = e.getY();
+        activeBoard.setCellState(x, y, true);
+        draw();
+    }
 
     @FXML
     public void handleAnimation() {
@@ -139,7 +186,7 @@ public class GameController implements Initializable {
 
         }
     }
-    
+
     public void draw() {
         gc.setFill(backgroundColor);
         gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
@@ -162,56 +209,6 @@ public class GameController implements Initializable {
         }
 
     }
-    
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        gc = canvas.getGraphicsContext2D();
-
-        activeBoard = new ArrayBoard();
-        cellCP.setValue(Color.BLACK);
-        backgroundCP.setValue(Color.web("#F4F4F4"));
-
-        handleZoom();
-        handleColor();
-        handleAnimationSpeedSlider();
-        mouseInit();
-        initAnimation();
-
-    }
-
-    //MouseEvent
-    public void mouseInit() {
-
-        //Registers clicks on scene
-        canvas.addEventHandler(MouseEvent.MOUSE_PRESSED,
-                (MouseEvent e) -> {
-                    handleMouseClick(e);
-                });
-        canvas.addEventHandler(MouseEvent.MOUSE_DRAGGED,
-                (MouseEvent e) -> {
-                    handleMouseClick(e);
-                });
-
-    }
-
-    private void initAnimation() {
-        Duration duration = Duration.millis(1000);
-        KeyFrame keyframe = new KeyFrame(duration, (ActionEvent e) -> {
-            activeBoard.nextGen();
-            draw();
-        });
-        timeline.setCycleCount(Animation.INDEFINITE);
-        timeline.getKeyFrames().add(keyframe);
-
-    }
-
-    private void handleMouseClick(MouseEvent e) {
-        double x = e.getX();
-        double y = e.getY();
-        activeBoard.setCellState(x, y, true);
-        draw();
-    }
-
 
     public void constructRule(byte[] cellsToLive, byte[] cellsToSpawn) {
         //@TODO implement costume rules
@@ -228,10 +225,9 @@ public class GameController implements Initializable {
     public void setActiveBoard(Board activeBoard) {
         this.activeBoard = activeBoard;
     }
-    
+
     public Board getActiveBoard() {
         return activeBoard;
     }
-
 
 }
