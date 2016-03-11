@@ -71,15 +71,17 @@ public class ReadFile {
         }
         return parsedBoard;
     }
+
     /**
-     * @bug number then $ is to say that there is that number of lines between this line and the next 
-     * 264bobo1447b6$ the last part is saying that there is 6 blank lines before the next line
-     * 
+     * @bug number then $ is to say that there is that number of lines between
+     * this line and the next 264bobo1447b6$ the last part is saying that there
+     * is 6 blank lines before the next line
+     *
      * @param file
      * @return
      * @throws IOException
      * @throws PatternFormatException
-     * @throws ArrayIndexOutOfBoundsException 
+     * @throws ArrayIndexOutOfBoundsException
      */
     private static byte[][] readRLE(String[] file) throws IOException, PatternFormatException, ArrayIndexOutOfBoundsException {
         int commentLines = 0;
@@ -93,6 +95,7 @@ public class ReadFile {
         StringBuilder pattern = new StringBuilder();
         int xLength = 0;
         int yLength = 0;
+        int emptyLines =0;
 
         //Reads x and y value from file.
         String[] attributes = file[commentLines].replaceAll("\\s", "").split(",");
@@ -115,12 +118,12 @@ public class ReadFile {
         }
         String[] lines = pattern.toString().split("\\$");
 
-        for (int i = 0; i < xLength; i++) {
-            if (i >= lines.length) {
+        for (int y = 0; y < xLength; y++) {
+            if (y >= yLength) {
                 throw new PatternFormatException("Missing end of file symbol");
             }
-            String[] numbers = lines[i].split("\\D+");
-            String[] letters = lines[i].split("\\d+");
+            String[] numbers = lines[y-emptyLines].split("\\D+");
+            String[] letters = lines[y-emptyLines].split("\\d+");
 
             int cellPosition = 0;
             int letterPosition = 0;
@@ -135,13 +138,13 @@ public class ReadFile {
                         }
 
                         for (int k = 0; k < Integer.parseInt(numbers[letterPosition]); k++) {
-                            setCellStateRLE(parsedBoard, letters[j].charAt(0), i, cellPosition);
+                            setCellStateRLE(parsedBoard, letters[j].charAt(0), y, cellPosition);
                             cellPosition++;
                         }
 
                         letterPosition++;
                     } else {
-                        setCellStateRLE(parsedBoard, letters[j].charAt(0), i, cellPosition);
+                        setCellStateRLE(parsedBoard, letters[j].charAt(0), y, cellPosition);
                         cellPosition++;
                     }
 
@@ -150,13 +153,19 @@ public class ReadFile {
                             if (letters[j].charAt(k) == '!') {
                                 return parsedBoard;
                             }
-                            setCellStateRLE(parsedBoard, letters[j].charAt(k), i, cellPosition);
+                            setCellStateRLE(parsedBoard, letters[j].charAt(k), y, cellPosition);
                             cellPosition++;
 
                         }
 
                     }
 
+                }
+            }
+            if (letterPosition < numbers.length) {
+                for (int j = 0; j < Integer.parseInt(numbers[letterPosition]); j++) {
+                    y++;
+                    emptyLines++;
                 }
             }
 
@@ -166,7 +175,7 @@ public class ReadFile {
 
     private static void setCellStateRLE(byte[][] parsedBoard, char letter, int x, int y) throws PatternFormatException {
         if (x >= parsedBoard.length || y >= parsedBoard[x].length) {
-            throw new PatternFormatException("Line exceeds the defined width. After line/\"$ number\": " + x );
+            throw new PatternFormatException("Line exceeds the defined width. After line/\"$ number\": " + x);
         } else {
             if (letter == 'b') {
                 parsedBoard[x][y] = 0;
