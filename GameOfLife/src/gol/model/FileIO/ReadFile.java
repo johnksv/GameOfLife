@@ -95,6 +95,7 @@ public class ReadFile {
         StringBuilder pattern = new StringBuilder();
         int xLength = 0;
         int yLength = 0;
+        int emptyLines =0;
 
         //Reads x and y value from file.
         String[] attributes = file[commentLines].replaceAll("\\s", "").split(",");
@@ -116,14 +117,16 @@ public class ReadFile {
             pattern.append(file[i]);
         }
         String[] lines = pattern.toString().split("\\$");
+
         int offset = 0;
         
         for (int i = 0; i < (yLength-offset); i++) {
             if (i >= lines.length) {
                 throw new PatternFormatException("Missing end of file symbol TOP");
+
             }
-            String[] numbers = lines[i].split("\\D+");
-            String[] letters = lines[i].split("\\d+");
+            String[] numbers = lines[i-emptyLines].split("\\D+");
+            String[] letters = lines[i-emptyLines].split("\\d+");
 
             int cellPosition = 0;
             int letterPosition = 0;
@@ -138,13 +141,17 @@ public class ReadFile {
                         }
 
                         for (int k = 0; k < Integer.parseInt(numbers[letterPosition]); k++) {
+
                             setCellStateRLE(parsedBoard, letters[j].charAt(0), i + offset, cellPosition);
+
                             cellPosition++;
                         }
 
                         letterPosition++;
                     } else {
+
                         setCellStateRLE(parsedBoard, letters[j].charAt(0), i + offset, cellPosition);
+
                         cellPosition++;
                     }
 
@@ -153,7 +160,9 @@ public class ReadFile {
                             if (letters[j].charAt(k) == '!') {
                                 return parsedBoard;
                             }
+
                             setCellStateRLE(parsedBoard, letters[j].charAt(k), i + offset, cellPosition);
+
                             cellPosition++;
 
                         }
@@ -162,6 +171,7 @@ public class ReadFile {
 
                 }
             }
+
             if ((numbers.length > letters.length) || 
                (numbers.length == letters.length && letters[0].equals(""))) {
                 
@@ -169,6 +179,7 @@ public class ReadFile {
                     offset++;
                 }
                 System.out.println(offset);
+
             }
 
         }
