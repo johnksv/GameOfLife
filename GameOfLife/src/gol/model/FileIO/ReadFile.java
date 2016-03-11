@@ -71,15 +71,17 @@ public class ReadFile {
         }
         return parsedBoard;
     }
+
     /**
-     * @bug number then $ is to say that there is that number of lines between this line and the next 
-     * 264bobo1447b6$ the last part is saying that there is 6 blank lines before the next line
-     * 
+     * @bug number then $ is to say that there is that number of lines between
+     * this line and the next 264bobo1447b6$ the last part is saying that there
+     * is 6 blank lines before the next line
+     *
      * @param file
      * @return
      * @throws IOException
      * @throws PatternFormatException
-     * @throws ArrayIndexOutOfBoundsException 
+     * @throws ArrayIndexOutOfBoundsException
      */
     private static byte[][] readRLE(String[] file) throws IOException, PatternFormatException, ArrayIndexOutOfBoundsException {
         int commentLines = 0;
@@ -114,10 +116,11 @@ public class ReadFile {
             pattern.append(file[i]);
         }
         String[] lines = pattern.toString().split("\\$");
-
-        for (int i = 0; i < xLength; i++) {
+        int offset = 0;
+        
+        for (int i = 0; i < (yLength-offset); i++) {
             if (i >= lines.length) {
-                throw new PatternFormatException("Missing end of file symbol");
+                throw new PatternFormatException("Missing end of file symbol TOP");
             }
             String[] numbers = lines[i].split("\\D+");
             String[] letters = lines[i].split("\\d+");
@@ -135,13 +138,13 @@ public class ReadFile {
                         }
 
                         for (int k = 0; k < Integer.parseInt(numbers[letterPosition]); k++) {
-                            setCellStateRLE(parsedBoard, letters[j].charAt(0), i, cellPosition);
+                            setCellStateRLE(parsedBoard, letters[j].charAt(0), i + offset, cellPosition);
                             cellPosition++;
                         }
 
                         letterPosition++;
                     } else {
-                        setCellStateRLE(parsedBoard, letters[j].charAt(0), i, cellPosition);
+                        setCellStateRLE(parsedBoard, letters[j].charAt(0), i + offset, cellPosition);
                         cellPosition++;
                     }
 
@@ -150,7 +153,7 @@ public class ReadFile {
                             if (letters[j].charAt(k) == '!') {
                                 return parsedBoard;
                             }
-                            setCellStateRLE(parsedBoard, letters[j].charAt(k), i, cellPosition);
+                            setCellStateRLE(parsedBoard, letters[j].charAt(k), i + offset, cellPosition);
                             cellPosition++;
 
                         }
@@ -159,6 +162,14 @@ public class ReadFile {
 
                 }
             }
+            if ((numbers.length > letters.length) || 
+               (numbers.length == letters.length && letters[0].equals(""))) {
+                
+                for (int k = 1; k < Integer.parseInt(numbers[numbers.length - 1]); k++) {
+                    offset++;
+                }
+                System.out.println(offset);
+            }
 
         }
         throw new PatternFormatException("Missing end of file symbol.");
@@ -166,7 +177,7 @@ public class ReadFile {
 
     private static void setCellStateRLE(byte[][] parsedBoard, char letter, int x, int y) throws PatternFormatException {
         if (x >= parsedBoard.length || y >= parsedBoard[x].length) {
-            throw new PatternFormatException("Line exceeds the defined width. After line/\"$ number\": " + x );
+            throw new PatternFormatException("Line exceeds the defined width. After line/\"$ number\": " + x);
         } else {
             if (letter == 'b') {
                 parsedBoard[x][y] = 0;
