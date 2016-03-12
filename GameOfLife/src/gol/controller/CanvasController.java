@@ -27,22 +27,22 @@ public class CanvasController implements Initializable {
     private Board activeBoard;
     private Color backgroundColor;
     private Color cellColor;
+    private boolean isInitialized = false;
 
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        System.out.println("CANVAS");
-        
-        mouseInit();
     }
 
     public void init(Board activeBoard, Color backgroundColor, Color cellColor) {
+        mouseInit();
         gc = canvas.getGraphicsContext2D();
         this.activeBoard = activeBoard;
         this.backgroundColor = backgroundColor;
         this.cellColor = cellColor;
+        isInitialized = true;
     }
 
     //MouseEvent
@@ -68,26 +68,27 @@ public class CanvasController implements Initializable {
     }
 
     public void draw() {
-        gc.setFill(backgroundColor);
-        gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-        gc.setFill(cellColor);
-        for (int i = 1; i < activeBoard.getArrayLength(); i++) {
-            if (canvas.getHeight() < i * activeBoard.getCellSize() + i * activeBoard.getGridSpacing()) {
-                break;
-            }
-            for (int j = 1; j < activeBoard.getArrayLength(i); j++) {
-                if (activeBoard.getCellState(i, j)) {
-                    if (canvas.getWidth() < j * activeBoard.getCellSize() + j * activeBoard.getGridSpacing()) {
-                        break;
+        if (isInitialized) {
+            gc.setFill(backgroundColor);
+            gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+            gc.setFill(cellColor);
+            for (int i = 1; i < activeBoard.getArrayLength(); i++) {
+                if (canvas.getHeight() < i * activeBoard.getCellSize() + i * activeBoard.getGridSpacing()) {
+                    break;
+                }
+                for (int j = 1; j < activeBoard.getArrayLength(i); j++) {
+                    if (activeBoard.getCellState(i, j)) {
+                        if (canvas.getWidth() < j * activeBoard.getCellSize() + j * activeBoard.getGridSpacing()) {
+                            break;
+                        }
+                        gc.fillRect(j * activeBoard.getCellSize() + j * activeBoard.getGridSpacing(),
+                                i * activeBoard.getCellSize() + i * activeBoard.getGridSpacing(),
+                                activeBoard.getCellSize(),
+                                activeBoard.getCellSize());
                     }
-                    gc.fillRect(j * activeBoard.getCellSize() + j * activeBoard.getGridSpacing(),
-                            i * activeBoard.getCellSize() + i * activeBoard.getGridSpacing(),
-                            activeBoard.getCellSize(),
-                            activeBoard.getCellSize());
                 }
             }
         }
-
     }
 
 }

@@ -10,23 +10,20 @@ import java.net.URL;
 
 import java.util.ResourceBundle;
 import javafx.animation.Animation;
-import javafx.animation.Animation.Status;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
-import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.util.Duration;
 
 /**
@@ -54,28 +51,25 @@ public class GameController implements Initializable {
     private ColorPicker backgroundCP;
 
     private Board activeBoard;
+    protected final Timeline timeline = new Timeline();
+    private byte[][] boardFromFile;
     private Color cellColor;
     private Color backgroundColor;
-    private GraphicsContext gc;
-    private final Timeline timeline = new Timeline();
-    private byte[][] boardFromFile;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-       canvasController.init(activeBoard, backgroundColor, cellColor);
-
         activeBoard = new ArrayBoard();
         cellCP.setValue(Color.BLACK);
         backgroundCP.setValue(Color.web("#F4F4F4"));
-
-        handleZoom();
         handleColor();
+        handleZoom();
+
         handleAnimationSpeedSlider();
         initAnimation();
-
+        canvasController.init(activeBoard, backgroundColor, cellColor);
     }
 
-    private void draw() {
+    public void draw() {
         canvasController.draw();
     }
 
@@ -90,11 +84,10 @@ public class GameController implements Initializable {
 
     }
 
-
     @FXML
     public void handleAnimation() {
 
-        if (timeline.getStatus() == Status.RUNNING) {
+        if (timeline.getStatus() == Animation.Status.RUNNING) {
             timeline.pause();
             startPauseBtn.setText("Start game");
         } else {
@@ -145,8 +138,8 @@ public class GameController implements Initializable {
             FileChooser fileChooser = new FileChooser();
 
             fileChooser.getExtensionFilters().addAll(
-                    new ExtensionFilter("Game of Life Files", "*.rle", "*.lif", "*.cells"),
-                    new ExtensionFilter("All Files", "*.*"));
+                    new FileChooser.ExtensionFilter("Game of Life Files", "*.rle", "*.lif", "*.cells"),
+                    new FileChooser.ExtensionFilter("All Files", "*.*"));
 
             File selected = fileChooser.showOpenDialog(null);
             if (selected != null) {
@@ -173,14 +166,6 @@ public class GameController implements Initializable {
 
     public void constructRule(byte[] cellsToLive, byte[] cellsToSpawn) {
         //@TODO implement costume rules
-    }
-
-    public void setCellColor(Color cellColor) {
-        this.cellColor = cellColor;
-    }
-
-    public void setBackgroundColor(Color backgroundColor) {
-        this.backgroundColor = backgroundColor;
     }
 
     public void setActiveBoard(Board activeBoard) {

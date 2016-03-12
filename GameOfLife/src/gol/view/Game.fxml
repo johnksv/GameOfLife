@@ -138,6 +138,6 @@
         </TabPane>
     </right>
     <center>
-        <fx:include source="Canvas.fxml" fx:id="canvasIncluded"/>
+        <fx:include source="Canvas.fxml" fx:id="canvas"/>
     </center>
 </BorderPane>
