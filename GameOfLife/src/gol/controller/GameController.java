@@ -1,5 +1,6 @@
 package gol.controller;
 
+import gol.controller.patternEditor.EditorController;
 import gol.model.Board.ArrayBoard;
 import gol.model.Board.Board;
 import gol.model.FileIO.PatternFormatException;
@@ -14,9 +15,10 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
-import javafx.scene.canvas.Canvas;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
@@ -24,6 +26,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
 /**
@@ -31,8 +35,6 @@ import javafx.util.Duration;
  */
 public class GameController implements Initializable {
 
-    @FXML
-    private Canvas canvas;
     @FXML
     private CanvasController canvasController;
     @FXML
@@ -162,6 +164,24 @@ public class GameController implements Initializable {
             alert.showAndWait();
 
         }
+    }
+
+    @FXML
+    public void openPatternEditor() throws IOException {
+        Stage editor = new Stage();
+        Parent root = FXMLLoader.load(getClass().getResource("/gol/view/patternEditor/Editor.fxml"));
+
+        timeline.pause();
+        new EditorController().initEditor(activeBoard);
+
+
+        Scene scene = new Scene(root);
+        editor.setScene(scene);
+        editor.setTitle("Pattern Editor");
+        editor.initModality(Modality.APPLICATION_MODAL);
+        editor.show();
+
+        
     }
 
     public void constructRule(byte[] cellsToLive, byte[] cellsToSpawn) {

@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.text.*?>
-<?import javafx.scene.shape.*?>
-<?import javafx.scene.canvas.*?>
-<?import javafx.scene.control.*?>
-<?import java.lang.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ColorPicker?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gol.controller.GameController">
     <bottom>
@@ -85,7 +95,7 @@
                                     <content>
                                         <AnchorPane minHeight="0.0" minWidth="0.0" prefWidth="200.0">
                                             <children>
-                                                <Button layoutX="27.0" layoutY="14.0" mnemonicParsing="false" text="Open Pattern Editor" />
+                                                <Button layoutX="27.0" layoutY="14.0" mnemonicParsing="false" onAction="#openPatternEditor" text="Open Pattern Editor" />
                                                 <Label layoutX="27.0" layoutY="50.0" text="PS: I redigering har du også &#10;mulighet til å importere mønster &#10;fra fil og internett" wrapText="true" />
                                             </children>
                                         </AnchorPane>
@@ -138,6 +148,6 @@
         </TabPane>
     </right>
     <center>
-        <fx:include source="Canvas.fxml" fx:id="canvas"/>
+        <fx:include fx:id="canvas" source="Canvas.fxml" />
     </center>
 </BorderPane>
