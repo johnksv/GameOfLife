@@ -37,6 +37,8 @@ public class GameController implements Initializable {
     @FXML
     private Canvas canvas;
     @FXML
+    private CanvasController canvasController;
+    @FXML
     private Slider cellSizeSlider;
     @FXML
     private Slider gridSpacingSlider;
