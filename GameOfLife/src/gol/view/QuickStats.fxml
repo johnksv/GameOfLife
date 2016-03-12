@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+
+<ToolBar prefHeight="40.0" prefWidth="200.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1">
+    <items>
+            <Label text="Sekunder simulering har vært i gang:" />
+            <Region prefWidth="100.0" />
+            <Separator orientation="VERTICAL" />
+            <Label text="Høyeste antall levende celler" />
+    </items>
+</ToolBar>
