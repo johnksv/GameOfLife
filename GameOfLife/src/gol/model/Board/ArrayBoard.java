@@ -3,6 +3,11 @@ package gol.model.Board;
 import gol.model.Logic.Rule;
 
 /**
+ * //TODO Comment about Arrayboard
+ * 
+ * 
+ * 
+ * 
  * @author s305054, s305084, s305089
  */
 public class ArrayBoard extends Board {
@@ -10,6 +15,9 @@ public class ArrayBoard extends Board {
     private final int WIDTH, HEIGHT;
     private byte[][] gameBoard;
 
+    /**
+     * Constructs a new Arrayboard with default width and height
+     */
     public ArrayBoard() {
         super();
         WIDTH = 1800;
@@ -17,6 +25,11 @@ public class ArrayBoard extends Board {
         gameBoard = new byte[WIDTH][HEIGHT];
     }
 
+    /**
+     * Constructs a new Arrayboard with given width and height
+     * @param width the width of the gameboard
+     * @param height the height of the gameboard
+     */
     public ArrayBoard(int width, int height) {
         super();
         this.WIDTH = width;
@@ -111,19 +124,8 @@ public class ArrayBoard extends Board {
          * x is position of the second index of the matrix (row)
          */
         y = y / (cellSize + gridSpacing);
-        x = x / (cellSize + gridSpacing);
-        byte value = 0;
-        if (alive) {
-            value = 64;
-        }
-
-        if (((int) y) < gameBoard.length && y >= 0) {
-            if (((int) x) < gameBoard[(int) y].length && x >= 0) {
-                gameBoard[(int) y][(int) x] = value;
-            }
-        } else {
-            System.err.println("x and y was not in gameboard.");
-        }
+        x = x / (cellSize + gridSpacing);     
+        setCellState((int) y, (int) x, alive);
     }
 
     @Override
