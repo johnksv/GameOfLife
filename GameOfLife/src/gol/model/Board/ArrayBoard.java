@@ -125,7 +125,7 @@ public class ArrayBoard extends Board {
          */
         y = y / (cellSize + gridSpacing);
         x = x / (cellSize + gridSpacing);     
-        setCellState((int) y, (int) x, alive);
+        setCellState((int) x, (int) y, alive);
     }
 
     @Override
