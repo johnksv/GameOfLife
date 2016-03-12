@@ -188,7 +188,7 @@ public abstract class Board {
      *
      * @param x the x coordinate of the mouse click.
      * @param y the y coordinate of the mouse click.
-//     * @return The cells state at position (x,y). true if alive. false if dead.
+     * @return The cells state at position (x,y). true if alive. false if dead.
      */
     public abstract boolean getCellState(double x, double y);
 
