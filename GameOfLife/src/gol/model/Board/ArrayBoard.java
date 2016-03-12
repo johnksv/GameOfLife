@@ -4,10 +4,10 @@ import gol.model.Logic.Rule;
 
 /**
  * //TODO Comment about Arrayboard
- * 
- * 
- * 
- * 
+ *
+ *
+ *
+ *
  * @author s305054, s305084, s305089
  */
 public class ArrayBoard extends Board {
@@ -27,6 +27,7 @@ public class ArrayBoard extends Board {
 
     /**
      * Constructs a new Arrayboard with given width and height
+     *
      * @param width the width of the gameboard
      * @param height the height of the gameboard
      */
@@ -46,7 +47,6 @@ public class ArrayBoard extends Board {
             }
         }
     }
-
 
     @Override
     protected void countNeigh() {
@@ -124,8 +124,19 @@ public class ArrayBoard extends Board {
          * x is position of the second index of the matrix (row)
          */
         y = y / (cellSize + gridSpacing);
-        x = x / (cellSize + gridSpacing);     
-        setCellState((int) y, (int) x, alive);
+        x = x / (cellSize + gridSpacing);
+
+        byte value = 0;
+        if (alive) {
+            value = 64;
+        }
+        if (((int) y) < gameBoard.length && y >= 0) {
+            if (((int) x) < gameBoard[(int) y].length && x >= 0) {
+                gameBoard[(int) y][(int) x] = value;
+            }
+        } else {
+            System.err.println("x and y was not in gameboard.");
+        }
     }
 
     @Override
