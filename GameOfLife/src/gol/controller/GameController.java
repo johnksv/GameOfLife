@@ -53,8 +53,7 @@ public class GameController implements Initializable, Controller {
     private Board activeBoard;
     protected final Timeline timeline = new Timeline();
     private byte[][] boardFromFile;
-    private Color cellColor;
-    private Color backgroundColor;
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -62,7 +61,7 @@ public class GameController implements Initializable, Controller {
         cellCP.setValue(Color.BLACK);
         backgroundCP.setValue(Color.web("#F4F4F4"));
         
-        canvasController.init(activeBoard, backgroundColor, cellColor);
+        canvasController.setActiveBoard(activeBoard);
         handleZoom();
         handleColor();
         handleAnimationSpeedSlider();
@@ -119,8 +118,8 @@ public class GameController implements Initializable, Controller {
 
     @FXML
     public void handleColor() {
-        cellColor = cellCP.getValue();
-        backgroundColor = backgroundCP.getValue();
+        canvasController.setCellColor(cellCP.getValue());
+        canvasController.setBackgroundColor(backgroundCP.getValue());
         draw();
     }
 

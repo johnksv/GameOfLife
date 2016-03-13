@@ -25,8 +25,9 @@ public class CanvasController implements Initializable {
     private Canvas canvas;
     private GraphicsContext gc;
     private Board activeBoard;
-    Color backgroundColor;
-    Color cellColor;
+    private Color backgroundColor = Color.web("#F4F4F4");
+    private Color cellColor = Color.BLACK;
+    private boolean isInitilized = false;
 
     /**
      * Initializes the controller class.
@@ -37,10 +38,9 @@ public class CanvasController implements Initializable {
         mouseInit();
     }
 
-    public void init(Board activeBoard, Color backgroundColor, Color  cellColor) {
+    public void setActiveBoard(Board activeBoard) {
         this.activeBoard = activeBoard;
-        this.backgroundColor = backgroundColor;
-        this.cellColor = cellColor;
+        isInitilized = true;
     }
 
     //MouseEvent
@@ -66,26 +66,42 @@ public class CanvasController implements Initializable {
     }
 
     public void draw() {
-        gc.setFill(backgroundColor);
-        gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-        gc.setFill(cellColor);
-        for (int i = 1; i < activeBoard.getArrayLength(); i++) {
-            if (canvas.getHeight() < i * activeBoard.getCellSize() + i * activeBoard.getGridSpacing()) {
-                break;
-            }
-            for (int j = 1; j < activeBoard.getArrayLength(i); j++) {
-                if (activeBoard.getCellState(i, j)) {
-                    if (canvas.getWidth() < j * activeBoard.getCellSize() + j * activeBoard.getGridSpacing()) {
-                        break;
+        if (isInitilized) {
+            gc.setFill(backgroundColor);
+            gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+            gc.setFill(cellColor);
+            for (int i = 1; i < activeBoard.getArrayLength(); i++) {
+                if (canvas.getHeight() < i * activeBoard.getCellSize() + i * activeBoard.getGridSpacing()) {
+                    break;
+                }
+                for (int j = 1; j < activeBoard.getArrayLength(i); j++) {
+                    if (activeBoard.getCellState(i, j)) {
+                        if (canvas.getWidth() < j * activeBoard.getCellSize() + j * activeBoard.getGridSpacing()) {
+                            break;
+                        }
+                        gc.fillRect(j * activeBoard.getCellSize() + j * activeBoard.getGridSpacing(),
+                                i * activeBoard.getCellSize() + i * activeBoard.getGridSpacing(),
+                                activeBoard.getCellSize(),
+                                activeBoard.getCellSize());
                     }
-                    gc.fillRect(j * activeBoard.getCellSize() + j * activeBoard.getGridSpacing(),
-                            i * activeBoard.getCellSize() + i * activeBoard.getGridSpacing(),
-                            activeBoard.getCellSize(),
-                            activeBoard.getCellSize());
                 }
             }
-        }
 
+        }
+    }
+
+    /**
+     * @param backgroundColor the backgroundColor to set
+     */
+    public void setBackgroundColor(Color backgroundColor) {
+        this.backgroundColor = backgroundColor;
+    }
+
+    /**
+     * @param cellColor the cellColor to set
+     */
+    public void setCellColor(Color cellColor) {
+        this.cellColor = cellColor;
     }
 
 }
