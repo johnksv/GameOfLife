@@ -55,8 +55,6 @@ public class GameController implements Initializable {
     private Board activeBoard;
     protected final Timeline timeline = new Timeline();
     private byte[][] boardFromFile;
-    private Color cellColor;
-    private Color backgroundColor;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -65,10 +63,10 @@ public class GameController implements Initializable {
         backgroundCP.setValue(Color.web("#F4F4F4"));
         handleColor();
         handleZoom();
-
         handleAnimationSpeedSlider();
         initAnimation();
-        canvasController.init(activeBoard, backgroundColor, cellColor);
+
+        canvasController.setActiveBoard(activeBoard);
     }
 
     public void draw() {
@@ -121,8 +119,8 @@ public class GameController implements Initializable {
 
     @FXML
     public void handleColor() {
-        cellColor = cellCP.getValue();
-        backgroundColor = backgroundCP.getValue();
+        canvasController.setCellColor(cellCP.getValue());
+        canvasController.setBackgroundColor(backgroundCP.getValue());
         draw();
     }
 
@@ -168,20 +166,20 @@ public class GameController implements Initializable {
 
     @FXML
     public void openPatternEditor() throws IOException {
-        Stage editor = new Stage();
-        Parent root = FXMLLoader.load(getClass().getResource("/gol/view/patternEditor/Editor.fxml"));
-
         timeline.pause();
-        new EditorController().initEditor(activeBoard);
 
+        Stage editor = new Stage();
+        FXMLLoader root = new FXMLLoader(getClass().getResource("/gol/view/patternEditor/Editor.fxml"));
 
-        Scene scene = new Scene(root);
+        Scene scene = new Scene((Parent) root.load());
+        EditorController editorController = root.<EditorController>getController();
+        editorController.setActiveBoard(activeBoard);
+
         editor.setScene(scene);
         editor.setTitle("Pattern Editor");
         editor.initModality(Modality.APPLICATION_MODAL);
         editor.show();
 
-        
     }
 
     public void constructRule(byte[] cellsToLive, byte[] cellsToSpawn) {

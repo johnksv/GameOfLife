@@ -5,6 +5,7 @@
 package gol.controller.patternEditor;
 
 import gol.controller.CanvasController;
+import gol.controller.GameController;
 import gol.model.Board.ArrayBoard;
 import gol.model.Board.Board;
 
@@ -12,6 +13,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 
 /**
@@ -30,13 +32,12 @@ public class EditorController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+        System.out.println("EDITOR INIT");
     }
 
-    public void initEditor(Board activeBoard) {
+    public void setActiveBoard(Board activeBoard) {
         this.activeBoard = activeBoard;
-    //    canvasController.init(activeBoard,Color.BLACK, Color.WHITE);
-//        canvasController.draw();
+        canvasController.setActiveBoard(activeBoard);
     }
 
 }

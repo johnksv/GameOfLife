@@ -4,6 +4,7 @@
  */
 package gol.controller;
 
+import gol.controller.patternEditor.EditorController;
 import gol.model.Board.Board;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -25,8 +26,8 @@ public class CanvasController implements Initializable {
     private Canvas canvas;
     private GraphicsContext gc;
     private Board activeBoard;
-    private Color backgroundColor;
-    private Color cellColor;
+    private Color backgroundColor = Color.web("#F4F4F4");
+    private Color cellColor = Color.BLACK;
     private boolean isInitialized = false;
 
     /**
@@ -34,20 +35,19 @@ public class CanvasController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        gc = canvas.getGraphicsContext2D();
+        mouseInit();
     }
 
-    public void init(Board activeBoard, Color backgroundColor, Color cellColor) {
-        mouseInit();
-        gc = canvas.getGraphicsContext2D();
+    public void setActiveBoard(Board activeBoard) {
         this.activeBoard = activeBoard;
-        this.backgroundColor = backgroundColor;
-        this.cellColor = cellColor;
+        System.out.println(activeBoard);
         isInitialized = true;
+        draw();
     }
 
     //MouseEvent
     private void mouseInit() {
-
         //Registers clicks on scene
         canvas.addEventHandler(MouseEvent.MOUSE_PRESSED,
                 (MouseEvent e) -> {
@@ -57,7 +57,6 @@ public class CanvasController implements Initializable {
                 (MouseEvent e) -> {
                     handleMouseClick(e);
                 });
-
     }
 
     private void handleMouseClick(MouseEvent e) {
@@ -89,6 +88,20 @@ public class CanvasController implements Initializable {
                 }
             }
         }
+    }
+
+    /**
+     * @param backgroundColor the backgroundColor to set
+     */
+    public void setBackgroundColor(Color backgroundColor) {
+        this.backgroundColor = backgroundColor;
+    }
+
+    /**
+     * @param cellColor the cellColor to set
+     */
+    public void setCellColor(Color cellColor) {
+        this.cellColor = cellColor;
     }
 
 }
