@@ -1,7 +1,7 @@
 package gol.model.Logic;
 
 /**
- * All classes that implements this interface have to override the setLife method.
+ * All classes that implements this interface can set a specific set of rules.
  * @author s305054, s305084, s305089
  */
 public interface Rule {
