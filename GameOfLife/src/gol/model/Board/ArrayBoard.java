@@ -20,8 +20,8 @@ public class ArrayBoard extends Board {
      */
     public ArrayBoard() {
         super();
-        WIDTH = 1800;
-        HEIGHT = 1800;
+        WIDTH = 10;
+        HEIGHT = 10;
         gameBoard = new byte[WIDTH][HEIGHT];
     }
 
@@ -100,7 +100,7 @@ public class ArrayBoard extends Board {
     }
 
     @Override
-    public void setCellState(int x, int y, boolean alive) {
+    public void setCellState(int y, int x, boolean alive) {
         byte value = 0;
         if (alive) {
             value = 64;
@@ -109,10 +109,12 @@ public class ArrayBoard extends Board {
         if (y < gameBoard.length && y >= 0) {
             if (x < gameBoard[y].length && x >= 0) {
                 gameBoard[y][x] = value;
+            } else {
+                System.err.println("x or y was not in gameboard.");
             }
 
         } else {
-            System.err.println("x and y was not in gameboard.");
+            System.err.println("x or y was not in gameboard.");
         }
     }
 
@@ -126,17 +128,7 @@ public class ArrayBoard extends Board {
         y = y / (cellSize + gridSpacing);
         x = x / (cellSize + gridSpacing);
 
-        byte value = 0;
-        if (alive) {
-            value = 64;
-        }
-        if (((int) y) < gameBoard.length && y >= 0) {
-            if (((int) x) < gameBoard[(int) y].length && x >= 0) {
-                gameBoard[(int) y][(int) x] = value;
-            }
-        } else {
-            System.err.println("x and y was not in gameboard.");
-        }
+        setCellState((int) x, (int) y, alive);
     }
 
     @Override
