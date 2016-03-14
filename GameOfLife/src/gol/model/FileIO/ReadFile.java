@@ -6,13 +6,17 @@ import java.nio.file.Path;
 import java.util.List;
 
 /**
+ * This class has the necessary static methods for parsing files into gameboards.
+ * 
  * @author s305054, s305084, s305089
  */
 public class ReadFile {
 
     /**
-     * Leser filen, lagerer en array. Sjekker format, og kaller på metode for
-     * parsing
+     * Reads a file, makes an array. 
+     * This static method checks the file format, and calls for the correct
+     * method for parsing the file.
+     * 
      *
      *
      */
@@ -36,6 +40,14 @@ public class ReadFile {
         }
     }
 
+    /**
+     * Parses a PlainText file into a Board.
+     * 
+     * @param file
+     * @return a parsed board where living cells get the value 64, and dead cells get the value 0
+     * @throws IOException
+     * @throws PatternFormatException 
+     */
     private static byte[][] readPlainText(String[] file) throws IOException, PatternFormatException {
         int greatestlength = 0;
         int commentLines = 0;
