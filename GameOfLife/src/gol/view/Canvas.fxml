@@ -3,5 +3,5 @@
 <?import javafx.scene.canvas.Canvas?>
 
 
-<Canvas fx:id="canvas" height="560.0" width="540.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" 
+<Canvas fx:id="canvas" height="560.0" width="540.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" 
     fx:controller="gol.controller.CanvasController"/>

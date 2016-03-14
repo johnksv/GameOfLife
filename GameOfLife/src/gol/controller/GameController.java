@@ -43,7 +43,7 @@ public class GameController implements Initializable {
 
     @FXML
     private CanvasController canvasController;
-   
+
     @FXML
     private Slider cellSizeSlider;
     @FXML
@@ -79,16 +79,12 @@ public class GameController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        
+
         activeBoard = new ArrayBoard();
         cellCP.setValue(Color.BLACK);
         backgroundCP.setValue(Color.web("#F4F4F4"));
-        System.out.println(canvasController);
-        canvasController.setActiveBoard(activeBoard);
-        canvasController.setRbMoveGrid(rbMoveGrid);
-        canvasController.setRbRemoveCell(rbRemoveCell);
-        
-        
+
+        initCanvasController();
         handleZoom();
         handleColor();
         handleAnimationSpeedSlider();
@@ -96,20 +92,24 @@ public class GameController implements Initializable {
         initGameRulesListner();
 
     }
-    
-    private void initGameRulesListner(){
+
+    private void initCanvasController() {
+        canvasController.setActiveBoard(activeBoard);
+        canvasController.setRbMoveGrid(rbMoveGrid);
+        canvasController.setRbRemoveCell(rbRemoveCell);
+    }
+
+    private void initGameRulesListner() {
         tgGameRules.selectedToggleProperty().addListener((ObservableValue<? extends Toggle> observable, Toggle oldValue, Toggle newValue) -> {
-            if(newValue == rbCustomGameRules){
+            if (newValue == rbCustomGameRules) {
                 tfCellsToLive.setDisable(false);
                 tfCellsToSpawn.setDisable(false);
-            }else{
+            } else {
                 tfCellsToLive.setDisable(true);
                 tfCellsToSpawn.setDisable(true);
             }
         });
     }
-
-    
 
     private void initAnimation() {
         Duration duration = Duration.millis(1000);
@@ -121,7 +121,7 @@ public class GameController implements Initializable {
         timeline.getKeyFrames().add(keyframe);
 
     }
-    
+
     private void draw() {
         canvasController.draw();
     }
@@ -207,11 +207,9 @@ public class GameController implements Initializable {
         }
     }
 
-
     public void constructRule(byte[] cellsToLive, byte[] cellsToSpawn) {
         //@TODO implement costume rules
     }
-
 
     public void setActiveBoard(Board activeBoard) {
         this.activeBoard = activeBoard;

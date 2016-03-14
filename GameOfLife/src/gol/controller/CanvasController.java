@@ -43,7 +43,6 @@ public class CanvasController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         gc = canvas.getGraphicsContext2D();
         mouseInit();
-        System.out.println("INIT CANVAS");
     }
 
     //MouseEvent
