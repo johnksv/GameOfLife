@@ -41,12 +41,12 @@ public class ReadFile {
     }
 
     /**
-     * Parses a PlainText file into a Board.
+     * Parses a PlainText file into a playable board.
      * 
-     * @param file
+     * @param file array with rows of plaintext
      * @return a parsed board where living cells get the value 64, and dead cells get the value 0
      * @throws IOException
-     * @throws PatternFormatException 
+     * @throws PatternFormatException Constructs a new exception, is thrown if there is an error reading/parsing the file.
      */
     private static byte[][] readPlainText(String[] file) throws IOException, PatternFormatException {
         int greatestlength = 0;
@@ -198,6 +198,14 @@ public class ReadFile {
         throw new PatternFormatException("Missing end of file symbol.");
     }
 
+    /**
+     * Parsed board is made into a playable board.
+     * @param parsedBoard
+     * @param letter
+     * @param x column of board
+     * @param y row of board
+     * @throws PatternFormatException Constructs a new exception, is thrown if there is an error reading/parsing the file.
+     */
     private static void setCellStateRLE(byte[][] parsedBoard, char letter, int x, int y) throws PatternFormatException {
         if (x >= parsedBoard.length || y >= parsedBoard[x].length) {
             throw new PatternFormatException("Line exceeds the defined width. After line/\"$ number\": " + x);

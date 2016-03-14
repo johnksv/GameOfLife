@@ -78,7 +78,7 @@ public class GameController implements Initializable {
     private GraphicsContext gc;
     private final Timeline timeline = new Timeline();
     private byte[][] boardFromFile;
-    private double[] moveGridValues = new double[4]; //Offset x, offset y, old x, old y
+    private double[] moveGridValues = {0, 0, -1, -1}; //Offset x, offset y, old x, old y
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -125,6 +125,18 @@ public class GameController implements Initializable {
                         handleMouseClick(e);
                     }
                 });
+        canvas.addEventHandler(MouseEvent.MOUSE_RELEASED,
+                (MouseEvent e) -> {
+                    if (rbMoveGrid.isSelected()) {
+                        moveGridValues[2] = -1;
+                        moveGridValues[3] = -1;
+                    }
+                });
+        
+        //offset
+        //Stian's proposition that is somewhat bugged if you zoom, but the zoom needs to be fixed any way.
+        moveGridValues[0]=-(activeBoard.getArrayLength()*activeBoard.getCellSize()*activeBoard.getGridSpacing())/2;
+        moveGridValues[1]=-(activeBoard.getArrayLength()*activeBoard.getCellSize()*activeBoard.getGridSpacing())/2;
 
     }
 
@@ -144,11 +156,12 @@ public class GameController implements Initializable {
         double y = e.getY();
 
         if (rbRemoveCell.isSelected()) {
-            activeBoard.setCellState(y, x, false);
+            activeBoard.setCellState(y, x, false, moveGridValues[0], moveGridValues[1]);
         } else if (rbMoveGrid.isSelected()) {
             System.out.println("Moving gird ");
         } else {
-            activeBoard.setCellState(y, x, true);
+            activeBoard.setCellState(y, x, true, moveGridValues[0], moveGridValues[1]);
+
         }
         draw();
     }
@@ -239,15 +252,15 @@ public class GameController implements Initializable {
         gc.setFill(cellColor);
         for (int i = 1; i < activeBoard.getArrayLength(); i++) {
             if (canvas.getHeight() < i * activeBoard.getCellSize() + i * activeBoard.getGridSpacing()) {
-                break;
+
             }
             for (int j = 1; j < activeBoard.getArrayLength(i); j++) {
                 if (activeBoard.getCellState(i, j)) {
                     if (canvas.getWidth() < j * activeBoard.getCellSize() + j * activeBoard.getGridSpacing()) {
-                        break;
+
                     }
-                    gc.fillRect(j * activeBoard.getCellSize() + j * activeBoard.getGridSpacing(),
-                            i * activeBoard.getCellSize() + i * activeBoard.getGridSpacing(),
+                    gc.fillRect(j * activeBoard.getCellSize() + j * activeBoard.getGridSpacing() + moveGridValues[0],
+                            i * activeBoard.getCellSize() + i * activeBoard.getGridSpacing() + moveGridValues[1],
                             activeBoard.getCellSize(),
                             activeBoard.getCellSize());
                 }
@@ -277,10 +290,16 @@ public class GameController implements Initializable {
     }
 
     private void moveGrid(MouseEvent e) {
-        moveGridValues[0] += e.getX() - moveGridValues[2]; //Offset x = x position - old x
-        moveGridValues[1] += e.getY() - moveGridValues[3];
-        moveGridValues[2] = e.getX();
-        moveGridValues[3] = e.getY();
+        if (moveGridValues[2] < 0) {
+            moveGridValues[2] = e.getX();
+            moveGridValues[3] = e.getY();
+        } else {
+            moveGridValues[0] += e.getX() - moveGridValues[2]; //Offset x = x position - old y
+            moveGridValues[1] += e.getY() - moveGridValues[3]; //Offset y = y position - old y
+            moveGridValues[2] = e.getX();
+            moveGridValues[3] = e.getY();
+        }
+        
         draw();
 
     }
