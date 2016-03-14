@@ -17,7 +17,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 /**
- *
+ * Starting- and endingpoint of application.
  * @author s305054, s305084, s305089
  */
 public class Main extends Application {
