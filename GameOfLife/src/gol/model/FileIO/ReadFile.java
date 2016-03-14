@@ -190,7 +190,6 @@ public class ReadFile {
                 for (int k = 1; k < Integer.parseInt(numbers[numbers.length - 1]); k++) {
                     offset++;
                 }
-                System.out.println(offset);
 
             }
 

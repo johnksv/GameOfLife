@@ -73,7 +73,6 @@ public class CanvasController implements Initializable {
         //Stian's proposition that is somewhat bugged if you zoom, but the zoom needs to be fixed any way.
 //        moveGridValues[0] = -(activeBoard.getArrayLength() * activeBoard.getCellSize() * activeBoard.getGridSpacing()) / 2;
 //        moveGridValues[1] = -(activeBoard.getArrayLength() * activeBoard.getCellSize() * activeBoard.getGridSpacing()) / 2;
-
     }
 
     public void draw() {
@@ -100,14 +99,28 @@ public class CanvasController implements Initializable {
         }
 
     }
-
+    //Over complicated for the sake of smoothness, this code may have huge potensial for improment. 
     private void moveGrid(MouseEvent e) {
         if (moveGridValues[2] < 0) {
             moveGridValues[2] = e.getX();
             moveGridValues[3] = e.getY();
         } else {
-            moveGridValues[0] += e.getX() - moveGridValues[2]; //Offset x = x position - old y
-            moveGridValues[1] += e.getY() - moveGridValues[3]; //Offset y = y position - old y
+            if (moveGridValues[0] + e.getX() - moveGridValues[2] < 0) {
+                if (moveGridValues[1] + e.getY() - moveGridValues[3] < 0) {
+
+                    moveGridValues[0] += e.getX() - moveGridValues[2]; //Offset x = x position - old y
+                    moveGridValues[1] += e.getY() - moveGridValues[3]; //Offset y = y position - old y
+                } else {
+                    moveGridValues[1] = 0;
+                    moveGridValues[0] += e.getX() - moveGridValues[2]; //Offset x = x position - old y
+                }
+            } else {
+                moveGridValues[0] = 0;
+                if (moveGridValues[1] + e.getY() - moveGridValues[3] < 0) {
+                    moveGridValues[1] += e.getY() - moveGridValues[3]; //Offset y = y position - old y
+                }
+
+            }
             moveGridValues[2] = e.getX();
             moveGridValues[3] = e.getY();
         }
@@ -165,6 +178,11 @@ public class CanvasController implements Initializable {
      */
     public void setRbMoveGrid(RadioButton rbMoveGrid) {
         this.rbMoveGrid = rbMoveGrid;
+    }
+    //Does not calc gridspacing yet.
+    public void calcNewOffset(double cellSize, double newCellSize) {
+        moveGridValues[0] = (moveGridValues[0] / cellSize) * newCellSize;
+        moveGridValues[1] = (moveGridValues[1] / cellSize) * newCellSize;
     }
 
 }

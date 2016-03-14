@@ -82,11 +82,14 @@ public class GameController implements Initializable {
         backgroundCP.setValue(Color.web("#F4F4F4"));
 
         initCanvasController();
-        handleZoom();
+        //handleZoom();
+        activeBoard.setCellSize(0.2 * Math.exp(0.05 *cellSizeSlider.getValue() ));
+        handleGridSpacingSlider();
         handleColor();
         handleAnimationSpeedSlider();
         initAnimation();
         initGameRulesListner();
+        draw();
 
     }
 
@@ -177,6 +180,8 @@ public class GameController implements Initializable {
     @FXML
     public void handleZoom() {
         double x = cellSizeSlider.getValue();
+        //Har ikke implementert gridspacing
+        canvasController.calcNewOffset(activeBoard.getCellSize(),0.2 * Math.exp(0.05 * x));
         activeBoard.setCellSize(0.2 * Math.exp(0.05 * x));
         handleGridSpacingSlider();
         draw();
