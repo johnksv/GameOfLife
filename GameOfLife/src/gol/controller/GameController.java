@@ -70,6 +70,7 @@ public class GameController implements Initializable {
     private GraphicsContext gc;
     private final Timeline timeline = new Timeline();
     private byte[][] boardFromFile;
+    private double[] moveGridValues = new double[4]; //Offset x, offset y, old x, old y
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -96,7 +97,11 @@ public class GameController implements Initializable {
                 });
         canvas.addEventHandler(MouseEvent.MOUSE_DRAGGED,
                 (MouseEvent e) -> {
-                    handleMouseClick(e);
+                    if (rbMoveGrid.isSelected()) {
+                        moveGrid(e);
+                    } else {
+                        handleMouseClick(e);
+                    }
                 });
 
     }
@@ -119,7 +124,7 @@ public class GameController implements Initializable {
         if (rbRemoveCell.isSelected()) {
             activeBoard.setCellState(y, x, false);
         } else if (rbMoveGrid.isSelected()) {
-            System.out.println("gfeh ");
+            System.out.println("Moving gird ");
         } else {
             activeBoard.setCellState(y, x, true);
         }
@@ -247,5 +252,14 @@ public class GameController implements Initializable {
 
     public Board getActiveBoard() {
         return activeBoard;
+    }
+
+    private void moveGrid(MouseEvent e) {
+        moveGridValues[0] += e.getX() - moveGridValues[2]; //Offset x = x position - old x
+        moveGridValues[1] += e.getY() - moveGridValues[3];
+        moveGridValues[2] = e.getX();
+        moveGridValues[3] = e.getY();
+        draw();
+
     }
 }
