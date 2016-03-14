@@ -131,17 +131,17 @@ public abstract class Board {
      * @param x the x coordinate for the first column in this array
      * @param y the x coordinate for the first row in this array
      */
-    public abstract void insertArray(byte[][] boardFromFile, int x, int y);
+    public abstract void insertArray(byte[][] boardFromFile, int y, int x);
 
     /**
-     * Sets the cell state at position (x,y)
+     * Sets the cell state at position (y,x)
      *
      * @param x the x coordinate of the cell
      * @param y the y coordinate of the cell
      * @param alive The state to set the cell to. True for alive. False for
      * dead.
      */
-    public abstract void setCellState(int x, int y, boolean alive);
+    public abstract void setCellState(int y, int x, boolean alive);
 
     /**
      * Sets the cell state from canvas coordinats, given from a mouse click.
@@ -151,7 +151,7 @@ public abstract class Board {
      * @param alive The state to set the cell to. True for alive. False for
      * dead.
      */
-    public abstract void setCellState(double x, double y, boolean alive);
+    public abstract void setCellState(double y, double x, boolean alive);
 
     /**
      *
