@@ -4,6 +4,8 @@ import gol.model.Board.ArrayBoard;
 import gol.model.Board.Board;
 import gol.model.FileIO.PatternFormatException;
 import gol.model.FileIO.ReadFile;
+import gol.model.Logic.ConwaysRule;
+import gol.model.Logic.CustomRule;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -13,24 +15,19 @@ import javafx.animation.Animation;
 import javafx.animation.Animation.Status;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
@@ -65,13 +62,13 @@ public class GameController implements Initializable {
     @FXML
     private ToggleGroup tgGameRules;
     @FXML
-    private RadioButton rbStandardGameRules;
-    @FXML
     private RadioButton rbCustomGameRules;
     @FXML
     private TextField tfCellsToSpawn;
     @FXML
     private TextField tfCellsToLive;
+    @FXML
+    private Button btnUseRule;
 
     private Board activeBoard;
     private final Timeline timeline = new Timeline();
@@ -104,9 +101,13 @@ public class GameController implements Initializable {
             if (newValue == rbCustomGameRules) {
                 tfCellsToLive.setDisable(false);
                 tfCellsToSpawn.setDisable(false);
+                btnUseRule.setDisable(false);
+                handleRuleBtn();
             } else {
                 tfCellsToLive.setDisable(true);
                 tfCellsToSpawn.setDisable(true);
+                btnUseRule.setDisable(true);
+                activeBoard.setGameRule(new ConwaysRule());
             }
         });
     }
@@ -143,6 +144,34 @@ public class GameController implements Initializable {
         double animationSpeed = animationSpeedSlider.getValue();
         timeline.setRate(animationSpeed);
         animationSpeedLabel.setText(String.format("%.2f %s", animationSpeed, " "));
+    }
+
+    @FXML
+    public void handleRuleText() {
+        //TODO
+
+    }
+
+    @FXML
+    public void handleRuleBtn() {
+
+        String[] toLiveString = tfCellsToLive.getText().replaceAll("\\D", "").split("");
+        String[] toSpawnString = tfCellsToSpawn.getText().replaceAll("\\D", "").split("");
+
+        byte[] toLive = new byte[toLiveString.length];
+        for (int i = 0; i < toLive.length; i++) {
+            if (Character.isDigit(toLiveString[i].charAt(0)) && toLiveString[i].length() == 1) {
+                toLive[i] = (byte) Integer.parseInt(toLiveString[i]);
+            }
+        }
+        byte[] toSpawn = new byte[toSpawnString.length];
+        for (int i = 0; i < toSpawn.length; i++) {
+            if (Character.isDigit(toSpawnString[i].charAt(0)) && toSpawnString[i].length() == 1) {
+                toSpawn[i] = (byte) Integer.parseInt(toSpawnString[i]);
+            }
+        }
+
+        constructRule(toLive, toSpawn);
     }
 
     @FXML
@@ -208,7 +237,7 @@ public class GameController implements Initializable {
     }
 
     public void constructRule(byte[] cellsToLive, byte[] cellsToSpawn) {
-        //@TODO implement costume rules
+        activeBoard.setGameRule(new CustomRule(cellsToLive, cellsToSpawn));
     }
 
     public void setActiveBoard(Board activeBoard) {

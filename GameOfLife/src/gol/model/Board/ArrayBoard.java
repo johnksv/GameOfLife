@@ -128,7 +128,7 @@ public class ArrayBoard extends Board {
         offsetY = offsetY / (cellSize + gridSpacing);
         offsetX = offsetX / (cellSize + gridSpacing);
 
-        setCellState((int)Math.floor(y - offsetY), (int)Math.floor(x - offsetX), alive);
+        setCellState((int) Math.floor(y - offsetY), (int) Math.floor(x - offsetX), alive);
     }
 
     @Override
