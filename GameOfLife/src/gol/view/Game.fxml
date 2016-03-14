@@ -14,10 +14,8 @@
 <?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.control.ToolBar?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.Region?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.*?>
+
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gol.controller.GameController">
     <bottom>
@@ -58,9 +56,6 @@
                                     <content>
                                         <AnchorPane prefWidth="200.0">
                                             <children>
-                                                <fx:define>
-                                                    <ToggleGroup fx:id="mouseActions" />
-                                                </fx:define>
                                                 <RadioButton fx:id="rbAddCell" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" selected="true" text="Add cells">
                                        <toggleGroup>
                                           <ToggleGroup fx:id="mouseActions" />
@@ -162,6 +157,8 @@
         </TabPane>
     </right>
     <center>
-        <Canvas fx:id="canvas" height="561.0" width="549.0" BorderPane.alignment="TOP_LEFT" />
+        <HBox prefHeight="561.0" prefWidth="549.0" BorderPane.alignment="TOP_LEFT">
+            <fx:include source="Canvas.fxml" fx:id="canvas"/>
+        </HBox>
     </center>
 </BorderPane>
