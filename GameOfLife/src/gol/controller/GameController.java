@@ -13,6 +13,8 @@ import javafx.animation.Animation;
 import javafx.animation.Animation.Status;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -22,7 +24,10 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.Slider;
+import javafx.scene.control.Toggle;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
@@ -50,6 +55,14 @@ public class GameController implements Initializable {
     private ColorPicker cellCP;
     @FXML
     private ColorPicker backgroundCP;
+    @FXML
+    private ToggleGroup mouseActions;
+    @FXML
+    private RadioButton rbAddCell;
+    @FXML
+    private RadioButton rbRemoveCell;
+    @FXML
+    private RadioButton rbMoveGrid;
 
     private Board activeBoard;
     private Color cellColor;
@@ -71,7 +84,6 @@ public class GameController implements Initializable {
         handleAnimationSpeedSlider();
         mouseInit();
         initAnimation();
-
     }
 
     //MouseEvent
@@ -103,7 +115,14 @@ public class GameController implements Initializable {
     private void handleMouseClick(MouseEvent e) {
         double x = e.getX();
         double y = e.getY();
-        activeBoard.setCellState(x, y, true);
+
+        if (rbRemoveCell.isSelected()) {
+            activeBoard.setCellState(y, x, false);
+        } else if (rbMoveGrid.isSelected()) {
+            System.out.println("gfeh ");
+        } else {
+            activeBoard.setCellState(y, x, true);
+        }
         draw();
     }
 
@@ -229,5 +248,4 @@ public class GameController implements Initializable {
     public Board getActiveBoard() {
         return activeBoard;
     }
-
 }
