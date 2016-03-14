@@ -99,8 +99,8 @@ public class ArrayBoardTest {
     @Test
     public void testSetCellState() {
         System.out.println("setCellState");
-        double x = 0.0;
-        double y = 0.0;
+        int x = 0;
+        int y = 0;
         boolean alive = false;
         ArrayBoard instance = null;
         instance.setCellState(x, y, alive);
