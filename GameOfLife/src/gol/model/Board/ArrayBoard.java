@@ -20,8 +20,8 @@ public class ArrayBoard extends Board {
      */
     public ArrayBoard() {
         super();
-        WIDTH = 20;
-        HEIGHT = 20;
+        WIDTH = 1800;
+        HEIGHT = 1800;
         gameBoard = new byte[WIDTH][HEIGHT];
     }
 
@@ -104,7 +104,6 @@ public class ArrayBoard extends Board {
         if (alive) {
             value = 64;
         }
-
         if (y < gameBoard.length && y >= 0) {
             if (x < gameBoard[y].length && x >= 0) {
                 gameBoard[y][x] = value;
@@ -118,7 +117,7 @@ public class ArrayBoard extends Board {
     }
 
     @Override
-    public void setCellState(double y, double x, boolean alive) {
+    public void setCellState(double y, double x, boolean alive, double offsetX, double offsetY) {
 
         /*
          * y is position of the first index of the matrix (column)
@@ -126,8 +125,10 @@ public class ArrayBoard extends Board {
          */
         y = y / (cellSize + gridSpacing);
         x = x / (cellSize + gridSpacing);
+        offsetY = offsetY / (cellSize + gridSpacing);
+        offsetX = offsetX / (cellSize + gridSpacing);
 
-        setCellState((int) y, (int) x, alive);
+        setCellState((int)Math.floor(y - offsetY), (int)Math.floor(x - offsetX), alive);
     }
 
     @Override

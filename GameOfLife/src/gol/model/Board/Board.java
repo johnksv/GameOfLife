@@ -63,7 +63,7 @@ public abstract class Board {
      *
      * @param activeRule The rule to be used when calculation next generation
      */
-    public void setGameRule(Rule activeRule) {
+    public final void setGameRule(Rule activeRule) {
         this.activeRule = activeRule;
     }
 
@@ -150,8 +150,10 @@ public abstract class Board {
      * @param y the y coordinate of the mouse click.
      * @param alive The state to set the cell to. True for alive. False for
      * dead.
+     * @param offsetX
+     * @param offsetY
      */
-    public abstract void setCellState(double y, double x, boolean alive);
+    public abstract void setCellState(double y, double x, boolean alive, double offsetX, double offsetY);
 
     /**
      *
