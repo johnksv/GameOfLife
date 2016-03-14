@@ -4,6 +4,7 @@
  */
 package gol.controller;
 
+import gol.model.Board.ArrayBoard;
 import gol.model.Board.Board;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -26,12 +27,12 @@ public class CanvasController implements Initializable {
     private Canvas canvas;
 
     private GraphicsContext gc;
-    private Board activeBoard;
+    private Board activeBoard = new ArrayBoard(10, 10);
     private Color cellColor = Color.BLACK;
     private Color backgroundColor = Color.web("#F4F4F4");
     private final double[] moveGridValues = {0, 0, -1, -1}; //Offset x, offset y, old x, old y
-    private RadioButton rbRemoveCell;
-    private RadioButton rbMoveGrid;
+    private RadioButton rbRemoveCell = new RadioButton();
+    private RadioButton rbMoveGrid = new RadioButton();
 
     private boolean isinitialized = false;
 
@@ -71,8 +72,8 @@ public class CanvasController implements Initializable {
 
         //offset
         //Stian's proposition that is somewhat bugged if you zoom, but the zoom needs to be fixed any way.
-        moveGridValues[0] = -(activeBoard.getArrayLength() * activeBoard.getCellSize() * activeBoard.getGridSpacing()) / 2;
-        moveGridValues[1] = -(activeBoard.getArrayLength() * activeBoard.getCellSize() * activeBoard.getGridSpacing()) / 2;
+//        moveGridValues[0] = -(activeBoard.getArrayLength() * activeBoard.getCellSize() * activeBoard.getGridSpacing()) / 2;
+//        moveGridValues[1] = -(activeBoard.getArrayLength() * activeBoard.getCellSize() * activeBoard.getGridSpacing()) / 2;
 
     }
 
@@ -151,6 +152,20 @@ public class CanvasController implements Initializable {
      */
     public void setBackgroundColor(Color backgroundColor) {
         this.backgroundColor = backgroundColor;
+    }
+
+    /**
+     * @param rbRemoveCell the rbRemoveCell to set
+     */
+    public void setRbRemoveCell(RadioButton rbRemoveCell) {
+        this.rbRemoveCell = rbRemoveCell;
+    }
+
+    /**
+     * @param rbMoveGrid the rbMoveGrid to set
+     */
+    public void setRbMoveGrid(RadioButton rbMoveGrid) {
+        this.rbMoveGrid = rbMoveGrid;
     }
 
 }

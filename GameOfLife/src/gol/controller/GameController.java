@@ -83,7 +83,11 @@ public class GameController implements Initializable {
         activeBoard = new ArrayBoard();
         cellCP.setValue(Color.BLACK);
         backgroundCP.setValue(Color.web("#F4F4F4"));
+        System.out.println(canvasController);
         canvasController.setActiveBoard(activeBoard);
+        canvasController.setRbMoveGrid(rbMoveGrid);
+        canvasController.setRbRemoveCell(rbRemoveCell);
+        
         
         handleZoom();
         handleColor();
@@ -158,8 +162,8 @@ public class GameController implements Initializable {
     @FXML
     public void handleColor() {
         //TODO
-        cellCP.getValue();
-        backgroundCP.getValue();
+        canvasController.setCellColor(cellCP.getValue());
+        canvasController.setBackgroundColor(backgroundCP.getValue());
         draw();
     }
 
