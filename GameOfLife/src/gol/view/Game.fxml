@@ -4,7 +4,6 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ColorPicker?>
-<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.Separator?>
@@ -62,7 +61,10 @@
                                                 <fx:define>
                                                     <ToggleGroup fx:id="mouseActions" />
                                                 </fx:define>
-                                                <RadioButton fx:id="rbAddCell" selected="true" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" text="Add cells" toggleGroup="$mouseActions"/>
+                                                <RadioButton fx:id="rbAddCell" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" selected="true" text="Add cells">
+                                       <toggleGroup>
+                                          <ToggleGroup fx:id="mouseActions" />
+                                       </toggleGroup></RadioButton>
                                                 <RadioButton fx:id="rbRemoveCell" layoutX="14.0" layoutY="44.0" mnemonicParsing="false" text="Remove cells" toggleGroup="$mouseActions" />
                                                 <RadioButton fx:id="rbMoveGrid" layoutX="14.0" layoutY="74.0" mnemonicParsing="false" text="Move grid" toggleGroup="$mouseActions" />
                                                 <CheckBox layoutX="15.0" layoutY="113.0" mnemonicParsing="false" text="Show grid" />
@@ -137,12 +139,17 @@
                                     <content>
                                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="300.0" prefWidth="250.0">
                                             <children>
-                                                <ComboBox layoutX="2.0" layoutY="14.0" prefWidth="150.0" promptText="Standard" />
                                                 <Label layoutX="7.0" layoutY="53.0" text="Naboer for å leve" />
                                                 <Label layoutX="7.0" layoutY="84.0" text="Naboer for å våkne" />
-                                                <TextField disable="true" layoutX="123.0" layoutY="49.0" prefHeight="25.0" prefWidth="92.0" text="2,3" />
-                                                <TextField disable="true" layoutX="123.0" layoutY="80.0" prefHeight="25.0" prefWidth="92.0" text="3" />
-                                                <Button disable="true" layoutX="68.0" layoutY="120.0" mnemonicParsing="false" text="Lagre regler" />
+                                    <RadioButton fx:id="rbStandardGameRules" contentDisplay="TOP" layoutX="19.0" layoutY="17.0" mnemonicParsing="false" selected="true" text="Standard">
+                                       <toggleGroup>
+                                          <ToggleGroup fx:id="tgGameRules" />
+                                       </toggleGroup>
+                                    </RadioButton>
+                                    <RadioButton fx:id="rbCustomGameRules" layoutX="123.0" layoutY="17.0" mnemonicParsing="false" text="Custom rules" toggleGroup="$tgGameRules" />
+                                                <TextField fx:id="tfCellsToLive" disable="true" layoutX="123.0" layoutY="49.0" prefHeight="25.0" prefWidth="92.0" text="2,3" />
+                                                <TextField fx:id="tfCellsToSpawn" disable="true" layoutX="123.0" layoutY="80.0" prefHeight="25.0" prefWidth="92.0" text="3" />
+                                                <Button disable="true" layoutX="68.0" layoutY="120.0" mnemonicParsing="false" text="Use Rules" />
                                             </children>
                                         </AnchorPane>
                                     </content>

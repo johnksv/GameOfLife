@@ -23,9 +23,11 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Slider;
+import javafx.scene.control.TextField;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.MouseEvent;
@@ -56,13 +58,19 @@ public class GameController implements Initializable {
     @FXML
     private ColorPicker backgroundCP;
     @FXML
-    private ToggleGroup mouseActions;
-    @FXML
-    private RadioButton rbAddCell;
-    @FXML
     private RadioButton rbRemoveCell;
     @FXML
     private RadioButton rbMoveGrid;
+    @FXML
+    private ToggleGroup tgGameRules;
+    @FXML
+    private RadioButton rbStandardGameRules;
+    @FXML
+    private RadioButton rbCustomGameRules;
+    @FXML
+    private TextField tfCellsToSpawn;
+    @FXML
+    private TextField tfCellsToLive;
 
     private Board activeBoard;
     private Color cellColor;
@@ -85,6 +93,20 @@ public class GameController implements Initializable {
         handleAnimationSpeedSlider();
         mouseInit();
         initAnimation();
+        initGameRulesListner();
+
+    }
+    
+    private void initGameRulesListner(){
+        tgGameRules.selectedToggleProperty().addListener((ObservableValue<? extends Toggle> observable, Toggle oldValue, Toggle newValue) -> {
+            if(newValue == rbCustomGameRules){
+                tfCellsToLive.setDisable(false);
+                tfCellsToSpawn.setDisable(false);
+            }else{
+                tfCellsToLive.setDisable(true);
+                tfCellsToSpawn.setDisable(true);
+            }
+        });
     }
 
     //MouseEvent
