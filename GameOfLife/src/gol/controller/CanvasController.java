@@ -26,10 +26,26 @@ public class CanvasController implements Initializable {
     private Board activeBoard = new ArrayBoard(10, 10);
     private Color cellColor = Color.BLACK;
     private Color backgroundColor = Color.web("#F4F4F4");
+    /**
+     * MoveGridValus contains:
+     * <ol>
+     * <li>
+     * Offset X
+     * </li>
+     * <li>
+     * Offset Y
+     * </li>
+     * <li>
+     * The old X-value
+     * </li>
+     * <li>
+     * The old Y-value
+     * </li>
+     * </ol>
+     */
     private final double[] moveGridValues = {0, 0, -1, -1}; //Offset x, offset y, old x, old y
     private RadioButton rbRemoveCell = new RadioButton();
     private RadioButton rbMoveGrid = new RadioButton();
-
     private boolean isinitialized = false;
 
     @Override
@@ -52,6 +68,7 @@ public class CanvasController implements Initializable {
                 (MouseEvent e) -> {
                     if (rbMoveGrid.isSelected()) {
                         moveGrid(e);
+                        drawGrid();
                     } else {
                         handleMouseClick(e);
                     }
@@ -64,18 +81,28 @@ public class CanvasController implements Initializable {
                     }
                 });
 
-   }
+    }
 
-    void drawGrid() {
+    /**
+     * //TODO Fix Comments
+     * QUICK NOTE:
+     * Draws the grid. First decide where to draw based on size and gridspacing, 
+     * then calculates to draw in the middle of gridspcaing (see - halfGridSpace)
+     * after this is done it adds the offset
+     */
+    public void drawGrid() {
         gc.setFill(Color.BLUE);
         //TODO Så den ikke tegner det som er utenfor
-        double spacing = activeBoard.getCellSize() + activeBoard.getGridSpacing();
-        for (int i = 0; i < activeBoard.getArrayLength(); i++) {
-            gc.strokeLine(i * spacing, 0, i * spacing, canvas.getHeight());
+        double sizeAndSpacing = activeBoard.getCellSize() + activeBoard.getGridSpacing();
+        double halfGridSpace = activeBoard.getGridSpacing() / 2;
+        for (int i = 0; i <= activeBoard.getArrayLength(); i++) {
+            gc.strokeLine((i * sizeAndSpacing - halfGridSpace) + moveGridValues[0], 0,
+                    (i * sizeAndSpacing - halfGridSpace) + moveGridValues[0], canvas.getHeight());
 
-            for (int j = 0; j < activeBoard.getArrayLength(i); j++) {
+            for (int j = 0; j <= activeBoard.getArrayLength(i); j++) {
 
-                gc.strokeLine(0, j * spacing, canvas.getWidth(), j * spacing);
+                gc.strokeLine(0, (j * sizeAndSpacing - halfGridSpace) + moveGridValues[1],
+                        canvas.getWidth(), (j * sizeAndSpacing - halfGridSpace) + moveGridValues[1]);
 
             }
         }
@@ -157,14 +184,14 @@ public class CanvasController implements Initializable {
 
     //Does not calc gridspacing yet.
     public void calcNewOffset(double cellSize, double newCellSize) {
-        double gridSpace=activeBoard.getGridSpacing();
+        double gridSpace = activeBoard.getGridSpacing();
         if (cellSize != 0) {
-            
-            double oldx = (canvas.getWidth() / 2 - moveGridValues[0]) / (cellSize );
+
+            double oldx = (canvas.getWidth() / 2 - moveGridValues[0]) / (cellSize);
             double oldy = (canvas.getHeight() / 2 - moveGridValues[1]) / (cellSize);
 
-            moveGridValues[0] = -(oldx * (newCellSize ) - canvas.getWidth() / 2);
-            moveGridValues[1] = -(oldy * (newCellSize ) - canvas.getHeight() / 2);
+            moveGridValues[0] = -(oldx * (newCellSize) - canvas.getWidth() / 2);
+            moveGridValues[1] = -(oldy * (newCellSize) - canvas.getHeight() / 2);
 
             moveGridValues[0] = (moveGridValues[0] > 0) ? 0 : moveGridValues[0];
             moveGridValues[1] = (moveGridValues[1] > 0) ? 0 : moveGridValues[1];
