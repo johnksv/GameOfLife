@@ -82,8 +82,7 @@ public class GameController implements Initializable {
         backgroundCP.setValue(Color.web("#F4F4F4"));
 
         initCanvasController();
-        //handleZoom();
-        activeBoard.setCellSize(0.2 * Math.exp(0.05 *cellSizeSlider.getValue() ));
+        handleZoom();
         handleGridSpacingSlider();
         handleColor();
         handleAnimationSpeedSlider();
@@ -180,7 +179,7 @@ public class GameController implements Initializable {
     @FXML
     public void handleZoom() {
         double x = cellSizeSlider.getValue();
-        //Har ikke implementert gridspacing
+        //TODO Har ikke implementert gridspacing
         canvasController.calcNewOffset(activeBoard.getCellSize(),0.2 * Math.exp(0.05 * x));
         activeBoard.setCellSize(0.2 * Math.exp(0.05 * x));
         handleGridSpacingSlider();
@@ -222,7 +221,7 @@ public class GameController implements Initializable {
             if (selected != null) {
                 boardFromFile = ReadFile.readFileFromDisk(selected.toPath());
 
-                //no ghosttiles yet
+                //TODO no ghosttiles yet
                 activeBoard.insertArray(boardFromFile, 1, 1);
                 draw();
             }

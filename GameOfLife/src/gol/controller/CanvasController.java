@@ -99,7 +99,9 @@ public class CanvasController implements Initializable {
         }
 
     }
+
     //Over complicated for the sake of smoothness, this code may have huge potensial for improment. 
+
     private void moveGrid(MouseEvent e) {
         if (moveGridValues[2] < 0) {
             moveGridValues[2] = e.getX();
@@ -179,10 +181,14 @@ public class CanvasController implements Initializable {
     public void setRbMoveGrid(RadioButton rbMoveGrid) {
         this.rbMoveGrid = rbMoveGrid;
     }
+
     //Does not calc gridspacing yet.
+
     public void calcNewOffset(double cellSize, double newCellSize) {
-        moveGridValues[0] = (moveGridValues[0] / cellSize) * newCellSize;
-        moveGridValues[1] = (moveGridValues[1] / cellSize) * newCellSize;
+        if (cellSize != 0) {
+            moveGridValues[0] = (moveGridValues[0] / cellSize) * newCellSize;
+            moveGridValues[1] = (moveGridValues[1] / cellSize) * newCellSize;
+        }
     }
 
 }
