@@ -7,9 +7,9 @@ import gol.model.Logic.Rule;
  * The abstract class <code>Board</code> is the superclass of
  * <code>ArrayBoard</code> and <code>DynamicBoard</code>. The main objective of
  * this class is to store and compute next generation of activeBoard.
- * 
- * The board is represented through row-major arrays.
- * This implies that y represents rows, and x represents columns.
+ *
+ * The board is represented through row-major arrays. This implies that y
+ * represents rows, and x represents columns.
  *
  * @author s305054, s305084, s305089
  */
@@ -102,23 +102,24 @@ public abstract class Board {
         return gridSpacing;
     }
 
-    
     /**
      * Get the representation of the smallest possible bord
-     * </p>
+     * <p>
      * Author: Henrik Lieng (Vedlegg 1 ark 5)
+     *
      * @return String of the smallest possible board
      */
     public abstract String getBoundingBoxPattern();
-    
+
     /**
      * Calculates the smallest possible gamebord
-     * </p>
+     * <p>
      * Author: Henrik Lieng (Vedlegg 1 ark 5)
-     * @return Array of minrow, maxrow, mincolumn, maxcolumn 
+     *
+     * @return Array of minrow, maxrow, mincolumn, maxcolumn
      */
     public abstract int[] getBoundingBox();
-    
+
     /**
      * Sets all the cells in the board to dead. This method should call a method
      * to update the view (e.g. {@link gol.controller.GameController#draw()}.
@@ -144,7 +145,14 @@ public abstract class Board {
 
     /**
      * Inserts a byte 2D-array into the current gameboard at the given (y, x)
-     * position
+     * position.
+     * <p>
+     * For example: To insert boardFromFile to upper left corner of the current 
+     * gameboard, insert at position (0,0). 
+     * <p>
+     * Elements from boardFromFile that exceeds the dimensios of the
+     * current gameboard is not inserted.
+     *
      *
      * @param boardFromFile bytearray to insert into the current gameboard.
      * @param y coordinate for where the first row is placed
@@ -169,11 +177,10 @@ public abstract class Board {
      * @param x x coordinate of the mouse click.
      * @param alive The state to set the cell to. True for alive. False for
      * dead.
-     * @param offsetY y offset of the canvas 
+     * @param offsetY y offset of the canvas
      * @param offsetX x offset of the canvas
      */
     public abstract void setCellState(double y, double x, boolean alive, double offsetX, double offsetY);
-
 
     /**
      * Returns the number of rows in the gameboard
@@ -201,7 +208,9 @@ public abstract class Board {
 
     /**
      * Returns the cell state from canvas coordinats, given from a mouse click.
-     * Mouse clicks are column major, therefore it recieves the parameters as (x,y).
+     * Mouse clicks are column major, therefore it recieves the parameters as
+     * (x,y).
+     *
      * @param x the x coordinate of the mouse click.
      * @param y the y coordinate of the mouse click.
      * @return The cells state at position (y,x). true if alive. false if dead.
