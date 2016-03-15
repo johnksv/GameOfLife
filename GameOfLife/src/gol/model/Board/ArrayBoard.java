@@ -142,6 +142,72 @@ public class ArrayBoard extends Board {
     }
 
     @Override
+    public String getBoundingBoxPattern() {
+        if (gameBoard.length == 0) {
+            return "";
+        }
+        int[] boundingBox = getBoundingBox();
+        StringBuilder result = new StringBuilder();
+        for (int y = boundingBox[0]; y <= boundingBox[1]; y++) {
+            for (int x = boundingBox[2]; x <= boundingBox[3]; x++) {
+                if (gameBoard[y][x] == 64) {
+                    result.append("1");
+                } else {
+                    result.append("0");
+                }
+            }
+        }
+        return result.toString();
+    }
+
+    //TODO: Er denne nødvendig?
+    public byte[][] getBoundingBoxBoard() {
+        
+        int[] boundingBox = getBoundingBox();
+        byte[][] board = new byte[boundingBox[1]][boundingBox[3]];
+        
+        for (int y = boundingBox[0]; y <= boundingBox[1]; y++) {
+            for (int x = boundingBox[2]; x <= boundingBox[3]; x++) {
+                if (gameBoard[y][x] == 64) {
+                    board[y][x] = 64;
+                } else {
+                    board[y][x] = 0;
+                }
+            }
+        }
+        return board;
+    }
+
+    @Override
+    public int[] getBoundingBox() {
+        int[] boundingBox = new int[4]; // minrow maxrow mincolumn maxcolumn 
+        boundingBox[0] = gameBoard.length;
+        boundingBox[1] = 0;
+        boundingBox[2] = gameBoard[0].length;
+        boundingBox[3] = 0;
+        for (int i = 0; i < gameBoard.length; i++) {
+            for (int j = 0; j < gameBoard[i].length; j++) {
+                if (gameBoard[i][j] != 64) {
+                    continue;
+                }
+                if (i < boundingBox[0]) {
+                    boundingBox[0] = i;
+                }
+                if (i > boundingBox[1]) {
+                    boundingBox[1] = i;
+                }
+                if (j < boundingBox[2]) {
+                    boundingBox[2] = j;
+                }
+                if (j > boundingBox[3]) {
+                    boundingBox[3] = j;
+                }
+            }
+        }
+        return boundingBox;
+    }
+
+    @Override
     public boolean getCellState(int y, int x) {
         return gameBoard[y][x] >= 64;
     }

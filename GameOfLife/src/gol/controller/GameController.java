@@ -133,7 +133,6 @@ public class GameController implements Initializable {
         if (cbShowGrid.isSelected()) {
             canvasController.drawGrid();
         }
-        
     }
 
     @FXML

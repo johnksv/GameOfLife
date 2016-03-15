@@ -102,7 +102,23 @@ public abstract class Board {
         return gridSpacing;
     }
 
-    // Abstract Methods 
+    
+    /**
+     * Get the representation of the smallest possible bord
+     * </p>
+     * Author: Henrik Lieng (Vedlegg 1 ark 5)
+     * @return String of the smallest possible board
+     */
+    public abstract String getBoundingBoxPattern();
+    
+    /**
+     * Calculates the smallest possible gamebord
+     * </p>
+     * Author: Henrik Lieng (Vedlegg 1 ark 5)
+     * @return Array of minrow, maxrow, mincolumn, maxcolumn 
+     */
+    public abstract int[] getBoundingBox();
+    
     /**
      * Sets all the cells in the board to dead. This method should call a method
      * to update the view (e.g. {@link gol.controller.GameController#draw()}.
