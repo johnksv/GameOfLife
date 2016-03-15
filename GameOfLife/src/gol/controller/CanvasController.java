@@ -64,11 +64,7 @@ public class CanvasController implements Initializable {
                     }
                 });
 
-        //offset
-        //Stian's proposition that is somewhat bugged if you zoom, but the zoom needs to be fixed any way.
-        moveGridValues[0] = -(activeBoard.getArrayLength() * activeBoard.getCellSize() * activeBoard.getGridSpacing()) / 2;
-        moveGridValues[1] = -(activeBoard.getArrayLength() * activeBoard.getCellSize() * activeBoard.getGridSpacing()) / 2;
-    }
+   }
 
     void drawGrid() {
         gc.setFill(Color.BLUE);
