@@ -134,7 +134,7 @@ public class ReadFile {
         
         for (int i = 0; i < (yLength-offset); i++) {
             if (i >= lines.length) {
-                throw new PatternFormatException("Missing end of file symbol TOP");
+                throw new PatternFormatException("Missing end of file symbol");
 
             }
             String[] numbers = lines[i-emptyLines].split("\\D+");
@@ -199,24 +199,24 @@ public class ReadFile {
 
     /**
      * Parsed board is made into a playable board.
-     * @param parsedBoard
+     * @param parsedBoard 
      * @param letter
-     * @param x column of board
-     * @param y row of board
+     * @param x column coordinate of board
+     * @param y row coordinate of board
      * @throws PatternFormatException Constructs a new exception, is thrown if there is an error reading/parsing the file.
      */
-    private static void setCellStateRLE(byte[][] parsedBoard, char letter, int x, int y) throws PatternFormatException {
-        if (x >= parsedBoard.length || y >= parsedBoard[x].length) {
-            throw new PatternFormatException("Line exceeds the defined width. After line/\"$ number\": " + x);
+    private static void setCellStateRLE(byte[][] parsedBoard, char letter, int y, int x) throws PatternFormatException {
+        if (y >= parsedBoard.length || x >= parsedBoard[y].length) {
+            throw new PatternFormatException("Line exceeds the defined width. After line/\"$ number\": " + y);
         } else {
             if (letter == 'b') {
-                parsedBoard[x][y] = 0;
+                parsedBoard[y][x] = 0;
 
             } else if (letter == 'o') {
-                parsedBoard[x][y] = 64;
+                parsedBoard[y][x] = 64;
 
             } else {
-                throw new PatternFormatException("Unknow character at line: " + x);
+                throw new PatternFormatException("Unknow character at line: " + y);
             }
         }
 

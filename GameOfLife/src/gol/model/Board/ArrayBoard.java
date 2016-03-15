@@ -132,13 +132,6 @@ public class ArrayBoard extends Board {
     }
 
     @Override
-    protected void setGameBoard(Object gameBoard) {
-        if (gameBoard instanceof byte[][]) {
-            this.gameBoard = (byte[][]) gameBoard;
-        }
-    }
-
-    @Override
     public int getArrayLength() {
         return gameBoard.length - 1;
     }
@@ -149,8 +142,8 @@ public class ArrayBoard extends Board {
     }
 
     @Override
-    public boolean getCellState(int x, int y) {
-        return gameBoard[x][y] >= 64;
+    public boolean getCellState(int y, int x) {
+        return gameBoard[y][x] >= 64;
     }
 
     @Override

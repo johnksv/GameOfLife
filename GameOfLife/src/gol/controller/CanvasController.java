@@ -153,7 +153,6 @@ public class CanvasController implements Initializable {
         if (rbRemoveCell.isSelected()) {
             activeBoard.setCellState(y, x, false, moveGridValues[0], moveGridValues[1]);
         } else if (rbMoveGrid.isSelected()) {
-            System.out.println("Moving gird ");
         } else {
             activeBoard.setCellState(y, x, true, moveGridValues[0], moveGridValues[1]);
 

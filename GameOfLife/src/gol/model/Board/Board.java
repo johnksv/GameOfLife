@@ -7,6 +7,9 @@ import gol.model.Logic.Rule;
  * The abstract class <code>Board</code> is the superclass of
  * <code>ArrayBoard</code> and <code>DynamicBoard</code>. The main objective of
  * this class is to store and compute next generation of activeBoard.
+ * 
+ * The board is represented through row-major arrays.
+ * This implies that y represents rows, and x represents columns.
  *
  * @author s305054, s305084, s305089
  */
@@ -124,20 +127,20 @@ public abstract class Board {
     protected abstract void checkRules(Rule activeRule);
 
     /**
-     * Inserts an byte 2D-array into the current gameboard at the given (x, y)
+     * Inserts a byte 2D-array into the current gameboard at the given (y, x)
      * position
      *
      * @param boardFromFile bytearray to insert into the current gameboard.
-     * @param x the x coordinate for the first column in this array
-     * @param y the x coordinate for the first row in this array
+     * @param y coordinate for where the first row is placed
+     * @param x coordinate for where the first column is placed
      */
     public abstract void insertArray(byte[][] boardFromFile, int y, int x);
 
     /**
      * Sets the cell state at position (y,x)
      *
-     * @param x the x coordinate of the cell
-     * @param y the y coordinate of the cell
+     * @param y y coordinate of the cell
+     * @param x x coordinate of the cell
      * @param alive The state to set the cell to. True for alive. False for
      * dead.
      */
@@ -146,20 +149,15 @@ public abstract class Board {
     /**
      * Sets the cell state from canvas coordinats, given from a mouse click.
      *
-     * @param x the x coordinate of the mouse click.
-     * @param y the y coordinate of the mouse click.
+     * @param y y coordinate of the mouse click.
+     * @param x x coordinate of the mouse click.
      * @param alive The state to set the cell to. True for alive. False for
      * dead.
-     * @param offsetX
-     * @param offsetY
+     * @param offsetY y offset of the canvas 
+     * @param offsetX x offset of the canvas
      */
     public abstract void setCellState(double y, double x, boolean alive, double offsetX, double offsetY);
 
-    /**
-     *
-     * @param gameBoard
-     */
-    protected abstract void setGameBoard(Object gameBoard);
 
     /**
      * Returns the number of rows in the gameboard
@@ -177,20 +175,20 @@ public abstract class Board {
     public abstract int getArrayLength(int i);
 
     /**
-     * Returns the cell state at position (x,y)
+     * Returns the cell state at position (y,x)
      *
-     * @param x the x coordinate of the cell
      * @param y the y coordinate of the cell
-     * @return The cells state at position (x,y). true if alive. false if dead.
+     * @param x the x coordinate of the cell
+     * @return The cells state at position (y,x). true if alive. false if dead.
      */
-    public abstract boolean getCellState(int x, int y);
+    public abstract boolean getCellState(int y, int x);
 
     /**
      * Returns the cell state from canvas coordinats, given from a mouse click.
-     *
+     * Mouse clicks are column major, therefore it recieves the parameters as (x,y).
      * @param x the x coordinate of the mouse click.
      * @param y the y coordinate of the mouse click.
-     * @return The cells state at position (x,y). true if alive. false if dead.
+     * @return The cells state at position (y,x). true if alive. false if dead.
      */
     public abstract boolean getCellState(double x, double y);
 
