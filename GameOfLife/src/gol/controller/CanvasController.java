@@ -1,7 +1,3 @@
-/*
- * Here comes the text of your license
- * Each line should be prefixed with  * 
- */
 package gol.controller;
 
 import gol.model.Board.ArrayBoard;
@@ -17,9 +13,9 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 
 /**
- * FXML Controller class
+ * This class has all the methods related to the canvas
  *
- * @author John Kasper
+ * @author s305054, s305084, s305089
  */
 public class CanvasController implements Initializable {
 
@@ -36,16 +32,16 @@ public class CanvasController implements Initializable {
 
     private boolean isinitialized = false;
 
-    /**
-     * Initializes the controller class.
-     */
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         gc = canvas.getGraphicsContext2D();
         mouseInit();
     }
 
-    //MouseEvent
+    /**
+     * Initiates all relevant mouseevents.
+     */
     private void mouseInit() {
 
         //Registers clicks on scene
@@ -71,8 +67,8 @@ public class CanvasController implements Initializable {
 
         //offset
         //Stian's proposition that is somewhat bugged if you zoom, but the zoom needs to be fixed any way.
-//        moveGridValues[0] = -(activeBoard.getArrayLength() * activeBoard.getCellSize() * activeBoard.getGridSpacing()) / 2;
-//        moveGridValues[1] = -(activeBoard.getArrayLength() * activeBoard.getCellSize() * activeBoard.getGridSpacing()) / 2;
+        moveGridValues[0] = -(activeBoard.getArrayLength() * activeBoard.getCellSize() * activeBoard.getGridSpacing()) / 2;
+        moveGridValues[1] = -(activeBoard.getArrayLength() * activeBoard.getCellSize() * activeBoard.getGridSpacing()) / 2;
     }
 
     void drawGrid() {
@@ -116,7 +112,7 @@ public class CanvasController implements Initializable {
 
     }
 
-    //Over complicated for the sake of smoothness, this code may have huge potensial for improment. 
+    //Over complicated for the sake of smoothness, this code may have huge potensial for improvement. 
     private void moveGrid(MouseEvent e) {
         if (moveGridValues[2] < 0) {
             moveGridValues[2] = e.getX();
@@ -145,7 +141,10 @@ public class CanvasController implements Initializable {
         draw();
 
     }
-
+    /**
+     * 
+     * @param e 
+     */
     private void handleMouseClick(MouseEvent e) {
         double x = e.getX();
         double y = e.getY();

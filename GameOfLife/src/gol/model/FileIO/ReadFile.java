@@ -6,19 +6,21 @@ import java.nio.file.Path;
 import java.util.List;
 
 /**
- * This class has the necessary static methods for parsing files into gameboards.
- * 
+ * This class has the necessary static methods for parsing files into
+ * gameboards. Supported file formats are .cells, .rle
+ *
  * @author s305054, s305084, s305089
  */
 public class ReadFile {
 
     /**
-     * Reads a file, makes an array. 
-     * This static method checks the file format, and calls for the correct
-     * method for parsing the file.
+     * Reads a file, makes an array. This static method checks the file format,
+     * and calls for the correct method for parsing the file.
      * 
-     *
-     *
+     * @param file location of chosen file
+     * @return a playable gameboard of type byte[][]
+     * @throws IOException 
+     * @throws PatternFormatException if there are an error parsing or reading the file
      */
     public static byte[][] readFileFromDisk(Path file) throws IOException, PatternFormatException {
         String path = file.toString();
@@ -42,11 +44,13 @@ public class ReadFile {
 
     /**
      * Parses a PlainText file into a playable board.
-     * 
+     *
      * @param file array with rows of plaintext
-     * @return a parsed board where living cells get the value 64, and dead cells get the value 0
+     * @return a parsed board where living cells get the value 64, and dead
+     * cells get the value 0
      * @throws IOException
-     * @throws PatternFormatException Constructs a new exception, is thrown if there is an error reading/parsing the file.
+     * @throws PatternFormatException Constructs a new exception, is thrown if
+     * there is an error reading/parsing the file.
      */
     private static byte[][] readPlainText(String[] file) throws IOException, PatternFormatException {
         int greatestlength = 0;
@@ -85,17 +89,13 @@ public class ReadFile {
     }
 
     /**
-     * @bug number then $ is to say that there is that number of lines between
-     * this line and the next 264bobo1447b6$ the last part is saying that there
-     * is 6 blank lines before the next line
-     *
+     * Parses the String array with rle format into a playable gameboard.
      * @param file
-     * @return
+     * @return playable gameboard
      * @throws IOException
-     * @throws PatternFormatException
-     * @throws ArrayIndexOutOfBoundsException
+     * @throws PatternFormatException if the given file is corrupt
      */
-    private static byte[][] readRLE(String[] file) throws IOException, PatternFormatException, ArrayIndexOutOfBoundsException {
+    private static byte[][] readRLE(String[] file) throws IOException, PatternFormatException {
         int commentLines = 0;
         for (String line : file) {
             if (line.startsWith("#")) {
@@ -107,7 +107,7 @@ public class ReadFile {
         StringBuilder pattern = new StringBuilder();
         int xLength = 0;
         int yLength = 0;
-        int emptyLines =0;
+        int emptyLines = 0;
 
         //Reads x and y value from file.
         String[] attributes = file[commentLines].replaceAll("\\s", "").split(",");
@@ -131,14 +131,14 @@ public class ReadFile {
         String[] lines = pattern.toString().split("\\$");
 
         int offset = 0;
-        
-        for (int i = 0; i < (yLength-offset); i++) {
+
+        for (int i = 0; i < (yLength - offset); i++) {
             if (i >= lines.length) {
                 throw new PatternFormatException("Missing end of file symbol");
 
             }
-            String[] numbers = lines[i-emptyLines].split("\\D+");
-            String[] letters = lines[i-emptyLines].split("\\d+");
+            String[] numbers = lines[i - emptyLines].split("\\D+");
+            String[] letters = lines[i - emptyLines].split("\\d+");
 
             int cellPosition = 0;
             int letterPosition = 0;
@@ -153,40 +153,30 @@ public class ReadFile {
                         }
 
                         for (int k = 0; k < Integer.parseInt(numbers[letterPosition]); k++) {
-
                             setCellStateRLE(parsedBoard, letters[j].charAt(0), i + offset, cellPosition);
-
                             cellPosition++;
                         }
 
                         letterPosition++;
                     } else {
-
                         setCellStateRLE(parsedBoard, letters[j].charAt(0), i + offset, cellPosition);
-
                         cellPosition++;
                     }
-
                     if (letters[j].length() > 1) {
                         for (int k = 1; k < letters[j].length(); k++) {
                             if (letters[j].charAt(k) == '!') {
                                 return parsedBoard;
                             }
-
                             setCellStateRLE(parsedBoard, letters[j].charAt(k), i + offset, cellPosition);
-
                             cellPosition++;
-
                         }
-
                     }
-
                 }
             }
+            //Checks if there are empty lines.
+            if ((numbers.length > letters.length)
+                    || (numbers.length == letters.length && letters[0].equals(""))) {
 
-            if ((numbers.length > letters.length) || 
-               (numbers.length == letters.length && letters[0].equals(""))) {
-                
                 for (int k = 1; k < Integer.parseInt(numbers[numbers.length - 1]); k++) {
                     offset++;
                 }
@@ -199,15 +189,17 @@ public class ReadFile {
 
     /**
      * Parsed board is made into a playable board.
-     * @param parsedBoard 
+     *
+     * @param parsedBoard
      * @param letter
      * @param x column coordinate of board
      * @param y row coordinate of board
-     * @throws PatternFormatException Constructs a new exception, is thrown if there is an error reading/parsing the file.
+     * @throws PatternFormatException Constructs a new exception, is thrown if
+     * there is an error reading/parsing the file.
      */
     private static void setCellStateRLE(byte[][] parsedBoard, char letter, int y, int x) throws PatternFormatException {
         if (y >= parsedBoard.length || x >= parsedBoard[y].length) {
-            throw new PatternFormatException("Line exceeds the defined width. After line/\"$ number\": " + y);
+            throw new PatternFormatException("Line exceeds the defined width. At line/\"$ number\": " + y);
         } else {
             if (letter == 'b') {
                 parsedBoard[y][x] = 0;
