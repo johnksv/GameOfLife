@@ -21,6 +21,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
@@ -69,6 +70,8 @@ public class GameController implements Initializable {
     private TextField tfCellsToLive;
     @FXML
     private Button btnUseRule;
+    @FXML
+    private CheckBox cbShowGrid;
 
     private Board activeBoard;
     private final Timeline timeline = new Timeline();
@@ -127,6 +130,10 @@ public class GameController implements Initializable {
 
     private void draw() {
         canvasController.draw();
+        if (cbShowGrid.isSelected()) {
+            canvasController.drawGrid();
+        }
+        
     }
 
     @FXML
@@ -180,7 +187,7 @@ public class GameController implements Initializable {
     public void handleZoom() {
         double x = cellSizeSlider.getValue();
         //TODO Har ikke implementert gridspacing
-        canvasController.calcNewOffset(activeBoard.getCellSize(),0.2 * Math.exp(0.05 * x));
+        canvasController.calcNewOffset(activeBoard.getCellSize(), 0.2 * Math.exp(0.05 * x));
         activeBoard.setCellSize(0.2 * Math.exp(0.05 * x));
         handleGridSpacingSlider();
         draw();

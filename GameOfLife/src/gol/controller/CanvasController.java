@@ -75,6 +75,22 @@ public class CanvasController implements Initializable {
 //        moveGridValues[1] = -(activeBoard.getArrayLength() * activeBoard.getCellSize() * activeBoard.getGridSpacing()) / 2;
     }
 
+    void drawGrid() {
+        gc.setFill(Color.BLUE);
+        //TODO Så den ikke tegner det som er utenfor
+        double spacing = activeBoard.getCellSize() + activeBoard.getGridSpacing();
+        for (int i = 0; i < activeBoard.getArrayLength(); i++) {
+            gc.strokeLine(i * spacing, 0, i * spacing, canvas.getHeight());
+
+            for (int j = 0; j < activeBoard.getArrayLength(i); j++) {
+
+                gc.strokeLine(0, j * spacing, canvas.getWidth(), j * spacing);
+
+            }
+        }
+
+    }
+
     public void draw() {
         if (isinitialized) {
             gc.setFill(backgroundColor);
@@ -82,12 +98,12 @@ public class CanvasController implements Initializable {
             gc.setFill(cellColor);
             for (int i = 1; i < activeBoard.getArrayLength(); i++) {
                 if (canvas.getHeight() < i * activeBoard.getCellSize() + i * activeBoard.getGridSpacing()) {
-
+                    //TODO Så den ikke tegner det som er utenfor
                 }
                 for (int j = 1; j < activeBoard.getArrayLength(i); j++) {
                     if (activeBoard.getCellState(i, j)) {
                         if (canvas.getWidth() < j * activeBoard.getCellSize() + j * activeBoard.getGridSpacing()) {
-
+                            //TODO Så den ikke tegner det som er utenfor
                         }
                         gc.fillRect(j * activeBoard.getCellSize() + j * activeBoard.getGridSpacing() + moveGridValues[0],
                                 i * activeBoard.getCellSize() + i * activeBoard.getGridSpacing() + moveGridValues[1],
@@ -101,7 +117,6 @@ public class CanvasController implements Initializable {
     }
 
     //Over complicated for the sake of smoothness, this code may have huge potensial for improment. 
-
     private void moveGrid(MouseEvent e) {
         if (moveGridValues[2] < 0) {
             moveGridValues[2] = e.getX();
@@ -146,6 +161,14 @@ public class CanvasController implements Initializable {
         draw();
     }
 
+    //Does not calc gridspacing yet.
+    public void calcNewOffset(double cellSize, double newCellSize) {
+        if (cellSize != 0) {
+            moveGridValues[0] = (moveGridValues[0] / cellSize) * newCellSize;
+            moveGridValues[1] = (moveGridValues[1] / cellSize) * newCellSize;
+        }
+    }
+
     /**
      * @param activeBoard the activeBoard to set
      */
@@ -180,15 +203,6 @@ public class CanvasController implements Initializable {
      */
     public void setRbMoveGrid(RadioButton rbMoveGrid) {
         this.rbMoveGrid = rbMoveGrid;
-    }
-
-    //Does not calc gridspacing yet.
-
-    public void calcNewOffset(double cellSize, double newCellSize) {
-        if (cellSize != 0) {
-            moveGridValues[0] = (moveGridValues[0] / cellSize) * newCellSize;
-            moveGridValues[1] = (moveGridValues[1] / cellSize) * newCellSize;
-        }
     }
 
 }

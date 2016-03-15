@@ -169,7 +169,7 @@ public abstract class Board {
     public abstract int getArrayLength();
 
     /**
-     * Returns the number of element in a row
+     * Returns the number of elements in a row
      *
      * @param i the row to check
      * @return elements in row i

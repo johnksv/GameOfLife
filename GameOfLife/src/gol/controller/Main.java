@@ -25,7 +25,7 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         //Passing the stage to main controller for later use.
-        //must be done first
+        //needs to be done first
         MainController.loadStage(primaryStage);
         
         Parent root = FXMLLoader.load(getClass().getResource("/gol/view/StartScreen.fxml"));
@@ -33,6 +33,7 @@ public class Main extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
         
+        MainController.loadStage(primaryStage);
    
 //        test100NextGen();
 //        Platform.exit();

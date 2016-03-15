@@ -63,7 +63,7 @@
                                        </toggleGroup></RadioButton>
                                                 <RadioButton fx:id="rbRemoveCell" layoutX="14.0" layoutY="44.0" mnemonicParsing="false" text="Remove cells" toggleGroup="$mouseActions" />
                                                 <RadioButton fx:id="rbMoveGrid" layoutX="14.0" layoutY="74.0" mnemonicParsing="false" text="Move grid" toggleGroup="$mouseActions" />
-                                                <CheckBox layoutX="15.0" layoutY="113.0" mnemonicParsing="false" text="Show grid" />
+                                                <CheckBox fx:id="cbShowGrid" layoutX="15.0" layoutY="113.0" mnemonicParsing="false" text="Show grid" />
                                             </children>
                                         </AnchorPane>
                                     </content>
@@ -159,7 +159,7 @@
     </right>
 
    <center>
-
+        
             <fx:include source="Canvas.fxml" fx:id="canvas"/>
 
    </center>

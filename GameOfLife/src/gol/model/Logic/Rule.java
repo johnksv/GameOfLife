@@ -9,7 +9,7 @@ public interface Rule {
     /**
      * Assigns the value a cell will have the next generation.
      * 
-     * @param cellToCheck cell that is being edited
+     * @param cellToCheck cell that is being modified
      * @return 64 for alive cells, 0 for dead cells
      * @see gol.model.Board.Board#nextGen() 
      */
