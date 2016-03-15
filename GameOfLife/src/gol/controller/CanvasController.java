@@ -32,7 +32,6 @@ public class CanvasController implements Initializable {
 
     private boolean isinitialized = false;
 
-    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         gc = canvas.getGraphicsContext2D();
@@ -141,9 +140,10 @@ public class CanvasController implements Initializable {
         draw();
 
     }
+
     /**
-     * 
-     * @param e 
+     *
+     * @param e
      */
     private void handleMouseClick(MouseEvent e) {
         double x = e.getX();
@@ -161,10 +161,20 @@ public class CanvasController implements Initializable {
 
     //Does not calc gridspacing yet.
     public void calcNewOffset(double cellSize, double newCellSize) {
+        double gridSpace=activeBoard.getGridSpacing();
         if (cellSize != 0) {
-            moveGridValues[0] = (moveGridValues[0] / cellSize) * newCellSize;
-            moveGridValues[1] = (moveGridValues[1] / cellSize) * newCellSize;
+            
+            double oldx = (canvas.getWidth() / 2 - moveGridValues[0]) / (cellSize );
+            double oldy = (canvas.getHeight() / 2 - moveGridValues[1]) / (cellSize);
+
+            moveGridValues[0] = -(oldx * (newCellSize ) - canvas.getWidth() / 2);
+            moveGridValues[1] = -(oldy * (newCellSize ) - canvas.getHeight() / 2);
+
+            moveGridValues[0] = (moveGridValues[0] > 0) ? 0 : moveGridValues[0];
+            moveGridValues[1] = (moveGridValues[1] > 0) ? 0 : moveGridValues[1];
+
         }
+
     }
 
     /**

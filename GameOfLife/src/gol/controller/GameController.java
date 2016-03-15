@@ -185,16 +185,19 @@ public class GameController implements Initializable {
     @FXML
     public void handleZoom() {
         double x = cellSizeSlider.getValue();
-        //TODO Har ikke implementert gridspacing
-        canvasController.calcNewOffset(activeBoard.getCellSize(), 0.2 * Math.exp(0.05 * x));
-        activeBoard.setCellSize(0.2 * Math.exp(0.05 * x));
+        double newValue = 0.2 * Math.exp(0.05 * x);
         handleGridSpacingSlider();
+
+        canvasController.calcNewOffset(activeBoard.getCellSize(), newValue);
+        activeBoard.setCellSize(newValue);
+
         draw();
     }
-
+    //TODO ZOOM!
     @FXML
     public void handleGridSpacingSlider() {
-        activeBoard.setGridSpacing(activeBoard.getCellSize() * gridSpacingSlider.getValue() / 100);
+        double x = cellSizeSlider.getValue();
+        activeBoard.setGridSpacing(0.2 * Math.exp(0.05 * x) * gridSpacingSlider.getValue() / 100);
         draw();
     }
 
