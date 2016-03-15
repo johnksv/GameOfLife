@@ -116,6 +116,9 @@ public class ReadFile {
                 xLength = Integer.parseInt(line.replaceAll("\\D", ""));
             } else if (line.matches("y=\\d+")) {
                 yLength = Integer.parseInt(line.replaceAll("\\D", ""));
+            } else if (line.matches("rule=")) {
+                System.out.println(line);
+                yLength = Integer.parseInt(line.replaceAll("\\D", ""));
             }
         }
         if (xLength == 0 || yLength == 0) {
