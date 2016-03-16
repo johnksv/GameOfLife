@@ -26,23 +26,6 @@ public class CanvasController implements Initializable {
     private Board activeBoard = new ArrayBoard(10, 10);
     private Color cellColor = Color.BLACK;
     private Color backgroundColor = Color.web("#F4F4F4");
-    /**
-     * MoveGridValus contains:
-     * <ol>
-     * <li>
-     * Offset X
-     * </li>
-     * <li>
-     * Offset Y
-     * </li>
-     * <li>
-     * The old X-value
-     * </li>
-     * <li>
-     * The old Y-value
-     * </li>
-     * </ol>
-     */
     private final double[] moveGridValues = {0, 0, -1, -1}; //Offset x, offset y, old x, old y
     private RadioButton rbRemoveCell = new RadioButton();
     private RadioButton rbMoveGrid = new RadioButton();
@@ -92,7 +75,7 @@ public class CanvasController implements Initializable {
      */
     public void drawGrid() {
         gc.setFill(Color.BLUE);
-        //TODO Så den ikke tegner det som er utenfor
+        //TODO Så den ikke tegner det som er utenfor det vi ser
         double sizeAndSpacing = activeBoard.getCellSize() + activeBoard.getGridSpacing();
         double halfGridSpace = activeBoard.getGridSpacing() / 2;
         for (int i = 0; i <= activeBoard.getArrayLength(); i++) {
