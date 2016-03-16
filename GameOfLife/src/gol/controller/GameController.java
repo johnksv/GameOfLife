@@ -85,6 +85,7 @@ public class GameController implements Initializable {
         backgroundCP.setValue(Color.web("#F4F4F4"));
 
         initCanvasController();
+        //TODO bug if used like this with new zoom!
         handleZoom();
         handleGridSpacingSlider();
         handleColor();
@@ -182,17 +183,30 @@ public class GameController implements Initializable {
         constructRule(toLive, toSpawn);
     }
 
+    /**
+     * //TODO bug?
+     *
+     * @Bug You can cheat this method if you zoom out max with max spacing, then
+     * remove the spacing, but this is the only issue.
+     */
     @FXML
     public void handleZoom() {
         double x = cellSizeSlider.getValue();
         double newValue = 0.2 * Math.exp(0.05 * x);
-        handleGridSpacingSlider();
+        if ((newValue + activeBoard.getGridSpacing()) * activeBoard.getArrayLength() > canvasController.getHigth()
+                && (newValue + activeBoard.getGridSpacing()) * activeBoard.getArrayLength(0) > canvasController.getWidth()) {
 
-        canvasController.calcNewOffset(activeBoard.getCellSize(), newValue);
-        activeBoard.setCellSize(newValue);
+            handleGridSpacingSlider();
+
+            canvasController.calcNewOffset(activeBoard.getCellSize(), newValue);
+            activeBoard.setCellSize(newValue);
+        } else {
+            cellSizeSlider.setValue(20 * Math.log(5 * activeBoard.getCellSize()));
+        }
 
         draw();
     }
+
     //TODO ZOOM!
     @FXML
     public void handleGridSpacingSlider() {

@@ -20,8 +20,8 @@ public class ArrayBoard extends Board {
      */
     public ArrayBoard() {
         super();
-        WIDTH = 100;
-        HEIGHT = 100;
+        WIDTH = 800;
+        HEIGHT = 800;
         gameBoard = new byte[WIDTH][HEIGHT];
     }
 

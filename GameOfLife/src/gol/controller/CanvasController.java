@@ -39,7 +39,7 @@ public class CanvasController implements Initializable {
     }
 
     /**
-     * Initiates all relevant mouseevents.
+     * Initiates all relevant MouseEvents.
      */
     private void mouseInit() {
 
@@ -207,6 +207,12 @@ public class CanvasController implements Initializable {
      */
     public void setRbMoveGrid(RadioButton rbMoveGrid) {
         this.rbMoveGrid = rbMoveGrid;
+    }
+    public double getHigth(){
+        return canvas.getHeight();
+    }
+    public double getWidth(){
+        return canvas.getHeight();
     }
 
 }
