@@ -87,6 +87,8 @@ public class ArrayBoard extends Board {
 
     @Override
     public void insertArray(byte[][] boardFromFile, int y, int x) {
+        y++;
+        x++;
         for (int i = 0; i < boardFromFile.length; i++) {
             for (int j = 0; j < boardFromFile[i].length; j++) {
                 if (i + y < gameBoard.length && j + x < gameBoard[y + i].length) {
@@ -162,10 +164,10 @@ public class ArrayBoard extends Board {
 
     //TODO: Er denne nødvendig?
     public byte[][] getBoundingBoxBoard() {
-        
+
         int[] boundingBox = getBoundingBox();
         byte[][] board = new byte[boundingBox[1]][boundingBox[3]];
-        
+
         for (int y = boundingBox[0]; y <= boundingBox[1]; y++) {
             for (int x = boundingBox[2]; x <= boundingBox[3]; x++) {
                 if (gameBoard[y][x] == 64) {

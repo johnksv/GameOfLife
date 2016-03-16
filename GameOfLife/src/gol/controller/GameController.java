@@ -245,7 +245,7 @@ public class GameController implements Initializable {
                 boardFromFile = ReadFile.readFileFromDisk(selected.toPath());
 
                 //TODO no ghosttiles yet
-                activeBoard.insertArray(boardFromFile, 1, 1);
+                activeBoard.insertArray(boardFromFile, 0, 0);
                 draw();
             }
 
