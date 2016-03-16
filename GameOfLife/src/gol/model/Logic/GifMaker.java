@@ -19,7 +19,7 @@ public class GifMaker {
 
     public static void makeGif(byte[][] board, GIFWriter gw,
             int width, int height, Color bgCl, Color cellCl) throws IOException {
-        
+
         sizeCell = (height < width) ? height / board.length : width / board.length;
         cellColor = cellCl;
         gifWriter = gw;
@@ -42,8 +42,8 @@ public class GifMaker {
         for (int i = 0; i < boarders.length; i++) {
             for (int j = 0; j < boarders[i].length; j++) {
                 if (boarders[i][j] == 64) {
-                    gifWriter.fillRect(i * sizeCell, i * sizeCell + sizeCell,
-                            j * sizeCell, j * sizeCell + sizeCell, cellColor);
+                    gifWriter.fillRect(i * sizeCell + 1, i * sizeCell + sizeCell - 1,
+                            j * sizeCell + 1, j * sizeCell + sizeCell - 1, cellColor);
                 }
             }
         }
