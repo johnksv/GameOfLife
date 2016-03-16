@@ -101,7 +101,8 @@ public abstract class Board {
     public double getGridSpacing() {
         return gridSpacing;
     }
-
+    //TODO comments.
+    public abstract byte[][] getBoundingBoxBoard();
     /**
      * Get the representation of the smallest possible bord
      * <p>

@@ -161,6 +161,7 @@ public class ArrayBoard extends Board {
     }
 
     //TODO: Er denne nødvendig?
+    @Override
     public byte[][] getBoundingBoxBoard() {
 
         int[] boundingBox = getBoundingBox();
