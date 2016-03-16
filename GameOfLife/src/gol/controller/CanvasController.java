@@ -51,7 +51,6 @@ public class CanvasController implements Initializable {
                 (MouseEvent e) -> {
                     if (rbMoveGrid.isSelected()) {
                         moveGrid(e);
-                        drawGrid();
                     } else {
                         handleMouseClick(e);
                     }
