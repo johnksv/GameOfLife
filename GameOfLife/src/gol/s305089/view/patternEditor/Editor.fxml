@@ -16,9 +16,7 @@
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gol.s305089.controller.editor.EditorController">
     <center>
-        <VBox BorderPane.alignment="TOP_LEFT">
-            <fx:include fx:id="canvas" source="../../../view/Canvas.fxml" />
-        </VBox>
+       <fx:include fx:id="canvas" source="../../../view/Canvas.fxml" />
     </center>
     <bottom>
         <BorderPane BorderPane.alignment="CENTER">
@@ -58,9 +56,6 @@
                             </children>
                         </VBox>
                     </content>
-               <VBox.margin>
-                  <Insets />
-               </VBox.margin>
                 </TitledPane>
                 <TitledPane prefWidth="200.0" text="Save pattern &amp; metadata">
                     <content>
