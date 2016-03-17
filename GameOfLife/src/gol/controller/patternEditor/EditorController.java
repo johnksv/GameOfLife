@@ -38,6 +38,7 @@ public class EditorController implements Initializable {
     public void setActiveBoard(Board activeBoard) {
         this.activeBoard = activeBoard;
         canvasController.setActiveBoard(activeBoard);
+        canvasController.draw();
     }
 
 }
