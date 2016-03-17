@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gol.s305089.controller.editor.EditorController">
+    <center>
+        <VBox BorderPane.alignment="TOP_LEFT">
+            <fx:include fx:id="canvas" source="../../../view/Canvas.fxml" />
+        </VBox>
+    </center>
+    <bottom>
+        <BorderPane BorderPane.alignment="CENTER">
+            <center>
+                <ScrollPane>
+                    <content>
+                        <HBox fx:id="canvasContainer" prefHeight="150.0" prefWidth="600.0" />
+                    </content>
+                </ScrollPane>
+            </center>
+            <bottom>
+                <ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+                    <items>
+                        <CheckBox mnemonicParsing="false" text="Automatically update strip" />
+                        <Button mnemonicParsing="false" text="Update strip" />
+                    </items>
+                </ToolBar>
+            </bottom>
+        </BorderPane>
+    </bottom>
+    <right>
+        <VBox BorderPane.alignment="TOP_LEFT">
+            <children>
+                <TitledPane prefWidth="200.0" text="General settings">
+                    <content>
+                        <VBox prefWidth="200.0" spacing="10.0">
+                            <children>
+                                <RadioButton fx:id="rbAddCell" mnemonicParsing="false" selected="true" text="Add cells">
+                                    <toggleGroup>
+                                        <ToggleGroup fx:id="mouseActions" />
+                                    </toggleGroup>
+                                </RadioButton>
+                                <RadioButton fx:id="rbRemoveCell" mnemonicParsing="false" text="Remove cells" toggleGroup="$mouseActions" />
+                                  <Button mnemonicParsing="false" text="Clear board" />
+                        <Separator prefWidth="200.0" />
+                        <Button mnemonicParsing="false" text="Send board to main window" />
+                            </children>
+                        </VBox>
+                    </content>
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+                </TitledPane>
+                <TitledPane prefWidth="200.0" text="Save pattern &amp; metadata">
+                    <content>
+                        <VBox prefHeight="200.0" prefWidth="100.0" spacing="10.0">
+                            <children>
+                                <TextField promptText="Pattername" />
+                                <TextField promptText="Author" />
+                                <TextField promptText="Description" />
+                                <TextField promptText="Rules (B/S)" />
+                                <TextField promptText="Placement" />
+                                  <Button mnemonicParsing="false" text="Save pattern" />
+                            </children>
+                        </VBox>
+                    </content>
+               <padding>
+                  <Insets top="5.0" />
+               </padding>
+                </TitledPane>
+            </children>
+        </VBox>
+    </right>
+</BorderPane>

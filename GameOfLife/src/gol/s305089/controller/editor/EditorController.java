@@ -2,7 +2,7 @@
  * Here comes the text of your license
  * Each line should be prefixed with  * 
  */
-package gol.controller.patternEditor;
+package gol.s305089.controller.editor;
 
 import gol.controller.CanvasController;
 import gol.controller.GameController;
@@ -36,6 +36,7 @@ public class EditorController implements Initializable {
     }
 
     public void setActiveBoard(Board activeBoard) {
+
         this.activeBoard = activeBoard;
         canvasController.setActiveBoard(activeBoard);
         canvasController.draw();

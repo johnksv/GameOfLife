@@ -1,12 +1,12 @@
 package gol.controller;
 
-import gol.controller.patternEditor.EditorController;
 import gol.model.Board.ArrayBoard;
 import gol.model.Board.Board;
 import gol.model.FileIO.PatternFormatException;
 import gol.model.FileIO.ReadFile;
 import gol.model.Logic.ConwaysRule;
 import gol.model.Logic.CustomRule;
+import gol.s305089.controller.editor.EditorController;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -269,12 +269,12 @@ public class GameController implements Initializable {
         }
     }
 
-            @FXML
+    @FXML
     public void openPatternEditor() throws IOException {
         timeline.pause();
 
         Stage editor = new Stage();
-        FXMLLoader root = new FXMLLoader(getClass().getResource("/gol/view/patternEditor/Editor.fxml"));
+        FXMLLoader root = new FXMLLoader(getClass().getResource("/gol/s305089/view/patternEditor/Editor.fxml"));
 
         Scene scene = new Scene((Parent) root.load());
         EditorController editorController = root.<EditorController>getController();
@@ -286,6 +286,7 @@ public class GameController implements Initializable {
         editor.show();
 
     }
+
     public void constructRule(byte[] cellsToLive, byte[] cellsToSpawn) {
         activeBoard.setGameRule(new CustomRule(cellsToLive, cellsToSpawn));
     }
