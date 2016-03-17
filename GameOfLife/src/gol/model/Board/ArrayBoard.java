@@ -20,8 +20,8 @@ public class ArrayBoard extends Board {
      */
     public ArrayBoard() {
         super();
-        WIDTH = 10;
-        HEIGHT = 10;
+        WIDTH = 800;
+        HEIGHT = 800;
         gameBoard = new byte[WIDTH][HEIGHT];
     }
 
@@ -86,38 +86,38 @@ public class ArrayBoard extends Board {
     }
 
     @Override
-    public void insertArray(byte[][] boardFromFile, int x, int y) {
+    public void insertArray(byte[][] boardFromFile, int y, int x) {
         for (int i = 0; i < boardFromFile.length; i++) {
             for (int j = 0; j < boardFromFile[i].length; j++) {
-                try {
-                    gameBoard[i + x][j + y] = boardFromFile[i][j];
-                } catch (ArrayIndexOutOfBoundsException e) {
-                    System.err.println("OUT OF BOUNDS");
+                if (i + y < gameBoard.length && j + x < gameBoard[y + i].length) {
+                    if (i + y >= 1 && j + x >= 1) {
+                        gameBoard[i + y][j + x] = boardFromFile[i][j];
+                    }
                 }
-
             }
         }
     }
 
     @Override
-    public void setCellState(int x, int y, boolean alive) {
+    public void setCellState(int y, int x, boolean alive) {
         byte value = 0;
         if (alive) {
             value = 64;
         }
-
         if (y < gameBoard.length && y >= 0) {
             if (x < gameBoard[y].length && x >= 0) {
                 gameBoard[y][x] = value;
+            } else {
+                System.err.println("x or y was not in gameboard.");
             }
 
         } else {
-            System.err.println("x and y was not in gameboard.");
+            System.err.println("x or y was not in gameboard.");
         }
     }
 
     @Override
-    public void setCellState(double x, double y, boolean alive) {
+    public void setCellState(double y, double x, boolean alive, double offsetX, double offsetY) {
 
         /*
          * y is position of the first index of the matrix (column)
@@ -125,25 +125,10 @@ public class ArrayBoard extends Board {
          */
         y = y / (cellSize + gridSpacing);
         x = x / (cellSize + gridSpacing);
+        offsetY = offsetY / (cellSize + gridSpacing);
+        offsetX = offsetX / (cellSize + gridSpacing);
 
-        byte value = 0;
-        if (alive) {
-            value = 64;
-        }
-        if (((int) y) < gameBoard.length && y >= 0) {
-            if (((int) x) < gameBoard[(int) y].length && x >= 0) {
-                gameBoard[(int) y][(int) x] = value;
-            }
-        } else {
-            System.err.println("x and y was not in gameboard.");
-        }
-    }
-
-    @Override
-    protected void setGameBoard(Object gameBoard) {
-        if (gameBoard instanceof byte[][]) {
-            this.gameBoard = (byte[][]) gameBoard;
-        }
+        setCellState((int) Math.floor(y - offsetY), (int) Math.floor(x - offsetX), alive);
     }
 
     @Override
@@ -157,8 +142,75 @@ public class ArrayBoard extends Board {
     }
 
     @Override
-    public boolean getCellState(int x, int y) {
-        return gameBoard[x][y] >= 64;
+    public String getBoundingBoxPattern() {
+        if (gameBoard.length == 0) {
+            return "";
+        }
+        int[] boundingBox = getBoundingBox();
+        StringBuilder result = new StringBuilder();
+        for (int y = boundingBox[0]; y <= boundingBox[1]; y++) {
+            for (int x = boundingBox[2]; x <= boundingBox[3]; x++) {
+                if (gameBoard[y][x] == 64) {
+                    result.append("1");
+                } else {
+                    result.append("0");
+                }
+            }
+        }
+        return result.toString();
+    }
+
+    //TODO: Er denne nødvendig?
+    @Override
+    public byte[][] getBoundingBoxBoard() {
+
+        int[] boundingBox = getBoundingBox();
+        byte[][] board = new byte[boundingBox[1]][boundingBox[3]];
+
+        for (int y = boundingBox[0]; y <= boundingBox[1]; y++) {
+            for (int x = boundingBox[2]; x <= boundingBox[3]; x++) {
+                if (gameBoard[y][x] == 64) {
+                    board[y][x] = 64;
+                } else {
+                    board[y][x] = 0;
+                }
+            }
+        }
+        return board;
+    }
+
+    @Override
+    public int[] getBoundingBox() {
+        int[] boundingBox = new int[4]; // minrow maxrow mincolumn maxcolumn 
+        boundingBox[0] = gameBoard.length;
+        boundingBox[1] = 0;
+        boundingBox[2] = gameBoard[0].length;
+        boundingBox[3] = 0;
+        for (int i = 0; i < gameBoard.length; i++) {
+            for (int j = 0; j < gameBoard[i].length; j++) {
+                if (gameBoard[i][j] != 64) {
+                    continue;
+                }
+                if (i < boundingBox[0]) {
+                    boundingBox[0] = i;
+                }
+                if (i > boundingBox[1]) {
+                    boundingBox[1] = i;
+                }
+                if (j < boundingBox[2]) {
+                    boundingBox[2] = j;
+                }
+                if (j > boundingBox[3]) {
+                    boundingBox[3] = j;
+                }
+            }
+        }
+        return boundingBox;
+    }
+
+    @Override
+    public boolean getCellState(int y, int x) {
+        return gameBoard[y][x] >= 64;
     }
 
     @Override

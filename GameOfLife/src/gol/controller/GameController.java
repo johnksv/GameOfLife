@@ -5,6 +5,8 @@ import gol.model.Board.ArrayBoard;
 import gol.model.Board.Board;
 import gol.model.FileIO.PatternFormatException;
 import gol.model.FileIO.ReadFile;
+import gol.model.Logic.ConwaysRule;
+import gol.model.Logic.CustomRule;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -13,17 +15,21 @@ import java.util.ResourceBundle;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.Slider;
+import javafx.scene.control.TextField;
+import javafx.scene.control.Toggle;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
@@ -37,6 +43,7 @@ public class GameController implements Initializable {
 
     @FXML
     private CanvasController canvasController;
+
     @FXML
     private Slider cellSizeSlider;
     @FXML
@@ -51,26 +58,68 @@ public class GameController implements Initializable {
     private ColorPicker cellCP;
     @FXML
     private ColorPicker backgroundCP;
+    @FXML
+    private RadioButton rbRemoveCell;
+    @FXML
+    private RadioButton rbMoveGrid;
+    @FXML
+    private ToggleGroup tgGameRules;
+    @FXML
+    private RadioButton rbCustomGameRules;
+    @FXML
+    private TextField tfCellsToSpawn;
+    @FXML
+    private TextField tfCellsToLive;
+    @FXML
+    private Button btnUseRule;
+    @FXML
+    private CheckBox cbShowGrid;
 
     private Board activeBoard;
-    protected final Timeline timeline = new Timeline();
+    private final Timeline timeline = new Timeline();
     private byte[][] boardFromFile;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
         activeBoard = new ArrayBoard();
         cellCP.setValue(Color.BLACK);
         backgroundCP.setValue(Color.web("#F4F4F4"));
+
+        initCanvasController();
+        //TODO bug if used like this with new zoom!
+        handleZoom();
+        handleGridSpacingSlider();
         handleColor();
         handleZoom();
         handleAnimationSpeedSlider();
         initAnimation();
+        initGameRulesListner();
+        draw();
 
         canvasController.setActiveBoard(activeBoard);
     }
 
-    public void draw() {
-        canvasController.draw();
+    private void initCanvasController() {
+        canvasController.setActiveBoard(activeBoard);
+        canvasController.setRbMoveGrid(rbMoveGrid);
+        canvasController.setRbRemoveCell(rbRemoveCell);
+    }
+
+    private void initGameRulesListner() {
+        tgGameRules.selectedToggleProperty().addListener((ObservableValue<? extends Toggle> observable, Toggle oldValue, Toggle newValue) -> {
+            if (newValue == rbCustomGameRules) {
+                tfCellsToLive.setDisable(false);
+                tfCellsToSpawn.setDisable(false);
+                btnUseRule.setDisable(false);
+                handleRuleBtn();
+            } else {
+                tfCellsToLive.setDisable(true);
+                tfCellsToSpawn.setDisable(true);
+                btnUseRule.setDisable(true);
+                activeBoard.setGameRule(new ConwaysRule());
+            }
+        });
     }
 
     private void initAnimation() {
@@ -82,6 +131,13 @@ public class GameController implements Initializable {
         timeline.setCycleCount(Animation.INDEFINITE);
         timeline.getKeyFrames().add(keyframe);
 
+    }
+
+    private void draw() {
+        canvasController.draw();
+        if (cbShowGrid.isSelected()) {
+            canvasController.drawGrid();
+        }
     }
 
     @FXML
@@ -104,21 +160,68 @@ public class GameController implements Initializable {
     }
 
     @FXML
-    public void handleZoom() {
-        double x = cellSizeSlider.getValue();
-        activeBoard.setCellSize(0.2 * Math.exp(0.05 * x));
-        handleGridSpacingSlider();
-        draw();
+    public void handleRuleText() {
+        //TODO
+
     }
 
     @FXML
+    public void handleRuleBtn() {
+
+        String[] toLiveString = tfCellsToLive.getText().replaceAll("\\D", "").split("");
+        String[] toSpawnString = tfCellsToSpawn.getText().replaceAll("\\D", "").split("");
+
+        byte[] toLive = new byte[toLiveString.length];
+        for (int i = 0; i < toLive.length; i++) {
+            if (Character.isDigit(toLiveString[i].charAt(0)) && toLiveString[i].length() == 1) {
+                toLive[i] = (byte) Integer.parseInt(toLiveString[i]);
+            }
+        }
+        byte[] toSpawn = new byte[toSpawnString.length];
+        for (int i = 0; i < toSpawn.length; i++) {
+            if (Character.isDigit(toSpawnString[i].charAt(0)) && toSpawnString[i].length() == 1) {
+                toSpawn[i] = (byte) Integer.parseInt(toSpawnString[i]);
+            }
+        }
+
+        constructRule(toLive, toSpawn);
+    }
+
+    /**
+     * //TODO bug?
+     *
+     * @Bug You can cheat this method if you zoom out max with max spacing, then
+     * remove the spacing, but this is the only issue.
+     */
+    @FXML
+    public void handleZoom() {
+        double x = cellSizeSlider.getValue();
+        double newValue = 0.2 * Math.exp(0.05 * x);
+        if ((newValue + activeBoard.getGridSpacing()) * activeBoard.getArrayLength() > canvasController.getHigth()
+                && (newValue + activeBoard.getGridSpacing()) * activeBoard.getArrayLength(0) > canvasController.getWidth()) {
+
+            handleGridSpacingSlider();
+
+            canvasController.calcNewOffset(activeBoard.getCellSize(), newValue);
+            activeBoard.setCellSize(newValue);
+        } else {
+            cellSizeSlider.setValue(20 * Math.log(5 * activeBoard.getCellSize()));
+        }
+
+        draw();
+    }
+
+    //TODO ZOOM!
+    @FXML
     public void handleGridSpacingSlider() {
-        activeBoard.setGridSpacing(activeBoard.getCellSize() * gridSpacingSlider.getValue() / 100);
+        double x = cellSizeSlider.getValue();
+        activeBoard.setGridSpacing(0.2 * Math.exp(0.05 * x) * gridSpacingSlider.getValue() / 100);
         draw();
     }
 
     @FXML
     public void handleColor() {
+        //TODO
         canvasController.setCellColor(cellCP.getValue());
         canvasController.setBackgroundColor(backgroundCP.getValue());
         draw();
@@ -145,8 +248,8 @@ public class GameController implements Initializable {
             if (selected != null) {
                 boardFromFile = ReadFile.readFileFromDisk(selected.toPath());
 
-                //no ghosttiles yet
-                activeBoard.insertArray(boardFromFile, 1, 1);
+                //TODO no ghosttiles yet
+                activeBoard.insertArray(boardFromFile, 0, 0);
                 draw();
             }
 
@@ -164,7 +267,7 @@ public class GameController implements Initializable {
         }
     }
 
-    @FXML
+            @FXML
     public void openPatternEditor() throws IOException {
         timeline.pause();
 
@@ -181,9 +284,8 @@ public class GameController implements Initializable {
         editor.show();
 
     }
-
     public void constructRule(byte[] cellsToLive, byte[] cellsToSpawn) {
-        //@TODO implement costume rules
+        activeBoard.setGameRule(new CustomRule(cellsToLive, cellsToSpawn));
     }
 
     public void setActiveBoard(Board activeBoard) {

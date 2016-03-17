@@ -128,8 +128,8 @@ public class BoardTest {
     @Test
     public void testSetCellState() {
         System.out.println("setCellState");
-        double x = 0.0;
-        double y = 0.0;
+        int x = 0;
+        int y = 0;
         boolean alive = false;
 
         instance.setCellState(x, y, alive);
