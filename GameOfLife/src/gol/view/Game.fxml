@@ -143,9 +143,9 @@
                                        </toggleGroup>
                                     </RadioButton>
                                     <RadioButton fx:id="rbCustomGameRules" layoutX="123.0" layoutY="17.0" mnemonicParsing="false" text="Custom rules" toggleGroup="$tgGameRules" />
-                                                <TextField fx:id="tfCellsToLive"  disable="true" layoutX="123.0" layoutY="49.0" prefHeight="25.0" prefWidth="92.0" text="2,3" />
-                                                <TextField fx:id="tfCellsToSpawn" onKeyTyped="#handleRuleText" disable="true" layoutX="123.0" layoutY="80.0" prefHeight="25.0" prefWidth="92.0" text="3" />
-                                                <Button fx:id="btnUseRule" onAction="#handleRuleBtn"  disable="true" layoutX="68.0" layoutY="120.0" mnemonicParsing="false" text="Use Rules" />
+                                                <TextField fx:id="tfCellsToLive" disable="true" layoutX="123.0" layoutY="49.0" prefHeight="25.0" prefWidth="92.0" text="2,3" />
+                                                <TextField fx:id="tfCellsToSpawn" disable="true" layoutX="123.0" layoutY="80.0" onKeyTyped="#handleRuleText" prefHeight="25.0" prefWidth="92.0" text="3" />
+                                                <Button fx:id="btnUseRule" disable="true" layoutX="68.0" layoutY="120.0" mnemonicParsing="false" onAction="#handleRuleBtn" text="Use Rules" />
                                             </children>
                                         </AnchorPane>
                                     </content>
@@ -179,9 +179,9 @@
                                 <TitledPane animated="false" collapsible="false" text="John Kasper">
                                     <content>
                                         <AnchorPane minHeight="0.0" minWidth="0.0" prefWidth="200.0">
-                                            <children>
-                                              
-                                            </children>
+                                 <children>
+                                    <Button fx:id="btnSaveToGifs89" onAction="#currentBoardToGIF"  layoutX="14.0" layoutY="10.0" mnemonicParsing="false" text="Save current patter to GIF" />
+                                 </children>
                                         </AnchorPane>
                                     </content>
                                 </TitledPane>
@@ -195,7 +195,7 @@
 
    <center>
         <VBox fx:id="canvasContainer">
-            <fx:include source="Canvas.fxml" fx:id="canvas"/>
+            <fx:include fx:id="canvas" source="Canvas.fxml" />
         </VBox>
 
    </center>

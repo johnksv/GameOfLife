@@ -6,11 +6,14 @@ import gol.model.FileIO.PatternFormatException;
 import gol.model.FileIO.ReadFile;
 import gol.model.Logic.ConwaysRule;
 import gol.model.Logic.CustomRule;
+import gol.s305089.BoardToGif;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.animation.Animation;
 import javafx.animation.Animation.Status;
 import javafx.animation.KeyFrame;
@@ -260,6 +263,19 @@ public class GameController implements Initializable {
             alert.setHeaderText("Pattern Error");
             alert.showAndWait();
 
+        }
+    }
+
+    @FXML
+    public void currentBoardToGIF() {
+        byte[][] newGameBoard = activeBoard.getBoundingBoxBoard();
+        try {
+            BoardToGif.writeBoardtoGIF(newGameBoard);
+        } catch (IOException ex) {
+            Alert alert = new Alert(Alert.AlertType.ERROR, ex.getMessage());
+            alert.setTitle("Error");
+            alert.setHeaderText("Pattern to GIF");
+            alert.showAndWait();
         }
     }
 
