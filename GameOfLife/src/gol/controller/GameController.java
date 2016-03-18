@@ -6,9 +6,11 @@ import gol.model.FileIO.PatternFormatException;
 import gol.model.FileIO.ReadFile;
 import gol.model.Logic.ConwaysRule;
 import gol.model.Logic.CustomRule;
+import gol.s305084.GifMaker;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Arrays;
 
 import java.util.ResourceBundle;
 import javafx.animation.Animation;
@@ -26,6 +28,8 @@ import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Slider;
+import javafx.scene.control.Spinner;
+import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
@@ -33,6 +37,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.util.Duration;
+import lieng.GIFWriter;
 
 /**
  * @author s305054, s305084, s305089
@@ -72,6 +77,8 @@ public class GameController implements Initializable {
     private Button btnUseRule;
     @FXML
     private CheckBox cbShowGrid;
+    @FXML
+    private Spinner spinner;
 
     private Board activeBoard;
     private final Timeline timeline = new Timeline();
@@ -97,6 +104,8 @@ public class GameController implements Initializable {
     }
 
     private void initCanvasController() {
+
+        spinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 20));
         canvasController.setActiveBoard(activeBoard);
         canvasController.setRbMoveGrid(rbMoveGrid);
         canvasController.setRbRemoveCell(rbRemoveCell);
@@ -159,6 +168,27 @@ public class GameController implements Initializable {
     public void handleRuleText() {
         //TODO
 
+    }
+
+    @FXML
+    public void handleGifBtn() {
+        
+        
+        try {
+            FileChooser fileChooser = new FileChooser();
+
+            fileChooser.getExtensionFilters().addAll(
+                    new ExtensionFilter("GIF files", "*.gif"));
+
+            File selected = fileChooser.showSaveDialog(null);
+            if (selected != null) {
+                GIFWriter gw = new GIFWriter(100, 100,selected.toPath().toAbsolutePath().toString(),(int)(1000/timeline.getRate()));
+                GifMaker.makeGif((byte[][])activeBoard.getGameBoard(), gw, 100, 100, java.awt.Color.WHITE, java.awt.Color.BLACK, 15);
+
+            }
+        } catch (IOException ex) {
+            System.out.println("WTF!");
+        }
     }
 
     @FXML

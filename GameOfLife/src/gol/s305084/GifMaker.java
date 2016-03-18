@@ -13,14 +13,14 @@ public class GifMaker {
 
     private static GIFWriter gifWriter;
 
-    private static int sizeCell;
+    private static int sizeCell=10;
     private static Color cellColor;
     //TODO make a copy and compare.
 
     public static void makeGif(byte[][] board, GIFWriter gw,
-            int width, int height, Color bgCl, Color cellCl) throws IOException {
+            int width, int height, Color bgCl, Color cellCl, int counter) throws IOException {
 
-        sizeCell = (height < width) ? height / board.length : width / board.length;
+        //sizeCell = (height < width) ? height / board.length : width / board.length;
         cellColor = cellCl;
         gifWriter = gw;
         gifWriter.setBackgroundColor(bgCl);
@@ -41,15 +41,20 @@ public class GifMaker {
         byte[][] boarders = frame.getBoundingBoxBoard();
         for (int i = 0; i < boarders.length; i++) {
             for (int j = 0; j < boarders[i].length; j++) {
+                if(i * sizeCell + sizeCell>= 100 || j * sizeCell + sizeCell >=100){
+                    break;
+                }else{
                 if (boarders[i][j] == 64) {
                     gifWriter.fillRect(i * sizeCell + 1, i * sizeCell + sizeCell - 1,
                             j * sizeCell + 1, j * sizeCell + sizeCell - 1, cellColor);
                 }
             }
+            }
         }
         
         frame.nextGen();
         gifWriter.insertCurrentImage();
+        
         return makeFrame(frame, --counter);
     }
 }
