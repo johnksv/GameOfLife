@@ -151,7 +151,7 @@ public abstract class Board {
      * For example: To insert boardFromFile to upper left corner of the current 
      * gameboard, insert at position (0,0). 
      * <p>
-     * Elements from boardFromFile that exceeds the dimensios of the
+     * Elements from boardFromFile that exceeds the dimensions of the
      * current gameboard is not inserted.
      *
      *
