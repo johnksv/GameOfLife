@@ -6,6 +6,7 @@
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.Spinner?>
 <?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
@@ -21,8 +22,11 @@
             <content>
                 <VBox prefHeight="200.0" prefWidth="100.0" spacing="10.0">
                     <children>
-                        <Button fx:id="btnChooseSaveDest" onAction="#chooseSaveDest"  mnemonicParsing="false" text="Choose save destination" />
-                        <Label fx:id="labelCurrentDest" text="Current:" />
+                        <Button fx:id="btnChooseSaveDest" mnemonicParsing="false" onAction="#chooseSaveDest" text="Choose save destination" />
+                        <Label fx:id="labelCurrentDest" text="Current:">
+                     <tooltip>
+                        <Tooltip fx:id="tooltipSaveLoc" wrapText="true" />
+                     </tooltip></Label>
                   <Separator prefWidth="200.0" />
                         <Label text="Cellsize" />
                         <Slider fx:id="sliderCellSize" showTickLabels="true" showTickMarks="true" snapToTicks="true" />

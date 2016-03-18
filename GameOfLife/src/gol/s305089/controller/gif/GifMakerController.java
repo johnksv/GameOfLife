@@ -5,6 +5,7 @@
 package gol.s305089.controller.gif;
 
 import gol.model.Board.Board;
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -15,6 +16,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.Spinner;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.FileChooser;
@@ -40,6 +42,8 @@ public class GifMakerController implements Initializable {
     private Spinner spinnTimeBetween;
     @FXML
     private ImageView imgViewPreview;
+    @FXML
+    private Tooltip tooltipSaveLoc;
 
     protected byte[][] activeBoard;
 
@@ -48,11 +52,25 @@ public class GifMakerController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        imgViewPreview.prefHeight(borderPane.getHeight());
-        imgViewPreview.prefWidth(borderPane.getWidth());
+
+    }
+
+    @FXML
+    private void chooseSaveDest() {
         FileChooser filechooser = new FileChooser();
         //TODO set filter for filechooser to .gif
-        String saveLocation = filechooser.showSaveDialog(null).toPath().toString();
+        File fileSaveLocation = filechooser.showSaveDialog(null);
+
+        String saveLocation;
+        if (fileSaveLocation != null) {
+            saveLocation = fileSaveLocation.toPath().toString();
+        } else {
+            saveLocation = System.getProperty("user.home");
+        }
+        
+        labelCurrentDest.setText("Current: " + saveLocation);
+        BoardToGif.setSaveLocation(saveLocation);
+        tooltipSaveLoc.setText(saveLocation);
     }
 
     @FXML
