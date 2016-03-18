@@ -6,7 +6,7 @@ import gol.model.FileIO.PatternFormatException;
 import gol.model.FileIO.ReadFile;
 import gol.model.Logic.ConwaysRule;
 import gol.model.Logic.CustomRule;
-import gol.s305089.controller.gif.BoardToGif;
+import gol.s305089.controller.gif.GifWriter;
 import gol.s305089.controller.gif.GifMakerController;
 import java.io.File;
 import java.io.IOException;

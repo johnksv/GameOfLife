@@ -12,7 +12,7 @@ import lieng.GIFWriter;
  *
  * Last edited: 18.03.2016
  */
-public final class BoardToGif {
+public final class GifWriter {
 
     private static Board gameboard;
     private static GIFWriter gifWriter;
@@ -24,7 +24,7 @@ public final class BoardToGif {
 
     public static void writeBoardtoGIF(byte[][] pattern) throws IOException {
       
-        BoardToGif.gameboard = new ArrayBoard(10,10);
+        GifWriter.gameboard = new ArrayBoard(10,10);
         gameboard.insertArray(pattern, 1, 1);
 
         gifWriter = new GIFWriter(gifWidth, gifHeight, saveLocation, durationBetweenFrames);

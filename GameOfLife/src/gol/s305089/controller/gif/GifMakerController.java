@@ -52,7 +52,8 @@ public class GifMakerController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-
+        chooseSaveDest();
+     
     }
 
     @FXML
@@ -69,14 +70,19 @@ public class GifMakerController implements Initializable {
         }
         
         labelCurrentDest.setText("Current: " + saveLocation);
-        BoardToGif.setSaveLocation(saveLocation);
+        GifWriter.setSaveLocation(saveLocation);
         tooltipSaveLoc.setText(saveLocation);
+    }
+    
+    @FXML
+    private void handleCellSizeChange(){
+        GifWriter.setCellSize((int) sliderCellSize.getValue());
     }
 
     @FXML
     private void generateGIF() {
         try {
-            BoardToGif.writeBoardtoGIF(activeBoard);
+            GifWriter.writeBoardtoGIF(activeBoard);
         } catch (IOException ex) {
             Alert alert = new Alert(Alert.AlertType.ERROR, ex.getMessage());
             alert.setTitle("Error");

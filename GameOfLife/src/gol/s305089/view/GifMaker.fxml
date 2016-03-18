@@ -29,7 +29,7 @@
                      </tooltip></Label>
                   <Separator prefWidth="200.0" />
                         <Label text="Cellsize" />
-                        <Slider fx:id="sliderCellSize" showTickLabels="true" showTickMarks="true" snapToTicks="true" />
+                        <Slider fx:id="sliderCellSize" onValueChange="#handleCellSizeChange"  showTickLabels="true" showTickMarks="true" snapToTicks="true" />
                   <Separator prefWidth="200.0" />
                         <Label text="Number of iterations to draw" />
                         <Spinner fx:id="spinnNumIterations" prefHeight="25.0" prefWidth="147.0" />
