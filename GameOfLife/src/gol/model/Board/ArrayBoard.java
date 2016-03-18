@@ -1,6 +1,7 @@
 package gol.model.Board;
 
 import gol.model.Logic.Rule;
+import java.util.Arrays;
 
 /**
  * //TODO Comment about Arrayboard
@@ -20,8 +21,8 @@ public class ArrayBoard extends Board {
      */
     public ArrayBoard() {
         super();
-        WIDTH = 800;
-        HEIGHT = 800;
+        WIDTH = 100;
+        HEIGHT = 100;
         gameBoard = new byte[WIDTH][HEIGHT];
     }
 
@@ -156,6 +157,7 @@ public class ArrayBoard extends Board {
                     result.append("0");
                 }
             }
+            result.append("\n");
         }
         return result.toString();
     }
@@ -234,7 +236,8 @@ public class ArrayBoard extends Board {
 
     @Override
     public String toString() {
-        StringBuilder result = new StringBuilder();
+        /*
+         StringBuilder result = new StringBuilder();
         for (byte row[] : gameBoard) {
             for (byte cell : row) {
                 if (cell >= 64) {
@@ -243,7 +246,8 @@ public class ArrayBoard extends Board {
                     result.append(0);
                 }
             }
-        }
-        return result.toString();
+        }*/
+        return Arrays.deepToString(gameBoard).replaceAll("64", "1");
+        //return result.toString();
     }
 }

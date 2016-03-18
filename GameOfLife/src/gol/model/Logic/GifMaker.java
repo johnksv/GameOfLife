@@ -47,7 +47,7 @@ public class GifMaker {
                 }
             }
         }
-
+        
         frame.nextGen();
         gifWriter.insertCurrentImage();
         return makeFrame(frame, --counter);

@@ -163,7 +163,7 @@ public class GameController implements Initializable {
 
     @FXML
     public void handleRuleBtn() {
-
+        System.out.println(activeBoard);
         String[] toLiveString = tfCellsToLive.getText().replaceAll("\\D", "").split("");
         String[] toSpawnString = tfCellsToSpawn.getText().replaceAll("\\D", "").split("");
 
