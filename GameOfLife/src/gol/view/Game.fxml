@@ -194,8 +194,9 @@
     </right>
 
    <center>
-        
+        <VBox fx:id="canvasContainer">
             <fx:include source="Canvas.fxml" fx:id="canvas"/>
+        </VBox>
 
    </center>
 </BorderPane>
