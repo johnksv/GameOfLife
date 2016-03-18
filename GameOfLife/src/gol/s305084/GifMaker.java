@@ -1,4 +1,4 @@
-package gol.model.Logic;
+package gol.s305084;
 
 import gol.model.Board.*;
 import java.awt.Color;
