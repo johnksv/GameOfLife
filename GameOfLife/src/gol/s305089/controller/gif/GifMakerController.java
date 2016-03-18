@@ -90,7 +90,7 @@ public class GifMakerController implements Initializable {
             GifWriter.writeBoardtoGIF(activeBoard);
             labelGenerateFeedback.setText("GIF was successfully created");
         } catch (IOException ex) {
-            Alert alert = new Alert(Alert.AlertType.ERROR, ex.getMessage());
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Det oppsto en feil...:\n" + ex.getMessage());
             alert.setTitle("Error");
             alert.setHeaderText("Pattern to GIF");
             alert.showAndWait();
