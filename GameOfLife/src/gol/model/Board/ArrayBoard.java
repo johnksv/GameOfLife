@@ -167,11 +167,10 @@ public class ArrayBoard extends Board {
     public byte[][] getBoundingBoxBoard() {
 
         int[] boundingBox = getBoundingBox();
-        byte[][] board = new byte[boundingBox[1]][boundingBox[3]];
-
-        for (int y = boundingBox[0]; y <= boundingBox[1]; y++) {
-            for (int x = boundingBox[2]; x <= boundingBox[3]; x++) {
-                if (gameBoard[y][x] == 64) {
+        byte[][] board = new byte[boundingBox[1] - boundingBox[0] + 1][boundingBox[3] - boundingBox[2] + 1];
+        for (int y = 0; y < board.length; y++) {
+            for (int x = 0; x < board[y].length; x++) {
+                if (gameBoard[boundingBox[0] + y][x + boundingBox[2]] == 64) {
                     board[y][x] = 64;
                 } else {
                     board[y][x] = 0;
@@ -236,8 +235,8 @@ public class ArrayBoard extends Board {
 
     @Override
     public String toString() {
-        /*
-         StringBuilder result = new StringBuilder();
+
+        StringBuilder result = new StringBuilder();
         for (byte row[] : gameBoard) {
             for (byte cell : row) {
                 if (cell >= 64) {
@@ -246,8 +245,7 @@ public class ArrayBoard extends Board {
                     result.append(0);
                 }
             }
-        }*/
-        return Arrays.deepToString(gameBoard).replaceAll("64", "1");
-        //return result.toString();
+        }
+        return result.toString();
     }
 }
