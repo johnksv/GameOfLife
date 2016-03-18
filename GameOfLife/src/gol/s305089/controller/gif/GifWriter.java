@@ -16,11 +16,12 @@ public final class GifWriter {
 
     private static Board gameboard;
     private static GIFWriter gifWriter;
-    private static int gifWidth;
-    private static int gifHeight;
+    private static int gifWidth = 100;
+    private static int gifHeight = 100;
     private static String saveLocation;
-    private static int durationBetweenFrames;
-    private static int cellSize = 9;
+    private static int durationBetweenFrames = 1000;
+    private static int cellSize = 10;
+    private static int iterations = 20;
 
     public static void writeBoardtoGIF(byte[][] pattern) throws IOException {
       
@@ -29,7 +30,7 @@ public final class GifWriter {
 
         gifWriter = new GIFWriter(gifWidth, gifHeight, saveLocation, durationBetweenFrames);
 
-        writeGIF(20);
+        writeGIF(iterations);
     }
     
 
@@ -84,5 +85,12 @@ public final class GifWriter {
      */
     public static void setCellSize(int aCellSize) {
         cellSize = aCellSize;
+    }
+
+    /**
+     * @param aIterations the iterations to set
+     */
+    public static void setIterations(int aIterations) {
+        iterations = aIterations;
     }
 }

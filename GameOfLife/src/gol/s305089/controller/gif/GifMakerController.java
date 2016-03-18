@@ -44,16 +44,19 @@ public class GifMakerController implements Initializable {
     private ImageView imgViewPreview;
     @FXML
     private Tooltip tooltipSaveLoc;
+    @FXML
+    private Label labelGenerateFeedback;
 
     protected byte[][] activeBoard;
+    private String saveLocation;
 
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        chooseSaveDest();
-     
+        saveLocation = System.getProperty("user.home");
+        setTextForLabels();
     }
 
     @FXML
@@ -62,20 +65,22 @@ public class GifMakerController implements Initializable {
         //TODO set filter for filechooser to .gif
         File fileSaveLocation = filechooser.showSaveDialog(null);
 
-        String saveLocation;
         if (fileSaveLocation != null) {
             saveLocation = fileSaveLocation.toPath().toString();
         } else {
             saveLocation = System.getProperty("user.home");
         }
-        
+        setTextForLabels();
+    }
+
+    private void setTextForLabels() {
         labelCurrentDest.setText("Current: " + saveLocation);
         GifWriter.setSaveLocation(saveLocation);
         tooltipSaveLoc.setText(saveLocation);
     }
-    
+
     @FXML
-    private void handleCellSizeChange(){
+    private void handleCellSizeChange() {
         GifWriter.setCellSize((int) sliderCellSize.getValue());
     }
 
@@ -83,6 +88,7 @@ public class GifMakerController implements Initializable {
     private void generateGIF() {
         try {
             GifWriter.writeBoardtoGIF(activeBoard);
+            labelGenerateFeedback.setText("GIF was successfully created");
         } catch (IOException ex) {
             Alert alert = new Alert(Alert.AlertType.ERROR, ex.getMessage());
             alert.setTitle("Error");
