@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gol.s305089.controller.GifMakerController">
+<BorderPane fx:id="borderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gol.s305089.controller.gif.GifMakerController">
     <center>
         <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER" />
     </center>
@@ -21,7 +21,7 @@
             <content>
                 <VBox prefHeight="200.0" prefWidth="100.0" spacing="10.0">
                     <children>
-                        <Button fx:id="btnChooseSaveDest" mnemonicParsing="false" text="Choose save destination" />
+                        <Button fx:id="btnChooseSaveDest" onAction="#chooseSaveDest"  mnemonicParsing="false" text="Choose save destination" />
                         <Label fx:id="labelCurrentDest" text="Current:" />
                   <Separator prefWidth="200.0" />
                         <Label text="Cellsize" />

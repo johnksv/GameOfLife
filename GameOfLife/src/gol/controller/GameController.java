@@ -6,7 +6,8 @@ import gol.model.FileIO.PatternFormatException;
 import gol.model.FileIO.ReadFile;
 import gol.model.Logic.ConwaysRule;
 import gol.model.Logic.CustomRule;
-import gol.s305089.BoardToGif;
+import gol.s305089.controller.gif.BoardToGif;
+import gol.s305089.controller.gif.GifMakerController;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -21,7 +22,10 @@ import javafx.animation.Timeline;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -35,6 +39,8 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
 /**
@@ -267,16 +273,21 @@ public class GameController implements Initializable {
     }
 
     @FXML
-    public void currentBoardToGIF() {
-        byte[][] newGameBoard = activeBoard.getBoundingBoxBoard();
-        try {
-            BoardToGif.writeBoardtoGIF(newGameBoard);
-        } catch (IOException ex) {
-            Alert alert = new Alert(Alert.AlertType.ERROR, ex.getMessage());
-            alert.setTitle("Error");
-            alert.setHeaderText("Pattern to GIF");
-            alert.showAndWait();
-        }
+    public void currentBoardToGIF() throws IOException {
+        timeline.pause();
+
+        Stage gifMaker = new Stage();
+        FXMLLoader root = new FXMLLoader(getClass().getResource("/gol/s305089/view/GifMaker.fxml"));
+
+        Scene scene = new Scene((Parent) root.load());
+
+        GifMakerController gifcontroller = root.<GifMakerController>getController();
+        gifcontroller.setByteBoard(activeBoard);
+
+        gifMaker.setScene(scene);
+        gifMaker.setTitle("Generate GIF - Game of Life");
+        gifMaker.initModality(Modality.APPLICATION_MODAL);
+        gifMaker.show();
     }
 
     public void constructRule(byte[] cellsToLive, byte[] cellsToSpawn) {
