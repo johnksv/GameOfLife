@@ -167,6 +167,11 @@ public class ArrayBoard extends Board {
     public byte[][] getBoundingBoxBoard() {
 
         int[] boundingBox = getBoundingBox();
+        if (boundingBox[1] - boundingBox[0] < 0 || boundingBox[3] - boundingBox[2] < 0) {
+            byte[][] board = new byte[1][1];
+
+            return board;
+        }
         byte[][] board = new byte[boundingBox[1] - boundingBox[0] + 1][boundingBox[3] - boundingBox[2] + 1];
         for (int y = 0; y < board.length; y++) {
             for (int x = 0; x < board[y].length; x++) {
@@ -178,6 +183,7 @@ public class ArrayBoard extends Board {
             }
         }
         return board;
+
     }
 
     @Override

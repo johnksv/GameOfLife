@@ -173,7 +173,6 @@ public class GameController implements Initializable {
     @FXML
     public void handleGifBtn() {
         
-        
         try {
             FileChooser fileChooser = new FileChooser();
 
@@ -187,7 +186,7 @@ public class GameController implements Initializable {
 
             }
         } catch (IOException ex) {
-            System.out.println("WTF!");
+            System.out.println("error");
         }
     }
 

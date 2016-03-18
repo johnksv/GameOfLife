@@ -13,48 +13,69 @@ public class GifMaker {
 
     private static GIFWriter gifWriter;
 
-    private static int sizeCell=10;
+    private static int sizeCell;
     private static Color cellColor;
+
     //TODO make a copy and compare.
 
+    /**
+     *
+     * @param board
+     * @param gw
+     * @param width
+     * @param height
+     * @param bgCl
+     * @param cellCl
+     * @param counter
+     * @throws IOException
+     */
     public static void makeGif(byte[][] board, GIFWriter gw,
             int width, int height, Color bgCl, Color cellCl, int counter) throws IOException {
-
-        //sizeCell = (height < width) ? height / board.length : width / board.length;
+        
+        
         cellColor = cellCl;
         gifWriter = gw;
         gifWriter.setBackgroundColor(bgCl);
-        Board activeboard = new ArrayBoard(height + 2, width + 2);
+        Board activeboard = new ArrayBoard(board.length, board[0].length);
         activeboard.insertArray(board, 1, 1);
 
+        sizeCell = (height < width) ? height / activeboard.getBoundingBoxBoard().length : width / activeboard.getBoundingBoxBoard().length;
+        
+        System.out.println(sizeCell);
         makeFrame(activeboard, 20);
     }
 
-    private static Board makeFrame(Board frame, int counter) throws IOException {
+    /**
+     * Java does not support tail recursion
+     *
+     */
+    private static void makeFrame(Board frame, int counter) throws IOException {
         if (counter <= 0) {
             gifWriter.close();
-            return frame;
+            return;
         }
         gifWriter.createNextImage();
         gifWriter.flush();
-
+        System.out.println("still good");
         byte[][] boarders = frame.getBoundingBoxBoard();
         for (int i = 0; i < boarders.length; i++) {
             for (int j = 0; j < boarders[i].length; j++) {
-                if(i * sizeCell + sizeCell>= 100 || j * sizeCell + sizeCell >=100){
+                if (i * sizeCell + sizeCell > 100 || j * sizeCell + sizeCell > 100) {
                     break;
-                }else{
-                if (boarders[i][j] == 64) {
-                    gifWriter.fillRect(i * sizeCell + 1, i * sizeCell + sizeCell - 1,
-                            j * sizeCell + 1, j * sizeCell + sizeCell - 1, cellColor);
+                } else {
+                    if (boarders[i][j] == 64) {
+                        if(sizeCell < 3){
+                            gifWriter.setPixelValue(j, i, cellColor);
+                        }
+                        gifWriter.fillRect(j * sizeCell + 1, j * sizeCell + sizeCell - 2,
+                                i * sizeCell + 1, i * sizeCell + sizeCell - 2, cellColor);
+                    }
                 }
             }
-            }
         }
-        
+
         frame.nextGen();
         gifWriter.insertCurrentImage();
-        
-        return makeFrame(frame, --counter);
+        makeFrame(frame, --counter);
     }
 }
