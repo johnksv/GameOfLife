@@ -26,7 +26,7 @@ public final class GifWriter {
     public static void writeBoardtoGIF(byte[][] pattern) throws IOException {
       
         GifWriter.gameboard = new ArrayBoard(10,10);
-        gameboard.insertArray(pattern, 1, 1);
+        gameboard.insertArray(pattern, 3, 3);
 
         gifWriter = new GIFWriter(gifWidth, gifHeight, saveLocation, durationBetweenFrames);
 

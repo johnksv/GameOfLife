@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.function.UnaryOperator;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
@@ -16,7 +17,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.Spinner;
+import javafx.scene.control.SpinnerValueFactory;
+import javafx.scene.control.TextFormatter;
 import javafx.scene.control.Tooltip;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.FileChooser;
@@ -47,7 +51,7 @@ public class GifMakerController implements Initializable {
     @FXML
     private Label labelGenerateFeedback;
 
-    protected byte[][] activeBoard;
+    protected byte[][] activeByteBoard;
     private String saveLocation;
 
     /**
@@ -55,8 +59,17 @@ public class GifMakerController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        saveLocation = System.getProperty("user.home");
-        setTextForLabels();
+        saveLocation = System.getProperty("user.home") + "/golGif.gif";
+        initSpinners();
+        setSaveLocation();
+
+    }
+
+    private void initSpinners() {
+        spinnNumIterations.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 100, 20, 1));
+        spinnTimeBetween.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 10000, 20, 1));
+        spinnNumIterations.setEditable(true);
+        spinnTimeBetween.setEditable(true);
     }
 
     @FXML
@@ -70,13 +83,7 @@ public class GifMakerController implements Initializable {
         } else {
             saveLocation = System.getProperty("user.home");
         }
-        setTextForLabels();
-    }
-
-    private void setTextForLabels() {
-        labelCurrentDest.setText("Current: " + saveLocation);
-        GifWriter.setSaveLocation(saveLocation);
-        tooltipSaveLoc.setText(saveLocation);
+        setSaveLocation();
     }
 
     @FXML
@@ -86,8 +93,10 @@ public class GifMakerController implements Initializable {
 
     @FXML
     private void generateGIF() {
+        setSaveLocation();
+        setValuesFromSpinners();
         try {
-            GifWriter.writeBoardtoGIF(activeBoard);
+            GifWriter.writeBoardtoGIF(activeByteBoard);
             labelGenerateFeedback.setText("GIF was successfully created");
         } catch (IOException ex) {
             Alert alert = new Alert(Alert.AlertType.ERROR, "Det oppsto en feil...:\n" + ex.getMessage());
@@ -97,8 +106,26 @@ public class GifMakerController implements Initializable {
         }
     }
 
+    private void previewGif() {
+//TODO Preview GIFS
+        Image previewGif = new Image(saveLocation);
+        imgViewPreview.setImage(null);
+
+    }
+
+    private void setSaveLocation() {
+        labelCurrentDest.setText("Current: " + saveLocation);
+        GifWriter.setSaveLocation(saveLocation);
+        tooltipSaveLoc.setText(saveLocation);
+    }
+    
+    private void setValuesFromSpinners(){
+        GifWriter.setIterations(((int) spinnNumIterations.getValue()));
+        GifWriter.setDurationBetweenFrames((int) spinnTimeBetween.getValue());
+    }
+
     public void setByteBoard(Board activeBoard) {
-        this.activeBoard = activeBoard.getBoundingBoxBoard();
+        this.activeByteBoard = activeBoard.getBoundingBoxBoard();
     }
 
 }
