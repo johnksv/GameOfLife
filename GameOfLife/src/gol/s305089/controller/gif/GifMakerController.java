@@ -111,18 +111,18 @@ public class GifMakerController implements Initializable {
     @FXML
     private void previewGif() {
         try {
-            //TODO Preview GIFS
-            File previewImage = File.createTempFile("golPreview", ".gif");
-            GifWriter.setSaveLocation(previewImage.getAbsolutePath());
+            File previewFile = File.createTempFile("golPreview", ".gif");
+            GifWriter.setSaveLocation(previewFile.getAbsolutePath());
+            
             GifWriter.writeBoardtoGIF(activeByteBoard);
-            Image previewGif = new Image("file:"+previewImage.getAbsolutePath());
+            Image previewGif = new Image(previewFile.toURI().toString());
+            
             imgViewPreview.setImage(previewGif);
             
-            previewImage.deleteOnExit();
-            
+            previewFile.deleteOnExit();
             
         } catch (IOException ex) {
-            Logger.getLogger(GifMakerController.class.getName()).log(Level.SEVERE, null, ex);
+            System.err.println("There was an error previewing the file...\n" + ex );
         }
 
     }
