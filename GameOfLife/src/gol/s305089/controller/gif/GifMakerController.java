@@ -12,6 +12,8 @@ import java.util.ResourceBundle;
 import java.util.function.UnaryOperator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
@@ -64,6 +66,7 @@ public class GifMakerController implements Initializable {
         saveLocation = System.getProperty("user.home") + "/golGif.gif";
         initSpinners();
         setSaveLocation();
+        setValuesFromSpinners();
 
     }
 
@@ -72,6 +75,12 @@ public class GifMakerController implements Initializable {
         spinnTimeBetween.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 10000, 20, 1));
         spinnNumIterations.setEditable(true);
         spinnTimeBetween.setEditable(true);
+        spinnNumIterations.valueProperty().addListener((ObservableValue observable, Object oldValue, Object newValue) -> {
+            setValuesFromSpinners();
+        });
+        spinnTimeBetween.valueProperty().addListener((ObservableValue observable, Object oldValue, Object newValue) -> {
+            setValuesFromSpinners();
+        });
     }
 
     @FXML
