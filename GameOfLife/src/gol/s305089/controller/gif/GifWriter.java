@@ -22,17 +22,17 @@ public final class GifWriter {
     private static int durationBetweenFrames = 1000;
     private static int cellSize = 10;
     private static int iterations = 20;
+    private static boolean centerPreview = false;
 
     public static void writeBoardtoGIF(byte[][] pattern) throws IOException {
-      
-        GifWriter.gameboard = new ArrayBoard(10,10);
+
+        GifWriter.gameboard = new ArrayBoard(10, 10);
         gameboard.insertArray(pattern, 3, 3);
 
         gifWriter = new GIFWriter(gifWidth, gifHeight, saveLocation, durationBetweenFrames);
 
         writeGIF(iterations);
     }
-    
 
     public static void writeGIF(int iterations) throws IOException {
         if (iterations > 0) {
@@ -40,16 +40,23 @@ public final class GifWriter {
             for (int y = 0; y < gameboard.getArrayLength(); y++) {
                 for (int x = 0; x < gameboard.getArrayLength(y); x++) {
                     if (gameboard.getCellState(y, x)) {
-                        gifWriter.fillRect(y*cellSize, y*cellSize + cellSize, x*cellSize, x*cellSize + cellSize, Color.BLACK);
+                        gifWriter.fillRect(y * cellSize, y * cellSize + cellSize, x * cellSize, x * cellSize + cellSize, Color.BLACK);
                     }
                 }
             }
             gifWriter.insertAndProceed();
+            if (centerPreview) {
+                centerGameBoard();
+            }
             gameboard.nextGen();
             writeGIF(iterations);
         } else {
             gifWriter.close();
         }
+    }
+
+    private static void centerGameBoard() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     /**
@@ -92,5 +99,12 @@ public final class GifWriter {
      */
     public static void setIterations(int aIterations) {
         iterations = aIterations;
+    }
+
+    /**
+     * @param aCenterPreview the centerPreview to set
+     */
+    public static void setCenterPreview(boolean aCenterPreview) {
+        centerPreview = aCenterPreview;
     }
 }

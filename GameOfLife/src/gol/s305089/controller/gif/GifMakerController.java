@@ -37,8 +37,6 @@ import javafx.stage.FileChooser;
 public class GifMakerController implements Initializable {
 
     @FXML
-    private BorderPane borderPane;
-    @FXML
     private Label labelCurrentDest;
     @FXML
     private Button btnChooseSaveDest;
@@ -57,10 +55,7 @@ public class GifMakerController implements Initializable {
 
     protected byte[][] activeByteBoard;
     private String saveLocation;
-
-    /**
-     * Initializes the controller class.
-     */
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         saveLocation = System.getProperty("user.home") + "/golGif.gif";
