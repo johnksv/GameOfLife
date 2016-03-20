@@ -10,6 +10,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.function.UnaryOperator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
@@ -105,11 +107,23 @@ public class GifMakerController implements Initializable {
             alert.showAndWait();
         }
     }
-
+    
+    @FXML
     private void previewGif() {
-//TODO Preview GIFS
-        Image previewGif = new Image(saveLocation);
-        imgViewPreview.setImage(null);
+        try {
+            //TODO Preview GIFS
+            File previewImage = File.createTempFile("golPreview", ".gif");
+            GifWriter.setSaveLocation(previewImage.getAbsolutePath());
+            GifWriter.writeBoardtoGIF(activeByteBoard);
+            Image previewGif = new Image("file:"+previewImage.getAbsolutePath());
+            imgViewPreview.setImage(previewGif);
+            
+            previewImage.deleteOnExit();
+            
+            
+        } catch (IOException ex) {
+            Logger.getLogger(GifMakerController.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
     }
 

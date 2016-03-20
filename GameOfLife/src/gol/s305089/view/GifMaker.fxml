@@ -42,6 +42,7 @@
                   <HBox>
                      <children>
                         <Button mnemonicParsing="false" onAction="#generateGIF" text="Generate GIF" />
+                        <Button mnemonicParsing="false" onAction="#previewGif" text="Preview GIF" />
                      </children>
                   </HBox>
                   <Label fx:id="labelGenerateFeedback">
