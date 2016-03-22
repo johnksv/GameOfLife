@@ -2,8 +2,9 @@
  * Here comes the text of your license
  * Each line should be prefixed with  * 
  */
-package gol.s305089.controller.gif;
+package gol.s305089.controller;
 
+import gol.s305089.model.GifMaker;
 import gol.model.Board.Board;
 import java.io.File;
 import java.io.IOException;

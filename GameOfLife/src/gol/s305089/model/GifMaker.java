@@ -1,4 +1,4 @@
-package gol.s305089.controller.gif;
+package gol.s305089.model;
 
 import gol.model.Board.ArrayBoard;
 import gol.model.Board.Board;
