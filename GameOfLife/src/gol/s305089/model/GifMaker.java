@@ -36,11 +36,6 @@ public final class GifMaker {
         }
     }
 
-    private void placePattern(int y, int x) {
-        gameboard.clearBoard();
-        gameboard.insertArray(pattern, y, x);
-    }
-
     /**
      *
      * Forstå hva halerekursjon (eng: tail recursion) er og fordelen er med slik
@@ -55,7 +50,7 @@ public final class GifMaker {
 
             for (int y = 0; y < gameboard.getArrayLength(); y++) {
                 for (int x = 0; x < gameboard.getArrayLength(y); x++) {
-                    if (gameboard.getCellState(y, x)) {
+                    if (gameboard.getCellState(x, y)) {
                         gifWriter.fillRect(y * cellSize, y * cellSize + cellSize, x * cellSize, x * cellSize + cellSize, Color.BLACK);
                     }
                 }
@@ -119,12 +114,14 @@ public final class GifMaker {
     }
 
     /**
+     * Consturcts an new Board instance, and inserts this board
+     * @see gol.model.Board.Board#insertArray(byte[][], int, int) 
      * @param Pattern the pattern to set
      */
     public void setPattern(byte[][] Pattern) {
         //TODO dynaimc size of board
         gameboard = new ArrayBoard(10, 10);
         this.pattern = Pattern;
-        placePattern(2, 2);
+        gameboard.insertArray(pattern, 2, 2);
     }
 }
