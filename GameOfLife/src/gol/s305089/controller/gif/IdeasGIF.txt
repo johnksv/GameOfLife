@@ -1,0 +1,13 @@
+TODO:
+Mulighet for cellestørrelse
+Mulighet for plassere mønsteret på midten av brettet hver gang.
+
+
+Feilmelding når brettet er for stort
+
+Should have(?)
+Brett like stort som brettstørrelse * antall itterasjoner
+
+
+Nice to Have
+Tekst i hjørnet for hvilken itteratsjon du er på
