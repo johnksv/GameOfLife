@@ -23,7 +23,6 @@ public final class GifMaker {
     private boolean centerPattern = false;
 
     public GifMaker() throws IOException {
-
     }
 
     public void writePatternToGIF(int iterations) throws IOException {
@@ -65,7 +64,7 @@ public final class GifMaker {
     }
 
     private void centerGameBoard() {
-
+        //TODO centerGameboard
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -116,6 +115,7 @@ public final class GifMaker {
      * @param Pattern the pattern to set
      */
     public void setPattern(byte[][] Pattern) {
+        //TODO dynaimc size of board
         gameboard = new ArrayBoard(10, 10);
         this.pattern = Pattern;
         placePattern(2, 2);
