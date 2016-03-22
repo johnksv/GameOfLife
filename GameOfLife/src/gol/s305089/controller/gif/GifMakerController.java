@@ -53,15 +53,22 @@ public class GifMakerController implements Initializable {
     @FXML
     private Label labelGenerateFeedback;
 
-    protected byte[][] activeByteBoard;
+    private byte[][] activeByteBoard;
+    private GifMaker gifmaker;
     private String saveLocation;
-    
+    private int iterations;
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        try {
+            gifmaker = new GifMaker();
+        } catch (IOException ex) {
+            System.err.println("File stream could not be established.. Try again");
+        }
         saveLocation = System.getProperty("user.home") + "/golGif.gif";
         initSpinners();
-        setSaveLocation();
-        setValuesFromSpinners();
+        setGIFSaveLocation();
+        setGIFValuesFromSpinners();
 
     }
 
@@ -71,10 +78,10 @@ public class GifMakerController implements Initializable {
         spinnNumIterations.setEditable(true);
         spinnTimeBetween.setEditable(true);
         spinnNumIterations.valueProperty().addListener((ObservableValue observable, Object oldValue, Object newValue) -> {
-            setValuesFromSpinners();
+            setGIFValuesFromSpinners();
         });
         spinnTimeBetween.valueProperty().addListener((ObservableValue observable, Object oldValue, Object newValue) -> {
-            setValuesFromSpinners();
+            setGIFValuesFromSpinners();
         });
     }
 
@@ -89,20 +96,22 @@ public class GifMakerController implements Initializable {
         } else {
             saveLocation = System.getProperty("user.home");
         }
-        setSaveLocation();
+        setGIFSaveLocation();
     }
 
     @FXML
     private void handleCellSizeChange() {
-        GifWriter.setCellSize((int) sliderCellSize.getValue());
+        gifmaker.setCellSize((int) sliderCellSize.getValue());
     }
 
     @FXML
     private void generateGIF() {
-        setSaveLocation();
-        setValuesFromSpinners();
+        setGIFSaveLocation();
+        setGIFValuesFromSpinners();
         try {
-            GifWriter.writeBoardtoGIF(activeByteBoard);
+
+            //gifmaker.setPattern(activeByteBoard);
+            gifmaker.writePatternToGIF(iterations);
             labelGenerateFeedback.setText("GIF was successfully created");
         } catch (IOException ex) {
             Alert alert = new Alert(Alert.AlertType.ERROR, "Det oppsto en feil...:\n" + ex.getMessage());
@@ -111,39 +120,43 @@ public class GifMakerController implements Initializable {
             alert.showAndWait();
         }
     }
-    
+
     @FXML
     private void previewGif() {
         try {
             File previewFile = File.createTempFile("golPreview", ".gif");
-            GifWriter.setSaveLocation(previewFile.getAbsolutePath());
-            
-            GifWriter.writeBoardtoGIF(activeByteBoard);
+            gifmaker.setSaveLocation(previewFile.getAbsolutePath());
+
+            // gifmaker.setPattern(activeByteBoard);
+            setGIFValuesFromSpinners();
+
+            gifmaker.writePatternToGIF(iterations);
             Image previewGif = new Image(previewFile.toURI().toString());
-            
+
             imgViewPreview.setImage(previewGif);
-            
-            previewFile.deleteOnExit();
-            
+
+            System.out.println(previewFile.delete());
+
         } catch (IOException ex) {
-            System.err.println("There was an error previewing the file...\n" + ex );
+            System.err.println("There was an error previewing the file...\n" + ex);
         }
 
     }
 
-    private void setSaveLocation() {
+    private void setGIFSaveLocation() {
         labelCurrentDest.setText("Current: " + saveLocation);
-        GifWriter.setSaveLocation(saveLocation);
+        gifmaker.setSaveLocation(saveLocation);
         tooltipSaveLoc.setText(saveLocation);
     }
-    
-    private void setValuesFromSpinners(){
-        GifWriter.setIterations(((int) spinnNumIterations.getValue()));
-        GifWriter.setDurationBetweenFrames((int) spinnTimeBetween.getValue());
+
+    private void setGIFValuesFromSpinners() {
+        iterations = (int) spinnNumIterations.getValue();
+        gifmaker.setDurationBetweenFrames((int) spinnTimeBetween.getValue());
     }
 
     public void setByteBoard(Board activeBoard) {
         this.activeByteBoard = activeBoard.getBoundingBoxBoard();
+        gifmaker.setPattern(activeByteBoard);
     }
 
 }
