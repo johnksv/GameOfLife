@@ -41,10 +41,18 @@ public final class GifMaker {
         gameboard.insertArray(pattern, y, x);
     }
 
+    /**
+     *
+     * Forstå hva halerekursjon (eng: tail recursion) er og fordelen er med slik
+     * rekursjon. Test om metoden dere har implementert over utfører slik
+     * halerekursjon. Ut ifra denne testen, diskuter nå fordeler/ulemper med
+     * rekursjon for dette problemet. Til slutt, bruk Internett til å finne ut
+     * om Java/JVM støtter halerekursjon og eventuelt hvordan.
+     */
     private void writeGIF(int iterations) throws IOException {
         if (iterations > 0) {
             iterations--;
-            
+
             for (int y = 0; y < gameboard.getArrayLength(); y++) {
                 for (int x = 0; x < gameboard.getArrayLength(y); x++) {
                     if (gameboard.getCellState(y, x)) {
@@ -102,7 +110,6 @@ public final class GifMaker {
     public void setGifHeight(int GifHeight) {
         this.gifHeight = GifHeight;
     }
-
 
     /**
      * @param SaveLocation the saveLocation to set
