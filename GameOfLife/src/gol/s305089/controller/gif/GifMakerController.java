@@ -9,24 +9,17 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.function.UnaryOperator;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
-import javafx.scene.control.TextFormatter;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.BorderPane;
 import javafx.stage.FileChooser;
 
 /**
@@ -39,19 +32,17 @@ public class GifMakerController implements Initializable {
     @FXML
     private Label labelCurrentDest;
     @FXML
-    private Button btnChooseSaveDest;
-    @FXML
     private Slider sliderCellSize;
     @FXML
     private Spinner spinnNumIterations;
     @FXML
     private Spinner spinnTimeBetween;
     @FXML
-    private ImageView imgViewPreview;
-    @FXML
     private Tooltip tooltipSaveLoc;
     @FXML
     private Label labelGenerateFeedback;
+    @FXML
+    private ImageView imgViewPreview;
 
     private byte[][] activeByteBoard;
     private GifMaker gifmaker;
@@ -69,12 +60,11 @@ public class GifMakerController implements Initializable {
         initSpinners();
         setGIFSaveLocation();
         setGIFValuesFromSpinners();
-
     }
 
     private void initSpinners() {
         spinnNumIterations.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 100, 20, 1));
-        spinnTimeBetween.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 10000, 20, 1));
+        spinnTimeBetween.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 10000, 200, 1));
         spinnNumIterations.setEditable(true);
         spinnTimeBetween.setEditable(true);
         spinnNumIterations.valueProperty().addListener((ObservableValue observable, Object oldValue, Object newValue) -> {
@@ -109,8 +99,6 @@ public class GifMakerController implements Initializable {
         setGIFSaveLocation();
         setGIFValuesFromSpinners();
         try {
-
-            //gifmaker.setPattern(activeByteBoard);
             gifmaker.writePatternToGIF(iterations);
             labelGenerateFeedback.setText("GIF was successfully created");
         } catch (IOException ex) {
@@ -127,20 +115,17 @@ public class GifMakerController implements Initializable {
             File previewFile = File.createTempFile("golPreview", ".gif");
             gifmaker.setSaveLocation(previewFile.getAbsolutePath());
 
-            // gifmaker.setPattern(activeByteBoard);
             setGIFValuesFromSpinners();
 
             gifmaker.writePatternToGIF(iterations);
             Image previewGif = new Image(previewFile.toURI().toString());
-
             imgViewPreview.setImage(previewGif);
-
-            System.out.println(previewFile.delete());
+            
+            previewFile.delete();
 
         } catch (IOException ex) {
             System.err.println("There was an error previewing the file...\n" + ex);
         }
-
     }
 
     private void setGIFSaveLocation() {
@@ -158,5 +143,4 @@ public class GifMakerController implements Initializable {
         this.activeByteBoard = activeBoard.getBoundingBoxBoard();
         gifmaker.setPattern(activeByteBoard);
     }
-
 }
