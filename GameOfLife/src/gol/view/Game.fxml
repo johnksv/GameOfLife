@@ -180,7 +180,9 @@
                                     <content>
                                         <AnchorPane minHeight="0.0" minWidth="0.0" prefWidth="200.0">
                                  <children>
-                                    <Button fx:id="btnSaveToGifs89" onAction="#currentBoardToGIF"  layoutX="14.0" layoutY="10.0" mnemonicParsing="false" text="Save current patter to GIF" />
+                                    <Button onAction="#currentBoardToGIF"  layoutX="14.0" layoutY="10.0" mnemonicParsing="false" text="Save current patter to GIF" />
+                                    <Button onAction="#showStats"  layoutX="14.0" layoutY="40.0" mnemonicParsing="false" text="Show Stats" />
+
                                  </children>
                                         </AnchorPane>
                                     </content>
