@@ -8,6 +8,7 @@ import gol.model.Logic.ConwaysRule;
 import gol.model.Logic.CustomRule;
 import gol.s305089.model.GifMaker;
 import gol.s305089.controller.GifMakerController;
+import gol.s305089.controller.StatsController;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -289,6 +290,25 @@ public class GameController implements Initializable {
         gifMaker.initModality(Modality.APPLICATION_MODAL);
         gifMaker.setMaxHeight(600.00);
         gifMaker.show();
+    }
+
+    @FXML
+    public void showStats() throws IOException {
+        timeline.pause();
+
+        Stage golStats = new Stage();
+        FXMLLoader root = new FXMLLoader(getClass().getResource("/gol/s305089/view/Stats.fxml"));
+
+        Scene scene = new Scene((Parent) root.load());
+
+        StatsController statsController = root.<StatsController>getController();
+        statsController.setByteBoard(activeBoard);
+
+        golStats.setScene(scene);
+        golStats.setTitle("Stats - Game of Life");
+        
+        
+        golStats.show();
     }
 
     public void constructRule(byte[] cellsToLive, byte[] cellsToSpawn) {
