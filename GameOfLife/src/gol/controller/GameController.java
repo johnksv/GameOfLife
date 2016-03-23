@@ -105,7 +105,8 @@ public class GameController implements Initializable {
 
     private void initCanvasController() {
 
-        spinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 20));
+        spinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 50));
+        spinner.increment(14);
         canvasController.setActiveBoard(activeBoard);
         canvasController.setRbMoveGrid(rbMoveGrid);
         canvasController.setRbRemoveCell(rbRemoveCell);
@@ -172,7 +173,7 @@ public class GameController implements Initializable {
 
     @FXML
     public void handleGifBtn() {
-        
+
         try {
             FileChooser fileChooser = new FileChooser();
 
@@ -181,12 +182,17 @@ public class GameController implements Initializable {
 
             File selected = fileChooser.showSaveDialog(null);
             if (selected != null) {
-                GIFWriter gw = new GIFWriter(100, 100,selected.toPath().toAbsolutePath().toString(),(int)(1000/timeline.getRate()));
-                GifMaker.makeGif((byte[][])activeBoard.getGameBoard(), gw, 100, 100, java.awt.Color.WHITE, java.awt.Color.BLACK, 15);
+                
+                       
+                GIFWriter gw = new GIFWriter(100, 100, selected.toPath().toAbsolutePath().toString(), (int) (1000 / timeline.getRate()));
+                 java.awt.Color bg =new java.awt.Color((float)backgroundCP.getValue().getRed(),(float)backgroundCP.getValue().getGreen(),(float)backgroundCP.getValue().getBlue());
+                 java.awt.Color cellColor =new java.awt.Color((float)cellCP.getValue().getRed(),(float)cellCP.getValue().getGreen(),(float)cellCP.getValue().getBlue());
+                 
+                GifMaker.makeGif((byte[][]) activeBoard.getGameBoard(), gw, 100, 100,bg, cellColor, (int) spinner.getValue());
 
             }
         } catch (IOException ex) {
-            System.out.println("error");
+            System.err.println("error");
         }
     }
 

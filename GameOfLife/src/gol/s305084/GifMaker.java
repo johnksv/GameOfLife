@@ -41,7 +41,6 @@ public class GifMaker {
 
         sizeCell = (height < width) ? height / activeboard.getBoundingBoxBoard().length : width / activeboard.getBoundingBoxBoard().length;
         
-        System.out.println(sizeCell);
         makeFrame(activeboard, 20);
     }
 
@@ -56,7 +55,6 @@ public class GifMaker {
         }
         gifWriter.createNextImage();
         gifWriter.flush();
-        System.out.println("still good");
         byte[][] boarders = frame.getBoundingBoxBoard();
         for (int i = 0; i < boarders.length; i++) {
             for (int j = 0; j < boarders[i].length; j++) {
