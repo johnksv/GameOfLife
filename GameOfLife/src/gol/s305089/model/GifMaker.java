@@ -114,7 +114,7 @@ public final class GifMaker {
     }
 
     /**
-     * Consturcts an new Board instance, and inserts this board
+     * Constructs an new Board instance, and inserts this board
      * @see gol.model.Board.Board#insertArray(byte[][], int, int) 
      * @param Pattern the pattern to set
      */

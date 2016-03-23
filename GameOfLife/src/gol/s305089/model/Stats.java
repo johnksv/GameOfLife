@@ -1,6 +1,5 @@
 package gol.s305089.model;
 
-import com.sun.deploy.util.StringUtils;
 import gol.model.Board.ArrayBoard;
 import gol.model.Board.Board;
 
@@ -13,21 +12,22 @@ public class Stats {
     private byte[][] pattern;
 
     public int[][] getStatistics(int iterations) {
+        int[][] stats = new int[iterations+1][3];
+                
+        for (int itNumber = 0; itNumber <= iterations; itNumber++) {
+            
+            stats[itNumber][0] = countLiving(itNumber);
+            stats[itNumber][1] = changeInLiving(itNumber);
+                // stats[itNumber][0] = similarityMeasure();
 
-        for (int time = 0; time <= iterations; time++) {
-            for (int j = 0; j < 3; j++) {
-                countLiving(time);
-                changeInLiving(time);
-                similarityMeasure();
-            }
             gameboard.nextGen();
         }
 
-        return null;
+        return stats;
     }
 
     /**
-     * Consturcts an new Board instance, and inserts this board
+     * Constructs an new Board instance, and inserts this board
      *
      * @see gol.model.Board.Board#insertArray(byte[][], int, int)
      * @param Pattern the pattern to set
@@ -39,18 +39,19 @@ public class Stats {
         gameboard.insertArray(pattern, 2, 2);
     }
 
-    private int countLiving(int time) {
+    public int countLiving(int iterationNumber) {
         int countOfLiving = 0;
-        char[] cell = gameboard.toString().toCharArray();
-        for(char value : cell){
-            if(value == '1'){
-                countOfLiving++;
+        for (byte[] row : pattern) {
+            for (byte value : row) {
+                if (value == 1) {
+                    countOfLiving++;
+                }
             }
         }
         return countOfLiving;
     }
 
-    private void changeInLiving(int time) {
+    public int changeInLiving(int time) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
