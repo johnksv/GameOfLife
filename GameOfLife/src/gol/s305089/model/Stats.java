@@ -88,4 +88,9 @@ public class Stats {
         gameboard.clearBoard();
         gameboard.insertArray(startPattern, 2, 2);
     }
+
+    int similarityMeasure(int time) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
 }

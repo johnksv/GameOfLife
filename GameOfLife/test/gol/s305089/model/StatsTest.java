@@ -60,5 +60,16 @@ public class StatsTest {
         }
 
     }
+    
+    @Test
+    public void testSimilarity(){
+        System.out.println("similarityMeasure");
+        instance.setPattern(new byte[][]{{0, 64, 0}, {0, 64, 0}, {0, 64, 0}});
+        int time = 0;
+        int resultat = instance.similarityMeasure(time);
+        fail("Not implemented yet");
+        
+    }
+    
 
 }

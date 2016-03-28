@@ -34,7 +34,6 @@ public class StatsController implements Initializable {
     private Spinner spinnerIterations;
 
     private Stats gameStats;
-    private byte[][] activeByteBoard;
 
     private XYChart.Series livingCells = new XYChart.Series();
     private XYChart.Series changeLivingCells = new XYChart.Series();
@@ -90,8 +89,6 @@ public class StatsController implements Initializable {
     }
 
     public void setByteBoard(Board activeBoard) {
-        this.activeByteBoard = activeBoard.getBoundingBoxBoard();
-        gameStats.setPattern(activeByteBoard);
-
+        gameStats.setPattern(activeBoard.getBoundingBoxBoard());
     }
 }
