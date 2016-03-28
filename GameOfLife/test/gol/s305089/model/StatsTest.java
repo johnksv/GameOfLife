@@ -23,7 +23,7 @@ public class StatsTest {
     @Before
     public void setUp() {
         instance = new Stats();
-        instance.setPattern(new byte[][]{{0, 1, 0}, {0, 1, 0}, {0, 1, 0}});
+        instance.setPattern(new byte[][]{{0, 64, 0}, {0, 64, 0}, {0, 64, 0}});
     }
     Stats instance;
 
@@ -51,11 +51,15 @@ public class StatsTest {
     @Test
     public void testChangeInLiving() {
         System.out.println("changeInLiving");
-        int time = 2;
-        instance.setPattern(new byte[][]{{0, 1, 0}, {0, 1, 0}, {0, 1, 0}});
-        int expResult = 0;
-        int result = instance.changeInLiving(time);
-        assertEquals(expResult, result);
+
+        instance.setPattern(new byte[][]{{0, 64, 0}, {0, 64, 0}, {0, 64, 0}});
+        for (int i = 0; i < 10; i++) {
+            if (i == 0) {
+                assertEquals(3, instance.changeInLiving(i));
+            } else {
+                assertEquals(0, instance.changeInLiving(i));
+            }
+        }
 
     }
 

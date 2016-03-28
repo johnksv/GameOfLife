@@ -8,9 +8,16 @@ import gol.model.Board.Board;
 import gol.s305089.model.Stats;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
+import javafx.scene.control.ProgressIndicator;
+import javafx.scene.control.Spinner;
+import javafx.scene.control.SpinnerValueFactory;
 
 /**
  * FXML Controller class
@@ -21,24 +28,65 @@ public class StatsController implements Initializable {
 
     @FXML
     private LineChart chart;
-    
-    private Stats stats;
+    @FXML
+    private ProgressIndicator progIndicator;
+    @FXML
+    private Spinner spinnerIterations;
+
+    private Stats gameStats;
     private byte[][] activeByteBoard;
+
+    private XYChart.Series livingCells = new XYChart.Series();
+    private XYChart.Series changeLivingCells = new XYChart.Series();
+    private XYChart.Series similarityMeasure = new XYChart.Series();
 
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        stats = new Stats();
-        stats.setPattern(new byte[][]{{0, 1, 0}, {0, 1, 0}, {0, 1, 0}});
-        stats.changeInLiving(5);
+        gameStats = new Stats();
+        gameStats.setPattern(new byte[][]{{0, 1, 0}, {0, 1, 0}, {0, 1, 0}});
+
+        initView();
+    }
+
+    private void initView() {
+        livingCells.setName("Living cells");
+        changeLivingCells.setName("Change in living cells");
+        similarityMeasure.setName("Similarity Measure");
+        chart.getData().addAll(livingCells, changeLivingCells, similarityMeasure);
+
+        spinnerIterations.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 1000, 20, 1));
+        spinnerIterations.setEditable(true);
+        spinnerIterations.valueProperty().addListener((ObservableValue observable, Object oldValue, Object newValue) -> {
+            calculatGameStats();
+        });
+    }
+
+    @FXML
+    private void calculatGameStats() {
+        displayData((int) spinnerIterations.getValue());
+    }
+
+    private void displayData(int iterations) {
+        progIndicator.setVisible(true);
+        livingCells.getData().clear();
+
+        int[][] gameData = gameStats.getStatistics(iterations);
+        for (int i = 0; i < gameData.length; i++) {
+            livingCells.getData().add(new XYChart.Data("" + i, gameData[i][0]));
+            changeLivingCells.getData().add(new XYChart.Data("" + i, gameData[i][1]));
+            similarityMeasure.getData().add(new XYChart.Data("" + i, gameData[i][2]));
+
+            progIndicator.setProgress(i / gameData.length);
+        }
+        progIndicator.setVisible(false);
     }
 
     public void setByteBoard(Board activeBoard) {
         this.activeByteBoard = activeBoard.getBoundingBoxBoard();
-        stats.setPattern(activeByteBoard);
+        gameStats.setPattern(activeByteBoard);
 
     }
-
 }

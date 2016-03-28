@@ -10,33 +10,20 @@ import java.util.Arrays;
 public class Stats {
 
     private Board gameboard;
-    private byte[][] pattern;
+    private byte[][] startPattern;
     private int[] livingCells;
 
     public int[][] getStatistics(int iterations) {
         int[][] stats = new int[iterations + 1][3];
+        livingCells = countLiving(iterations);
 
         for (int i = 0; i < iterations; i++) {
             stats[i][0] = livingCells[i];
             stats[i][1] = changeInLiving(i);
+            stats[i][2] = 0;
         }
 
         return stats;
-    }
-
-    /**
-     * Constructs an new Board instance, and inserts this board
-     *
-     * @see gol.model.Board.Board#insertArray(byte[][], int, int)
-     * @param Pattern the pattern to set
-     */
-    public void setPattern(byte[][] Pattern) {
-        //TODO dynaimc size of board
-        //TODO Move Method to helper method?
-        gameboard = new ArrayBoard(10, 10);
-        this.pattern = Pattern;
-        gameboard.clearBoard();
-        gameboard.insertArray(pattern, 2, 2);
     }
 
     /**
@@ -52,16 +39,20 @@ public class Stats {
             return new int[]{0};
         }
 
-        if (gameboard == null || pattern == null) {
+        if (gameboard == null || startPattern == null) {
             throw new NullPointerException("Gameboard or pattern is not set. Be sure to call setPattern first");
         }
 
         int[] countOfLiving = new int[iterationNumber];
         for (int i = 0; i < countOfLiving.length; i++) {
+            if (i == 0) {
+                setPattern(startPattern);
+            }
+
             int livingThisGen = 0;
-            for (byte[] row : pattern) {
+            for (byte[] row : (byte[][]) gameboard.getGameBoard()) {
                 for (byte value : row) {
-                    if (value == 1) {
+                    if (value == 64) {
                         livingThisGen++;
                     }
                 }
@@ -74,14 +65,28 @@ public class Stats {
     }
 
     public int changeInLiving(int time) {
-        System.out.println("pattern: " + Arrays.deepToString(pattern));
-        System.out.println("gameboard: " + gameboard);
         if (livingCells == null) {
             countLiving(time + 1);
         }
-
+        if (time == 0) {
+            return livingCells[time];
+        }
 
         return livingCells[time - 1] - livingCells[time];
     }
 
+    /**
+     * Constructs an new Board instance, and inserts this board
+     *
+     * @see gol.model.Board.Board#insertArray(byte[][], int, int)
+     * @param Pattern the startPattern to set
+     */
+    public void setPattern(byte[][] Pattern) {
+        //TODO dynaimc size of board
+        //TODO Move Method to helper method?
+        gameboard = new ArrayBoard(100, 100);
+        this.startPattern = Pattern;
+        gameboard.clearBoard();
+        gameboard.insertArray(startPattern, 2, 2);
+    }
 }
