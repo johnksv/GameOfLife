@@ -11,9 +11,7 @@ import java.util.ResourceBundle;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
-import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.Spinner;
@@ -47,6 +45,7 @@ public class StatsController implements Initializable {
         gameStats = new Stats();
         gameStats.setPattern(new byte[][]{{0, 1, 0}, {0, 1, 0}, {0, 1, 0}});
         progIndicator.toFront();
+        progIndicator.setVisible(true);
         initView();
     }
 
@@ -70,21 +69,21 @@ public class StatsController implements Initializable {
 
     private void displayData(int iterations) {
         progIndicator.setVisible(true);
+
         livingCells.getData().clear();
         changeLivingCells.getData().clear();
         similarityMeasure.getData().clear();
 
         int[][] gameData = gameStats.getStatistics(iterations);
-        
+
         //ignors the last iteration
-        for (int i = 0; i < gameData.length-1; i++) {
+        for (int i = 0; i < gameData.length - 1; i++) {
             livingCells.getData().add(new XYChart.Data("" + i, gameData[i][0]));
             changeLivingCells.getData().add(new XYChart.Data("" + i, gameData[i][1]));
-           // similarityMeasure.getData().add(new XYChart.Data("" + i, gameData[i][2]));
-            System.out.println("Progress: " + (double) i / gameData.length);
-            
-            progIndicator.setProgress(i / gameData.length);
+            // similarityMeasure.getData().add(new XYChart.Data("" + i, gameData[i][2]));
+            //TODO PROGRESS BAR
         }
+        
         progIndicator.setVisible(false);
     }
 
