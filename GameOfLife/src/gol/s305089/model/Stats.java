@@ -13,6 +13,10 @@ public class Stats {
     private byte[][] startPattern;
     private int[] livingCells;
 
+    private final double alpha = 0.5;
+    private final double beta = 3.0;
+    private final double gamma = 0.25;
+
     public int[][] getStatistics(int iterations) {
         int[][] stats = new int[iterations + 1][3];
         livingCells = countLiving(iterations);
@@ -90,6 +94,14 @@ public class Stats {
     }
 
     int similarityMeasure(int time) {
+        double theta = alpha * livingCells[time]
+                + beta * changeInLiving(time)
+                + gamma * geometricFactor();
+
+        return 0;
+    }
+
+    private double geometricFactor() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
