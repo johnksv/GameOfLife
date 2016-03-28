@@ -55,8 +55,6 @@ public class StatsTest {
         instance.setPattern(new byte[][]{{0, 64, 0}, {0, 64, 0}, {0, 64, 0}});
         for (int i = 0; i < 10; i++) {
             if (i == 0) {
-                assertEquals(3, instance.changeInLiving(i));
-            } else {
                 assertEquals(0, instance.changeInLiving(i));
             }
         }

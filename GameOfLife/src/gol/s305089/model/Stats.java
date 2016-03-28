@@ -68,11 +68,10 @@ public class Stats {
         if (livingCells == null) {
             countLiving(time + 1);
         }
-        if (time == 0) {
-            return livingCells[time];
+        if (time < livingCells.length - 1) {
+            return livingCells[time + 1] - livingCells[time];
         }
-
-        return livingCells[time - 1] - livingCells[time];
+        return 0;
     }
 
     /**
@@ -84,7 +83,7 @@ public class Stats {
     public void setPattern(byte[][] Pattern) {
         //TODO dynaimc size of board
         //TODO Move Method to helper method?
-        gameboard = new ArrayBoard(100, 100);
+        gameboard = new ArrayBoard(1800, 1800);
         this.startPattern = Pattern;
         gameboard.clearBoard();
         gameboard.insertArray(startPattern, 2, 2);

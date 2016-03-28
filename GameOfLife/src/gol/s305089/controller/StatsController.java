@@ -47,7 +47,7 @@ public class StatsController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         gameStats = new Stats();
         gameStats.setPattern(new byte[][]{{0, 1, 0}, {0, 1, 0}, {0, 1, 0}});
-
+        progIndicator.toFront();
         initView();
     }
 
@@ -72,13 +72,18 @@ public class StatsController implements Initializable {
     private void displayData(int iterations) {
         progIndicator.setVisible(true);
         livingCells.getData().clear();
+        changeLivingCells.getData().clear();
+        similarityMeasure.getData().clear();
 
         int[][] gameData = gameStats.getStatistics(iterations);
-        for (int i = 0; i < gameData.length; i++) {
+        
+        //ignors the last iteration
+        for (int i = 0; i < gameData.length-1; i++) {
             livingCells.getData().add(new XYChart.Data("" + i, gameData[i][0]));
             changeLivingCells.getData().add(new XYChart.Data("" + i, gameData[i][1]));
-            similarityMeasure.getData().add(new XYChart.Data("" + i, gameData[i][2]));
-
+           // similarityMeasure.getData().add(new XYChart.Data("" + i, gameData[i][2]));
+            System.out.println("Progress: " + (double) i / gameData.length);
+            
             progIndicator.setProgress(i / gameData.length);
         }
         progIndicator.setVisible(false);
