@@ -51,8 +51,8 @@ public class StatsTest {
     @Test
     public void testChangeInLiving() {
         System.out.println("changeInLiving");
-        int time = 1;
-
+        int time = 2;
+        instance.setPattern(new byte[][]{{0, 1, 0}, {0, 1, 0}, {0, 1, 0}});
         int expResult = 0;
         int result = instance.changeInLiving(time);
         assertEquals(expResult, result);

@@ -2,6 +2,7 @@ package gol.s305089.model;
 
 import gol.model.Board.ArrayBoard;
 import gol.model.Board.Board;
+import java.util.Arrays;
 
 /**
  * @author s305089
@@ -15,7 +16,6 @@ public class Stats {
     public int[][] getStatistics(int iterations) {
         int[][] stats = new int[iterations + 1][3];
 
-        livingCells = countLiving(iterations);
         for (int i = 0; i < iterations; i++) {
             stats[i][0] = livingCells[i];
             stats[i][1] = changeInLiving(i);
@@ -38,7 +38,7 @@ public class Stats {
         gameboard.clearBoard();
         gameboard.insertArray(pattern, 2, 2);
     }
-    
+
     /**
      *
      * If number of iteration is 0, an empty array would be returend, as
@@ -50,6 +50,10 @@ public class Stats {
     public int[] countLiving(int iterationNumber) {
         if (iterationNumber == 0) {
             return new int[]{0};
+        }
+
+        if (gameboard == null || pattern == null) {
+            throw new NullPointerException("Gameboard or pattern is not set. Be sure to call setPattern first");
         }
 
         int[] countOfLiving = new int[iterationNumber];
@@ -65,14 +69,19 @@ public class Stats {
             countOfLiving[i] = livingThisGen;
             gameboard.nextGen();
         }
+        livingCells = countOfLiving;
         return countOfLiving;
     }
 
     public int changeInLiving(int time) {
-        if(livingCells==null){
-            countLiving(time+1);
+        System.out.println("pattern: " + Arrays.deepToString(pattern));
+        System.out.println("gameboard: " + gameboard);
+        if (livingCells == null) {
+            countLiving(time + 1);
         }
-        return livingCells[time+1]-livingCells[time];
+
+
+        return livingCells[time - 1] - livingCells[time];
     }
 
 }
