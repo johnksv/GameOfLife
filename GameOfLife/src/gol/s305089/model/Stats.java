@@ -26,7 +26,9 @@ public class Stats {
             stats[i][1] = changeInLiving(i);
             stats[i][2] = 0;
         }
-
+        
+        geometricFactor(iterations);
+        
         return stats;
     }
 
@@ -93,16 +95,36 @@ public class Stats {
         gameboard.insertArray(startPattern, 2, 2);
     }
 
-    int similarityMeasure(int time) {
+    double similarityMeasure(int time) {
         double theta = alpha * livingCells[time]
                 + beta * changeInLiving(time)
-                + gamma * geometricFactor();
+                + gamma * geometricFactor(time);
 
-        return 0;
+        return theta;
     }
 
-    private double geometricFactor() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    /**
+     *
+     * @param time
+     * @return The sum of x and y coordinats of living cells
+     */
+    public int geometricFactor(int time) {
+        int result = 0;
+
+        setPattern(startPattern);
+        for (int i = 0; i < time; i++) {
+            gameboard.nextGen();
+        }
+        
+        byte[][] boundedBoard = gameboard.getBoundingBoxBoard();
+        for (int i = 0; i < boundedBoard.length; i++) {
+            for (int j = 0; j < boundedBoard[i].length; j++) {
+                if (boundedBoard[i][j] == 64) {
+                    result += i + j;
+                }
+            }
+        }
+        return result;
     }
 
 }

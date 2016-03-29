@@ -58,18 +58,44 @@ public class StatsTest {
                 assertEquals(0, instance.changeInLiving(i));
             }
         }
+    }
+
+    @Test
+    public void testSimilarityMeasure() {
+        System.out.println("similarityMeasure");
+        int time = 0;
+
+        int expResult = 0;
+        instance.setPattern(new byte[][]{{0, 64, 0}, {0, 64, 0}, {0, 64, 0}});
+        // int result = instance.similarityMeasure(time);
+        // assertEquals(expResult, result);
+        fail("The test case is a prototype.");
+    }
+
+    @Test
+    public void testGeometricFactor() {
+        System.out.println("geometricFactor");
+        int expResult;
+        int result;
+        instance.setPattern(new byte[][]{{0, 64, 0}, {0, 64, 0}, {0, 64, 0}});
+        for (int i = 0; i < 10; i++) {
+            expResult = 3;
+            result = instance.geometricFactor(i);
+            assertEquals(expResult, result);
+        }
+
+        instance.setPattern(new byte[][]{{0, 64, 0}, {0, 0, 64}, {64, 64, 64}});
+        for (int i = 1; i < 10; i++) {
+            if (i % 2 == 0) {
+                expResult = 13;
+            } else {
+                expResult = 10;
+            }
+            result = instance.geometricFactor(i);
+            System.out.println("i: " + i + ", result: " + result);
+            assertEquals(expResult, result);
+        }
 
     }
-    
-    @Test
-    public void testSimilarity(){
-        System.out.println("similarityMeasure");
-        instance.setPattern(new byte[][]{{0, 64, 0}, {0, 64, 0}, {0, 64, 0}});
-        int time = 0;
-        int resultat = instance.similarityMeasure(time);
-        fail("Not implemented yet");
-        
-    }
-    
 
 }

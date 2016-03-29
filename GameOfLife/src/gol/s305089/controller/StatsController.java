@@ -33,9 +33,9 @@ public class StatsController implements Initializable {
 
     private Stats gameStats;
 
-    private XYChart.Series livingCells = new XYChart.Series();
-    private XYChart.Series changeLivingCells = new XYChart.Series();
-    private XYChart.Series similarityMeasure = new XYChart.Series();
+    private final XYChart.Series livingCells = new XYChart.Series();
+    private final XYChart.Series changeLivingCells = new XYChart.Series();
+    private final XYChart.Series similarityMeasure = new XYChart.Series();
 
     /**
      * Initializes the controller class.
@@ -44,8 +44,6 @@ public class StatsController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         gameStats = new Stats();
         gameStats.setPattern(new byte[][]{{0, 1, 0}, {0, 1, 0}, {0, 1, 0}});
-        progIndicator.toFront();
-        progIndicator.setVisible(true);
         initView();
     }
 
