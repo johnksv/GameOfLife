@@ -53,21 +53,19 @@ public class StatsTest {
         System.out.println("changeInLiving");
 
         instance.setPattern(new byte[][]{{0, 64, 0}, {0, 64, 0}, {0, 64, 0}});
-        for (int i = 0; i < 10; i++) {
-            if (i == 0) {
-                assertEquals(0, instance.changeInLiving(i));
-            }
+        int[] countChangeOfLiving = instance.changeInLiving(10);
+        for (int i = 0; i < countChangeOfLiving.length; i++) {
+            assertEquals(0, countChangeOfLiving[i]);
         }
     }
 
     @Test
     public void testSimilarityMeasure() {
         System.out.println("similarityMeasure");
-        int time = 0;
-
+        int time = 10;
         int expResult = 0;
         instance.setPattern(new byte[][]{{0, 64, 0}, {0, 64, 0}, {0, 64, 0}});
-        // int result = instance.similarityMeasure(time);
+        int[] result = instance.similarityMeasure(time);
         // assertEquals(expResult, result);
         fail("The test case is a prototype.");
     }
@@ -92,7 +90,6 @@ public class StatsTest {
                 expResult = 10;
             }
             result = instance.geometricFactor(i);
-            System.out.println("i: " + i + ", result: " + result);
             assertEquals(expResult, result);
         }
 

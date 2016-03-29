@@ -12,6 +12,8 @@ public class Stats {
     private Board gameboard;
     private byte[][] startPattern;
     private int[] livingCells;
+    private int[] changeLivingCells;
+    private int[] similarityMeasure;
 
     private final double alpha = 0.5;
     private final double beta = 3.0;
@@ -20,15 +22,15 @@ public class Stats {
     public int[][] getStatistics(int iterations) {
         int[][] stats = new int[iterations + 1][3];
         livingCells = countLiving(iterations);
+        changeLivingCells = changeInLiving(iterations);
+        similarityMeasure = similarityMeasure(iterations);
 
         for (int i = 0; i < iterations; i++) {
             stats[i][0] = livingCells[i];
-            stats[i][1] = changeInLiving(i);
-            stats[i][2] = 0;
+            stats[i][1] = changeLivingCells[i];
+            stats[i][2] = similarityMeasure[i];
         }
-        
-        geometricFactor(iterations);
-        
+
         return stats;
     }
 
@@ -37,11 +39,11 @@ public class Stats {
      * If number of iteration is 0, an empty array would be returend, as
      * expected
      *
-     * @param iterationNumber
+     * @param iterationsToCalcualte
      * @return
      */
-    public int[] countLiving(int iterationNumber) {
-        if (iterationNumber == 0) {
+    public int[] countLiving(int iterationsToCalcualte) {
+        if (iterationsToCalcualte == 0) {
             return new int[]{0};
         }
 
@@ -49,7 +51,7 @@ public class Stats {
             throw new NullPointerException("Gameboard or pattern is not set. Be sure to call setPattern first");
         }
 
-        int[] countOfLiving = new int[iterationNumber];
+        int[] countOfLiving = new int[iterationsToCalcualte];
         for (int i = 0; i < countOfLiving.length; i++) {
             if (i == 0) {
                 setPattern(startPattern);
@@ -70,14 +72,17 @@ public class Stats {
         return countOfLiving;
     }
 
-    public int changeInLiving(int time) {
+    public int[] changeInLiving(int iterationsToCalcualte) {
         if (livingCells == null) {
-            countLiving(time + 1);
+            countLiving(iterationsToCalcualte + 1);
         }
-        if (time < livingCells.length - 1) {
-            return livingCells[time + 1] - livingCells[time];
+        int[] countChangeOfLiving = new int[iterationsToCalcualte];
+        for (int time = 0; time < iterationsToCalcualte; time++) {
+            if (iterationsToCalcualte < livingCells.length - 1) {
+                countChangeOfLiving[time] = livingCells[time + 1] - livingCells[time];
+            }
         }
-        return 0;
+        return countChangeOfLiving;
     }
 
     /**
@@ -95,11 +100,35 @@ public class Stats {
         gameboard.insertArray(startPattern, 2, 2);
     }
 
-    double similarityMeasure(int time) {
-        double theta = alpha * livingCells[time]
-                + beta * changeInLiving(time)
-                + gamma * geometricFactor(time);
+    public int[] similarityMeasure(int iterationsToCalcualte) {
+        int[] similarity = new int[iterationsToCalcualte + 1];
 
+        for (int time1 = 0; time1 < iterationsToCalcualte; time1++) {
+            double thetaTime1 = getTheta(time1);
+
+            int max = 0;
+            for (int time2 = 0; time2 < iterationsToCalcualte; time2++) {
+                if (time1 != time2) {
+                    double thetaTime2 = getTheta(time2);
+                    double measure = Math.min(thetaTime1, thetaTime2) / Math.max(thetaTime1, thetaTime2);
+                    if (Math.floor(measure * 100) > max) {
+                        max = (int) Math.floor(measure * 100);
+                        if(max == 100){
+                            time2 = iterationsToCalcualte-1;
+                        }
+                    }
+                }
+            }
+            similarity[time1] = max;
+        }
+
+        return similarity;
+    }
+
+    private double getTheta(int time) {
+        double theta = alpha * livingCells[time]
+                + beta * changeLivingCells[time]
+                + gamma * geometricFactor(time);
         return theta;
     }
 
@@ -115,7 +144,7 @@ public class Stats {
         for (int i = 0; i < time; i++) {
             gameboard.nextGen();
         }
-        
+
         byte[][] boundedBoard = gameboard.getBoundingBoxBoard();
         for (int i = 0; i < boundedBoard.length; i++) {
             for (int j = 0; j < boundedBoard[i].length; j++) {
