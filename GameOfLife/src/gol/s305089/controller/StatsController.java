@@ -67,19 +67,19 @@ public class StatsController implements Initializable {
 
     private void displayData(int iterations) {
         progIndicator.setVisible(true);
-        
-        progIndicator.setProgress(0.5);
+
         livingCells.getData().clear();
         changeLivingCells.getData().clear();
         similarityMeasure.getData().clear();
 
+        //TODO Thread
         int[][] gameData = gameStats.getStatistics(iterations);
 
         //ignors the last iteration
         for (int i = 0; i < gameData.length - 1; i++) {
             livingCells.getData().add(new XYChart.Data("" + i, gameData[i][0]));
             changeLivingCells.getData().add(new XYChart.Data("" + i, gameData[i][1]));
-            //similarityMeasure.getData().add(new XYChart.Data("" + i, gameData[i][2]));
+            similarityMeasure.getData().add(new XYChart.Data("" + i, gameData[i][2]));
         }
         
         progIndicator.setVisible(false);

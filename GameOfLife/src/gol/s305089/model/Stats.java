@@ -14,6 +14,7 @@ public class Stats {
     private int[] livingCells;
     private int[] changeLivingCells;
     private int[] similarityMeasure;
+    private int[] geometricFactor;
 
     private final double alpha = 0.5;
     private final double beta = 3.0;
@@ -21,10 +22,10 @@ public class Stats {
 
     public int[][] getStatistics(int iterations) {
         int[][] stats = new int[iterations + 1][3];
+        calculateGeometricFactor(iterations);
         livingCells = countLiving(iterations);
         changeLivingCells = changeInLiving(iterations);
         similarityMeasure = similarityMeasure(iterations);
-
         for (int i = 0; i < iterations; i++) {
             stats[i][0] = livingCells[i];
             stats[i][1] = changeLivingCells[i];
@@ -85,6 +86,7 @@ public class Stats {
 
     private int[] similarityMeasure(int iterationsToCalcualte) {
         int[] similarity = new int[iterationsToCalcualte + 1];
+        setPattern(startPattern);
 
         for (int time1 = 0; time1 < iterationsToCalcualte; time1++) {
             double thetaTime1 = getTheta(time1);
@@ -112,7 +114,7 @@ public class Stats {
     private double getTheta(int time) {
         double theta = alpha * livingCells[time]
                 + beta * changeLivingCells[time]
-                + gamma * geometricFactor(time);
+                + gamma * geometricFactor[time];
         return theta;
     }
 
@@ -121,23 +123,21 @@ public class Stats {
      * @param time
      * @return The sum of x and y coordinats of living cells
      */
-    private int geometricFactor(int time) {
-        int result = 0;
-
+    private void calculateGeometricFactor(int iterationsToCalcualte) {
+        geometricFactor = new int[iterationsToCalcualte + 1];
         setPattern(startPattern);
-        for (int i = 0; i < time; i++) {
-            gameboard.nextGen();
-        }
 
-        byte[][] boundedBoard = gameboard.getBoundingBoxBoard();
-        for (int i = 0; i < boundedBoard.length; i++) {
-            for (int j = 0; j < boundedBoard[i].length; j++) {
-                if (boundedBoard[i][j] == 64) {
-                    result += i + j;
+        for (int iterations = 0; iterations < iterationsToCalcualte; iterations++) {
+            byte[][] boundedBoard = gameboard.getBoundingBoxBoard();
+            for (int row = 0; row < boundedBoard.length; row++) {
+                for (int column = 0; column < boundedBoard[row].length; column++) {
+                    if (boundedBoard[row][column] == 64) {
+                        geometricFactor[iterations] += row + column;
+                    }
                 }
             }
+            gameboard.nextGen();
         }
-        return result;
     }
 
     /**
