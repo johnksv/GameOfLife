@@ -36,13 +36,11 @@ public class Stats {
 
     /**
      *
-     * If number of iteration is 0, an empty array would be returend, as
-     * expected
      *
      * @param iterationsToCalcualte
      * @return
      */
-    public int[] countLiving(int iterationsToCalcualte) {
+    private int[] countLiving(int iterationsToCalcualte) {
         if (iterationsToCalcualte == 0) {
             return new int[]{0};
         }
@@ -72,7 +70,7 @@ public class Stats {
         return countOfLiving;
     }
 
-    public int[] changeInLiving(int iterationsToCalcualte) {
+    private int[] changeInLiving(int iterationsToCalcualte) {
         if (livingCells == null) {
             countLiving(iterationsToCalcualte + 1);
         }
@@ -85,22 +83,7 @@ public class Stats {
         return countChangeOfLiving;
     }
 
-    /**
-     * Constructs an new Board instance, and inserts this board
-     *
-     * @see gol.model.Board.Board#insertArray(byte[][], int, int)
-     * @param Pattern the startPattern to set
-     */
-    public void setPattern(byte[][] Pattern) {
-        //TODO dynaimc size of board
-        //TODO Move Method to helper method?
-        gameboard = new ArrayBoard(1800, 1800);
-        this.startPattern = Pattern;
-        gameboard.clearBoard();
-        gameboard.insertArray(startPattern, 2, 2);
-    }
-
-    public int[] similarityMeasure(int iterationsToCalcualte) {
+    private int[] similarityMeasure(int iterationsToCalcualte) {
         int[] similarity = new int[iterationsToCalcualte + 1];
 
         for (int time1 = 0; time1 < iterationsToCalcualte; time1++) {
@@ -126,7 +109,7 @@ public class Stats {
         return similarity;
     }
 
-    public double getTheta(int time) {
+    private double getTheta(int time) {
         double theta = alpha * livingCells[time]
                 + beta * changeLivingCells[time]
                 + gamma * geometricFactor(time);
@@ -138,7 +121,7 @@ public class Stats {
      * @param time
      * @return The sum of x and y coordinats of living cells
      */
-    public int geometricFactor(int time) {
+    private int geometricFactor(int time) {
         int result = 0;
 
         setPattern(startPattern);
@@ -157,4 +140,18 @@ public class Stats {
         return result;
     }
 
+    /**
+     * Constructs an new Board instance, and inserts this board
+     *
+     * @see gol.model.Board.Board#insertArray(byte[][], int, int)
+     * @param Pattern the startPattern to set
+     */
+    public void setPattern(byte[][] Pattern) {
+        //TODO dynaimc size of board
+        //TODO Move Method to helper method?
+        gameboard = new ArrayBoard(1800, 1800);
+        startPattern = Pattern;
+        gameboard.clearBoard();
+        gameboard.insertArray(startPattern, 2, 2);
+    }
 }

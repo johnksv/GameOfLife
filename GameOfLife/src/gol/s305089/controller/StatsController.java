@@ -53,7 +53,7 @@ public class StatsController implements Initializable {
         similarityMeasure.setName("Similarity Measure");
         chart.getData().addAll(livingCells, changeLivingCells, similarityMeasure);
 
-        spinnerIterations.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 1000, 20, 1));
+        spinnerIterations.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(3, 100, 20, 1));
         spinnerIterations.setEditable(true);
         spinnerIterations.valueProperty().addListener((ObservableValue observable, Object oldValue, Object newValue) -> {
             calculatGameStats();
@@ -79,7 +79,7 @@ public class StatsController implements Initializable {
         for (int i = 0; i < gameData.length - 1; i++) {
             livingCells.getData().add(new XYChart.Data("" + i, gameData[i][0]));
             changeLivingCells.getData().add(new XYChart.Data("" + i, gameData[i][1]));
-            similarityMeasure.getData().add(new XYChart.Data("" + i, gameData[i][2]));
+            //similarityMeasure.getData().add(new XYChart.Data("" + i, gameData[i][2]));
         }
         
         progIndicator.setVisible(false);
