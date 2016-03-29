@@ -29,6 +29,10 @@ public class HashLife {
     public static void preEvolve() {
         if (activeBoard != null) {
             int[] boundingBox = activeBoard.getBoundingBox();
+            boundingBox[0]--;
+            boundingBox[2]--;
+            boundingBox[1]++;
+            boundingBox[3]++;
             int k = 1;
             while (boundingBox[1] - boundingBox[0] >= Math.pow(2, k) || boundingBox[3] - boundingBox[2] >= Math.pow(2, k)) {
                 k += 1;
@@ -68,14 +72,14 @@ public class HashLife {
             if (hash.containsKey(macroCell.toString())) {
                 System.out.println("Du er i hash");
                 for (int i = 0; i < 4; i++) {
-                    nextBoard[y + i % 2][x + (int) (i / 2)] = hash.get(macroCell.toString())[i];
+                    nextBoard[y + (int) (i / 2)][x + i % 2] = hash.get(macroCell.toString())[i];
                 }
 
             } else {
                 byte[] nextgen =nextgen(y, x);
                 hash.put(macroCell.toString(), nextgen);
                 for (int i = 0; i < 4; i++) {
-                    nextBoard[y + i % 2][x + (int) (i / 2)] = nextgen[i];
+                    nextBoard[y + (int) (i / 2)][x + i % 2] = nextgen[i];
                 }
             }
             return;
@@ -96,7 +100,9 @@ public class HashLife {
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 2; j++) {
                 int counter = 0;
-
+                
+                //I choose to make the cell count itself as a nigbohor
+                //becouse of this cells will stay alive at one more then normale
                 for (int l = -1; l <= 1; l++) {
                     for (int k = -1; k <= 1; k++) {
                         if (activeBoard.getCellState(startY + y+ i + l, startX + x +j+ k)) {
@@ -104,7 +110,6 @@ public class HashLife {
                         }
                     }
                 }
-                System.out.println(counter);
                 if (counter == 3 && !activeBoard.getCellState(startY + y + i, startX + x + j)) {
 
                     nexGen[i * 2 + j] = 64;
@@ -116,7 +121,6 @@ public class HashLife {
                 }
             }
         }
-        System.out.println(Arrays.toString(nexGen));
         return nexGen;
     }
 }
