@@ -1,6 +1,7 @@
 package gol.model.Board;
 
 import gol.model.Logic.Rule;
+import gol.s305084.HashLife;
 import java.util.Arrays;
 
 /**
@@ -21,8 +22,8 @@ public class ArrayBoard extends Board {
      */
     public ArrayBoard() {
         super();
-        WIDTH = 100;
-        HEIGHT = 100;
+        WIDTH = 50;
+        HEIGHT = 50;
         gameBoard = new byte[WIDTH][HEIGHT];
     }
 
@@ -253,5 +254,10 @@ public class ArrayBoard extends Board {
             }
         }
         return result.toString();
+    }
+
+    @Override
+    public void hashLife() {
+        HashLife.loadeBoard(this);
     }
 }

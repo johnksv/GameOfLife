@@ -7,10 +7,10 @@ import gol.model.FileIO.ReadFile;
 import gol.model.Logic.ConwaysRule;
 import gol.model.Logic.CustomRule;
 import gol.s305084.GifMaker;
+import gol.s305084.HashLife;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Arrays;
 
 import java.util.ResourceBundle;
 import javafx.animation.Animation;
@@ -108,6 +108,7 @@ public class GameController implements Initializable {
         spinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 50));
         spinner.increment(14);
         canvasController.setActiveBoard(activeBoard);
+        activeBoard.hashLife();
         canvasController.setRbMoveGrid(rbMoveGrid);
         canvasController.setRbRemoveCell(rbRemoveCell);
     }
@@ -260,10 +261,12 @@ public class GameController implements Initializable {
 
     @FXML
     public void handleClearBtn() {
-        activeBoard.clearBoard();
+        
+        HashLife.preEvolve();
+        /*activeBoard.clearBoard();
         timeline.pause();
         startPauseBtn.setText("Start game");
-        draw();
+        */draw();
     }
 
     @FXML
@@ -280,7 +283,7 @@ public class GameController implements Initializable {
                 boardFromFile = ReadFile.readFileFromDisk(selected.toPath());
 
                 //TODO no ghosttiles yet
-                activeBoard.insertArray(boardFromFile, 0, 0);
+                activeBoard.insertArray(boardFromFile, 100, 100);
                 draw();
             }
 
