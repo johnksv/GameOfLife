@@ -22,7 +22,7 @@ public class Stats {
 
     public int[][] getStatistics(int iterations) {
         int[][] stats = new int[iterations + 1][3];
-        calculateGeometricFactor(iterations);
+
         livingCells = countLiving(iterations);
         changeLivingCells = changeInLiving(iterations);
         similarityMeasure = similarityMeasure(iterations);
@@ -86,6 +86,8 @@ public class Stats {
 
     private int[] similarityMeasure(int iterationsToCalcualte) {
         int[] similarity = new int[iterationsToCalcualte + 1];
+        calculateGeometricFactor(iterationsToCalcualte);
+
         setPattern(startPattern);
 
         for (int time1 = 0; time1 < iterationsToCalcualte; time1++) {
