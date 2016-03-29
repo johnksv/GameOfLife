@@ -77,10 +77,10 @@ public class Stats {
             countLiving(iterationsToCalcualte + 1);
         }
         int[] countChangeOfLiving = new int[iterationsToCalcualte];
-        for (int time = 0; time < iterationsToCalcualte; time++) {
-            if (iterationsToCalcualte < livingCells.length - 1) {
-                countChangeOfLiving[time] = livingCells[time + 1] - livingCells[time];
-            }
+        setPattern(startPattern);
+        for (int time = 0; time < iterationsToCalcualte - 1; time++) {
+            countChangeOfLiving[time] = livingCells[time + 1] - livingCells[time];
+            gameboard.nextGen();
         }
         return countChangeOfLiving;
     }
@@ -111,10 +111,11 @@ public class Stats {
                 if (time1 != time2) {
                     double thetaTime2 = getTheta(time2);
                     double measure = Math.min(thetaTime1, thetaTime2) / Math.max(thetaTime1, thetaTime2);
-                    if (Math.floor(measure * 100) > max) {
+                    if (Math.floor(measure * 100) <= max) {
+                    } else {
                         max = (int) Math.floor(measure * 100);
-                        if(max == 100){
-                            time2 = iterationsToCalcualte-1;
+                        if (max == 100) {
+                            time2 = iterationsToCalcualte - 1;
                         }
                     }
                 }
@@ -125,7 +126,7 @@ public class Stats {
         return similarity;
     }
 
-    private double getTheta(int time) {
+    public double getTheta(int time) {
         double theta = alpha * livingCells[time]
                 + beta * changeLivingCells[time]
                 + gamma * geometricFactor(time);

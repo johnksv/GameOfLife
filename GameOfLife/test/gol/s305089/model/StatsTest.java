@@ -57,6 +57,13 @@ public class StatsTest {
         for (int i = 0; i < countChangeOfLiving.length; i++) {
             assertEquals(0, countChangeOfLiving[i]);
         }
+
+        instance.setPattern(new byte[][]{{64, 64, 0}, {0, 64, 0}, {0, 64, 0}});
+        countChangeOfLiving = instance.changeInLiving(10);
+        assertEquals(0, countChangeOfLiving[0]);
+        assertEquals(2, countChangeOfLiving[1]);
+        assertEquals(0, countChangeOfLiving[1]);
+
     }
 
     @Test
@@ -93,6 +100,14 @@ public class StatsTest {
             assertEquals(expResult, result);
         }
 
+    }
+
+    @Test
+    public void testgetTheta() {
+        System.out.println("getTheta");
+        for (int i = 1; i < 5; i++) {
+            System.out.println(instance.getTheta(i));
+        }
     }
 
 }

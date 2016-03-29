@@ -67,7 +67,8 @@ public class StatsController implements Initializable {
 
     private void displayData(int iterations) {
         progIndicator.setVisible(true);
-
+        
+        progIndicator.setProgress(0.5);
         livingCells.getData().clear();
         changeLivingCells.getData().clear();
         similarityMeasure.getData().clear();
@@ -78,13 +79,12 @@ public class StatsController implements Initializable {
         for (int i = 0; i < gameData.length - 1; i++) {
             livingCells.getData().add(new XYChart.Data("" + i, gameData[i][0]));
             changeLivingCells.getData().add(new XYChart.Data("" + i, gameData[i][1]));
-            // similarityMeasure.getData().add(new XYChart.Data("" + i, gameData[i][2]));
-            //TODO PROGRESS BAR
+            similarityMeasure.getData().add(new XYChart.Data("" + i, gameData[i][2]));
         }
         
         progIndicator.setVisible(false);
     }
-
+    
     public void setByteBoard(Board activeBoard) {
         gameStats.setPattern(activeBoard.getBoundingBoxBoard());
     }
