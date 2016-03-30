@@ -18,7 +18,7 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gol.controller.GameController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gol.controller.GameController">
     <bottom>
         <ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
             <items>
@@ -58,9 +58,10 @@
                                         <AnchorPane prefWidth="200.0">
                                             <children>
                                                 <RadioButton fx:id="rbAddCell" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" selected="true" text="Add cells">
-                                       <toggleGroup>
-                                          <ToggleGroup fx:id="mouseActions" />
-                                       </toggleGroup></RadioButton>
+                                                    <toggleGroup>
+                                                        <ToggleGroup fx:id="mouseActions" />
+                                                    </toggleGroup>
+                                                </RadioButton>
                                                 <RadioButton fx:id="rbRemoveCell" layoutX="14.0" layoutY="44.0" mnemonicParsing="false" text="Remove cells" toggleGroup="$mouseActions" />
                                                 <RadioButton fx:id="rbMoveGrid" layoutX="14.0" layoutY="74.0" mnemonicParsing="false" text="Move grid" toggleGroup="$mouseActions" />
                                                 <CheckBox fx:id="cbShowGrid" layoutX="15.0" layoutY="113.0" mnemonicParsing="false" text="Show grid" />
@@ -137,15 +138,15 @@
                                             <children>
                                                 <Label layoutX="7.0" layoutY="53.0" text="Naboer for å leve" />
                                                 <Label layoutX="7.0" layoutY="84.0" text="Naboer for å våkne" />
-                                    <RadioButton contentDisplay="TOP" layoutX="19.0" layoutY="17.0" mnemonicParsing="false" selected="true" text="Standard">
-                                       <toggleGroup>
-                                          <ToggleGroup fx:id="tgGameRules" />
-                                       </toggleGroup>
-                                    </RadioButton>
-                                    <RadioButton fx:id="rbCustomGameRules" layoutX="123.0" layoutY="17.0" mnemonicParsing="false" text="Custom rules" toggleGroup="$tgGameRules" />
-                                                <TextField fx:id="tfCellsToLive"  disable="true" layoutX="123.0" layoutY="49.0" prefHeight="25.0" prefWidth="92.0" text="2,3" />
-                                                <TextField fx:id="tfCellsToSpawn" onKeyTyped="#handleRuleText" disable="true" layoutX="123.0" layoutY="80.0" prefHeight="25.0" prefWidth="92.0" text="3" />
-                                                <Button fx:id="btnUseRule" onAction="#handleRuleBtn"  disable="true" layoutX="68.0" layoutY="120.0" mnemonicParsing="false" text="Use Rules" />
+                                                <RadioButton contentDisplay="TOP" layoutX="19.0" layoutY="17.0" mnemonicParsing="false" selected="true" text="Standard">
+                                                    <toggleGroup>
+                                                        <ToggleGroup fx:id="tgGameRules" />
+                                                    </toggleGroup>
+                                                </RadioButton>
+                                                <RadioButton fx:id="rbCustomGameRules" layoutX="123.0" layoutY="17.0" mnemonicParsing="false" text="Custom rules" toggleGroup="$tgGameRules" />
+                                                <TextField fx:id="tfCellsToLive" disable="true" layoutX="123.0" layoutY="49.0" prefHeight="25.0" prefWidth="92.0" text="2,3" />
+                                                <TextField fx:id="tfCellsToSpawn" disable="true" layoutX="123.0" layoutY="80.0" onKeyTyped="#handleRuleText" prefHeight="25.0" prefWidth="92.0" text="3" />
+                                                <Button fx:id="btnUseRule" disable="true" layoutX="68.0" layoutY="120.0" mnemonicParsing="false" onAction="#handleRuleBtn" text="Use Rules" />
                                             </children>
                                         </AnchorPane>
                                     </content>
@@ -178,9 +179,13 @@
                                 </TitledPane>
                                 <TitledPane animated="false" collapsible="false" text="John Kasper">
                                     <content>
-                                        <AnchorPane minHeight="0.0" minWidth="0.0" prefWidth="200.0">
+                                        <AnchorPane minHeight="0.0" minWidth="0.0" prefWidth="248.0">
                                             <children>
-                                               <Button onAction="#openPatternEditor" layoutX="27.0" layoutY="14.0" mnemonicParsing="false" text="Open Pattern Editor" />
+                                                <Button layoutX="15.0" layoutY="14.0" mnemonicParsing="false" onAction="#openPatternEditor" text="Open Pattern Editor" />
+
+                                                <Button layoutX="14.0" layoutY="46.0" mnemonicParsing="false" onAction="#currentBoardToGIF" text="Save current patter to GIF" />
+                                                <Button layoutX="14.0" layoutY="78.0" mnemonicParsing="false" onAction="#showStats" text="Show Stats" />
+
                                             </children>
                                         </AnchorPane>
                                     </content>
@@ -193,10 +198,10 @@
         </TabPane>
     </right>
 
-   <center>
+    <center>
         <VBox fx:id="canvasContainer">
-            <fx:include source="Canvas.fxml" fx:id="canvas"/>
+            <fx:include fx:id="canvas" source="Canvas.fxml" />
         </VBox>
 
-   </center>
+    </center>
 </BorderPane>

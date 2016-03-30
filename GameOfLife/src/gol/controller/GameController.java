@@ -7,11 +7,16 @@ import gol.model.FileIO.ReadFile;
 import gol.model.Logic.ConwaysRule;
 import gol.model.Logic.CustomRule;
 import gol.s305089.controller.EditorController;
+import gol.s305089.model.GifMaker;
+import gol.s305089.controller.GifMakerController;
+import gol.s305089.controller.StatsController;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -34,6 +39,7 @@ import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -251,7 +257,7 @@ public class GameController implements Initializable {
                 boardFromFile = ReadFile.readFileFromDisk(selected.toPath());
 
                 //TODO no ghosttiles yet
-                activeBoard.insertArray(boardFromFile, 0, 0);
+                activeBoard.insertArray(boardFromFile, 1, 1);
                 draw();
             }
 
@@ -285,6 +291,41 @@ public class GameController implements Initializable {
         editor.initModality(Modality.APPLICATION_MODAL);
         editor.show();
 
+    public void currentBoardToGIF() throws IOException {
+        timeline.pause();
+
+        Stage gifMaker = new Stage();
+        FXMLLoader root = new FXMLLoader(getClass().getResource("/gol/s305089/view/GifMaker.fxml"));
+
+        Scene scene = new Scene((Parent) root.load());
+
+        GifMakerController gifcontroller = root.<GifMakerController>getController();
+        gifcontroller.setByteBoard(activeBoard);
+
+        gifMaker.setScene(scene);
+        gifMaker.setTitle("Generate GIF - Game of Life");
+        gifMaker.initModality(Modality.APPLICATION_MODAL);
+        gifMaker.setMaxHeight(600.00);
+        gifMaker.show();
+    }
+
+    @FXML
+    public void showStats() throws IOException {
+        timeline.pause();
+
+        Stage golStats = new Stage();
+        FXMLLoader root = new FXMLLoader(getClass().getResource("/gol/s305089/view/Stats.fxml"));
+
+        Scene scene = new Scene((Parent) root.load());
+
+        StatsController statsController = root.<StatsController>getController();
+        statsController.setByteBoard(activeBoard);
+
+        golStats.setScene(scene);
+        golStats.setTitle("Stats - Game of Life");
+        
+        
+        golStats.show();
     }
 
     public void constructRule(byte[] cellsToLive, byte[] cellsToSpawn) {
