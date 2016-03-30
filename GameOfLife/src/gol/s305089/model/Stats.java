@@ -130,6 +130,7 @@ public class Stats {
         setPattern(startPattern);
 
         for (int iterations = 0; iterations < iterationsToCalcualte; iterations++) {
+            //TODO CHECK BUG WITH BOARD 1001 3*0000  0001 1000 (Negatie Array error)
             byte[][] boundedBoard = gameboard.getBoundingBoxBoard();
             for (int row = 0; row < boundedBoard.length; row++) {
                 for (int column = 0; column < boundedBoard[row].length; column++) {

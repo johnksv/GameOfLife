@@ -290,7 +290,8 @@ public class GameController implements Initializable {
         editor.setTitle("Pattern Editor");
         editor.initModality(Modality.APPLICATION_MODAL);
         editor.show();
-
+    }
+    
     public void currentBoardToGIF() throws IOException {
         timeline.pause();
 
