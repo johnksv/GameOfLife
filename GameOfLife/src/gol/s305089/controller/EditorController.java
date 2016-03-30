@@ -30,7 +30,8 @@ public class EditorController implements Initializable {
     private CanvasController canvasController;
     @FXML
     private HBox canvasContainer;
-    private Board activeBoard;
+    private Board gameboard;
+    private byte[][] pattern;
     private final List<Canvas> theStrip = new ArrayList<>();
 
     /**
@@ -50,10 +51,26 @@ public class EditorController implements Initializable {
     }
 
     public void setActiveBoard(Board activeBoard) {
-
-        this.activeBoard = activeBoard;
-        canvasController.setActiveBoard(activeBoard);
+        byte[][] activeByteBoard = activeBoard.getBoundingBoxBoard();
+        setPattern(activeByteBoard);
+        
+        //TODO FIx bug, canvas not showing
+        canvasController.setActiveBoard(gameboard);
         canvasController.draw();
+        System.out.println(gameboard);
+        
+    }
+    
+        /**
+     * Constructs an new Board instance, and inserts this board
+     * @see gol.model.Board.Board#insertArray(byte[][], int, int) 
+     * @param Pattern the pattern to set
+     */
+    public void setPattern(byte[][] Pattern) {
+        //TODO dynaimc size of board
+        gameboard = new ArrayBoard(10, 10);
+        this.pattern = Pattern;
+        gameboard.insertArray(pattern, 2, 2);
     }
 
 }
