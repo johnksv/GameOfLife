@@ -2,7 +2,7 @@
  * Here comes the text of your license
  * Each line should be prefixed with  * 
  */
-package gol.s305089.controller.editor;
+package gol.s305089.controller;
 
 import gol.controller.CanvasController;
 import gol.controller.GameController;

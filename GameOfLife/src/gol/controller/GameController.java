@@ -6,7 +6,7 @@ import gol.model.FileIO.PatternFormatException;
 import gol.model.FileIO.ReadFile;
 import gol.model.Logic.ConwaysRule;
 import gol.model.Logic.CustomRule;
-import gol.s305089.controller.editor.EditorController;
+import gol.s305089.controller.EditorController;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -274,7 +274,7 @@ public class GameController implements Initializable {
         timeline.pause();
 
         Stage editor = new Stage();
-        FXMLLoader root = new FXMLLoader(getClass().getResource("/gol/s305089/view/patternEditor/Editor.fxml"));
+        FXMLLoader root = new FXMLLoader(getClass().getResource("/gol/s305089/view/PatternEditor.fxml"));
 
         Scene scene = new Scene((Parent) root.load());
         EditorController editorController = root.<EditorController>getController();
