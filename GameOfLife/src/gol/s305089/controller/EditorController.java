@@ -5,7 +5,6 @@
 package gol.s305089.controller;
 
 import gol.controller.CanvasController;
-import gol.controller.GameController;
 import gol.model.Board.ArrayBoard;
 import gol.model.Board.Board;
 
@@ -15,9 +14,10 @@ import java.util.List;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.canvas.Canvas;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.RadioButton;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
-import javafx.scene.paint.Color;
 
 /**
  * FXML Controller class
@@ -29,10 +29,17 @@ public class EditorController implements Initializable {
     @FXML
     private CanvasController canvasController;
     @FXML
-    private HBox canvasContainer;
+    private CheckBox chboxAutoUpdateStrip;
+    @FXML
+    private HBox canvasPreviewContainer;
+    @FXML
+    private RadioButton rbRemoveCell;
+    @FXML
+    private RadioButton rbMoveGrid;
+
     private Board gameboard;
     private byte[][] pattern;
-    private final List<Canvas> theStrip = new ArrayList<>();
+    private final List<ImageView> theStrip = new ArrayList<>();
 
     /**
      * Initializes the controller class.
@@ -40,37 +47,46 @@ public class EditorController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         initTheStrip();
+        canvasController.setRbRemoveCell(rbRemoveCell);
+        canvasController.setRbMoveGrid(rbMoveGrid);
 
     }
 
     private void initTheStrip() {
         for (int i = 0; i < 20; i++) {
-            theStrip.add(new Canvas(50, 50));
+            theStrip.add(i, new ImageView());
         }
-        canvasContainer.getChildren().addAll(theStrip);
+        canvasPreviewContainer.getChildren().addAll(theStrip);
+    }
+
+    @FXML
+    private void updateTheStrip() {
+        for (int iteration = 0; iteration < 20; iteration++) {
+            gameboard.nextGen();
+        }
+
     }
 
     public void setActiveBoard(Board activeBoard) {
         byte[][] activeByteBoard = activeBoard.getBoundingBoxBoard();
         setPattern(activeByteBoard);
-        
-        //TODO FIx bug, canvas not showing
+        gameboard.setCellSize(activeBoard.getCellSize());
+
         canvasController.setActiveBoard(gameboard);
         canvasController.draw();
-        System.out.println(gameboard);
-        
     }
-    
-        /**
+
+    /**
      * Constructs an new Board instance, and inserts this board
-     * @see gol.model.Board.Board#insertArray(byte[][], int, int) 
+     *
+     * @see gol.model.Board.Board#insertArray(byte[][], int, int)
      * @param Pattern the pattern to set
      */
     public void setPattern(byte[][] Pattern) {
         //TODO dynaimc size of board
-        gameboard = new ArrayBoard(10, 10);
+        gameboard = new ArrayBoard(100, 100);
         this.pattern = Pattern;
-        gameboard.insertArray(pattern, 2, 2);
+        gameboard.insertArray(pattern, 1, 1);
     }
 
 }

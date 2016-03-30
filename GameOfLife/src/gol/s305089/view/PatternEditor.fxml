@@ -16,22 +16,26 @@
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gol.s305089.controller.EditorController">
     <center>
-       <fx:include fx:id="canvas" source="../../view/Canvas.fxml" />
+        <HBox BorderPane.alignment="TOP_LEFT">
+            <children>
+                <fx:include fx:id="canvas" source="../../view/Canvas.fxml" />
+            </children>
+        </HBox>
     </center>
     <bottom>
         <BorderPane BorderPane.alignment="CENTER">
             <center>
                 <ScrollPane>
                     <content>
-                        <HBox fx:id="canvasContainer" prefHeight="150.0" prefWidth="600.0" />
+                        <HBox fx:id="canvasPreviewContainer" prefHeight="150.0" prefWidth="600.0" />
                     </content>
                 </ScrollPane>
             </center>
             <bottom>
                 <ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                     <items>
-                        <CheckBox mnemonicParsing="false" text="Automatically update strip" />
-                        <Button mnemonicParsing="false" text="Update strip" />
+                        <CheckBox fx:id="chboxAutoUpdateStrip" mnemonicParsing="false" text="Automatically update strip" />
+                        <Button onAction="#updateTheStrip"  mnemonicParsing="false" text="Update strip" />
                     </items>
                 </ToolBar>
             </bottom>
@@ -44,15 +48,16 @@
                     <content>
                         <VBox prefWidth="200.0" spacing="10.0">
                             <children>
-                                <RadioButton fx:id="rbAddCell" mnemonicParsing="false" selected="true" text="Add cells">
+                                <RadioButton mnemonicParsing="false" selected="true" text="Add cells">
                                     <toggleGroup>
                                         <ToggleGroup fx:id="mouseActions" />
                                     </toggleGroup>
                                 </RadioButton>
                                 <RadioButton fx:id="rbRemoveCell" mnemonicParsing="false" text="Remove cells" toggleGroup="$mouseActions" />
-                                  <Button mnemonicParsing="false" text="Clear board" />
-                        <Separator prefWidth="200.0" />
-                        <Button mnemonicParsing="false" text="Send board to main window" />
+                                <RadioButton fx:id="rbMoveGrid" mnemonicParsing="false" text="Move grid" toggleGroup="$mouseActions" />
+                                <Button mnemonicParsing="false" text="Clear board" />
+                                <Separator prefWidth="200.0" />
+                                <Button mnemonicParsing="false" text="Send board to main window" />
                             </children>
                         </VBox>
                     </content>
@@ -66,13 +71,13 @@
                                 <TextField promptText="Description" />
                                 <TextField promptText="Rules (B/S)" />
                                 <TextField promptText="Placement" />
-                                  <Button mnemonicParsing="false" text="Save pattern" />
+                                <Button mnemonicParsing="false" text="Save pattern" />
                             </children>
                         </VBox>
                     </content>
-               <padding>
-                  <Insets top="5.0" />
-               </padding>
+                    <padding>
+                        <Insets top="5.0" />
+                    </padding>
                 </TitledPane>
             </children>
         </VBox>
