@@ -58,50 +58,13 @@
                                         <AnchorPane prefWidth="200.0">
                                             <children>
                                                 <RadioButton fx:id="rbAddCell" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" selected="true" text="Add cells">
-                                       <toggleGroup>
-                                          <ToggleGroup fx:id="mouseActions" />
-                                       </toggleGroup></RadioButton>
+                                                    <toggleGroup>
+                                                        <ToggleGroup fx:id="mouseActions" />
+                                                    </toggleGroup>
+                                                </RadioButton>
                                                 <RadioButton fx:id="rbRemoveCell" layoutX="14.0" layoutY="44.0" mnemonicParsing="false" text="Remove cells" toggleGroup="$mouseActions" />
                                                 <RadioButton fx:id="rbMoveGrid" layoutX="14.0" layoutY="74.0" mnemonicParsing="false" text="Move grid" toggleGroup="$mouseActions" />
                                                 <CheckBox fx:id="cbShowGrid" layoutX="15.0" layoutY="113.0" mnemonicParsing="false" text="Show grid" />
-                                            </children>
-                                        </AnchorPane>
-                                    </content>
-                                </TitledPane>
-                            </children>
-                        </VBox>
-                    </content>
-                </Tab>
-                <Tab text="Pattern">
-                    <content>
-                        <VBox prefHeight="200.0" prefWidth="100.0">
-                            <children>
-                                <TitledPane animated="false" collapsible="false" text="Import">
-                                    <content>
-                                        <AnchorPane minHeight="0.0" minWidth="0.0" prefWidth="200.0">
-                                            <children>
-                                                <Button layoutX="25.0" layoutY="6.0" mnemonicParsing="false" onAction="#handleImportFileBtn" text="Import pattern from file" />
-                                                <Button layoutX="25.0" layoutY="42.0" mnemonicParsing="false" text="Import/search pattern from internet" />
-                                            </children>
-                                        </AnchorPane>
-                                    </content>
-                                </TitledPane>
-                                <TitledPane animated="false" collapsible="false" text="Export">
-                                    <content>
-                                        <AnchorPane minHeight="0.0" minWidth="0.0" prefWidth="200.0">
-                                            <children>
-                                                <Button layoutX="24.0" layoutY="10.0" mnemonicParsing="false" text="Export pattern to file" />
-                                                <Button layoutX="24.0" layoutY="44.0" mnemonicParsing="false" text="Export to GIF" />
-                                            </children>
-                                        </AnchorPane>
-                                    </content>
-                                </TitledPane>
-                                <TitledPane animated="false" collapsible="false" text="Edit">
-                                    <content>
-                                        <AnchorPane minHeight="0.0" minWidth="0.0" prefWidth="200.0">
-                                            <children>
-                                                <Button layoutX="27.0" layoutY="14.0" mnemonicParsing="false" text="Open Pattern Editor" />
-                                                <Label layoutX="27.0" layoutY="50.0" text="PS: I redigering har du også &#10;mulighet til å importere mønster &#10;fra fil og internett" wrapText="true" />
                                             </children>
                                         </AnchorPane>
                                     </content>
@@ -114,38 +77,44 @@
                     <content>
                         <VBox>
                             <children>
-                                <TitledPane collapsible="false">
+                                <TitledPane animated="false" collapsible="false" text="Import Pattern">
                                     <content>
-                                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="300.0" prefWidth="200.0">
+                                        <AnchorPane minHeight="0.0" minWidth="0.0" prefWidth="200.0">
                                             <children>
-                                                <RadioButton layoutX="14.0" layoutY="37.0" mnemonicParsing="false" selected="true" text="2D" />
-                                                <RadioButton layoutX="57.0" layoutY="37.0" mnemonicParsing="false" text="3D" />
-                                                <Label layoutX="14.0" layoutY="14.0" text="Visning av brett:" />
-                                                <ColorPicker fx:id="cellCP" layoutX="12.0" layoutY="111.0" onValueChange="#handleColor" prefWidth="176.0" />
-                                                <Label layoutX="12.0" layoutY="87.0" text="Farge til punkter:" />
-                                                <ColorPicker fx:id="backgroundCP" layoutX="14.0" layoutY="182.0" onValueChange="#handleColor" prefWidth="176.0" />
-                                                <Label layoutX="14.0" layoutY="159.0" text="Farge til bakgrunn:" />
-                                                <Separator layoutX="-4.0" layoutY="68.0" prefHeight="3.0" prefWidth="227.0" />
-                                                <Separator layoutX="-4.0" layoutY="146.0" prefHeight="3.0" prefWidth="227.0" />
+                                                <Button layoutX="16.0" layoutY="11.0" mnemonicParsing="false" onAction="#handleImportFileBtn" text="Import pattern from file" />
+                                                <Button layoutX="16.0" layoutY="47.0" mnemonicParsing="false" text="Import/search pattern from internet" />
                                             </children>
                                         </AnchorPane>
                                     </content>
                                 </TitledPane>
-                                <TitledPane collapsible="false" text="Spillregler">
+                                <TitledPane collapsible="false" text="Color">
+                                    <content>
+                                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="150.0" prefWidth="200.0">
+                                            <children>
+                                                <ColorPicker fx:id="cellCP" layoutX="12.0" layoutY="28.0" onValueChange="#handleColor" prefWidth="176.0" />
+                                                <Label layoutX="12.0" layoutY="9.0" text="Living cells" />
+                                                <ColorPicker fx:id="backgroundCP" layoutX="14.0" layoutY="96.0" onValueChange="#handleColor" prefWidth="176.0" />
+                                                <Label layoutX="14.0" layoutY="73.0" text="Background" />
+                                                <Separator layoutX="-4.0" layoutY="60.0" prefHeight="3.0" prefWidth="227.0" />
+                                            </children>
+                                        </AnchorPane>
+                                    </content>
+                                </TitledPane>
+                                <TitledPane collapsible="false" prefHeight="225.0" prefWidth="250.0" text="Game rules">
                                     <content>
                                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="300.0" prefWidth="250.0">
                                             <children>
                                                 <Label layoutX="7.0" layoutY="53.0" text="Naboer for å leve" />
                                                 <Label layoutX="7.0" layoutY="84.0" text="Naboer for å våkne" />
-                                    <RadioButton contentDisplay="TOP" layoutX="19.0" layoutY="17.0" mnemonicParsing="false" selected="true" text="Standard">
-                                       <toggleGroup>
-                                          <ToggleGroup fx:id="tgGameRules" />
-                                       </toggleGroup>
-                                    </RadioButton>
-                                    <RadioButton fx:id="rbCustomGameRules" layoutX="123.0" layoutY="17.0" mnemonicParsing="false" text="Custom rules" toggleGroup="$tgGameRules" />
-                                                <TextField fx:id="tfCellsToLive"  disable="true" layoutX="123.0" layoutY="49.0" prefHeight="25.0" prefWidth="92.0" text="2,3" />
-                                                <TextField fx:id="tfCellsToSpawn" onKeyTyped="#handleRuleText" disable="true" layoutX="123.0" layoutY="80.0" prefHeight="25.0" prefWidth="92.0" text="3" />
-                                                <Button fx:id="btnUseRule" onAction="#handleRuleBtn"  disable="true" layoutX="68.0" layoutY="120.0" mnemonicParsing="false" text="Use Rules" />
+                                                <RadioButton contentDisplay="TOP" layoutX="19.0" layoutY="17.0" mnemonicParsing="false" selected="true" text="Standard">
+                                                    <toggleGroup>
+                                                        <ToggleGroup fx:id="tgGameRules" />
+                                                    </toggleGroup>
+                                                </RadioButton>
+                                                <RadioButton fx:id="rbCustomGameRules" layoutX="123.0" layoutY="17.0" mnemonicParsing="false" text="Custom rules" toggleGroup="$tgGameRules" />
+                                                <TextField fx:id="tfCellsToLive" disable="true" layoutX="123.0" layoutY="49.0" prefHeight="25.0" prefWidth="92.0" text="2,3" />
+                                                <TextField fx:id="tfCellsToSpawn" disable="true" layoutX="123.0" layoutY="80.0" onKeyTyped="#handleRuleText" prefHeight="25.0" prefWidth="92.0" text="3" />
+                                                <Button fx:id="btnUseRule" disable="true" layoutX="68.0" layoutY="120.0" mnemonicParsing="false" onAction="#handleRuleBtn" text="Use Rules" />
                                             </children>
                                         </AnchorPane>
                                     </content>
@@ -193,10 +162,10 @@
         </TabPane>
     </right>
 
-   <center>
+    <center>
         <VBox fx:id="canvasContainer">
-            <fx:include source="Canvas.fxml" fx:id="canvas"/>
+            <fx:include fx:id="canvas" source="Canvas.fxml" />
         </VBox>
 
-   </center>
+    </center>
 </BorderPane>
