@@ -16,25 +16,10 @@ import static org.junit.Assert.*;
  * @author trygvevang
  */
 public class ConwaysRuleTest {
-    
+
     public ConwaysRuleTest() {
     }
-    
-    @BeforeClass
-    public static void setUpClass() {
-    }
-    
-    @AfterClass
-    public static void tearDownClass() {
-    }
-    
-    @Before
-    public void setUp() {
-    }
-    
-    @After
-    public void tearDown() {
-    }
+
 
     /**
      * Test of setLife method, of class ConwaysRule.
@@ -42,13 +27,26 @@ public class ConwaysRuleTest {
     @Test
     public void testSetLife() {
         System.out.println("setLife");
-        byte cellToCheck = 0;
         ConwaysRule instance = new ConwaysRule();
-        byte expResult = 0;
-        byte result = instance.setLife(cellToCheck);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        
+        byte cellToCheck;
+        byte expResult;
+        byte result;
+        for (byte i = 0; i < 127; i++) {
+            cellToCheck = i;
+            if (i == 66 || i == 67 || i == 3) {
+                expResult = 64;
+            } else { 
+                expResult = 0;
+            }
+            result = instance.setLife(cellToCheck);
+            assertEquals(expResult, result);
+        }
+        for (byte i = 0; i > -128; i--) {
+            cellToCheck = i;
+            expResult = 0;         
+            
+            result = instance.setLife(cellToCheck);
+            assertEquals(expResult, result);
+        }
     }
-    
 }
