@@ -32,8 +32,8 @@ public final class HashLife {
     private HashLife() { }
 
     /**
-     * Sets a board to be manipulated by this class. This needs to be done if
-     * HashLife is wished for.
+     * Sets a board to be manipulated by this class. 
+     * This needs to be done if HashLife is wished for.
      *
      * @param otherBoard
      */
