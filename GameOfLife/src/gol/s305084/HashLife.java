@@ -8,31 +8,52 @@ import java.util.HashMap;
 import java.util.Hashtable;
 
 /**
+ * This class stores all necessary methods for a simple version of the algorithm
+ * HashLife
  *
- * @author Stian
+ * @author s305084
  */
-public class HashLife {
+public final class HashLife {
 
     private static Board activeBoard;
     //private static byte[][] activeBoard;
     private static byte[][] nextBoard;
     private static Hashtable<String, byte[]> hash = new Hashtable<>();
     private static StringBuilder macroCell = new StringBuilder();
+    //TODO save macrocells as short
+    private static short macroCell_;
     private static int startX;
     private static int startY;
 
+    /**
+     * Don't let anyone instantiate this class.
+     * @see Math.Math()
+     */
+    private HashLife() { }
+
+    /**
+     * Sets a board to be manipulated by this class. This needs to be done if
+     * HashLife is wished for.
+     *
+     * @param otherBoard
+     */
     public static void loadeBoard(Board otherBoard) {
         activeBoard = otherBoard;
     }
 
     //a macrocell is the size 2^n + 2  
+    /**
+     *
+     */
     public static void preEvolve() {
+
         if (activeBoard != null) {
             int[] boundingBox = activeBoard.getBoundingBox();
             boundingBox[0]--;
             boundingBox[2]--;
             boundingBox[1]++;
             boundingBox[3]++;
+            //TODO use the full array
             int k = 1;
             while (boundingBox[1] - boundingBox[0] >= Math.pow(2, k) || boundingBox[3] - boundingBox[2] >= Math.pow(2, k)) {
                 k += 1;
@@ -48,11 +69,13 @@ public class HashLife {
     }
 
     private static void evolve(int y, int x, int k) {
-        System.out.println("y: " + y + " x:" + x);
+
         if (k <= 1) {
             macroCell.delete(0, macroCell.length());
 
-            try {
+            if (startY + y + 2 < activeBoard.getArrayLength()
+                    && startX + x + 2 < activeBoard.getArrayLength()) {
+
                 for (int i = -1; i < 3; i++) {
                     for (int j = -1; j < 3; j++) {
                         if (activeBoard.getCellState(startY + y + i, startX + x + j)) {
@@ -63,20 +86,15 @@ public class HashLife {
                     }
 
                 }
-
-            } catch (ArrayIndexOutOfBoundsException ex) {
-                System.err.println("OUT!");
             }
 
-            System.out.println(macroCell.toString());
             if (hash.containsKey(macroCell.toString())) {
-                System.out.println("Du er i hash");
                 for (int i = 0; i < 4; i++) {
                     nextBoard[y + (int) (i / 2)][x + i % 2] = hash.get(macroCell.toString())[i];
                 }
 
             } else {
-                byte[] nextgen =nextgen(y, x);
+                byte[] nextgen = nextgen(y, x);
                 hash.put(macroCell.toString(), nextgen);
                 for (int i = 0; i < 4; i++) {
                     nextBoard[y + (int) (i / 2)][x + i % 2] = nextgen[i];
@@ -85,27 +103,27 @@ public class HashLife {
             return;
 
         }
-        k--;
-        System.out.println(k);
-        evolve(y, x, k); //Topp Left
+        k -= 1;
+        evolve(y, x, k);//Topp Left
         evolve(y, x + (int) Math.pow(2, k), k); //Topp Rigth
         evolve(y + (int) Math.pow(2, k), x, k); //Bottom Left
         evolve(y + (int) Math.pow(2, k), x + (int) Math.pow(2, k), k); //Bottom Rigth
-
-        return;
     }
+    /*
+     * Helping method for hashlife, it is used to calculate non hashed macrocells.
+     */
 
     private static byte[] nextgen(int y, int x) {
+
         byte[] nexGen = new byte[4];
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 2; j++) {
                 int counter = 0;
-                
-                //I choose to make the cell count itself as a nigbohor
-                //becouse of this cells will stay alive at one more then normale
+                //TODO handel outOfBounds
                 for (int l = -1; l <= 1; l++) {
                     for (int k = -1; k <= 1; k++) {
-                        if (activeBoard.getCellState(startY + y+ i + l, startX + x +j+ k)) {
+                        if (activeBoard.getCellState(startY + y + i + l, startX + x + j + k)
+                                && (l != 0 || k != 0)) {
                             counter++;
                         }
                     }
@@ -113,7 +131,7 @@ public class HashLife {
                 if (counter == 3 && !activeBoard.getCellState(startY + y + i, startX + x + j)) {
 
                     nexGen[i * 2 + j] = 64;
-                } else if ((counter == 2 + 1 || counter == 3 + 1) && activeBoard.getCellState(startY + y + i, startX + x + j)) {
+                } else if ((counter == 2 || counter == 3) && activeBoard.getCellState(startY + y + i, startX + x + j)) {
 
                     nexGen[i * 2 + j] = 64;
                 } else {

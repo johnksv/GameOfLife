@@ -108,7 +108,7 @@ public class GameController implements Initializable {
         spinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 50));
         spinner.increment(14);
         canvasController.setActiveBoard(activeBoard);
-        activeBoard.hashLife();
+        HashLife.loadeBoard(activeBoard);
         canvasController.setRbMoveGrid(rbMoveGrid);
         canvasController.setRbRemoveCell(rbRemoveCell);
     }
@@ -132,7 +132,8 @@ public class GameController implements Initializable {
     private void initAnimation() {
         Duration duration = Duration.millis(1000);
         KeyFrame keyframe = new KeyFrame(duration, (ActionEvent e) -> {
-            activeBoard.nextGen();
+            //activeBoard.nextGen();
+            HashLife.preEvolve();
             draw();
         });
         timeline.setCycleCount(Animation.INDEFINITE);
@@ -189,7 +190,7 @@ public class GameController implements Initializable {
                  java.awt.Color bg =new java.awt.Color((float)backgroundCP.getValue().getRed(),(float)backgroundCP.getValue().getGreen(),(float)backgroundCP.getValue().getBlue());
                  java.awt.Color cellColor =new java.awt.Color((float)cellCP.getValue().getRed(),(float)cellCP.getValue().getGreen(),(float)cellCP.getValue().getBlue());
                  
-                GifMaker.makeGif((byte[][]) activeBoard.getGameBoard(), gw, 100, 100,bg, cellColor, (int) spinner.getValue());
+                GifMaker.makeGif( activeBoard.getGameBoard(), gw, 100, 100,bg, cellColor, (int) spinner.getValue());
 
             }
         } catch (IOException ex) {
@@ -222,7 +223,7 @@ public class GameController implements Initializable {
     /**
      * //TODO bug?
      *
-     * @Bug You can cheat this method if you zoom out max with max spacing, then
+     * Bug You can cheat this method if you zoom out max with max spacing, then
      * remove the spacing, but this is the only issue.
      */
     @FXML
@@ -262,11 +263,10 @@ public class GameController implements Initializable {
     @FXML
     public void handleClearBtn() {
         
-        HashLife.preEvolve();
-        /*activeBoard.clearBoard();
+        activeBoard.clearBoard();
         timeline.pause();
         startPauseBtn.setText("Start game");
-        */draw();
+        draw();
     }
 
     @FXML

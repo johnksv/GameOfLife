@@ -22,8 +22,8 @@ public class ArrayBoard extends Board {
      */
     public ArrayBoard() {
         super();
-        WIDTH = 50;
-        HEIGHT = 50;
+        WIDTH = 500;
+        HEIGHT = 500;
         gameBoard = new byte[WIDTH][HEIGHT];
     }
 
@@ -256,8 +256,4 @@ public class ArrayBoard extends Board {
         return result.toString();
     }
 
-    @Override
-    public void hashLife() {
-        HashLife.loadeBoard(this);
-    }
 }

@@ -50,6 +50,9 @@ public class GifMaker {
      *
      */
     private static void makeFrame(Board frame, int counter) throws IOException {
+        int xoffset = 0;
+        int yoffset = 0;
+
         if (counter <= 0) {
             gifWriter.close();
             return;
@@ -60,13 +63,18 @@ public class GifMaker {
         //sizeCell = (height > width) ? height / boarders.length : width / boarders[0].length;
         if (height / boarders.length < width / boarders[0].length) {
             sizeCell = height / boarders.length;
+            xoffset = width/2 - (boarders[0].length * sizeCell)/2;
+            if(xoffset < 0){
+                xoffset = 0;
+            }
         } else {
-
             sizeCell = width / boarders[0].length;
+            yoffset = height/2 - (boarders.length * sizeCell)/2;
+            if(yoffset < 0){
+                yoffset = 0;
+            }
         }
-        System.out.println(sizeCell);
         for (int i = 0; i < boarders.length; i++) {
-            System.out.println("next line");
             for (int j = 0; j < boarders[i].length; j++) {
 
                 if (i * sizeCell + sizeCell > height && j * sizeCell + sizeCell > width) {
@@ -77,10 +85,9 @@ public class GifMaker {
                         if (sizeCell < 3) {
                             gifWriter.setPixelValue(j, i, cellColor);
                         } else {
-                            System.out.println("good");
                             System.out.println(j * sizeCell + sizeCell - 2);
-                            gifWriter.fillRect(j * sizeCell + 1, j * sizeCell + sizeCell - 1,
-                                    i * sizeCell + 1, i * sizeCell + sizeCell - 1, cellColor);
+                            gifWriter.fillRect(j * sizeCell + 1 + xoffset, xoffset + j * sizeCell + sizeCell - 1,
+                                    yoffset + i * sizeCell + 1, yoffset + i * sizeCell + sizeCell - 1, cellColor);
 
                         }
                     }

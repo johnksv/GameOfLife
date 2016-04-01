@@ -222,8 +222,7 @@ public abstract class Board {
      *
      * @return
      */
-    public abstract Object getGameBoard();
+    public abstract<T extends Object>T getGameBoard();
     
-    public abstract void hashLife();
 
 }
