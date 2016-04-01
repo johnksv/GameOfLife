@@ -6,11 +6,14 @@ import gol.model.FileIO.PatternFormatException;
 import gol.model.FileIO.ReadFile;
 import gol.model.Logic.ConwaysRule;
 import gol.model.Logic.CustomRule;
+import gol.model.Logic.unsupportedRuleException;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.animation.Animation;
 import javafx.animation.Animation.Status;
 import javafx.animation.KeyFrame;
@@ -163,20 +166,34 @@ public class GameController implements Initializable {
 
     @FXML
     public void handleRuleBtn() {
+        byte[] toSpawn;
+        byte[] toLive;
+        System.out.println(tfCellsToLive.getText());
+        if (tfCellsToLive.getText().replaceAll("\\D", "").equals("")) {
+            tfCellsToLive.setText("");
+            toLive = new byte[]{-1};
+        } else {
+            String[] toLiveString = tfCellsToLive.getText().replaceAll("\\D", "").split("");
 
-        String[] toLiveString = tfCellsToLive.getText().replaceAll("\\D", "").split("");
-        String[] toSpawnString = tfCellsToSpawn.getText().replaceAll("\\D", "").split("");
-
-        byte[] toLive = new byte[toLiveString.length];
-        for (int i = 0; i < toLive.length; i++) {
-            if (Character.isDigit(toLiveString[i].charAt(0)) && toLiveString[i].length() == 1) {
-                toLive[i] = (byte) Integer.parseInt(toLiveString[i]);
+            toLive = new byte[toLiveString.length];
+            for (int i = 0; i < toLive.length; i++) {
+                if (Character.isDigit(toLiveString[i].charAt(0)) && toLiveString[i].length() == 1) {
+                    toLive[i] = (byte) Integer.parseInt(toLiveString[i]);
+                }
             }
+
         }
-        byte[] toSpawn = new byte[toSpawnString.length];
-        for (int i = 0; i < toSpawn.length; i++) {
-            if (Character.isDigit(toSpawnString[i].charAt(0)) && toSpawnString[i].length() == 1) {
-                toSpawn[i] = (byte) Integer.parseInt(toSpawnString[i]);
+        if (tfCellsToSpawn.getText().replaceAll("\\D", "").equals("")) {
+            tfCellsToSpawn.setText("");
+            toSpawn = new byte[]{-1};
+        } else {
+            String[] toSpawnString = tfCellsToSpawn.getText().replaceAll("\\D", "").split("");
+
+            toSpawn = new byte[toSpawnString.length];
+            for (int i = 0; i < toSpawn.length; i++) {
+                if (Character.isDigit(toSpawnString[i].charAt(0)) && toSpawnString[i].length() == 1) {
+                    toSpawn[i] = (byte) Integer.parseInt(toSpawnString[i]);
+                }
             }
         }
 
@@ -264,7 +281,14 @@ public class GameController implements Initializable {
     }
 
     public void constructRule(byte[] cellsToLive, byte[] cellsToSpawn) {
-        activeBoard.setGameRule(new CustomRule(cellsToLive, cellsToSpawn));
+        try {
+            activeBoard.setGameRule(new CustomRule(cellsToLive, cellsToSpawn));
+        } catch (unsupportedRuleException ex) {
+            Alert alert = new Alert(Alert.AlertType.ERROR, ex.getMessage());
+            alert.setTitle("Error");
+            alert.setHeaderText("Your given rule is not supported. \n Try again.");
+            alert.showAndWait();
+        }
     }
 
     public void setActiveBoard(Board activeBoard) {
