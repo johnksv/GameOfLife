@@ -24,9 +24,6 @@ public class CustomRuleTest {
     byte[] cellToCheckAlive = new byte[length];
     byte[] cellToCheckDead = new byte[length];
     
-    @Rule
-    public ExpectedException exp = ExpectedException.none();
-    
     public CustomRuleTest() {
     }
 
@@ -102,22 +99,12 @@ public class CustomRuleTest {
     }
     
     
-    @Test
-    public void testSetLifeSpecialRuleException() {
-        
-
-        exp.expect(unsupportedRuleException.class);
-        
-        
+    @Test (expected = unsupportedRuleException.class)
+    public void testSetLifeSpecialRuleException() throws unsupportedRuleException {
         toLive = new byte[]{0};
         toSpawn = new byte[]{-1};
+        rule = new CustomRule(toLive, toSpawn);
 
-        
-        try {      
-            rule = new CustomRule(toLive, toSpawn);
-        } catch (unsupportedRuleException ex) {
-            exp.expect(unsupportedRuleException.class); 
-        }
     }
 
 }
