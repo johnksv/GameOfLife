@@ -87,8 +87,6 @@ public class GameController implements Initializable {
     private Color cellColor = Color.BLACK;
     private Color backgroundColor = Color.web("#F4F4F4");
     private byte[][] boardFromFile;
-    private int mousePositionX;
-    private int mousePositionY;
     //Offset x, offset y, old x, old y
     private final double[] moveGridValues = {0, 0, -Double.MAX_VALUE, -Double.MAX_VALUE};
 
@@ -132,7 +130,6 @@ public class GameController implements Initializable {
         KeyFrame keyframe = new KeyFrame(duration, (ActionEvent e) -> {
             activeBoard.nextGen();
             draw();
-            drawGhostTiles();
         });
         timeline.setCycleCount(Animation.INDEFINITE);
         timeline.getKeyFrames().add(keyframe);
@@ -262,7 +259,7 @@ public class GameController implements Initializable {
                 boardFromFile = ReadFile.readFileFromDisk(selected.toPath());
 
                 //TODO no ghosttiles yet
-                //activeBoard.insertArray(boardFromFile, 0, 0);
+                activeBoard.insertArray(boardFromFile, 1, 1);
                 draw();
             }
 
@@ -307,15 +304,7 @@ public class GameController implements Initializable {
         //Registers clicks on scene
         canvas.addEventHandler(MouseEvent.MOUSE_PRESSED,
                 (MouseEvent e) -> {
-                    if (boardFromFile != null) {
-                        activeBoard.insertArray(boardFromFile, (int) (mousePositionY / (activeBoard.getGridSpacing() + activeBoard.getCellSize())),
-                                (int) (mousePositionX / (activeBoard.getGridSpacing() + activeBoard.getCellSize())));
-                        boardFromFile = null;
-
-                        draw();
-                    } else {
-                        handleMouseClick(e);
-                    }
+                    handleMouseClick(e);
                 });
         canvas.addEventHandler(MouseEvent.MOUSE_DRAGGED,
                 (MouseEvent e) -> {
@@ -332,19 +321,6 @@ public class GameController implements Initializable {
                         moveGridValues[3] = -Double.MAX_VALUE;
                     }
                 });
-
-        canvas.addEventHandler(MouseEvent.MOUSE_MOVED,
-                (MouseEvent e) -> {
-                    if (boardFromFile != null) {
-
-                        mousePositionX = (int) e.getX();
-                        mousePositionY = (int) e.getY();
-                        draw();
-                        drawGhostTiles();
-                    }
-
-                });
-
     }
 
     /**
@@ -396,34 +372,6 @@ public class GameController implements Initializable {
 
     }
 
-    protected void drawGhostTiles() {
-        if (boardFromFile != null) {
-
-            gc.setFill(cellColor);
-            for (int j = 0; j < boardFromFile.length; j++) {
-                for (int i = 0; i < boardFromFile[j].length; i++) {
-                    if (boardFromFile[j][i] == 64) {
-
-                        gc.setGlobalAlpha(1);
-                        gc.setFill(backgroundColor);
-                        gc.fillRect(mousePositionX + i * activeBoard.getCellSize() + i * activeBoard.getGridSpacing() + moveGridValues[0],
-                                mousePositionY + j * activeBoard.getCellSize() + j * activeBoard.getGridSpacing() + moveGridValues[1],
-                                activeBoard.getCellSize(),
-                                activeBoard.getCellSize());
-                        gc.setFill(cellColor);
-
-                        gc.setGlobalAlpha(0.5);
-                        gc.fillRect(mousePositionX + i * activeBoard.getCellSize() + i * activeBoard.getGridSpacing() + moveGridValues[0],
-                                mousePositionY + j * activeBoard.getCellSize() + j * activeBoard.getGridSpacing() + moveGridValues[1],
-                                activeBoard.getCellSize(),
-                                activeBoard.getCellSize());
-                    }
-                }
-            }
-        }
-
-    }
-
     //Over complicated for the sake of smoothness, this code may have huge potensial for improvement. 
     private void moveGrid(MouseEvent e) {
         if (moveGridValues[2] == -Double.MAX_VALUE && moveGridValues[3] == -Double.MAX_VALUE) {
@@ -450,7 +398,6 @@ public class GameController implements Initializable {
             moveGridValues[3] = e.getY();
         }
         draw();
-        drawGhostTiles();
     }
 
     /**
@@ -469,7 +416,6 @@ public class GameController implements Initializable {
 
         }
         draw();
-        drawGhostTiles();
     }
 
     //Does not calc gridspacing yet.
