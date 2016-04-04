@@ -13,15 +13,12 @@ import java.net.URL;
 import java.util.Optional;
 
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.animation.Animation;
 import javafx.animation.Animation.Status;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
@@ -301,6 +298,13 @@ public class GameController implements Initializable {
             alert.setHeaderText("Pattern Error");
             alert.showAndWait();
 
+        }
+    }
+    
+    @FXML
+    private void rotateBoardFromFile(){
+        if(boardFromFile != null){
+           boardFromFile = usefullMethods.rotateArray90Deg(boardFromFile);
         }
     }
 
