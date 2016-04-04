@@ -31,10 +31,12 @@ import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Slider;
+import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
@@ -47,7 +49,10 @@ public class GameController implements Initializable {
 
     @FXML
     private Canvas canvas;
-
+    @FXML
+    private BorderPane borderpane;
+    @FXML
+    private TabPane tabpane;
     @FXML
     private Slider cellSizeSlider;
     @FXML
@@ -94,9 +99,11 @@ public class GameController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        System.out.println("Init");
         gc = canvas.getGraphicsContext2D();
 
+        canvas.widthProperty().bind(borderpane.widthProperty().subtract(tabpane.widthProperty()));
+        canvas.heightProperty().bind(borderpane.heightProperty());
+        
         activeBoard = new ArrayBoard();
         cellCP.setValue(Color.BLACK);
         backgroundCP.setValue(Color.web("#F4F4F4"));
