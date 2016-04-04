@@ -90,13 +90,13 @@ public class GameController implements Initializable {
     private int mousePositionX;
     private int mousePositionY;
     //Offset x, offset y, old x, old y
-    private final double[] moveGridValues = {0, 0, -100, -100};
+    private final double[] moveGridValues = {0, 0, -Double.MAX_VALUE, -Double.MAX_VALUE};
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         System.out.println("Init");
         gc = canvas.getGraphicsContext2D();
-        
+
         activeBoard = new ArrayBoard();
         cellCP.setValue(Color.BLACK);
         backgroundCP.setValue(Color.web("#F4F4F4"));
@@ -328,8 +328,8 @@ public class GameController implements Initializable {
         canvas.addEventHandler(MouseEvent.MOUSE_RELEASED,
                 (MouseEvent e) -> {
                     if (rbMoveGrid.isSelected()) {
-                        moveGridValues[2] = -100;
-                        moveGridValues[3] = -100;
+                        moveGridValues[2] = -Double.MAX_VALUE;
+                        moveGridValues[3] = -Double.MAX_VALUE;
                     }
                 });
 
@@ -426,7 +426,7 @@ public class GameController implements Initializable {
 
     //Over complicated for the sake of smoothness, this code may have huge potensial for improvement. 
     private void moveGrid(MouseEvent e) {
-        if (moveGridValues[2] == -100 && moveGridValues[3] == -100) {
+        if (moveGridValues[2] == -Double.MAX_VALUE && moveGridValues[3] == -Double.MAX_VALUE) {
             moveGridValues[2] = e.getX();
             moveGridValues[3] = e.getY();
         } else {
@@ -451,7 +451,6 @@ public class GameController implements Initializable {
         }
         draw();
         drawGhostTiles();
-
     }
 
     /**
