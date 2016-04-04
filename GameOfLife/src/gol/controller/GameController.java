@@ -21,6 +21,7 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
@@ -39,6 +40,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
@@ -365,9 +367,17 @@ public class GameController implements Initializable {
                         //TODO SUPPORT FOR OFFSET++
                         drawGhostTiles();
                     }
-
                 });
-
+        
+        //TODO Scroll in at mouse position
+        canvas.setOnScroll((ScrollEvent event) -> {
+            
+            if(event.getDeltaY()>0) {
+                cellSizeSlider.increment();
+            }else{
+                cellSizeSlider.decrement();
+            }
+        });
     }
 
     /**
