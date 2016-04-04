@@ -22,6 +22,8 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -32,6 +34,7 @@ import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
@@ -43,7 +46,7 @@ import javafx.util.Duration;
 public class GameController implements Initializable {
 
     @FXML
-    private CanvasController canvasController;
+    private Canvas canvas;
 
     @FXML
     private Slider cellSizeSlider;
@@ -75,20 +78,30 @@ public class GameController implements Initializable {
     private Button btnUseRule;
     @FXML
     private CheckBox cbShowGrid;
+    //TODO Show grid is not working yet. Implement it
 
     private Board activeBoard;
     private final Timeline timeline = new Timeline();
-    
+    private GraphicsContext gc;
+
+    private Color cellColor = Color.BLACK;
+    private Color backgroundColor = Color.web("#F4F4F4");
+    private byte[][] boardFromFile;
+    private int mousePositionX;
+    private int mousePositionY;
+    //Offset x, offset y, old x, old y
+    private final double[] moveGridValues = {0, 0, -100, -100};
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
+        System.out.println("Init");
+        gc = canvas.getGraphicsContext2D();
+        
         activeBoard = new ArrayBoard();
         cellCP.setValue(Color.BLACK);
         backgroundCP.setValue(Color.web("#F4F4F4"));
-
-        initCanvasController();
         //TODO bug if used like this with new zoom!
+        mouseInit();
         handleZoom();
         handleGridSpacingSlider();
         handleColor();
@@ -96,12 +109,6 @@ public class GameController implements Initializable {
         initAnimation();
         initGameRulesListner();
 
-    }
-
-    private void initCanvasController() {
-        canvasController.setActiveBoard(activeBoard);
-        canvasController.setRbMoveGrid(rbMoveGrid);
-        canvasController.setRbRemoveCell(rbRemoveCell);
     }
 
     private void initGameRulesListner() {
@@ -124,18 +131,12 @@ public class GameController implements Initializable {
         Duration duration = Duration.millis(1000);
         KeyFrame keyframe = new KeyFrame(duration, (ActionEvent e) -> {
             activeBoard.nextGen();
-            canvasController.draw();
-            canvasController.drawGhostTiles();
+            draw();
+            drawGhostTiles();
         });
         timeline.setCycleCount(Animation.INDEFINITE);
         timeline.getKeyFrames().add(keyframe);
 
-    }
-
-    private void draw() {
-        canvasController.draw();
-        canvasController.drawGhostTiles();
-        
     }
 
     @FXML
@@ -209,12 +210,12 @@ public class GameController implements Initializable {
     public void handleZoom() {
         double x = cellSizeSlider.getValue();
         double newValue = 0.2 * Math.exp(0.05 * x);
-        if ((newValue + activeBoard.getGridSpacing()) * activeBoard.getArrayLength() > canvasController.getHigth()
-                && (newValue + activeBoard.getGridSpacing()) * activeBoard.getArrayLength(0) > canvasController.getWidth()) {
+        if ((newValue + activeBoard.getGridSpacing()) * activeBoard.getArrayLength() > canvas.getHeight()
+                && (newValue + activeBoard.getGridSpacing()) * activeBoard.getArrayLength(0) > canvas.getWidth()) {
 
             handleGridSpacingSlider();
 
-            canvasController.calcNewOffset(activeBoard.getCellSize(), newValue);
+            calcNewOffset(activeBoard.getCellSize(), newValue);
             activeBoard.setCellSize(newValue);
         } else {
             cellSizeSlider.setValue(20 * Math.log(5 * activeBoard.getCellSize()));
@@ -234,8 +235,8 @@ public class GameController implements Initializable {
     @FXML
     public void handleColor() {
         //TODO
-        canvasController.setCellColor(cellCP.getValue());
-        canvasController.setBackgroundColor(backgroundCP.getValue());
+        cellColor = cellCP.getValue();
+        backgroundColor = backgroundCP.getValue();
         draw();
     }
 
@@ -258,8 +259,8 @@ public class GameController implements Initializable {
 
             File selected = fileChooser.showOpenDialog(null);
             if (selected != null) {
-                canvasController.setGhost(ReadFile.readFileFromDisk(selected.toPath()));
-                
+                boardFromFile = ReadFile.readFileFromDisk(selected.toPath());
+
                 //TODO no ghosttiles yet
                 //activeBoard.insertArray(boardFromFile, 0, 0);
                 draw();
@@ -296,6 +297,198 @@ public class GameController implements Initializable {
 
     public Board getActiveBoard() {
         return activeBoard;
+    }
+
+    /**
+     * Initiates all relevant MouseEvents.
+     */
+    private void mouseInit() {
+
+        //Registers clicks on scene
+        canvas.addEventHandler(MouseEvent.MOUSE_PRESSED,
+                (MouseEvent e) -> {
+                    if (boardFromFile != null) {
+                        activeBoard.insertArray(boardFromFile, (int) (mousePositionY / (activeBoard.getGridSpacing() + activeBoard.getCellSize())),
+                                (int) (mousePositionX / (activeBoard.getGridSpacing() + activeBoard.getCellSize())));
+                        boardFromFile = null;
+
+                        draw();
+                    } else {
+                        handleMouseClick(e);
+                    }
+                });
+        canvas.addEventHandler(MouseEvent.MOUSE_DRAGGED,
+                (MouseEvent e) -> {
+                    if (rbMoveGrid.isSelected()) {
+                        moveGrid(e);
+                    } else {
+                        handleMouseClick(e);
+                    }
+                });
+        canvas.addEventHandler(MouseEvent.MOUSE_RELEASED,
+                (MouseEvent e) -> {
+                    if (rbMoveGrid.isSelected()) {
+                        moveGridValues[2] = -100;
+                        moveGridValues[3] = -100;
+                    }
+                });
+
+        canvas.addEventHandler(MouseEvent.MOUSE_MOVED,
+                (MouseEvent e) -> {
+                    if (boardFromFile != null) {
+
+                        mousePositionX = (int) e.getX();
+                        mousePositionY = (int) e.getY();
+                        draw();
+                        drawGhostTiles();
+                    }
+
+                });
+
+    }
+
+    /**
+     * //TODO Fix Comments QUICK NOTE: Draws the grid. First decide where to
+     * draw based on size and gridspacing, then calculates to draw in the middle
+     * of gridspcaing (see - halfGridSpace) after this is done it adds the
+     * offset
+     */
+    public void drawGrid() {
+        gc.setFill(Color.BLUE);
+        //TODO Så den ikke tegner det som er utenfor det vi ser
+        double sizeAndSpacing = activeBoard.getCellSize() + activeBoard.getGridSpacing();
+        double halfGridSpace = activeBoard.getGridSpacing() / 2;
+        for (int i = 0; i <= activeBoard.getArrayLength(); i++) {
+            gc.strokeLine((i * sizeAndSpacing - halfGridSpace) + moveGridValues[0], 0,
+                    (i * sizeAndSpacing - halfGridSpace) + moveGridValues[0], canvas.getHeight());
+
+            for (int j = 0; j <= activeBoard.getArrayLength(i); j++) {
+
+                gc.strokeLine(0, (j * sizeAndSpacing - halfGridSpace) + moveGridValues[1],
+                        canvas.getWidth(), (j * sizeAndSpacing - halfGridSpace) + moveGridValues[1]);
+
+            }
+        }
+
+    }
+
+    public void draw() {
+        gc.setGlobalAlpha(1);
+        gc.setFill(backgroundColor);
+        gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+        gc.setFill(cellColor);
+        for (int i = 1; i < activeBoard.getArrayLength(); i++) {
+            if (canvas.getHeight() < i * activeBoard.getCellSize() + i * activeBoard.getGridSpacing()) {
+                //TODO Så den ikke tegner det som er utenfor
+            }
+            for (int j = 1; j < activeBoard.getArrayLength(i); j++) {
+                if (activeBoard.getCellState(i, j)) {
+                    if (canvas.getWidth() < j * activeBoard.getCellSize() + j * activeBoard.getGridSpacing()) {
+                        //TODO Så den ikke tegner det som er utenfor
+                    }
+                    gc.fillRect(j * activeBoard.getCellSize() + j * activeBoard.getGridSpacing() + moveGridValues[0],
+                            i * activeBoard.getCellSize() + i * activeBoard.getGridSpacing() + moveGridValues[1],
+                            activeBoard.getCellSize(),
+                            activeBoard.getCellSize());
+                }
+            }
+        }
+
+    }
+
+    protected void drawGhostTiles() {
+        if (boardFromFile != null) {
+
+            gc.setFill(cellColor);
+            for (int j = 0; j < boardFromFile.length; j++) {
+                for (int i = 0; i < boardFromFile[j].length; i++) {
+                    if (boardFromFile[j][i] == 64) {
+
+                        gc.setGlobalAlpha(1);
+                        gc.setFill(backgroundColor);
+                        gc.fillRect(mousePositionX + i * activeBoard.getCellSize() + i * activeBoard.getGridSpacing() + moveGridValues[0],
+                                mousePositionY + j * activeBoard.getCellSize() + j * activeBoard.getGridSpacing() + moveGridValues[1],
+                                activeBoard.getCellSize(),
+                                activeBoard.getCellSize());
+                        gc.setFill(cellColor);
+
+                        gc.setGlobalAlpha(0.5);
+                        gc.fillRect(mousePositionX + i * activeBoard.getCellSize() + i * activeBoard.getGridSpacing() + moveGridValues[0],
+                                mousePositionY + j * activeBoard.getCellSize() + j * activeBoard.getGridSpacing() + moveGridValues[1],
+                                activeBoard.getCellSize(),
+                                activeBoard.getCellSize());
+                    }
+                }
+            }
+        }
+
+    }
+
+    //Over complicated for the sake of smoothness, this code may have huge potensial for improvement. 
+    private void moveGrid(MouseEvent e) {
+        if (moveGridValues[2] == -100 && moveGridValues[3] == -100) {
+            moveGridValues[2] = e.getX();
+            moveGridValues[3] = e.getY();
+        } else {
+            if (moveGridValues[0] + e.getX() - moveGridValues[2] < 0) {
+                if (moveGridValues[1] + e.getY() - moveGridValues[3] < 0) {
+
+                    moveGridValues[0] += e.getX() - moveGridValues[2]; //Offset x = x position - old y
+                    moveGridValues[1] += e.getY() - moveGridValues[3]; //Offset y = y position - old y
+                } else {
+                    moveGridValues[1] = 0;
+                    moveGridValues[0] += e.getX() - moveGridValues[2]; //Offset x = x position - old y
+                }
+            } else {
+                moveGridValues[0] = 0;
+                if (moveGridValues[1] + e.getY() - moveGridValues[3] < 0) {
+                    moveGridValues[1] += e.getY() - moveGridValues[3]; //Offset y = y position - old y
+                }
+
+            }
+            moveGridValues[2] = e.getX();
+            moveGridValues[3] = e.getY();
+        }
+        draw();
+        drawGhostTiles();
+
+    }
+
+    /**
+     *
+     * @param e
+     */
+    private void handleMouseClick(MouseEvent e) {
+        double x = e.getX();
+        double y = e.getY();
+
+        if (rbRemoveCell.isSelected()) {
+            activeBoard.setCellState(y, x, false, moveGridValues[0], moveGridValues[1]);
+        } else if (rbMoveGrid.isSelected()) {
+        } else {
+            activeBoard.setCellState(y, x, true, moveGridValues[0], moveGridValues[1]);
+
+        }
+        draw();
+        drawGhostTiles();
+    }
+
+    //Does not calc gridspacing yet.
+    public void calcNewOffset(double cellSize, double newCellSize) {
+        double gridSpace = activeBoard.getGridSpacing();
+        if (cellSize != 0) {
+
+            double oldx = (canvas.getWidth() / 2 - moveGridValues[0]) / (cellSize);
+            double oldy = (canvas.getHeight() / 2 - moveGridValues[1]) / (cellSize);
+
+            moveGridValues[0] = -(oldx * (newCellSize) - canvas.getWidth() / 2);
+            moveGridValues[1] = -(oldy * (newCellSize) - canvas.getHeight() / 2);
+
+            moveGridValues[0] = (moveGridValues[0] > 0) ? 0 : moveGridValues[0];
+            moveGridValues[1] = (moveGridValues[1] > 0) ? 0 : moveGridValues[1];
+
+        }
+
     }
 
 }
