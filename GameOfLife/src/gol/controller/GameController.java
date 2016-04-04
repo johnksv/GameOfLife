@@ -340,6 +340,7 @@ public class GameController implements Initializable {
                         mousePositionX = (int) e.getX();
                         mousePositionY = (int) e.getY();
                         draw();
+                        //TODO SUPPORT FOR OFFSET++
                         drawGhostTiles();
                     }
 
@@ -372,7 +373,7 @@ public class GameController implements Initializable {
 
     }
 
-    public void draw() {
+    public void draw() { 
         gc.setGlobalAlpha(1);
         gc.setFill(backgroundColor);
         gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
