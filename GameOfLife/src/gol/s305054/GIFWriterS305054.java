@@ -2,6 +2,7 @@ package gol.s305054;
 
 import gol.model.Board.ArrayBoard;
 import gol.model.Board.Board;
+import lieng.GIFWriter;
 
 /**
  * This class is used to create a .gif file showing several generations of a GoL board.
@@ -14,6 +15,6 @@ public class GIFWriterS305054 {
     int height = 100; //Height of .gif - Hardcoded value will be changed
     int time = 1000; // 1000 ms = 1s
     
-    //lieng.GIFWriter gifWriter;
+    GIFWriter gifWriter;
     
 }
