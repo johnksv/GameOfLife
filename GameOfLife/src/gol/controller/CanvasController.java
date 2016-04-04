@@ -3,7 +3,9 @@ package gol.controller;
 import gol.model.Board.ArrayBoard;
 import gol.model.Board.Board;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.ResourceBundle;
+import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
@@ -26,11 +28,16 @@ public class CanvasController implements Initializable {
     private Board activeBoard = new ArrayBoard(10, 10);
     private Color cellColor = Color.BLACK;
     private Color backgroundColor = Color.web("#F4F4F4");
-    private final double[] moveGridValues = {0, 0, -1, -1}; //Offset x, offset y, old x, old y
+    private final double[] moveGridValues = {0, 0, -100, -100}; //Offset x, offset y, old x, old y
     private RadioButton rbRemoveCell = new RadioButton();
     private RadioButton rbMoveGrid = new RadioButton();
     private boolean isinitialized = false;
 
+    private byte[][] boardFromFile;
+    private int mousePositionX;
+    private int mousePositionY;
+    private Timeline timeLine;
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         gc = canvas.getGraphicsContext2D();
@@ -45,7 +52,15 @@ public class CanvasController implements Initializable {
         //Registers clicks on scene
         canvas.addEventHandler(MouseEvent.MOUSE_PRESSED,
                 (MouseEvent e) -> {
-                    handleMouseClick(e);
+                    if (boardFromFile != null) {
+                        activeBoard.insertArray(boardFromFile, (int) (mousePositionY / (activeBoard.getGridSpacing() + activeBoard.getCellSize())),
+                                (int) (mousePositionX / (activeBoard.getGridSpacing() + activeBoard.getCellSize())));
+                        boardFromFile = null;
+                        
+                        draw();
+                    } else {
+                        handleMouseClick(e);
+                    }
                 });
         canvas.addEventHandler(MouseEvent.MOUSE_DRAGGED,
                 (MouseEvent e) -> {
@@ -58,19 +73,30 @@ public class CanvasController implements Initializable {
         canvas.addEventHandler(MouseEvent.MOUSE_RELEASED,
                 (MouseEvent e) -> {
                     if (rbMoveGrid.isSelected()) {
-                        moveGridValues[2] = -1;
-                        moveGridValues[3] = -1;
+                        moveGridValues[2] = -100;
+                        moveGridValues[3] = -100;
                     }
+                });
+
+        canvas.addEventHandler(MouseEvent.MOUSE_MOVED,
+                (MouseEvent e) -> {
+                    if (boardFromFile != null) {
+
+                        mousePositionX = (int) e.getX();
+                        mousePositionY = (int) e.getY();
+                        draw();
+                        drawGhostTiles();
+                    }
+
                 });
 
     }
 
     /**
-     * //TODO Fix Comments
-     * QUICK NOTE:
-     * Draws the grid. First decide where to draw based on size and gridspacing, 
-     * then calculates to draw in the middle of gridspcaing (see - halfGridSpace)
-     * after this is done it adds the offset
+     * //TODO Fix Comments QUICK NOTE: Draws the grid. First decide where to
+     * draw based on size and gridspacing, then calculates to draw in the middle
+     * of gridspcaing (see - halfGridSpace) after this is done it adds the
+     * offset
      */
     public void drawGrid() {
         gc.setFill(Color.BLUE);
@@ -92,21 +118,48 @@ public class CanvasController implements Initializable {
     }
 
     public void draw() {
-        if (isinitialized) {
-            gc.setFill(backgroundColor);
-            gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-            gc.setFill(cellColor);
-            for (int i = 1; i < activeBoard.getArrayLength(); i++) {
-                if (canvas.getHeight() < i * activeBoard.getCellSize() + i * activeBoard.getGridSpacing()) {
-                    //TODO Så den ikke tegner det som er utenfor
+        gc.setGlobalAlpha(1);
+        gc.setFill(backgroundColor);
+        gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+        gc.setFill(cellColor);
+        for (int i = 1; i < activeBoard.getArrayLength(); i++) {
+            if (canvas.getHeight() < i * activeBoard.getCellSize() + i * activeBoard.getGridSpacing()) {
+                //TODO Så den ikke tegner det som er utenfor
+            }
+            for (int j = 1; j < activeBoard.getArrayLength(i); j++) {
+                if (activeBoard.getCellState(i, j)) {
+                    if (canvas.getWidth() < j * activeBoard.getCellSize() + j * activeBoard.getGridSpacing()) {
+                        //TODO Så den ikke tegner det som er utenfor
+                    }
+                    gc.fillRect(j * activeBoard.getCellSize() + j * activeBoard.getGridSpacing() + moveGridValues[0],
+                            i * activeBoard.getCellSize() + i * activeBoard.getGridSpacing() + moveGridValues[1],
+                            activeBoard.getCellSize(),
+                            activeBoard.getCellSize());
                 }
-                for (int j = 1; j < activeBoard.getArrayLength(i); j++) {
-                    if (activeBoard.getCellState(i, j)) {
-                        if (canvas.getWidth() < j * activeBoard.getCellSize() + j * activeBoard.getGridSpacing()) {
-                            //TODO Så den ikke tegner det som er utenfor
-                        }
-                        gc.fillRect(j * activeBoard.getCellSize() + j * activeBoard.getGridSpacing() + moveGridValues[0],
-                                i * activeBoard.getCellSize() + i * activeBoard.getGridSpacing() + moveGridValues[1],
+            }
+        }
+
+    }
+
+    protected void drawGhostTiles() {
+        if (boardFromFile != null) {
+
+            gc.setFill(cellColor);
+            for (int j = 0; j < boardFromFile.length; j++) {
+                for (int i = 0; i < boardFromFile[j].length; i++) {
+                    if (boardFromFile[j][i] == 64) {
+
+                        gc.setGlobalAlpha(1);
+                        gc.setFill(backgroundColor);
+                        gc.fillRect(mousePositionX + i * activeBoard.getCellSize() + i * activeBoard.getGridSpacing() + moveGridValues[0],
+                                mousePositionY + j * activeBoard.getCellSize() + j * activeBoard.getGridSpacing() + moveGridValues[1],
+                                activeBoard.getCellSize(),
+                                activeBoard.getCellSize());
+                        gc.setFill(cellColor);
+
+                        gc.setGlobalAlpha(0.5);
+                        gc.fillRect(mousePositionX + i * activeBoard.getCellSize() + i * activeBoard.getGridSpacing() + moveGridValues[0],
+                                mousePositionY + j * activeBoard.getCellSize() + j * activeBoard.getGridSpacing() + moveGridValues[1],
                                 activeBoard.getCellSize(),
                                 activeBoard.getCellSize());
                     }
@@ -118,7 +171,7 @@ public class CanvasController implements Initializable {
 
     //Over complicated for the sake of smoothness, this code may have huge potensial for improvement. 
     private void moveGrid(MouseEvent e) {
-        if (moveGridValues[2] < 0) {
+        if (moveGridValues[2] == -100 && moveGridValues[3] == -100) {
             moveGridValues[2] = e.getX();
             moveGridValues[3] = e.getY();
         } else {
@@ -141,8 +194,8 @@ public class CanvasController implements Initializable {
             moveGridValues[2] = e.getX();
             moveGridValues[3] = e.getY();
         }
-
         draw();
+        drawGhostTiles();
 
     }
 
@@ -162,6 +215,7 @@ public class CanvasController implements Initializable {
 
         }
         draw();
+        drawGhostTiles();
     }
 
     //Does not calc gridspacing yet.
@@ -217,10 +271,16 @@ public class CanvasController implements Initializable {
     public void setRbMoveGrid(RadioButton rbMoveGrid) {
         this.rbMoveGrid = rbMoveGrid;
     }
-    public double getHigth(){
+
+    public void setGhost(byte[][] ghostBoard) {
+        boardFromFile = ghostBoard;
+    }
+
+    public double getHigth() {
         return canvas.getHeight();
     }
-    public double getWidth(){
+
+    public double getWidth() {
         return canvas.getHeight();
     }
 

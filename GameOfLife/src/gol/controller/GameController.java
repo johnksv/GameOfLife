@@ -78,7 +78,7 @@ public class GameController implements Initializable {
 
     private Board activeBoard;
     private final Timeline timeline = new Timeline();
-    private byte[][] boardFromFile;
+    
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -95,7 +95,6 @@ public class GameController implements Initializable {
         handleAnimationSpeedSlider();
         initAnimation();
         initGameRulesListner();
-        draw();
 
     }
 
@@ -125,7 +124,8 @@ public class GameController implements Initializable {
         Duration duration = Duration.millis(1000);
         KeyFrame keyframe = new KeyFrame(duration, (ActionEvent e) -> {
             activeBoard.nextGen();
-            draw();
+            canvasController.draw();
+            canvasController.drawGhostTiles();
         });
         timeline.setCycleCount(Animation.INDEFINITE);
         timeline.getKeyFrames().add(keyframe);
@@ -134,9 +134,8 @@ public class GameController implements Initializable {
 
     private void draw() {
         canvasController.draw();
-        if (cbShowGrid.isSelected()) {
-            canvasController.drawGrid();
-        }
+        canvasController.drawGhostTiles();
+        
     }
 
     @FXML
@@ -259,10 +258,10 @@ public class GameController implements Initializable {
 
             File selected = fileChooser.showOpenDialog(null);
             if (selected != null) {
-                boardFromFile = ReadFile.readFileFromDisk(selected.toPath());
-
+                canvasController.setGhost(ReadFile.readFileFromDisk(selected.toPath()));
+                
                 //TODO no ghosttiles yet
-                activeBoard.insertArray(boardFromFile, 0, 0);
+                //activeBoard.insertArray(boardFromFile, 0, 0);
                 draw();
             }
 
