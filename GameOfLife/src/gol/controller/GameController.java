@@ -10,6 +10,7 @@ import gol.model.Logic.unsupportedRuleException;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Optional;
 
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -25,7 +26,9 @@ import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
@@ -40,6 +43,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
+import javafx.stage.StageStyle;
 import javafx.util.Duration;
 
 /**
@@ -103,7 +107,7 @@ public class GameController implements Initializable {
 
         canvas.widthProperty().bind(borderpane.widthProperty().subtract(tabpane.widthProperty()));
         canvas.heightProperty().bind(borderpane.heightProperty());
-        
+
         activeBoard = new ArrayBoard();
         cellCP.setValue(Color.BLACK);
         backgroundCP.setValue(Color.web("#F4F4F4"));
@@ -267,9 +271,20 @@ public class GameController implements Initializable {
             File selected = fileChooser.showOpenDialog(null);
             if (selected != null) {
                 boardFromFile = ReadFile.readFileFromDisk(selected.toPath());
+                Alert alert = new Alert(AlertType.NONE);
+                alert.setTitle("Place pattern");
+                alert.initStyle(StageStyle.UTILITY);
+                alert.setContentText("How do you want to insert the pattern?");
+                ButtonType btnGhostTiles = new ButtonType("Insert with ghost tiles");
+                ButtonType btnInsert = new ButtonType("Insert at top-left");
+                
+                alert.getButtonTypes().addAll(btnGhostTiles, btnInsert);
 
-                //TODO no ghosttiles yet
-                //activeBoard.insertArray(boardFromFile, 0, 0);
+                Optional<ButtonType> result = alert.showAndWait();
+                if (result.get() == btnInsert) {
+                    activeBoard.insertArray(boardFromFile, 1, 1);
+                    boardFromFile = null;
+                }
                 draw();
             }
 
@@ -380,7 +395,7 @@ public class GameController implements Initializable {
 
     }
 
-    public void draw() { 
+    public void draw() {
         gc.setGlobalAlpha(1);
         gc.setFill(backgroundColor);
         gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
