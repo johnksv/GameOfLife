@@ -230,16 +230,4 @@ public class BoardTest {
         fail("The test case is a prototype.");
     }
 
-    /**
-     * Test of setGameBoard method, of class Board.
-     */
-    @Test
-    public void testSetGameBoard() {
-        System.out.println("setGameBoard");
-        Object gameBoard = null;
-        instance.setGameBoard(gameBoard);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
 }

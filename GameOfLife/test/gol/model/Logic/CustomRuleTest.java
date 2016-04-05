@@ -3,12 +3,9 @@ package gol.model.Logic;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import org.junit.rules.ExpectedException;
 
 /**
  *
@@ -17,8 +14,8 @@ import org.junit.rules.ExpectedException;
 public class CustomRuleTest {
 
     CustomRule rule;
-    byte[] toLive;
-    byte[] toSpawn;
+    byte[] toSurvive;
+    byte[] toBeBorn;
 
     int length = 10;
     byte[] cellToCheckAlive = new byte[length];
@@ -46,11 +43,11 @@ public class CustomRuleTest {
     @Test
     public void testSetLife() {
 
-        toLive = new byte[]{1, 5};
-        toSpawn = new byte[]{2, 3, 8};
+        toSurvive = new byte[]{1, 5};
+        toBeBorn = new byte[]{2, 3, 8};
 
         try {
-            rule = new CustomRule(toLive, toSpawn);
+            rule = new CustomRule(toSurvive, toBeBorn);
         } catch (unsupportedRuleException ex) {
             Logger.getLogger(CustomRuleTest.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -73,11 +70,11 @@ public class CustomRuleTest {
     @Test
     public void testSetLifeSpecialRule() {
 
-        toLive = new byte[]{-1};
-        toSpawn = new byte[]{0};
+        toSurvive = new byte[]{-1};
+        toBeBorn = new byte[]{0};
 
         try {
-            rule = new CustomRule(toLive, toSpawn);
+            rule = new CustomRule(toSurvive, toBeBorn);
         } catch (unsupportedRuleException ex) {
             Logger.getLogger(CustomRuleTest.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -101,9 +98,9 @@ public class CustomRuleTest {
     
     @Test (expected = unsupportedRuleException.class)
     public void testSetLifeSpecialRuleException() throws unsupportedRuleException {
-        toLive = new byte[]{0};
-        toSpawn = new byte[]{-1};
-        rule = new CustomRule(toLive, toSpawn);
+        toSurvive = new byte[]{0};
+        toBeBorn = new byte[]{-1};
+        rule = new CustomRule(toSurvive, toBeBorn);
 
     }
 

@@ -1,5 +1,6 @@
 package gol.model.FileIO;
 
+import gol.model.Logic.*;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -13,14 +14,17 @@ import java.util.List;
  */
 public class ReadFile {
 
+    private static Rule parsedRule;
+
     /**
      * Reads a file, makes an array. This static method checks the file format,
      * and calls for the correct method for parsing the file.
-     * 
+     *
      * @param file location of chosen file
      * @return a playable gameboard of type byte[][]
-     * @throws IOException 
-     * @throws PatternFormatException if there are an error parsing or reading the file
+     * @throws IOException
+     * @throws PatternFormatException if there are an error parsing or reading
+     * the file
      */
     public static byte[][] readFileFromDisk(Path file) throws IOException, PatternFormatException {
         String path = file.toString();
@@ -40,6 +44,22 @@ public class ReadFile {
             default:
                 throw new PatternFormatException("Pattern format is not supported");
         }
+    }
+    /**
+     * Returns the newly parsed Rule.
+     * If no rule was parsed from the last file it will return ConwaysRule. 
+     * @see Rule
+     * @see ConwaysRule
+     * @return Rule 
+     */
+    public static Rule getParsedRule() {
+        Rule returnRule = parsedRule;
+        parsedRule = null;
+        
+        if (returnRule == null) {
+            return new ConwaysRule();
+        }
+        return returnRule;
     }
 
     /**
@@ -90,6 +110,7 @@ public class ReadFile {
 
     /**
      * Parses the String array with rle format into a playable gameboard.
+     *
      * @param file
      * @return playable gameboard
      * @throws IOException
@@ -117,7 +138,7 @@ public class ReadFile {
             } else if (line.matches("y=\\d+")) {
                 yLength = Integer.parseInt(line.replaceAll("\\D", ""));
             } else if (line.matches("rule.*")) {
-                System.out.println(line);
+                processRule(line);
             }
         }
         if (xLength == 0 || yLength == 0) {
@@ -214,5 +235,65 @@ public class ReadFile {
             }
         }
 
+    }
+
+    private static void processRule(String ruleLine) {
+        byte[] born = null;
+        byte[] survive = null;
+
+        String[] rule = ruleLine.split("=");
+        
+        rule = rule[1].split("/");
+        for (int i = 0; i < rule.length; i++) {
+            if (rule[i].matches("[Ss]\\d*")) {
+                if (rule[i].length() > 1) {
+                    survive = new byte[rule[i].length() - 1];
+                    for (int j = 1; j < rule[i].length(); j++) {
+                        survive[j - 1] = (byte) Character.digit(rule[i].toCharArray()[j], 10);
+                    }
+                } else {
+                    survive = new byte[]{-1};
+                }
+
+            } else if (rule[i].matches("[Bb]\\d*")) {
+                if (rule[i].length() > 1) {
+                    born = new byte[rule[i].length() - 1];
+                    for (int j = 1; j < rule[i].length(); j++) {
+                        born[j - 1] = (byte) Character.digit(rule[i].toCharArray()[j], 10);
+                    }
+                } else {
+                    born = new byte[]{-1};
+                }
+
+            } else {
+                //expected Rule=3/23  (born/survive)
+
+                if (i == 0) {
+                    if (rule[i].length() >= 1) {
+                        born = new byte[rule[i].length()];
+                        for (int j = 0; j < rule[i].length(); j++) {
+                            born[j] = (byte) Character.digit(rule[i].toCharArray()[j], 10);
+                        }
+                    } else {
+                        born = new byte[]{-1};
+                    }
+                } else if (i == 1) {
+                    if (rule[i].length() >= 1) {
+                        survive = new byte[rule[i].length()];
+                        for (int j = 0; j < rule[i].length(); j++) {
+                            survive[j] = (byte) Character.digit(rule[i].toCharArray()[j], 10);
+                        }
+                    } else {
+                        survive = new byte[]{-1};
+                    }
+                }
+
+            }
+        }
+        try {
+            parsedRule = new CustomRule(survive, born);
+        } catch (unsupportedRuleException ex) {
+            parsedRule = new ConwaysRule();
+        }
     }
 }

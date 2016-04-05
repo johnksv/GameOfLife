@@ -1,11 +1,7 @@
-/*
- * Here comes the text of your license
- * Each line should be prefixed with  * 
- */
+
 package gol.model.FileIO;
 
 import java.io.File;
-import java.net.URI;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import org.junit.After;
@@ -22,22 +18,6 @@ import static org.junit.Assert.*;
 public class ReadFileTest {
 
     public ReadFileTest() {
-    }
-
-    @BeforeClass
-    public static void setUpClass() {
-    }
-
-    @AfterClass
-    public static void tearDownClass() {
-    }
-
-    @Before
-    public void setUp() throws Exception {
-    }
-
-    @After
-    public void tearDown() {
     }
 
     @Test

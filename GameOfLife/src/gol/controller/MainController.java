@@ -50,9 +50,10 @@ public class MainController implements Initializable {
     public void startGame() throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("/gol/view/Game.fxml"));
         Scene scene = new Scene(root);
-
         setKeyEvents(scene);
         primaryStage.setScene(scene);
+        primaryStage.setMinWidth(800);
+        primaryStage.setMinHeight(600);
 
     }
 
