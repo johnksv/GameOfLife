@@ -7,28 +7,19 @@ package gol.s305089.controller;
 import gol.model.Board.ArrayBoard;
 import gol.model.Board.Board;
 import gol.s305089.UsefullMethods;
-import gol.s305089.model.GifMaker;
-import java.io.File;
-import java.io.IOException;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.RadioButton;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
+import javafx.scene.transform.Affine;
 
 /**
  * FXML Controller class
@@ -44,15 +35,14 @@ public class EditorController implements Initializable {
     @FXML
     private CheckBox chboxAutoUpdateStrip;
     @FXML
-    private HBox canvasPreviewContainer;
+    private Canvas theStripCanvas;
     @FXML
     private RadioButton rbRemoveCell;
 
     private Board activeBoard;
     private GraphicsContext gc;
     private byte[][] byteBoard;
-    private final List<ImageView> theStrip = new ArrayList<>();
-    private GifMaker gifmaker;
+    private GraphicsContext theStripGc;
 
     private Color cellColor = Color.BLACK;
     private Color backgroundColor = Color.web("#F4F4F4");
@@ -64,43 +54,93 @@ public class EditorController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         gc = canvas.getGraphicsContext2D();
+        theStripGc = theStripCanvas.getGraphicsContext2D();
+
         canvas.widthProperty().bind(rootBorderPane.widthProperty());
         canvas.heightProperty().bind(rootBorderPane.heightProperty());
 
-        initTheStrip();
         mouseInit();
     }
 
-    private void initTheStrip() {
-        for (int i = 0; i < 20; i++) {
-            theStrip.add(i, new ImageView());
-        }
-        canvasPreviewContainer.getChildren().addAll(theStrip);
+    private void mouseInit() {
+        canvas.addEventHandler(MouseEvent.MOUSE_PRESSED,
+                (MouseEvent e) -> {
+                    if (byteBoard != null) {
+                        activeBoard.insertArray(byteBoard, (int) (mousePositionY / (activeBoard.getGridSpacing() + activeBoard.getCellSize())),
+                                (int) (mousePositionX / (activeBoard.getGridSpacing() + activeBoard.getCellSize())));
+                        byteBoard = null;
+                        draw();
+                    } else {
+                        handleMouseClick(e);
+                    }
+                    if (chboxAutoUpdateStrip.isSelected()) {
+                        updateTheStrip();
+                    }
+                });
+
+        canvas.addEventHandler(MouseEvent.MOUSE_DRAGGED,
+                (MouseEvent e) -> {
+                    handleMouseClick(e);
+                });
+
+        canvas.addEventFilter(MouseEvent.MOUSE_RELEASED, (MouseEvent e) -> {
+            if (chboxAutoUpdateStrip.isSelected()) {
+                updateTheStrip();
+            }
+        });
+
+        canvas.addEventHandler(MouseEvent.MOUSE_MOVED,
+                (MouseEvent e) -> {
+                    if (byteBoard != null) {
+                        mousePositionX = (int) e.getX();
+                        mousePositionY = (int) e.getY();
+                        draw();
+                        drawGhostTiles();
+                    }
+                });
+    }
+
+    @FXML
+    private void handleClearBtn() {
+        activeBoard.clearBoard();
     }
 
     @FXML
     private void updateTheStrip() {
-
+        Board tempBoard = activeBoard;
+        theStripCanvas.setWidth(5000);
+        theStripGc.clearRect(0, 0, theStripCanvas.widthProperty().get(), theStripCanvas.heightProperty().get());
+        Affine xform = new Affine();
+        double tx = 10;
+        double lastTx =0;
+        
+        
+        //TODO FIX BUG: First two is drawn on top of each other
         for (int iteration = 0; iteration < 20; iteration++) {
-            try {
-                activeBoard.nextGen();
 
-                File saveLocation = File.createTempFile("golTheStripPreview", ".gif");
+            byte[][] tempByteBoard = tempBoard.getBoundingBoxBoard();
+            int longestRow = 0;
 
-                gifmaker = new GifMaker();
-                gifmaker.setSaveLocation(saveLocation.getAbsolutePath());
-                gifmaker.setPattern(activeBoard.getBoundingBoxBoard());
-                gifmaker.writePatternToGIF(1);
-                Image previewGif = new Image(saveLocation.toURI().toString());
-
-                theStrip.get(iteration).setImage(previewGif);
-
-                saveLocation.delete();
-
-            } catch (IOException ex) {
-                Logger.getLogger(EditorController.class.getName()).log(Level.SEVERE, null, ex);
+            for (byte[] row : tempByteBoard) {
+                if (row.length > longestRow) {
+                    longestRow = row.length;
+                }
             }
+            tempBoard = new ArrayBoard(tempByteBoard.length + 4, longestRow + 4);
+            tempBoard.insertArray(tempByteBoard, 2, 2);
+            tempBoard.setCellSize(10);
+            tempBoard.nextGen();
+
+            drawTheStrip(tempBoard);
+            
+            theStripGc.setTransform(xform);
+            lastTx = longestRow * tempBoard.getCellSize() + 50;
+            tx += lastTx;
+            xform.setTx(tx);
         }
+        theStripCanvas.setWidth(tx-lastTx);
+        xform.setTx(0.0);
+        theStripGc.setTransform(xform);
 
     }
 
@@ -113,9 +153,22 @@ public class EditorController implements Initializable {
                 / gameBoardToCopy.getCellSize());
 
         activeBoard = new ArrayBoard(rows, columns);
-        System.out.println("Størrelse: row: " + rows + ", kol: " + columns);
         this.activeBoard.setCellSize(gameBoardToCopy.getCellSize());
 
+    }
+
+    private void drawTheStrip(Board boardToDraw) {
+        theStripGc.setFill(cellColor);
+        for (int i = 1; i < boardToDraw.getArrayLength(); i++) {
+            for (int j = 1; j < boardToDraw.getArrayLength(i); j++) {
+                if (boardToDraw.getCellState(i, j)) {
+                    theStripGc.fillRect(j * boardToDraw.getCellSize(),
+                            i * boardToDraw.getCellSize(),
+                            boardToDraw.getCellSize(),
+                            boardToDraw.getCellSize());
+                }
+            }
+        }
     }
 
     private void draw() {
@@ -164,44 +217,6 @@ public class EditorController implements Initializable {
                 }
             }
         }
-    }
-
-    private void mouseInit() {
-
-        canvas.addEventHandler(MouseEvent.MOUSE_PRESSED,
-                (MouseEvent e) -> {
-                    if (byteBoard != null) {
-                        activeBoard.insertArray(byteBoard, (int) (mousePositionY / (activeBoard.getGridSpacing() + activeBoard.getCellSize())),
-                                (int) (mousePositionX / (activeBoard.getGridSpacing() + activeBoard.getCellSize())));
-                        byteBoard = null;
-
-                        draw();
-                    } else if (chboxAutoUpdateStrip.isSelected()) {
-                        updateTheStrip();
-                    }
-                    handleMouseClick(e);
-                });
-        canvas.addEventHandler(MouseEvent.MOUSE_DRAGGED,
-                (MouseEvent e) -> {
-                    handleMouseClick(e);
-                });
-        canvas.addEventFilter(MouseEvent.MOUSE_RELEASED, (MouseEvent e) -> {
-            if (chboxAutoUpdateStrip.isSelected()) {
-                updateTheStrip();
-            }
-        });
-
-        canvas.addEventHandler(MouseEvent.MOUSE_MOVED,
-                (MouseEvent e) -> {
-                    if (byteBoard != null) {
-
-                        mousePositionX = (int) e.getX();
-                        mousePositionY = (int) e.getY();
-                        draw();
-                        //TODO SUPPORT FOR OFFSET++
-                        drawGhostTiles();
-                    }
-                });
     }
 
     private void handleMouseClick(MouseEvent e) {

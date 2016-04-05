@@ -329,7 +329,7 @@ public class GameController implements Initializable {
         editorController.setActiveBoard(activeBoard);
 
         editor.setTitle("Pattern Editor");
-        editor.initModality(Modality.APPLICATION_MODAL);
+        editor.initModality(Modality.WINDOW_MODAL);
         editor.show();
         editor.setMinWidth(800);
         editor.setMinHeight(600);

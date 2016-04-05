@@ -24,7 +24,7 @@
         </HBox>
     </center>
     <bottom>
-        <TitledPane BorderPane.alignment="TOP_LEFT">
+        <TitledPane prefHeight="225.0" prefWidth="800.0" text="Preview generations" BorderPane.alignment="TOP_LEFT">
             <content>
                 <VBox>
                     <children>
@@ -36,7 +36,11 @@
                         </ToolBar>
                         <ScrollPane BorderPane.alignment="CENTER">
                             <content>
-                                <HBox fx:id="canvasPreviewContainer" prefHeight="150.0" prefWidth="600.0" />
+                                <VBox prefHeight="150.0">
+                                    <children>
+                                        <Canvas fx:id="theStripCanvas" height="150.0" width="600.0" />
+                                    </children>
+                                </VBox>
                             </content>
                         </ScrollPane>
                     </children>
@@ -57,7 +61,7 @@
                                     </toggleGroup>
                                 </RadioButton>
                                 <RadioButton fx:id="rbRemoveCell" mnemonicParsing="false" text="Remove cells" toggleGroup="$mouseActions" />
-                                <Button mnemonicParsing="false" text="Clear board" />
+                                <Button mnemonicParsing="false" onAction="#handleClearBtn" text="Clear board" />
                                 <Separator prefWidth="200.0" />
                                 <Button mnemonicParsing="false" text="Send board to main window" />
                             </children>
