@@ -371,7 +371,8 @@ public class GameController implements Initializable {
 
         golStats.show();
     }
-
+    
+    @FXML
     private void rotateBoardFromFile() {
         if (boardFromFile != null) {
             boardFromFile = usefullMethods.rotateArray90Deg(boardFromFile);

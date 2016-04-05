@@ -4,7 +4,6 @@
  */
 package gol.s305089.controller;
 
-import gol.controller.CanvasController;
 import gol.model.Board.ArrayBoard;
 import gol.model.Board.Board;
 import gol.s305089.model.GifMaker;
@@ -20,11 +19,13 @@ import java.util.logging.Logger;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.RadioButton;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.paint.Color;
 
 /**
  * FXML Controller class
@@ -43,21 +44,23 @@ public class EditorController implements Initializable {
     private RadioButton rbRemoveCell;
     @FXML
     private RadioButton rbMoveGrid;
-
+    
     private Board gameboard;
+    private GraphicsContext gc;
     private byte[][] pattern;
     private final List<ImageView> theStrip = new ArrayList<>();
     private GifMaker gifmaker;
+    
+    private Color cellColor = Color.BLACK;
+    private Color backgroundColor = Color.web("#F4F4F4");
 
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        gc = canvas.getGraphicsContext2D();
         initTheStrip();
-        canvasController.setRbRemoveCell(rbRemoveCell);
-        canvasController.setRbMoveGrid(rbMoveGrid);
-
     }
 
     private void initTheStrip() {
@@ -73,7 +76,7 @@ public class EditorController implements Initializable {
         for (int iteration = 0; iteration < 20; iteration++) {
             try {
                 gameboard.nextGen();
-                
+
                 File saveLocation = File.createTempFile("golTheStripPreview", ".gif");
 
                 gifmaker = new GifMaker();
@@ -81,10 +84,9 @@ public class EditorController implements Initializable {
                 gifmaker.setPattern(gameboard.getBoundingBoxBoard());
                 gifmaker.writePatternToGIF(1);
                 Image previewGif = new Image(saveLocation.toURI().toString());
-                
-                
+
                 theStrip.get(iteration).setImage(previewGif);
-                
+
                 saveLocation.delete();
 
             } catch (IOException ex) {
@@ -94,13 +96,11 @@ public class EditorController implements Initializable {
 
     }
 
-    public void setActiveBoard(Board activeBoard) {
-        byte[][] activeByteBoard = activeBoard.getBoundingBoxBoard();
+    public void setActiveBoard(Board gameboard) {
+        byte[][] activeByteBoard = gameboard.getBoundingBoxBoard();
         setPattern(activeByteBoard);
-        gameboard.setCellSize(activeBoard.getCellSize());
-
-        canvasController.setActiveBoard(gameboard);
-        canvasController.draw();
+        gameboard.setCellSize(gameboard.getCellSize());
+        draw();
     }
 
     /**
@@ -114,6 +114,30 @@ public class EditorController implements Initializable {
         gameboard = new ArrayBoard(100, 100);
         this.pattern = Pattern;
         gameboard.insertArray(pattern, 1, 1);
+    }
+
+    private void draw() {
+        gc.setGlobalAlpha(1);
+        gc.setFill(backgroundColor);
+        gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+        gc.setFill(cellColor);
+        for (int i = 1; i < gameboard.getArrayLength(); i++) {
+            if (canvas.getHeight() < i * gameboard.getCellSize() + i * gameboard.getGridSpacing()) {
+                //TODO Så den ikke tegner det som er utenfor
+            }
+            for (int j = 1; j < gameboard.getArrayLength(i); j++) {
+                if (gameboard.getCellState(i, j)) {
+                    if (canvas.getWidth() < j * gameboard.getCellSize() + j * gameboard.getGridSpacing()) {
+                        //TODO Så den ikke tegner det som er utenfor
+                    }
+                    gc.fillRect(j * gameboard.getCellSize() + j * gameboard.getGridSpacing(),
+                            i * gameboard.getCellSize() + i * gameboard.getGridSpacing(),
+                            gameboard.getCellSize(),
+                            gameboard.getCellSize());
+                }
+            }
+        }
+
     }
 
 }
