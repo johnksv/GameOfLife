@@ -221,7 +221,6 @@ public class GameController implements Initializable {
     private void handleZoom() {
         double x = cellSizeSlider.getValue();
         double newValue = 0.2 * Math.exp(0.05 * x);
-        System.out.println(newValue);
         if ((newValue ) * activeBoard.getArrayLength() > canvas.getHeight()
                 && (newValue ) * activeBoard.getArrayLength(0) > canvas.getWidth()) {
 
