@@ -220,8 +220,8 @@ public class GameController implements Initializable {
     private void handleZoom() {
         double x = cellSizeSlider.getValue();
         double newValue = 0.2 * Math.exp(0.05 * x);
-        if ((newValue ) * activeBoard.getArrayLength() > canvas.getHeight()
-                && (newValue ) * activeBoard.getArrayLength(0) > canvas.getWidth()) {
+        if ((newValue) * activeBoard.getArrayLength() > canvas.getHeight()
+                && (newValue) * activeBoard.getArrayLength(0) > canvas.getWidth()) {
 
             handleGridSpacingSlider();
 
@@ -340,7 +340,15 @@ public class GameController implements Initializable {
         //Registers clicks on scene
         canvas.addEventHandler(MouseEvent.MOUSE_PRESSED,
                 (MouseEvent e) -> {
-                    handleMouseClick(e);
+                    if (boardFromFile != null) {
+                        activeBoard.insertArray(boardFromFile, (int) ((mousePositionY - moveGridValues[1]) / (activeBoard.getGridSpacing() + activeBoard.getCellSize())),
+                                (int) ((mousePositionX - moveGridValues[0]) / (activeBoard.getGridSpacing() + activeBoard.getCellSize())));
+                        boardFromFile = null;
+
+                        draw();
+                    } else {
+                        handleMouseClick(e);
+                    }
                 });
         canvas.addEventHandler(MouseEvent.MOUSE_DRAGGED,
                 (MouseEvent e) -> {
@@ -357,7 +365,7 @@ public class GameController implements Initializable {
                         moveGridValues[3] = -Double.MAX_VALUE;
                     }
                 });
-        
+
         canvas.addEventHandler(MouseEvent.MOUSE_MOVED,
                 (MouseEvent e) -> {
                     if (boardFromFile != null) {
@@ -432,7 +440,6 @@ public class GameController implements Initializable {
 
     private void drawGhostTiles() {
         if (boardFromFile != null) {
-
             gc.setFill(cellColor);
             for (int j = 0; j < boardFromFile.length; j++) {
                 for (int i = 0; i < boardFromFile[j].length; i++) {
@@ -440,15 +447,15 @@ public class GameController implements Initializable {
 
                         gc.setGlobalAlpha(1);
                         gc.setFill(backgroundColor);
-                        gc.fillRect(mousePositionX + i * activeBoard.getCellSize() + i * activeBoard.getGridSpacing() + moveGridValues[0],
-                                mousePositionY + j * activeBoard.getCellSize() + j * activeBoard.getGridSpacing() + moveGridValues[1],
+                        gc.fillRect(mousePositionX + i * activeBoard.getCellSize() + i * activeBoard.getGridSpacing(),
+                                mousePositionY + j * activeBoard.getCellSize() + j * activeBoard.getGridSpacing(),
                                 activeBoard.getCellSize(),
                                 activeBoard.getCellSize());
                         gc.setFill(cellColor);
-
+                        
                         gc.setGlobalAlpha(0.5);
-                        gc.fillRect(mousePositionX + i * activeBoard.getCellSize() + i * activeBoard.getGridSpacing() + moveGridValues[0],
-                                mousePositionY + j * activeBoard.getCellSize() + j * activeBoard.getGridSpacing() + moveGridValues[1],
+                        gc.fillRect(mousePositionX + i * activeBoard.getCellSize() + i * activeBoard.getGridSpacing() ,
+                                mousePositionY + j * activeBoard.getCellSize() + j * activeBoard.getGridSpacing(),
                                 activeBoard.getCellSize(),
                                 activeBoard.getCellSize());
                     }
