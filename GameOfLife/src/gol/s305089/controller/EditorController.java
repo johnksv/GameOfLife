@@ -29,7 +29,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
-import javafx.stage.Screen;
 
 /**
  * FXML Controller class
@@ -37,7 +36,7 @@ import javafx.stage.Screen;
  * @author John Kasper
  */
 public class EditorController implements Initializable {
-    
+
     @FXML
     private BorderPane rootBorderPane;
     @FXML
@@ -49,14 +48,15 @@ public class EditorController implements Initializable {
     @FXML
     private RadioButton rbRemoveCell;
 
-    private Board gameboard;
+    private Board activeBoard;
     private GraphicsContext gc;
-    private byte[][] pattern;
+    private byte[][] byteBoard;
     private final List<ImageView> theStrip = new ArrayList<>();
     private GifMaker gifmaker;
 
     private Color cellColor = Color.BLACK;
     private Color backgroundColor = Color.web("#F4F4F4");
+    int mousePositionX, mousePositionY;
 
     /**
      * Initializes the controller class.
@@ -83,13 +83,13 @@ public class EditorController implements Initializable {
 
         for (int iteration = 0; iteration < 20; iteration++) {
             try {
-                gameboard.nextGen();
+                activeBoard.nextGen();
 
                 File saveLocation = File.createTempFile("golTheStripPreview", ".gif");
 
                 gifmaker = new GifMaker();
                 gifmaker.setSaveLocation(saveLocation.getAbsolutePath());
-                gifmaker.setPattern(gameboard.getBoundingBoxBoard());
+                gifmaker.setPattern(activeBoard.getBoundingBoxBoard());
                 gifmaker.writePatternToGIF(1);
                 Image previewGif = new Image(saveLocation.toURI().toString());
 
@@ -105,51 +105,102 @@ public class EditorController implements Initializable {
     }
 
     public void setActiveBoard(Board gameBoardToCopy) {
-        byte[][] activeByteBoard = gameBoardToCopy.getBoundingBoxBoard();
+        byteBoard = gameBoardToCopy.getBoundingBoxBoard();
 
-        int rows = (int) (UsefullMethods.getScreenSize()[0]
-                / gameBoardToCopy.getCellSize() + gameBoardToCopy.getGridSpacing());
-        int columns = (int) (UsefullMethods.getScreenSize()[1]
-                / gameBoardToCopy.getCellSize() + gameBoardToCopy.getGridSpacing());
+        int rows = (int) (UsefullMethods.getScreenSize()[1]
+                / gameBoardToCopy.getCellSize());
+        int columns = (int) (UsefullMethods.getScreenSize()[0]
+                / gameBoardToCopy.getCellSize());
 
-        gameboard = new ArrayBoard(columns, rows);
-        this.pattern = activeByteBoard;
-        gameboard.insertArray(pattern, 1, 1);
-        this.gameboard.setCellSize(gameBoardToCopy.getCellSize());
-        draw();
+        activeBoard = new ArrayBoard(rows, columns);
+        System.out.println("Størrelse: row: " + rows + ", kol: " + columns);
+        this.activeBoard.setCellSize(gameBoardToCopy.getCellSize());
+
     }
 
     private void draw() {
-
+        gc.setGlobalAlpha(1);
         gc.setFill(backgroundColor);
         gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
         gc.setFill(cellColor);
-        for (int i = 1; i < gameboard.getArrayLength(); i++) {
-            if (canvas.getHeight() < i * gameboard.getCellSize() + i * gameboard.getGridSpacing()) {
+        for (int i = 1; i < activeBoard.getArrayLength(); i++) {
+            if (canvas.getHeight() < i * activeBoard.getCellSize() + i * activeBoard.getGridSpacing()) {
                 //TODO Så den ikke tegner det som er utenfor
             }
-            for (int j = 1; j < gameboard.getArrayLength(i); j++) {
-                if (gameboard.getCellState(i, j)) {
-                    if (canvas.getWidth() < j * gameboard.getCellSize() + j * gameboard.getGridSpacing()) {
+            for (int j = 1; j < activeBoard.getArrayLength(i); j++) {
+                if (activeBoard.getCellState(i, j)) {
+                    if (canvas.getWidth() < j * activeBoard.getCellSize() + j * activeBoard.getGridSpacing()) {
                         //TODO Så den ikke tegner det som er utenfor
                     }
-                    gc.fillRect(j * gameboard.getCellSize() + j * gameboard.getGridSpacing(),
-                            i * gameboard.getCellSize() + i * gameboard.getGridSpacing(),
-                            gameboard.getCellSize(),
-                            gameboard.getCellSize());
+                    gc.fillRect(j * activeBoard.getCellSize() + j * activeBoard.getGridSpacing(),
+                            i * activeBoard.getCellSize() + i * activeBoard.getGridSpacing(),
+                            activeBoard.getCellSize(),
+                            activeBoard.getCellSize());
+                }
+            }
+        }
+    }
+
+    private void drawGhostTiles() {
+        if (byteBoard != null) {
+            gc.setFill(cellColor);
+            for (int j = 0; j < byteBoard.length; j++) {
+                for (int i = 0; i < byteBoard[j].length; i++) {
+                    if (byteBoard[j][i] == 64) {
+                        gc.setGlobalAlpha(1);
+                        gc.setFill(backgroundColor);
+                        gc.fillRect(mousePositionX + i * activeBoard.getCellSize() + i * activeBoard.getGridSpacing(),
+                                mousePositionY + j * activeBoard.getCellSize() + j * activeBoard.getGridSpacing(),
+                                activeBoard.getCellSize(),
+                                activeBoard.getCellSize());
+                        gc.setFill(cellColor);
+
+                        gc.setGlobalAlpha(0.5);
+                        gc.fillRect(mousePositionX + i * activeBoard.getCellSize() + i * activeBoard.getGridSpacing(),
+                                mousePositionY + j * activeBoard.getCellSize() + j * activeBoard.getGridSpacing(),
+                                activeBoard.getCellSize(),
+                                activeBoard.getCellSize());
+                    }
                 }
             }
         }
     }
 
     private void mouseInit() {
+
         canvas.addEventHandler(MouseEvent.MOUSE_PRESSED,
                 (MouseEvent e) -> {
+                    if (byteBoard != null) {
+                        activeBoard.insertArray(byteBoard, (int) (mousePositionY / (activeBoard.getGridSpacing() + activeBoard.getCellSize())),
+                                (int) (mousePositionX / (activeBoard.getGridSpacing() + activeBoard.getCellSize())));
+                        byteBoard = null;
+
+                        draw();
+                    } else if (chboxAutoUpdateStrip.isSelected()) {
+                        updateTheStrip();
+                    }
                     handleMouseClick(e);
                 });
         canvas.addEventHandler(MouseEvent.MOUSE_DRAGGED,
                 (MouseEvent e) -> {
                     handleMouseClick(e);
+                });
+        canvas.addEventFilter(MouseEvent.MOUSE_RELEASED, (MouseEvent e) -> {
+            if (chboxAutoUpdateStrip.isSelected()) {
+                updateTheStrip();
+            }
+        });
+
+        canvas.addEventHandler(MouseEvent.MOUSE_MOVED,
+                (MouseEvent e) -> {
+                    if (byteBoard != null) {
+
+                        mousePositionX = (int) e.getX();
+                        mousePositionY = (int) e.getY();
+                        draw();
+                        //TODO SUPPORT FOR OFFSET++
+                        drawGhostTiles();
+                    }
                 });
     }
 
@@ -158,9 +209,9 @@ public class EditorController implements Initializable {
         double y = e.getY();
 
         if (rbRemoveCell.isSelected()) {
-            gameboard.setCellState(y, x, false, 0, 0);
+            activeBoard.setCellState(y, x, false, 0, 0);
         } else {
-            gameboard.setCellState(y, x, true, 0, 0);
+            activeBoard.setCellState(y, x, true, 0, 0);
 
         }
         draw();
