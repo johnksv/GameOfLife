@@ -51,6 +51,7 @@ public class MainController implements Initializable {
         setKeyEvents(scene);
         primaryStage.setScene(scene);
         primaryStage.setMinWidth(800);
+        primaryStage.setMinHeight(600);
 
     }
 
