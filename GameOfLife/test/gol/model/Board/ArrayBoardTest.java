@@ -1,5 +1,6 @@
 package gol.model.Board;
 
+import gol.model.Logic.ConwaysRule;
 import gol.model.Logic.Rule;
 import java.util.Arrays;
 import org.junit.Before;
@@ -17,12 +18,12 @@ public class ArrayBoardTest {
 
     @Before
     public void setUp() {
-        instance = new ArrayBoard();
+        instance = new ArrayBoard(5, 5);
         pattern = new byte[][]
                    {{0,0,0,0,0},
-                    {0,64,64,64,0},
-                    {0,64,64,64,0},
-                    {0,64,64,64,0},
+                    {0,64,0,0,0},
+                    {0,64,64,0,0},
+                    {0,0,0,0,0},
                     {0,0,0,0,0}};
     }
     Board instance;
@@ -34,11 +35,9 @@ public class ArrayBoardTest {
     @Test
     public void testClearBoard() {
         System.out.println("clearBoard");
-        
         instance.insertArray(pattern,1,1);
         instance.clearBoard();
         String result = instance.toString();
-        System.out.println(Arrays.deepToString((byte[][])instance.getGameBoard()));
         
         String expResult = "0000000000000000000000000";
         assertEquals(expResult, result);
@@ -61,12 +60,25 @@ public class ArrayBoardTest {
      */
     @Test
     public void testCheckRules() {
+        //TODO fiks denne testen? Eller skal den slettes? conwaysRule og customRule er testet.
         System.out.println("checkRules");
-        Rule activeRule = null;
-       
+        Rule activeRule = new ConwaysRule();
+        instance.clearBoard();
+        instance.insertArray(pattern,0,0);
+        
+        byte[][] expectedPattern = new byte[][] //This is pattern next gen with Conways Rule
+                    {{0,0,0,0,0},
+                    {0,0,0,0,0},
+                    {0,64,64,0,0},
+                    {0,64,64,0,0},
+                    {0,0,0,0,0}};
+        
+        
         instance.checkRules(activeRule);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        System.out.println(Arrays.deepToString((byte[][])instance.getGameBoard()));
+        System.out.println(Arrays.deepToString((byte[][])expectedPattern));
+        
+        assertArrayEquals(pattern, expectedPattern);
     }
 
     /**
@@ -76,16 +88,18 @@ public class ArrayBoardTest {
     public void testToString() {
         System.out.println("toString");
         
+        Board toStringInstance = new ArrayBoard(4, 4);
+        
         byte[][] board = {
             {0, 0, 0, 0},
             {0, 64, 64, 0},
             {0, 64, 64, 0},
             {0, 0, 0, 0}};
-        instance.insertArray(board, 1, 1);
+        toStringInstance.insertArray(board, 0, 0);
         String expResult = "0000011001100000";
-        String result = instance.toString();
+        String result = toStringInstance.toString();
         assertEquals(expResult, result);
-        fail("The test case is a prototype.");
+        
     }
 
 }
