@@ -96,6 +96,8 @@ public class GameController implements Initializable {
     private Color cellColor = Color.BLACK;
     private Color backgroundColor = Color.web("#F4F4F4");
     private byte[][] boardFromFile;
+    private int mousePositionX;
+    private int mousePositionY;
     //Offset x, offset y, old x, old y
     private final double[] moveGridValues = {0, 0, -Double.MAX_VALUE, -Double.MAX_VALUE};
 
