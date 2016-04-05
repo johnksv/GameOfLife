@@ -1,19 +1,11 @@
-/*
- * Here comes the text of your license
- * Each line should be prefixed with  * 
- */
 package gol.model.Logic;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
  *
- * @author trygvevang
+ * @author s305054, s305084, s305089
  */
 public class ConwaysRuleTest {
 
