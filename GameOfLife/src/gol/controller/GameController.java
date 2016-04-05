@@ -80,9 +80,9 @@ public class GameController implements Initializable {
     @FXML
     private RadioButton rbCustomGameRules;
     @FXML
-    private TextField tfCellsToSpawn;
+    private TextField tfCellsToBeBorn;
     @FXML
-    private TextField tfCellsToLive;
+    private TextField tfCellsToSurvive;
     @FXML
     private Button btnUseRule;
     @FXML
@@ -125,13 +125,13 @@ public class GameController implements Initializable {
     private void initGameRulesListner() {
         tgGameRules.selectedToggleProperty().addListener((ObservableValue<? extends Toggle> observable, Toggle oldValue, Toggle newValue) -> {
             if (newValue == rbCustomGameRules) {
-                tfCellsToLive.setDisable(false);
-                tfCellsToSpawn.setDisable(false);
+                tfCellsToSurvive.setDisable(false);
+                tfCellsToBeBorn.setDisable(false);
                 btnUseRule.setDisable(false);
                 handleRuleBtn();
             } else {
-                tfCellsToLive.setDisable(true);
-                tfCellsToSpawn.setDisable(true);
+                tfCellsToSurvive.setDisable(true);
+                tfCellsToBeBorn.setDisable(true);
                 btnUseRule.setDisable(true);
                 activeBoard.setGameRule(new ConwaysRule());
             }
@@ -176,38 +176,38 @@ public class GameController implements Initializable {
 
     @FXML
     private void handleRuleBtn() {
-        byte[] toSpawn;
-        byte[] toLive;
-        System.out.println(tfCellsToLive.getText());
-        if (tfCellsToLive.getText().replaceAll("\\D", "").equals("")) {
-            tfCellsToLive.setText("");
-            toLive = new byte[]{-1};
+        byte[] toBeBorn;
+        byte[] toSurvive;
+        System.out.println(tfCellsToSurvive.getText());
+        if (tfCellsToSurvive.getText().replaceAll("\\D", "").equals("")) {
+            tfCellsToSurvive.setText("");
+            toSurvive = new byte[]{-1};
         } else {
-            String[] toLiveString = tfCellsToLive.getText().replaceAll("\\D", "").split("");
+            String[] toSurviveString = tfCellsToSurvive.getText().replaceAll("\\D", "").split("");
 
-            toLive = new byte[toLiveString.length];
-            for (int i = 0; i < toLive.length; i++) {
-                if (Character.isDigit(toLiveString[i].charAt(0)) && toLiveString[i].length() == 1) {
-                    toLive[i] = (byte) Integer.parseInt(toLiveString[i]);
+            toSurvive = new byte[toSurviveString.length];
+            for (int i = 0; i < toSurvive.length; i++) {
+                if (Character.isDigit(toSurviveString[i].charAt(0)) && toSurviveString[i].length() == 1) {
+                    toSurvive[i] = (byte) Integer.parseInt(toSurviveString[i]);
                 }
             }
 
         }
-        if (tfCellsToSpawn.getText().replaceAll("\\D", "").equals("")) {
-            tfCellsToSpawn.setText("");
-            toSpawn = new byte[]{-1};
+        if (tfCellsToBeBorn.getText().replaceAll("\\D", "").equals("")) {
+            tfCellsToBeBorn.setText("");
+            toBeBorn = new byte[]{-1};
         } else {
-            String[] toSpawnString = tfCellsToSpawn.getText().replaceAll("\\D", "").split("");
+            String[] toBeBornString = tfCellsToBeBorn.getText().replaceAll("\\D", "").split("");
 
-            toSpawn = new byte[toSpawnString.length];
-            for (int i = 0; i < toSpawn.length; i++) {
-                if (Character.isDigit(toSpawnString[i].charAt(0)) && toSpawnString[i].length() == 1) {
-                    toSpawn[i] = (byte) Integer.parseInt(toSpawnString[i]);
+            toBeBorn = new byte[toBeBornString.length];
+            for (int i = 0; i < toBeBorn.length; i++) {
+                if (Character.isDigit(toBeBornString[i].charAt(0)) && toBeBornString[i].length() == 1) {
+                    toBeBorn[i] = (byte) Integer.parseInt(toBeBornString[i]);
                 }
             }
         }
 
-        constructRule(toLive, toSpawn);
+        constructRule(toSurvive, toBeBorn);
     }
 
     /**
@@ -313,9 +313,9 @@ public class GameController implements Initializable {
         }
     }
 
-    public void constructRule(byte[] cellsToLive, byte[] cellsToSpawn) {
+    public void constructRule(byte[] cellsToSurvive, byte[] cellsToBeBorn) {
         try {
-            activeBoard.setGameRule(new CustomRule(cellsToLive, cellsToSpawn));
+            activeBoard.setGameRule(new CustomRule(cellsToSurvive, cellsToBeBorn));
         } catch (unsupportedRuleException ex) {
             Alert alert = new Alert(Alert.AlertType.ERROR, ex.getMessage());
             alert.setTitle("Error");
@@ -452,9 +452,9 @@ public class GameController implements Initializable {
                                 activeBoard.getCellSize(),
                                 activeBoard.getCellSize());
                         gc.setFill(cellColor);
-                        
+
                         gc.setGlobalAlpha(0.5);
-                        gc.fillRect(mousePositionX + i * activeBoard.getCellSize() + i * activeBoard.getGridSpacing() ,
+                        gc.fillRect(mousePositionX + i * activeBoard.getCellSize() + i * activeBoard.getGridSpacing(),
                                 mousePositionY + j * activeBoard.getCellSize() + j * activeBoard.getGridSpacing(),
                                 activeBoard.getCellSize(),
                                 activeBoard.getCellSize());

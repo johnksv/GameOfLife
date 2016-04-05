@@ -4,10 +4,7 @@ import gol.model.Logic.*;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Arrays;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * This class has the necessary static methods for parsing files into
@@ -55,7 +52,7 @@ public class ReadFile {
      * @see ConwaysRule
      * @return Rule 
      */
-    public Rule getParsedRule() {
+    public static Rule getParsedRule() {
         Rule returnRule = parsedRule;
         parsedRule = null;
         
@@ -245,7 +242,7 @@ public class ReadFile {
         byte[] survive = null;
 
         String[] rule = ruleLine.split("=");
-        //
+        
         rule = rule[1].split("/");
         for (int i = 0; i < rule.length; i++) {
             if (rule[i].matches("[Ss]\\d*")) {
@@ -293,8 +290,6 @@ public class ReadFile {
 
             }
         }
-        System.out.println(Arrays.toString(survive));
-        System.out.println(Arrays.toString(born));
         try {
             parsedRule = new CustomRule(survive, born);
         } catch (unsupportedRuleException ex) {

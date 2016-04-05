@@ -106,16 +106,16 @@
                                     <content>
                                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="300.0" prefWidth="250.0">
                                             <children>
-                                                <Label layoutX="7.0" layoutY="53.0" text="Naboer for å leve" />
-                                                <Label layoutX="7.0" layoutY="84.0" text="Naboer for å våkne" />
+                                                <Label layoutX="7.0" layoutY="53.0" text="S: survive at:" />
+                                                <Label layoutX="7.0" layoutY="84.0" text="B: born at:" />
                                                 <RadioButton contentDisplay="TOP" layoutX="19.0" layoutY="17.0" mnemonicParsing="false" selected="true" text="Standard">
                                                     <toggleGroup>
                                                         <ToggleGroup fx:id="tgGameRules" />
                                                     </toggleGroup>
                                                 </RadioButton>
                                                 <RadioButton fx:id="rbCustomGameRules" layoutX="123.0" layoutY="17.0" mnemonicParsing="false" text="Custom rules" toggleGroup="$tgGameRules" />
-                                                <TextField fx:id="tfCellsToLive" disable="true" layoutX="123.0" layoutY="49.0" prefHeight="25.0" prefWidth="92.0" text="2,3" />
-                                                <TextField fx:id="tfCellsToSpawn" disable="true" layoutX="123.0" layoutY="80.0" onKeyTyped="#handleRuleText" prefHeight="25.0" prefWidth="92.0" text="3" />
+                                                <TextField fx:id="tfCellsToSurvive" disable="true" layoutX="123.0" layoutY="49.0" prefHeight="25.0" prefWidth="92.0" text="2,3" />
+                                                <TextField fx:id="tfCellsToBeBorn" disable="true" layoutX="123.0" layoutY="80.0" onKeyTyped="#handleRuleText" prefHeight="25.0" prefWidth="92.0" text="3" />
                                                 <Button fx:id="btnUseRule" disable="true" layoutX="68.0" layoutY="120.0" mnemonicParsing="false" onAction="#handleRuleBtn" text="Use Rules" />
                                             </children>
                                         </AnchorPane>
