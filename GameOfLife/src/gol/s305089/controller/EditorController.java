@@ -19,6 +19,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.RadioButton;
 import javafx.scene.image.Image;
@@ -33,7 +34,7 @@ import javafx.scene.layout.HBox;
 public class EditorController implements Initializable {
 
     @FXML
-    private CanvasController canvasController;
+    private Canvas canvas;
     @FXML
     private CheckBox chboxAutoUpdateStrip;
     @FXML
