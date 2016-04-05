@@ -7,9 +7,13 @@ public class CustomRule implements Rule {
 
     private byte[] toSpawn, toLive;
 
-    public CustomRule(byte[] toLive, byte[] toSpawn) {
+    public CustomRule(byte[] toLive, byte[] toSpawn) throws unsupportedRuleException {
         this.toLive = toLive;
-        this.toSpawn = toSpawn;
+        if(toSpawn[0] == -1){
+            throw new unsupportedRuleException();
+        }else{
+            this.toSpawn = toSpawn;
+        }
     }
 
     /**
@@ -20,9 +24,13 @@ public class CustomRule implements Rule {
      * @return true if living neighbors is two or three, else false
      */
     private boolean toLive(byte cellToCheck) {
-        for (byte i : toLive) {
-            if (i + 64 == cellToCheck) {
-                return true;
+        if (toLive[0] == -1) {
+            return false;
+        } else {
+            for (byte i : toLive) {
+                if (i + 64 == cellToCheck) {
+                    return true;
+                }
             }
         }
         return false;
