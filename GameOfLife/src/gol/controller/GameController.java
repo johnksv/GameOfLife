@@ -57,8 +57,6 @@ import javafx.util.Duration;
 /**
  * @author s305054, s305084, s305089
  */
-
-
 public class GameController implements Initializable {
 
     @FXML
@@ -330,10 +328,12 @@ public class GameController implements Initializable {
         EditorController editorController = root.<EditorController>getController();
         editorController.setActiveBoard(activeBoard);
 
-        editor.setScene(scene);
         editor.setTitle("Pattern Editor");
         editor.initModality(Modality.APPLICATION_MODAL);
         editor.show();
+        editor.setMinWidth(800);
+        editor.setMinHeight(600);
+        editor.setScene(scene);
     }
 
     public void currentBoardToGIF() throws IOException {
@@ -371,7 +371,7 @@ public class GameController implements Initializable {
 
         golStats.show();
     }
-    
+
     @FXML
     private void rotateBoardFromFile() {
         if (boardFromFile != null) {
