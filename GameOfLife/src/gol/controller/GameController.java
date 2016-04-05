@@ -107,7 +107,8 @@ public class GameController implements Initializable {
 
         canvas.widthProperty().bind(borderpane.widthProperty().subtract(tabpane.widthProperty()));
         canvas.heightProperty().bind(borderpane.heightProperty());
-
+        cellSizeSlider.setBlockIncrement(0.75);
+        
         activeBoard = new ArrayBoard();
         cellCP.setValue(Color.BLACK);
         backgroundCP.setValue(Color.web("#F4F4F4"));
@@ -382,7 +383,6 @@ public class GameController implements Initializable {
 
         //TODO Scroll in at mouse position
         canvas.setOnScroll((ScrollEvent event) -> {
-
             if (event.getDeltaY() > 0) {
                 cellSizeSlider.increment();
             } else {
