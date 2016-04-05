@@ -108,7 +108,7 @@ public class GameController implements Initializable {
         canvas.widthProperty().bind(borderpane.widthProperty().subtract(tabpane.widthProperty()));
         canvas.heightProperty().bind(borderpane.heightProperty());
         cellSizeSlider.setBlockIncrement(0.75);
-        
+
         activeBoard = new ArrayBoard();
         cellCP.setValue(Color.BLACK);
         backgroundCP.setValue(Color.web("#F4F4F4"));
@@ -223,10 +223,14 @@ public class GameController implements Initializable {
         double newValue = 0.2 * Math.exp(0.05 * x);
         if ((newValue) * activeBoard.getArrayLength() > canvas.getHeight()
                 && (newValue) * activeBoard.getArrayLength(0) > canvas.getWidth()) {
-
             handleGridSpacingSlider();
 
-            calcNewOffset(activeBoard.getCellSize(), newValue);
+            if (cellSizeSlider.isFocused()) {
+
+                calcNewOffset(activeBoard.getCellSize(), newValue);
+            } else {
+                calcNewOffsetMouse(activeBoard.getCellSize(), newValue);
+            }
             activeBoard.setCellSize(newValue);
         } else {
             cellSizeSlider.setValue(20 * Math.log(5 * activeBoard.getCellSize()));
@@ -290,7 +294,7 @@ public class GameController implements Initializable {
                     boardFromFile = null;
                     timeline.getKeyFrames().remove(keyframe);
                 }
-                
+
                 activeBoard.setGameRule(ReadFile.getParsedRule());
                 draw();
             }
@@ -371,10 +375,10 @@ public class GameController implements Initializable {
 
         canvas.addEventHandler(MouseEvent.MOUSE_MOVED,
                 (MouseEvent e) -> {
+                    mousePositionX = (int) e.getX();
+                    mousePositionY = (int) e.getY();
                     if (boardFromFile != null) {
 
-                        mousePositionX = (int) e.getX();
-                        mousePositionY = (int) e.getY();
                         draw();
                         //TODO SUPPORT FOR OFFSET++
                         drawGhostTiles();
@@ -474,13 +478,15 @@ public class GameController implements Initializable {
             moveGridValues[3] = e.getY();
         } else {
             if (moveGridValues[0] + e.getX() - moveGridValues[2] < 0) {
-                if (moveGridValues[1] + e.getY() - moveGridValues[3] < 0) {
+                if (true) {
+                    if (moveGridValues[1] + e.getY() - moveGridValues[3] < 0) {
 
-                    moveGridValues[0] += e.getX() - moveGridValues[2]; //Offset x = x position - old y
-                    moveGridValues[1] += e.getY() - moveGridValues[3]; //Offset y = y position - old y
-                } else {
-                    moveGridValues[1] = 0;
-                    moveGridValues[0] += e.getX() - moveGridValues[2]; //Offset x = x position - old y
+                        moveGridValues[0] += e.getX() - moveGridValues[2]; //Offset x = x position - old y
+                        moveGridValues[1] += e.getY() - moveGridValues[3]; //Offset y = y position - old y
+                    } else {
+                        moveGridValues[1] = 0;
+                        moveGridValues[0] += e.getX() - moveGridValues[2]; //Offset x = x position - old y
+                    }
                 }
             } else {
                 moveGridValues[0] = 0;
@@ -515,7 +521,6 @@ public class GameController implements Initializable {
 
     //Does not calc gridspacing yet.
     private void calcNewOffset(double cellSize, double newCellSize) {
-        double gridSpace = activeBoard.getGridSpacing();
         if (cellSize != 0) {
 
             double oldx = (canvas.getWidth() / 2 - moveGridValues[0]) / (cellSize);
@@ -527,6 +532,31 @@ public class GameController implements Initializable {
             moveGridValues[0] = (moveGridValues[0] > 0) ? 0 : moveGridValues[0];
             moveGridValues[1] = (moveGridValues[1] > 0) ? 0 : moveGridValues[1];
 
+            double maxvalueX = -(newCellSize * activeBoard.getArrayLength() - canvas.getWidth());
+            double maxvalueY = -(newCellSize * activeBoard.getArrayLength(0) - canvas.getHeight());
+
+            moveGridValues[0] = (moveGridValues[0] < maxvalueX) ? maxvalueX : moveGridValues[0];
+            moveGridValues[1] = (moveGridValues[1] < maxvalueY) ? maxvalueY : moveGridValues[1];
+        }
+
+    }
+
+    private void calcNewOffsetMouse(double cellSize, double newCellSize) {
+        if (cellSize != 0) {
+            double oldx = (mousePositionX - moveGridValues[0]) / (cellSize);
+            double oldy = (mousePositionY - moveGridValues[1]) / (cellSize);
+
+            moveGridValues[0] = -(oldx * (newCellSize) - mousePositionX);
+            moveGridValues[1] = -(oldy * (newCellSize) - mousePositionY);
+
+            moveGridValues[0] = (moveGridValues[0] > 0) ? 0 : moveGridValues[0];
+            moveGridValues[1] = (moveGridValues[1] > 0) ? 0 : moveGridValues[1];
+
+            double maxvalueX = -(newCellSize * activeBoard.getArrayLength() - canvas.getWidth());
+            double maxvalueY = -(newCellSize * activeBoard.getArrayLength(0) - canvas.getHeight());
+
+            moveGridValues[0] = (moveGridValues[0] < maxvalueX) ? maxvalueX : moveGridValues[0];
+            moveGridValues[1] = (moveGridValues[1] < maxvalueY) ? maxvalueY : moveGridValues[1];
         }
 
     }
