@@ -289,6 +289,8 @@ public class GameController implements Initializable {
                     boardFromFile = null;
                     timeline.getKeyFrames().remove(keyframe);
                 }
+                
+                activeBoard.setGameRule(ReadFile.getParsedRule());
                 draw();
             }
 

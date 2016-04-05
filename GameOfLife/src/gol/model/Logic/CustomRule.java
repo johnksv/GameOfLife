@@ -5,16 +5,17 @@ package gol.model.Logic;
  */
 public class CustomRule implements Rule {
 
-    private byte[] toBeBorn;
+    private final byte[] toBeBorn;
     private final byte[] toSurvive;
 
     public CustomRule(byte[] toSurvive, byte[] toBeBorn) throws unsupportedRuleException {
         this.toSurvive = toSurvive;
-        if(toBeBorn[0] == -1){
-            throw new unsupportedRuleException();
-        }else{
-            this.toBeBorn = toBeBorn;
+        for (byte value : toBeBorn) {
+            if (value == 0 || value == -1) {
+                throw new unsupportedRuleException();
+            }
         }
+        this.toBeBorn = toBeBorn;
     }
 
     /**
