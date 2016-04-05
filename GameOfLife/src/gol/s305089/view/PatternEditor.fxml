@@ -19,7 +19,7 @@
     <center>
         <HBox BorderPane.alignment="TOP_LEFT">
          <children>
-            <Canvas fx:id="canvas" height="460.0" width="800.0" HBox.hgrow="ALWAYS" />
+            <Canvas fx:id="canvas" height="460.0" width="800.0"/>
          </children>
         </HBox>
     </center>
