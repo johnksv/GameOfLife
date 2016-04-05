@@ -19,6 +19,7 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
@@ -281,8 +282,13 @@ public class GameController implements Initializable {
 
                 Optional<ButtonType> result = alert.showAndWait();
                 if (result.get() == btnInsert) {
+                    KeyFrame keyframe = new KeyFrame(Duration.millis(1000), (ActionEvent event) -> {
+                        drawGhostTiles();
+                    });
+                    timeline.getKeyFrames().add(keyframe);
                     activeBoard.insertArray(boardFromFile, 1, 1);
                     boardFromFile = null;
+                    timeline.getKeyFrames().remove(keyframe);
                 }
                 draw();
             }
