@@ -224,7 +224,7 @@ public class GameController implements Initializable {
         if ((newValue) * activeBoard.getArrayLength() > canvas.getHeight()
                 && (newValue) * activeBoard.getArrayLength(0) > canvas.getWidth()) {
             handleGridSpacingSlider();
-
+            
             if (cellSizeSlider.isFocused()) {
 
                 calcNewOffset(activeBoard.getCellSize(), newValue);
@@ -385,8 +385,9 @@ public class GameController implements Initializable {
                     }
                 });
 
-        //TODO Scroll in at mouse position
         canvas.setOnScroll((ScrollEvent event) -> {
+            //TODO Talk about with the group
+            canvas.requestFocus();
             if (event.getDeltaY() > 0) {
                 cellSizeSlider.increment();
             } else {
