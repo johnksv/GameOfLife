@@ -10,34 +10,40 @@ import gol.model.Logic.unsupportedRuleException;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Optional;
 
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.animation.Animation;
 import javafx.animation.Animation.Status;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Slider;
+import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.ScrollEvent;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
+import javafx.stage.StageStyle;
 import javafx.util.Duration;
 
 /**
@@ -47,7 +53,10 @@ public class GameController implements Initializable {
 
     @FXML
     private Canvas canvas;
-
+    @FXML
+    private BorderPane borderpane;
+    @FXML
+    private TabPane tabpane;
     @FXML
     private Slider cellSizeSlider;
     @FXML
@@ -92,8 +101,10 @@ public class GameController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        System.out.println("Init");
         gc = canvas.getGraphicsContext2D();
+
+        canvas.widthProperty().bind(borderpane.widthProperty().subtract(tabpane.widthProperty()));
+        canvas.heightProperty().bind(borderpane.heightProperty());
 
         activeBoard = new ArrayBoard();
         cellCP.setValue(Color.BLACK);
@@ -137,7 +148,7 @@ public class GameController implements Initializable {
     }
 
     @FXML
-    public void handleAnimation() {
+    private void handleAnimation() {
 
         if (timeline.getStatus() == Status.RUNNING) {
             timeline.pause();
@@ -149,7 +160,7 @@ public class GameController implements Initializable {
     }
 
     @FXML
-    public void handleAnimationSpeedSlider() {
+    private void handleAnimationSpeedSlider() {
         double animationSpeed = animationSpeedSlider.getValue();
         timeline.setRate(animationSpeed);
         animationSpeedLabel.setText(String.format("%.2f %s", animationSpeed, " "));
@@ -162,7 +173,7 @@ public class GameController implements Initializable {
     }
 
     @FXML
-    public void handleRuleBtn() {
+    private void handleRuleBtn() {
         byte[] toSpawn;
         byte[] toLive;
         System.out.println(tfCellsToLive.getText());
@@ -204,11 +215,11 @@ public class GameController implements Initializable {
      * remove the spacing, but this is the only issue.
      */
     @FXML
-    public void handleZoom() {
+    private void handleZoom() {
         double x = cellSizeSlider.getValue();
         double newValue = 0.2 * Math.exp(0.05 * x);
-        if ((newValue + activeBoard.getGridSpacing()) * activeBoard.getArrayLength() > canvas.getHeight()
-                && (newValue + activeBoard.getGridSpacing()) * activeBoard.getArrayLength(0) > canvas.getWidth()) {
+        if ((newValue ) * activeBoard.getArrayLength() > canvas.getHeight()
+                && (newValue ) * activeBoard.getArrayLength(0) > canvas.getWidth()) {
 
             handleGridSpacingSlider();
 
@@ -221,16 +232,15 @@ public class GameController implements Initializable {
         draw();
     }
 
-    //TODO ZOOM!
     @FXML
-    public void handleGridSpacingSlider() {
+    private void handleGridSpacingSlider() {
         double x = cellSizeSlider.getValue();
         activeBoard.setGridSpacing(0.2 * Math.exp(0.05 * x) * gridSpacingSlider.getValue() / 100);
         draw();
     }
 
     @FXML
-    public void handleColor() {
+    private void handleColor() {
         //TODO
         cellColor = cellCP.getValue();
         backgroundColor = backgroundCP.getValue();
@@ -238,7 +248,7 @@ public class GameController implements Initializable {
     }
 
     @FXML
-    public void handleClearBtn() {
+    private void handleClearBtn() {
         activeBoard.clearBoard();
         timeline.pause();
         startPauseBtn.setText("Start game");
@@ -246,7 +256,7 @@ public class GameController implements Initializable {
     }
 
     @FXML
-    public void handleImportFileBtn() {
+    private void handleImportFileBtn() {
         try {
             FileChooser fileChooser = new FileChooser();
 
@@ -254,12 +264,29 @@ public class GameController implements Initializable {
                     new ExtensionFilter("Game of Life Files", "*.rle", "*.lif", "*.cells"),
                     new ExtensionFilter("All Files", "*.*"));
 
+            timeline.pause();
             File selected = fileChooser.showOpenDialog(null);
             if (selected != null) {
                 boardFromFile = ReadFile.readFileFromDisk(selected.toPath());
+                Alert alert = new Alert(AlertType.NONE);
+                alert.setTitle("Place pattern");
+                alert.initStyle(StageStyle.UTILITY);
+                alert.setContentText("How do you want to insert the pattern?");
+                ButtonType btnGhostTiles = new ButtonType("Insert with ghost tiles");
+                ButtonType btnInsert = new ButtonType("Insert at top-left");
 
-                //TODO no ghosttiles yet
-                activeBoard.insertArray(boardFromFile, 1, 1);
+                alert.getButtonTypes().addAll(btnGhostTiles, btnInsert);
+
+                Optional<ButtonType> result = alert.showAndWait();
+                if (result.get() == btnInsert) {
+                    KeyFrame keyframe = new KeyFrame(Duration.millis(1000), (ActionEvent event) -> {
+                        drawGhostTiles();
+                    });
+                    timeline.getKeyFrames().add(keyframe);
+                    activeBoard.insertArray(boardFromFile, 1, 1);
+                    boardFromFile = null;
+                    timeline.getKeyFrames().remove(keyframe);
+                }
                 draw();
             }
 
@@ -274,6 +301,13 @@ public class GameController implements Initializable {
             alert.setHeaderText("Pattern Error");
             alert.showAndWait();
 
+        }
+    }
+
+    @FXML
+    private void rotateBoardFromFile() {
+        if (boardFromFile != null) {
+            boardFromFile = usefullMethods.rotateArray90Deg(boardFromFile);
         }
     }
 
@@ -321,6 +355,28 @@ public class GameController implements Initializable {
                         moveGridValues[3] = -Double.MAX_VALUE;
                     }
                 });
+        
+        canvas.addEventHandler(MouseEvent.MOUSE_MOVED,
+                (MouseEvent e) -> {
+                    if (boardFromFile != null) {
+
+                        mousePositionX = (int) e.getX();
+                        mousePositionY = (int) e.getY();
+                        draw();
+                        //TODO SUPPORT FOR OFFSET++
+                        drawGhostTiles();
+                    }
+                });
+
+        //TODO Scroll in at mouse position
+        canvas.setOnScroll((ScrollEvent event) -> {
+
+            if (event.getDeltaY() > 0) {
+                cellSizeSlider.increment();
+            } else {
+                cellSizeSlider.decrement();
+            }
+        });
     }
 
     /**
@@ -329,7 +385,7 @@ public class GameController implements Initializable {
      * of gridspcaing (see - halfGridSpace) after this is done it adds the
      * offset
      */
-    public void drawGrid() {
+    private void drawGrid() {
         gc.setFill(Color.BLUE);
         //TODO Så den ikke tegner det som er utenfor det vi ser
         double sizeAndSpacing = activeBoard.getCellSize() + activeBoard.getGridSpacing();
@@ -348,7 +404,7 @@ public class GameController implements Initializable {
 
     }
 
-    public void draw() {
+    private void draw() {
         gc.setGlobalAlpha(1);
         gc.setFill(backgroundColor);
         gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
@@ -366,6 +422,34 @@ public class GameController implements Initializable {
                             i * activeBoard.getCellSize() + i * activeBoard.getGridSpacing() + moveGridValues[1],
                             activeBoard.getCellSize(),
                             activeBoard.getCellSize());
+                }
+            }
+        }
+
+    }
+
+    private void drawGhostTiles() {
+        if (boardFromFile != null) {
+
+            gc.setFill(cellColor);
+            for (int j = 0; j < boardFromFile.length; j++) {
+                for (int i = 0; i < boardFromFile[j].length; i++) {
+                    if (boardFromFile[j][i] == 64) {
+
+                        gc.setGlobalAlpha(1);
+                        gc.setFill(backgroundColor);
+                        gc.fillRect(mousePositionX + i * activeBoard.getCellSize() + i * activeBoard.getGridSpacing() + moveGridValues[0],
+                                mousePositionY + j * activeBoard.getCellSize() + j * activeBoard.getGridSpacing() + moveGridValues[1],
+                                activeBoard.getCellSize(),
+                                activeBoard.getCellSize());
+                        gc.setFill(cellColor);
+
+                        gc.setGlobalAlpha(0.5);
+                        gc.fillRect(mousePositionX + i * activeBoard.getCellSize() + i * activeBoard.getGridSpacing() + moveGridValues[0],
+                                mousePositionY + j * activeBoard.getCellSize() + j * activeBoard.getGridSpacing() + moveGridValues[1],
+                                activeBoard.getCellSize(),
+                                activeBoard.getCellSize());
+                    }
                 }
             }
         }
@@ -419,7 +503,7 @@ public class GameController implements Initializable {
     }
 
     //Does not calc gridspacing yet.
-    public void calcNewOffset(double cellSize, double newCellSize) {
+    private void calcNewOffset(double cellSize, double newCellSize) {
         double gridSpace = activeBoard.getGridSpacing();
         if (cellSize != 0) {
 
@@ -435,5 +519,4 @@ public class GameController implements Initializable {
         }
 
     }
-
 }
