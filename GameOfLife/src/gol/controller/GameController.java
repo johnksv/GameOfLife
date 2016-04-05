@@ -476,25 +476,33 @@ public class GameController implements Initializable {
         if (moveGridValues[2] == -Double.MAX_VALUE && moveGridValues[3] == -Double.MAX_VALUE) {
             moveGridValues[2] = e.getX();
             moveGridValues[3] = e.getY();
-        } else {
-            if (moveGridValues[0] + e.getX() - moveGridValues[2] < 0) {
-                if (true) {
-                    if (moveGridValues[1] + e.getY() - moveGridValues[3] < 0) {
-
-                        moveGridValues[0] += e.getX() - moveGridValues[2]; //Offset x = x position - old y
-                        moveGridValues[1] += e.getY() - moveGridValues[3]; //Offset y = y position - old y
-                    } else {
-                        moveGridValues[1] = 0;
-                        moveGridValues[0] += e.getX() - moveGridValues[2]; //Offset x = x position - old y
-                    }
+        } else {           
+            double maxValueX = -((activeBoard.getCellSize()+activeBoard.getGridSpacing()) * activeBoard.getArrayLength() - canvas.getWidth());
+            double maxValueY = -((activeBoard.getCellSize()+activeBoard.getGridSpacing()) * activeBoard.getArrayLength(0) - canvas.getHeight());
+            
+            double newXoffset = moveGridValues[0] + e.getX() - moveGridValues[2];
+            double newYoffset = moveGridValues[1] + e.getY() - moveGridValues[3];
+            if (newXoffset < 0) {
+                if (newXoffset > maxValueX) {
+                    moveGridValues[0] = newXoffset;
+                } else {
+                    moveGridValues[0] = maxValueX;
                 }
+
             } else {
                 moveGridValues[0] = 0;
-                if (moveGridValues[1] + e.getY() - moveGridValues[3] < 0) {
-                    moveGridValues[1] += e.getY() - moveGridValues[3]; //Offset y = y position - old y
+            }
+            if (newYoffset < 0) {
+                if (newYoffset > maxValueY) {
+                    moveGridValues[1] = newYoffset;
+                } else {
+                    moveGridValues[1] = maxValueY;
                 }
 
+            } else {
+                moveGridValues[1] = 0;
             }
+            
             moveGridValues[2] = e.getX();
             moveGridValues[3] = e.getY();
         }
