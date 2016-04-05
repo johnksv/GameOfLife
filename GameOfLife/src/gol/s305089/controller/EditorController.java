@@ -24,6 +24,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.RadioButton;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 
@@ -44,13 +45,14 @@ public class EditorController implements Initializable {
     private RadioButton rbRemoveCell;
     @FXML
     private RadioButton rbMoveGrid;
-    
+
     private Board gameboard;
     private GraphicsContext gc;
     private byte[][] pattern;
     private final List<ImageView> theStrip = new ArrayList<>();
     private GifMaker gifmaker;
-    
+    private final double[] moveGridValues = {0, 0, -Double.MAX_VALUE, -Double.MAX_VALUE};
+
     private Color cellColor = Color.BLACK;
     private Color backgroundColor = Color.web("#F4F4F4");
 
@@ -60,7 +62,9 @@ public class EditorController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         gc = canvas.getGraphicsContext2D();
+        System.out.println(gc); 
         initTheStrip();
+        mouseInit();
     }
 
     private void initTheStrip() {
@@ -111,13 +115,13 @@ public class EditorController implements Initializable {
      */
     public void setPattern(byte[][] Pattern) {
         //TODO dynaimc size of board
-        gameboard = new ArrayBoard(100, 100);
+        gameboard = new ArrayBoard(5, 5);
         this.pattern = Pattern;
         gameboard.insertArray(pattern, 1, 1);
     }
 
     private void draw() {
-        gc.setGlobalAlpha(1);
+        
         gc.setFill(backgroundColor);
         gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
         gc.setFill(cellColor);
@@ -137,7 +141,62 @@ public class EditorController implements Initializable {
                 }
             }
         }
-
     }
 
+    private void mouseInit() {
+        canvas.addEventHandler(MouseEvent.MOUSE_PRESSED,
+                (MouseEvent e) -> {
+                    System.out.println("pressed");
+                    handleMouseClick(e);
+                });
+        canvas.addEventHandler(MouseEvent.MOUSE_DRAGGED,
+                (MouseEvent e) -> {
+                    if (rbMoveGrid.isSelected()) {
+                        moveGrid(e);
+                    } else {
+                        handleMouseClick(e);
+                    }
+                });
+    }
+
+    private void handleMouseClick(MouseEvent e) {
+        double x = e.getX();
+        double y = e.getY();
+
+        if (rbRemoveCell.isSelected()) {
+            gameboard.setCellState(y, x, false, moveGridValues[0], moveGridValues[1]);
+        } else if (rbMoveGrid.isSelected()) {
+        } else {
+            gameboard.setCellState(y, x, true, moveGridValues[0], moveGridValues[1]);
+
+        }
+        draw();
+    }
+
+    private void moveGrid(MouseEvent e) {
+        if (moveGridValues[2] == -Double.MAX_VALUE && moveGridValues[3] == -Double.MAX_VALUE) {
+            moveGridValues[2] = e.getX();
+            moveGridValues[3] = e.getY();
+        } else {
+            if (moveGridValues[0] + e.getX() - moveGridValues[2] < 0) {
+                if (moveGridValues[1] + e.getY() - moveGridValues[3] < 0) {
+
+                    moveGridValues[0] += e.getX() - moveGridValues[2]; //Offset x = x position - old y
+                    moveGridValues[1] += e.getY() - moveGridValues[3]; //Offset y = y position - old y
+                } else {
+                    moveGridValues[1] = 0;
+                    moveGridValues[0] += e.getX() - moveGridValues[2]; //Offset x = x position - old y
+                }
+            } else {
+                moveGridValues[0] = 0;
+                if (moveGridValues[1] + e.getY() - moveGridValues[3] < 0) {
+                    moveGridValues[1] += e.getY() - moveGridValues[3]; //Offset y = y position - old y
+                }
+
+            }
+            moveGridValues[2] = e.getX();
+            moveGridValues[3] = e.getY();
+        }
+        draw();
+    }
 }
