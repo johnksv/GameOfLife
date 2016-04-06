@@ -1,6 +1,7 @@
 package gol.model.Board;
 
 import gol.model.Logic.Rule;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
@@ -21,8 +22,8 @@ public class ArrayBoard extends Board {
      */
     public ArrayBoard() {
         super();
-        WIDTH = 500;
-        HEIGHT = 500;
+        WIDTH = (int)Math.pow(2, 3);
+        HEIGHT = (int)Math.pow(2, 3);;
         gameBoard = new byte[WIDTH][HEIGHT];
     }
 
@@ -100,7 +101,19 @@ public class ArrayBoard extends Board {
             }
         }
     }
-
+    @Override
+    public void insertList(ArrayList<ArrayList<Number>> board){
+        int x = 0;
+        int y = 0;       
+        for(ArrayList<Number> list : board){
+            for(Number nr :list){
+                if(x <= WIDTH && y < HEIGHT){
+                    gameBoard[y++][x++]= nr.byteValue();
+                }
+            }
+        }
+        
+    }
     @Override
     public void setCellState(int y, int x, boolean alive) {
         byte value = 0;

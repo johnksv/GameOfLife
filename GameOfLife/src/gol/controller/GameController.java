@@ -151,8 +151,8 @@ public class GameController implements Initializable {
     private void initAnimation() {
         Duration duration = Duration.millis(1000);
         KeyFrame keyframe = new KeyFrame(duration, (ActionEvent e) -> {
-            activeBoard.nextGen();
-            //HashLife.preEvolve();
+            //activeBoard.nextGen();
+            HashLife.dynamicHash();
             draw();
         });
         timeline.setCycleCount(Animation.INDEFINITE);

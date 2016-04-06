@@ -3,6 +3,7 @@ package gol.s305084;
 import gol.model.Board.Board;
 import gol.model.Logic.*;
 import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -16,10 +17,10 @@ import java.util.Hashtable;
 public final class HashLife {
 
     private static Board activeBoard;
-    //private static byte[][] activeBoard;
+    private static final ArrayList<ArrayList<Number>> nextlist = new ArrayList<>();
     private static byte[][] nextBoard;
-    private static Hashtable<String, byte[]> hash = new Hashtable<>();
-    private static StringBuilder macroCell = new StringBuilder();
+    private static final Hashtable<String, byte[]> hash = new Hashtable<>();
+    private static final StringBuilder macroCell = new StringBuilder();
     //TODO save macrocells as short
     private static short macroCell_;
     private static int startX;
@@ -27,13 +28,15 @@ public final class HashLife {
 
     /**
      * Don't let anyone instantiate this class.
+     *
      * @see Math.Math()
      */
-    private HashLife() { }
+    private HashLife() {
+    }
 
     /**
-     * Sets a board to be manipulated by this class. 
-     * This needs to be done if HashLife is wished for.
+     * Sets a board to be manipulated by this class. This needs to be done if
+     * HashLife is wished for.
      *
      * @param otherBoard
      */
@@ -41,7 +44,74 @@ public final class HashLife {
         activeBoard = otherBoard;
     }
 
+    public static void dynamicHash() {
+
+        int k = 1;
+        while (activeBoard.getArrayLength() >= Math.pow(2, k) || activeBoard.getArrayLength(0) >= Math.pow(2, k)) {
+            k += 1;
+        }
+        while (nextlist.size() != Math.pow(2, k)) {
+            if (nextlist.size() < Math.pow(2, k)) {
+                nextlist.add(nextlist.size(), new ArrayList<>());
+            } else {
+                nextlist.remove(nextlist.size() - 1);
+            }
+        }
+        dynamicEvolve(0, 0, k);
+        //TODO Make this insert lists to
+        activeBoard.insertList(nextlist);
+
+    }
+
+    private static void dynamicEvolve(int y, int x, int k) {
+        if (k <= 1) {
+
+            //Creating Macrocell
+            macroCell.delete(0, macroCell.length());
+            for (int i = -1; i < 3; i++) {
+                for (int j = -1; j < 3; j++) {
+
+                    //TODO remove this if we get dynamic board
+                    if (y + i > 0 && x + j > 0) {
+                        if (y + i < activeBoard.getArrayLength() && x + j < activeBoard.getArrayLength(0)) {
+                            if (activeBoard.getCellState(y + i, x + j)) {
+                                macroCell.append('1');
+                            } else {
+                                macroCell.append('0');
+                            }
+                        }
+                    }
+                }
+            }
+            //Hashing
+            if (hash.containsKey(macroCell.toString())) {
+                for (int i = 0; i < 4; i++) {
+                    //nextBoard[y + (int) (i / 2)][x + i % 2] = hash.get(macroCell.toString())[i];
+                    nextlist.get(y + (int) (i / 2)).add(x + i % 2, hash.get(macroCell.toString())[i]);
+                }
+
+            } else {
+                byte[] nextgen = nextgenDynamic(y, x);
+                hash.put(macroCell.toString(), nextgen);
+
+                for (int i = 0; i < 4; i++) {
+                    //nextBoard[y + (int) (i / 2)][x + i % 2] = nextgen[i];
+
+                    nextlist.get(y + (int) (i / 2)).add(x + i % 2, nextgen[i]);
+                }
+            }
+            return;
+
+        }
+        k -= 1;
+        dynamicEvolve(y, x, k);//Topp Left
+        dynamicEvolve(y, x + (int) Math.pow(2, k), k); //Topp Rigth
+        dynamicEvolve(y + (int) Math.pow(2, k), x, k); //Bottom Left
+        dynamicEvolve(y + (int) Math.pow(2, k), x + (int) Math.pow(2, k), k); //Bottom Rigth
+    }
+
     //a macrocell is the size 2^n + 2  
+
     /**
      *
      */
@@ -112,6 +182,46 @@ public final class HashLife {
     /*
      * Helping method for hashlife, it is used to calculate non hashed macrocells.
      */
+
+    private static byte[] nextgenDynamic(int y, int x) {
+        byte[] nexGen = new byte[4];
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 2; j++) {
+                int counter = 0;
+                
+                for (int l = -1; l <= 1; l++) {
+                    for (int k = -1; k <= 1; k++) {
+                        //TODO remove this if we get dynamic board
+                        if (y + i + l > 0 && x + j + k > 0) {
+                            if (y + i + l < activeBoard.getArrayLength() && x + j + k < activeBoard.getArrayLength(0)) {
+                                if (activeBoard.getCellState(y + i + l, x + j + k)
+                                        && (l != 0 || k != 0)) {
+                                    counter++;
+                                }
+                            }
+                        }
+
+                    }
+                }
+                //System.out.println(counter);
+                //TODO remove this if we get dynamic board
+                if (y < activeBoard.getArrayLength() && x < activeBoard.getArrayLength(0)) {
+
+                    if (counter == 3 && !activeBoard.getCellState(y + i, x + j)) {
+
+                        nexGen[i * 2 + j] = 64;
+                    } else if ((counter == 2 || counter == 3) && activeBoard.getCellState(y + i, x + j)) {
+
+                        nexGen[i * 2 + j] = 64;
+                    } else {
+                        nexGen[i * 2 + j] = 0;
+                    }
+                }
+            }
+        }
+        System.out.println(Arrays.toString(nexGen));
+        return nexGen;
+    }
 
     private static byte[] nextgen(int y, int x) {
 

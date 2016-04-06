@@ -2,6 +2,7 @@ package gol.model.Board;
 
 import gol.model.Logic.ConwaysRule;
 import gol.model.Logic.Rule;
+import java.util.ArrayList;
 
 /**
  * The abstract class <code>Board</code> is the superclass of
@@ -160,7 +161,8 @@ public abstract class Board {
      * @param x coordinate for where the first column is placed
      */
     public abstract void insertArray(byte[][] boardFromFile, int y, int x);
-
+    
+    public abstract void insertList(ArrayList<ArrayList<Number>> board);
     /**
      * Sets the cell state at position (y,x)
      *
