@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.canvas.Canvas?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="455.0" prefWidth="666.0" style="-fx-background-color: #e6ffff;" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Canvas id="canvasEditor" height="271.0" width="376.0" />
+      <VBox layoutX="446.0" layoutY="14.0" prefHeight="271.0" prefWidth="169.0" spacing="10.0">
+         <children>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Editor:" wrappingWidth="88.201416015625">
+               <font>
+                  <Font name="Arial" size="23.0" />
+               </font>
+            </Text>
+            <RadioButton id="rbAdd" mnemonicParsing="false" text="Add cells" />
+            <RadioButton id="rbRemove" mnemonicParsing="false" prefHeight="17.0" prefWidth="119.0" text="Remove cells" />
+            <HBox alignment="CENTER" prefHeight="37.0" prefWidth="155.0">
+               <children>
+                  <Button minWidth="80.0" mnemonicParsing="false" text="Save as gif" />
+               </children>
+            </HBox>
+            <TextField promptText="Pattern Name" />
+            <TextField prefHeight="25.0" prefWidth="132.0" promptText="Author" />
+            <TextField promptText="Comments" />
+            <Button mnemonicParsing="false" text="Save as RLE" />
+            <Button mnemonicParsing="false" text="Close" />
+         </children>
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+         <padding>
+            <Insets left="5.0" top="5.0" />
+         </padding>
+      </VBox>
+      <ScrollPane layoutY="315.0" prefHeight="140.0" prefWidth="666.0">
+         <content>
+            <Canvas height="121.0" width="1019.0" />
+         </content>
+      </ScrollPane>
+   </children>
+</AnchorPane>
