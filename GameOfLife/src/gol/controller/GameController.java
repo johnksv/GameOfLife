@@ -338,8 +338,13 @@ public class GameController implements Initializable {
 
             editor.initModality(Modality.WINDOW_MODAL);
             editor.initOwner(canvas.getScene().getWindow());
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/gol/s305084/view/Editor.fxml"));
+
+            Parent root = loader.load();
+            gol.s305084.PatternEditorController editorController = loader.getController();
+            editorController.setBGColor(backgroundColor);
+            editorController.setCellColor(cellColor);
             
-            Parent root = FXMLLoader.load(getClass().getResource("/gol/s305084/view/Editor.fxml"));
             Scene scene = new Scene(root);
             editor.setScene(scene);
 
