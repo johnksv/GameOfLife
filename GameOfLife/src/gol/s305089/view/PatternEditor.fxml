@@ -77,7 +77,7 @@
                                 <TextField promptText="Description" />
                                 <TextField promptText="Rules (Survive/Birth)" />
                                 <TextField promptText="Placement" />
-                                <Button mnemonicParsing="false" text="Save pattern" />
+                                <Button onAction="#savePatternRLE" mnemonicParsing="false" text="Save pattern" />
                             </children>
                         </VBox>
                     </content>

@@ -7,6 +7,8 @@ package gol.s305089.controller;
 import gol.model.Board.ArrayBoard;
 import gol.model.Board.Board;
 import gol.s305089.UsefullMethods;
+import gol.s305089.model.WriteFile;
+import java.io.File;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -20,6 +22,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Affine;
+import javafx.stage.FileChooser;
 
 /**
  * FXML Controller class
@@ -106,15 +109,23 @@ public class EditorController implements Initializable {
     }
 
     @FXML
+    private void savePatternRLE() {
+        FileChooser filechooser = new FileChooser();
+        File file = filechooser.showSaveDialog(null);
+        if (file != null) {
+            WriteFile.writeToRLE(activeBoard.getBoundingBoxBoard(), file.toPath());
+        }
+    }
+
+    @FXML
     private void updateTheStrip() {
         Board tempBoard = activeBoard;
         theStripCanvas.setWidth(5000);
         theStripGc.clearRect(0, 0, theStripCanvas.widthProperty().get(), theStripCanvas.heightProperty().get());
         Affine xform = new Affine();
         double tx = 10;
-        double lastTx =0;
-        
-        
+        double lastTx = 0;
+
         //TODO FIX BUG: First two is drawn on top of each other
         for (int iteration = 0; iteration < 20; iteration++) {
 
@@ -132,13 +143,13 @@ public class EditorController implements Initializable {
             tempBoard.nextGen();
 
             drawTheStrip(tempBoard);
-            
+
             theStripGc.setTransform(xform);
             lastTx = longestRow * tempBoard.getCellSize() + 50;
             tx += lastTx;
             xform.setTx(tx);
         }
-        theStripCanvas.setWidth(tx-lastTx);
+        theStripCanvas.setWidth(tx - lastTx);
         xform.setTx(0.0);
         theStripGc.setTransform(xform);
 

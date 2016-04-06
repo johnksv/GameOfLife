@@ -11,7 +11,10 @@ import java.nio.file.Path;
  */
 public final class WriteFile {
 
-    private static void compressedRow(StringBuilder row) {
+    private WriteFile() {
+    }
+
+    private static StringBuilder compressedRow(StringBuilder row) {
         StringBuilder result = new StringBuilder();
         char[] rowArray = row.toString().toCharArray();
 
@@ -30,44 +33,43 @@ public final class WriteFile {
             } else {
                 if (countOfSameChar > 1) {
                     result.append(countOfSameChar + lastChar);
-                } else if (countOfSameChar == rowArray.length) {
+                } else if (countOfSameChar == rowArray.length-1) {
                     result.append(countOfSameChar);
-                } else {
+                }else if(curentChar == '$'){
+                    result.append(curentChar);
+                }else {
                     result.append(lastChar);
                 }
                 countOfSameChar = 0;
             }
         }
-        result.append('$');
-//TODO Om en hel rad er tom. Teste om dette fungerer
-    }
-
-    private WriteFile() {
+        return result;
+//TODO  Teste om dette fungerer
     }
 
     /**
      *
+     * @param boardToWrite
      * @param saveLocation
      * @return True if file was sucsessfully written to, otherwise false
      */
-    public static boolean writeToRLE(Board boardToWrite, Path saveLocation) {
+    public static boolean writeToRLE(byte[][] boardToWrite, Path saveLocation) {
         StringBuilder row = new StringBuilder();
-        int countOfLivingRow;
+        
         try (BufferedWriter writer = Files.newBufferedWriter(saveLocation)) {
-            for (int i = 1; i < boardToWrite.getArrayLength(); i++) {
-                countOfLivingRow = 0;
-                for (int j = 1; j < boardToWrite.getArrayLength(i); j++) {
-                    if (boardToWrite.getCellState(i, j)) {
+            for (int i = 0; i < boardToWrite.length; i++) {
+                for (int j = 0; j < boardToWrite[i].length; j++) {
+                    if (boardToWrite[i][j] == 64) {
                         row.append('o');
                     } else {
                         row.append('b');
                     }
                 }
                 row.append('$');
-                compressedRow(row);
-
+                row = compressedRow(row);
+                System.out.println(row);
                 writer.newLine();
-
+                row.delete(0, row.length());
             }
 
         } catch (IOException e) {
