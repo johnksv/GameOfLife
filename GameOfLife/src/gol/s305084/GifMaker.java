@@ -33,6 +33,7 @@ public class GifMaker {
     public static void makeGif(byte[][] board, GIFWriter gw,
             int newWidth, int newHeight, Color bgCl, Color cellCl, int counter) throws IOException {
 
+
         cellColor = cellCl;
         gifWriter = gw;
         height = newHeight;
@@ -93,7 +94,8 @@ public class GifMaker {
                     }
                 }
             }
-        }
+            }
+        
         System.out.println("next gen");
         frame.nextGen();
         gifWriter.insertCurrentImage();

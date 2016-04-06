@@ -11,6 +11,7 @@ import gol.s305084.HashLife;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Arrays;
 
 import java.util.ResourceBundle;
 import javafx.animation.Animation;
@@ -107,6 +108,7 @@ public class GameController implements Initializable {
 
         spinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 50));
         spinner.increment(14);
+
         canvasController.setActiveBoard(activeBoard);
         HashLife.loadeBoard(activeBoard);
         canvasController.setRbMoveGrid(rbMoveGrid);
@@ -173,30 +175,7 @@ public class GameController implements Initializable {
 
     }
 
-    @FXML
-    public void handleGifBtn() {
 
-        try {
-            FileChooser fileChooser = new FileChooser();
-
-            fileChooser.getExtensionFilters().addAll(
-                    new ExtensionFilter("GIF files", "*.gif"));
-
-            File selected = fileChooser.showSaveDialog(null);
-            if (selected != null) {
-                
-                       
-                GIFWriter gw = new GIFWriter(100, 100, selected.toPath().toAbsolutePath().toString(), (int) (1000 / timeline.getRate()));
-                 java.awt.Color bg =new java.awt.Color((float)backgroundCP.getValue().getRed(),(float)backgroundCP.getValue().getGreen(),(float)backgroundCP.getValue().getBlue());
-                 java.awt.Color cellColor =new java.awt.Color((float)cellCP.getValue().getRed(),(float)cellCP.getValue().getGreen(),(float)cellCP.getValue().getBlue());
-                 
-                GifMaker.makeGif( activeBoard.getGameBoard(), gw, 100, 100,bg, cellColor, (int) spinner.getValue());
-
-            }
-        } catch (IOException ex) {
-            System.err.println("error");
-        }
-    }
 
     @FXML
     public void handleRuleBtn() {
