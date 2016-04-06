@@ -6,12 +6,7 @@ import gol.model.FileIO.PatternFormatException;
 import gol.model.FileIO.ReadFile;
 import gol.model.Logic.ConwaysRule;
 import gol.model.Logic.CustomRule;
-import gol.s305084.GifMaker;
 import gol.s305084.HashLife;
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
-import java.util.Arrays;
 import gol.model.Logic.unsupportedRuleException;
 import java.io.File;
 import java.io.IOException;
@@ -19,6 +14,8 @@ import java.net.URL;
 import java.util.Optional;
 
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.animation.Animation;
 import javafx.animation.Animation.Status;
 import javafx.animation.KeyFrame;
@@ -27,7 +24,10 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Alert;
@@ -39,8 +39,6 @@ import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Slider;
-import javafx.scene.control.Spinner;
-import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Toggle;
@@ -51,9 +49,10 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
-import lieng.GIFWriter;
 
 /**
  * @author s305054, s305084, s305089
@@ -96,8 +95,6 @@ public class GameController implements Initializable {
     private Button btnUseRule;
     @FXML
     private CheckBox cbShowGrid;
-    @FXML
-    private Spinner spinner;
     //TODO Show grid is not working yet. Implement it
 
     private Board activeBoard;
@@ -135,7 +132,6 @@ public class GameController implements Initializable {
 
     }
 
-
     private void initGameRulesListner() {
         tgGameRules.selectedToggleProperty().addListener((ObservableValue<? extends Toggle> observable, Toggle oldValue, Toggle newValue) -> {
             if (newValue == rbCustomGameRules) {
@@ -155,8 +151,8 @@ public class GameController implements Initializable {
     private void initAnimation() {
         Duration duration = Duration.millis(1000);
         KeyFrame keyframe = new KeyFrame(duration, (ActionEvent e) -> {
-            //activeBoard.nextGen();
-            HashLife.preEvolve();
+            activeBoard.nextGen();
+            //HashLife.preEvolve();
             draw();
         });
         timeline.setCycleCount(Animation.INDEFINITE);
@@ -189,14 +185,10 @@ public class GameController implements Initializable {
 
     }
 
-
-
     @FXML
-
     private void handleRuleBtn() {
         byte[] toBeBorn;
         byte[] toSurvive;
-        System.out.println(tfCellsToSurvive.getText());
         if (tfCellsToSurvive.getText().replaceAll("\\D", "").equals("")) {
             tfCellsToSurvive.setText("");
             toSurvive = new byte[]{-1};
@@ -241,7 +233,7 @@ public class GameController implements Initializable {
         if ((newValue) * activeBoard.getArrayLength() > canvas.getHeight()
                 && (newValue) * activeBoard.getArrayLength(0) > canvas.getWidth()) {
             handleGridSpacingSlider();
-            
+
             if (cellSizeSlider.isFocused()) {
 
                 calcNewOffset(activeBoard.getCellSize(), newValue);
@@ -272,7 +264,6 @@ public class GameController implements Initializable {
     }
 
     @FXML
-
     private void handleClearBtn() {
         activeBoard.clearBoard();
         timeline.pause();
@@ -337,6 +328,25 @@ public class GameController implements Initializable {
     private void rotateBoardFromFile() {
         if (boardFromFile != null) {
             boardFromFile = usefullMethods.rotateArray90Deg(boardFromFile);
+        }
+    }
+
+    @FXML
+    private void handleSEditor() {
+        try {
+            Stage editor = new Stage();
+
+            editor.initModality(Modality.WINDOW_MODAL);
+            editor.initOwner(canvas.getScene().getWindow());
+            
+            Parent root = FXMLLoader.load(getClass().getResource("/gol/s305084/view/Editor.fxml"));
+            Scene scene = new Scene(root);
+            editor.setScene(scene);
+
+            editor.setTitle("Pattern Editor");
+            editor.showAndWait();
+        } catch (IOException ex) {
+            Logger.getLogger(GameController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -497,10 +507,10 @@ public class GameController implements Initializable {
         if (moveGridValues[2] == -Double.MAX_VALUE && moveGridValues[3] == -Double.MAX_VALUE) {
             moveGridValues[2] = e.getX();
             moveGridValues[3] = e.getY();
-        } else {           
-            double maxValueX = -((activeBoard.getCellSize()+activeBoard.getGridSpacing()) * activeBoard.getArrayLength() - canvas.getWidth());
-            double maxValueY = -((activeBoard.getCellSize()+activeBoard.getGridSpacing()) * activeBoard.getArrayLength(0) - canvas.getHeight());
-            
+        } else {
+            double maxValueX = -((activeBoard.getCellSize() + activeBoard.getGridSpacing()) * activeBoard.getArrayLength() - canvas.getWidth());
+            double maxValueY = -((activeBoard.getCellSize() + activeBoard.getGridSpacing()) * activeBoard.getArrayLength(0) - canvas.getHeight());
+
             double newXoffset = moveGridValues[0] + e.getX() - moveGridValues[2];
             double newYoffset = moveGridValues[1] + e.getY() - moveGridValues[3];
             if (newXoffset < 0) {
@@ -523,7 +533,7 @@ public class GameController implements Initializable {
             } else {
                 moveGridValues[1] = 0;
             }
-            
+
             moveGridValues[2] = e.getX();
             moveGridValues[3] = e.getY();
         }
