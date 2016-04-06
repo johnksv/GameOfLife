@@ -7,7 +7,7 @@ import gol.model.FileIO.ReadFile;
 import gol.model.Logic.ConwaysRule;
 import gol.model.Logic.CustomRule;
 import gol.model.Logic.unsupportedRuleException;
-import gol.s305089.controller.EditorController;
+import gol.s305089.controller.PatternEditorController;
 import gol.s305089.model.GifMaker;
 import gol.s305089.controller.GifMakerController;
 import gol.s305089.controller.StatsController;
@@ -325,7 +325,7 @@ public class GameController implements Initializable {
         FXMLLoader root = new FXMLLoader(getClass().getResource("/gol/s305089/view/PatternEditor.fxml"));
 
         Scene scene = new Scene((Parent) root.load());
-        EditorController editorController = root.<EditorController>getController();
+        PatternEditorController editorController = root.<PatternEditorController>getController();
         editorController.setActiveBoard(activeBoard);
 
         editor.setTitle("Pattern Editor");

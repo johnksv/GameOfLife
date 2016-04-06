@@ -29,7 +29,7 @@ import javafx.stage.FileChooser;
  *
  * @author John Kasper
  */
-public class EditorController implements Initializable {
+public class PatternEditorController implements Initializable {
 
     @FXML
     private BorderPane rootBorderPane;

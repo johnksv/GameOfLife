@@ -13,6 +13,68 @@ public final class WriteFile {
 
     private WriteFile() {
     }
+    private static String patternName, author, comment;
+
+    /**
+     *
+     * @param boardToWrite
+     * @param saveLocation
+     * @return True if file was sucsessfully written to, otherwise false
+     */
+    public static boolean writeToRLE(byte[][] boardToWrite, Path saveLocation) {
+
+        int xRows = 0;
+        int yCols = 0;
+        xRows = boardToWrite.length;
+        for (byte[] gameRow : boardToWrite) {
+            if (gameRow.length > yCols) {
+                yCols = gameRow.length;
+            }
+        }
+        String bordDimensions = "x = " + xRows + ", y = " + yCols;
+
+        try (BufferedWriter writer = Files.newBufferedWriter(saveLocation)) {
+            if (patternName != null) {
+                writer.append("#N: " + patternName);
+                writer.newLine();
+            }
+            if (author != null) {
+                writer.append("#O: " + author);
+                writer.newLine();
+            }
+            if (comment != null) {
+                writer.append("#C: " + comment.replace("\n", " "));
+                writer.newLine();
+            }
+            
+            writer.append(bordDimensions);
+            //TODO append rules
+            writer.newLine();
+            writer.append(parseGameBoard(boardToWrite));
+
+            patternName = null;
+            author = null;
+            comment = null;
+
+            return true;
+        } catch (IOException e) {
+
+        }
+
+        return false;
+    }
+
+    public static void setPatternName(String newPatternName) {
+        patternName = newPatternName;
+    }
+
+    public static void setAuthor(String patternAuthor) {
+        author = patternAuthor;
+    }
+
+    public static void setComment(String patternComment) {
+        comment = patternComment;
+    }
 
     private static StringBuilder compressedRow(StringBuilder row) {
         StringBuilder result = new StringBuilder();
@@ -32,51 +94,41 @@ public final class WriteFile {
                 countOfSameChar++;
             } else {
                 if (countOfSameChar > 1) {
-                    result.append(countOfSameChar + lastChar);
-                } else if (countOfSameChar == rowArray.length-1) {
                     result.append(countOfSameChar);
-                }else if(curentChar == '$'){
+                    result.append(lastChar);
+                    result.append('$');
+                } else if (countOfSameChar == rowArray.length - 1) {
+                    result.append(countOfSameChar);
+                } else if (curentChar == '$') {
                     result.append(curentChar);
-                }else {
+                } else {
                     result.append(lastChar);
                 }
                 countOfSameChar = 0;
             }
         }
         return result;
-//TODO  Teste om dette fungerer
     }
 
-    /**
-     *
-     * @param boardToWrite
-     * @param saveLocation
-     * @return True if file was sucsessfully written to, otherwise false
-     */
-    public static boolean writeToRLE(byte[][] boardToWrite, Path saveLocation) {
+    private static StringBuilder parseGameBoard(byte[][] boardToWrite) {
+        StringBuilder patternFile = new StringBuilder();
         StringBuilder row = new StringBuilder();
-        
-        try (BufferedWriter writer = Files.newBufferedWriter(saveLocation)) {
-            for (int i = 0; i < boardToWrite.length; i++) {
-                for (int j = 0; j < boardToWrite[i].length; j++) {
-                    if (boardToWrite[i][j] == 64) {
-                        row.append('o');
-                    } else {
-                        row.append('b');
-                    }
+        for (byte[] gameRow : boardToWrite) {
+            for (int j = 0; j < gameRow.length; j++) {
+                if (gameRow[j] == 64) {
+                    row.append('o');
+                } else {
+                    row.append('b');
                 }
-                row.append('$');
-                row = compressedRow(row);
-                System.out.println(row);
-                writer.newLine();
-                row.delete(0, row.length());
             }
+            row.append('$');
+            row = compressedRow(row);
 
-        } catch (IOException e) {
-
+            patternFile.append(row);
+            patternFile.append(System.lineSeparator());
+            row.delete(0, row.length());
         }
-
-        return false;
+        return patternFile;
     }
 
 }

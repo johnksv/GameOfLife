@@ -4,6 +4,7 @@
 <?import javafx.scene.canvas.Canvas?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Separator?>
@@ -11,27 +12,96 @@
 <?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane fx:id="rootBorderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gol.s305089.controller.EditorController">
+<BorderPane fx:id="rootBorderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gol.s305089.controller.PatternEditorController">
     <center>
-        <HBox BorderPane.alignment="TOP_LEFT">
-            <children>
-                <Canvas fx:id="canvas" height="460.0" width="800.0" />
-            </children>
-        </HBox>
+      <AnchorPane BorderPane.alignment="TOP_LEFT">
+         <children>
+              <HBox>
+                  <children>
+                      <Canvas fx:id="canvas" height="460.0" width="800.0" />
+                  </children>
+              </HBox>
+              <VBox fillWidth="false" AnchorPane.rightAnchor="0.0">
+                  <children>
+                      <TitledPane prefWidth="250.0" text="General settings">
+                          <content>
+                              <VBox prefWidth="200.0" spacing="10.0">
+                                  <children>
+                                      <RadioButton mnemonicParsing="false" selected="true" text="Add cells">
+                                          <toggleGroup>
+                                              <ToggleGroup fx:id="mouseActions" />
+                                          </toggleGroup>
+                                      </RadioButton>
+                                      <RadioButton fx:id="rbRemoveCell" mnemonicParsing="false" text="Remove cells" toggleGroup="$mouseActions" />
+                                      <Button mnemonicParsing="false" onAction="#handleClearBtn" text="Clear board" />
+                                      <Separator prefWidth="200.0" />
+                                      <Button mnemonicParsing="false" text="Send board to main window" />
+                                  </children>
+                              </VBox>
+                          </content>
+                      </TitledPane>
+                      <TitledPane prefWidth="250.0" text="Save pattern &amp; metadata">
+                          <content>
+                              <VBox prefHeight="200.0" prefWidth="100.0" spacing="10.0">
+                                  <children>
+                              <HBox>
+                                 <children>
+                                    <Label text="Name:" />
+                                    <Region prefHeight="25.0" prefWidth="44.0" />
+                                            <TextField promptText="Pattername" />
+                                 </children>
+                              </HBox>
+                              <HBox>
+                                 <children>
+                                    <Label text="Author:" />
+                                    <Region prefHeight="25.0" prefWidth="39.0" />
+                                            <TextField promptText="Author" />
+                                 </children>
+                              </HBox>
+                              <HBox>
+                                 <children>
+                                    <Label text="Desciption:" />
+                                    <Region prefHeight="25.0" prefWidth="20.0" />
+                                            <TextField promptText="Description" />
+                                 </children>
+                              </HBox>
+                              <HBox>
+                                 <children>
+                                    <Label text="Rules:" />
+                                    <Region prefHeight="25.0" prefWidth="47.0" />
+                                            <TextField promptText="Survive/Birth" />
+                                 </children>
+                              </HBox>
+                              <Label text="Leave &quot;Rules&quot; blank for standard rules:" />
+                                      <Button mnemonicParsing="false" onAction="#savePatternRLE" text="Save pattern to file" />
+                                  </children>
+                              </VBox>
+                          </content>
+                          <padding>
+                              <Insets top="5.0" />
+                          </padding>
+                      </TitledPane>
+                  </children>
+              </VBox>
+         </children>
+      </AnchorPane>
     </center>
     <bottom>
-        <TitledPane prefHeight="225.0" prefWidth="800.0" text="Preview generations" BorderPane.alignment="TOP_LEFT">
+        <TitledPane alignment="BOTTOM_LEFT" animated="false" prefWidth="800.0" text="Preview generations" BorderPane.alignment="BOTTOM_LEFT">
             <content>
                 <VBox>
                     <children>
                         <ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                             <items>
-                                <CheckBox fx:id="chboxAutoUpdateStrip" mnemonicParsing="false" text="Automatically update strip" />
                                 <Button mnemonicParsing="false" onAction="#updateTheStrip" text="Update strip" />
+                        <Region prefHeight="30.0" prefWidth="17.0" />
+                                <CheckBox fx:id="chboxAutoUpdateStrip" mnemonicParsing="false" text="Automatically update strip" />
                             </items>
                         </ToolBar>
                         <ScrollPane BorderPane.alignment="CENTER">
@@ -48,44 +118,4 @@
             </content>
         </TitledPane>
     </bottom>
-    <right>
-        <VBox BorderPane.alignment="TOP_LEFT">
-            <children>
-                <TitledPane prefWidth="200.0" text="General settings">
-                    <content>
-                        <VBox prefWidth="200.0" spacing="10.0">
-                            <children>
-                                <RadioButton mnemonicParsing="false" selected="true" text="Add cells">
-                                    <toggleGroup>
-                                        <ToggleGroup fx:id="mouseActions" />
-                                    </toggleGroup>
-                                </RadioButton>
-                                <RadioButton fx:id="rbRemoveCell" mnemonicParsing="false" text="Remove cells" toggleGroup="$mouseActions" />
-                                <Button mnemonicParsing="false" onAction="#handleClearBtn" text="Clear board" />
-                                <Separator prefWidth="200.0" />
-                                <Button mnemonicParsing="false" text="Send board to main window" />
-                            </children>
-                        </VBox>
-                    </content>
-                </TitledPane>
-                <TitledPane prefWidth="200.0" text="Save pattern &amp; metadata">
-                    <content>
-                        <VBox prefHeight="200.0" prefWidth="100.0" spacing="10.0">
-                            <children>
-                                <TextField promptText="Pattername" />
-                                <TextField promptText="Author" />
-                                <TextField promptText="Description" />
-                                <TextField promptText="Rules (Survive/Birth)" />
-                                <TextField promptText="Placement" />
-                                <Button onAction="#savePatternRLE" mnemonicParsing="false" text="Save pattern" />
-                            </children>
-                        </VBox>
-                    </content>
-                    <padding>
-                        <Insets top="5.0" />
-                    </padding>
-                </TitledPane>
-            </children>
-        </VBox>
-    </right>
 </BorderPane>
