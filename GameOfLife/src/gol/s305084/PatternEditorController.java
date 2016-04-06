@@ -5,11 +5,11 @@ import java.util.ResourceBundle;
 import javafx.fxml.Initializable;
 
 /**
- * FXML Controller class
+ * Controller
  *
  * @author S305084
  */
-public class FXMLController implements Initializable {
+public class PatternEditorController implements Initializable {
 
     /**
      * Initializes the controller class.
