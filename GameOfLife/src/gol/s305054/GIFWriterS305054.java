@@ -16,7 +16,6 @@ import lieng.GIFWriter;
 public class GIFWriterS305054 {
 
     private Board copiedBoard; //deep copy of board - TODO check if boundBox or not.
-    byte[][] copiedArray;
 
     int width = 100; //Width of .gif - Hardcoded value will be changed
     int height = 100; //Height of .gif - Hardcoded value will be changed
@@ -36,13 +35,8 @@ public class GIFWriterS305054 {
          Param originaleBoard - get array, each element in originaleArray, assigned to copied array
          assigns copied array to copiedBoard.
          */
-        byte[][] originaleArray = originaleBoard.getBoundingBoxBoard();
-        for (int i = 0; i < originaleBoard.getArrayLength(); i++) {
-            for (int j = 0; j < originaleBoard.getArrayLength(i); j++) {
-                copiedArray[i][j] = originaleArray[i][j];
-            }
-        }
-        copiedBoard.insertArray(copiedArray, 1, 1);
+        byte[][] originaleArray = originaleBoard.getBoundingBoxBoard();      
+        copiedBoard.insertArray(originaleArray, 1, 1); //Get boundingBox and insert it to an empty.
     }
     /**
      * This method is used for creating a .gif file with x generations (pictures), with dimension ixj, and speed y.
