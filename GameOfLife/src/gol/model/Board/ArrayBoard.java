@@ -1,7 +1,6 @@
 package gol.model.Board;
 
 import gol.model.Logic.Rule;
-import gol.s305084.HashLife;
 import java.util.Arrays;
 
 /**
@@ -40,11 +39,13 @@ public class ArrayBoard extends Board {
         gameBoard = new byte[WIDTH][HEIGHT];
 
     }
-
+    /*
+    * Bruker gameBoard.length i stedet for getArrayLength(i/j) for å ta med ramme.
+    */
     @Override
     public void clearBoard() {
-        for (int i = 1; i < getArrayLength(); i++) {
-            for (int j = 1; j < getArrayLength(i); j++) {
+        for (int i = 0; i < gameBoard.length; i++) {
+            for (int j = 0; j < gameBoard.length; j++) {
                 gameBoard[i][j] = 0;
             }
         }

@@ -3,8 +3,8 @@ package gol.model.Logic;
 /**
  * This class implements all the logic behind Conway's rule of Game of Life.
  * Conway's rule specifies the next generation with these requirement:
- * A cell lives on if it has two or three neigbhors.
- * A cell spawns if it has excatly three neigbhors.
+ * A cell survives on if it has two or three neigbhors.
+ * A cell will be born if it has excatly three neigbhors.
  * Otherwise the cell will die.
  * 
  * Conway's Rule is the originale set of rules in Game of Life.
@@ -26,23 +26,23 @@ public class ConwaysRule implements Rule {
      * @param cellToCheck cell that is being checked for living neighbors
      * @return true if living neighbors is two or three, else false
      */
-    private boolean toLive(byte cellToCheck) {
+    private boolean toSurvive(byte cellToCheck) {
         return cellToCheck == 66 || cellToCheck == 67;
     }
 
     /**
-     * Check if a dead cell will be spawned the next generation.
+     * Check if a dead cell will be born the next generation.
      * 
      * @param cellToCheck cell that is being checked for living neighbors
      * @return true if there are exactly three living neighbors
      */
-    private boolean toSpawn(byte cellToCheck) {
+    private boolean toBeBorn(byte cellToCheck) {
         return cellToCheck == 3;
     }
 
     @Override
     public byte setLife(byte cellToCheck) {
-        if (toLive(cellToCheck) || toSpawn(cellToCheck)) {
+        if (toSurvive(cellToCheck) || toBeBorn(cellToCheck)) {
             return 64;
         }
         return 0;
