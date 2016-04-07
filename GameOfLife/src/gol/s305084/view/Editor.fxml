@@ -32,7 +32,7 @@
             <TextField promptText="Pattern Name" />
             <TextField prefHeight="25.0" prefWidth="132.0" promptText="Author" />
             <TextField promptText="Comments" />
-            <Button mnemonicParsing="false" text="Save as RLE" />
+            <Button mnemonicParsing="false" onAction="#handlebtnRLE" text="Save as RLE" />
             <Button mnemonicParsing="false" text="Close" />
          </children>
          <opaqueInsets>
