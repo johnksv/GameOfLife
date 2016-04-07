@@ -17,6 +17,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
@@ -41,6 +42,8 @@ public class PatternEditorController implements Initializable {
     private Canvas theStripCanvas;
     @FXML
     private RadioButton rbRemoveCell;
+    @FXML
+    private Label labelWriteFileFdBck;
 
     private Board activeBoard;
     private GraphicsContext gc;
@@ -110,11 +113,16 @@ public class PatternEditorController implements Initializable {
 
     @FXML
     private void savePatternRLE() {
+        boolean fileSucsessCreated = false;
         FileChooser filechooser = new FileChooser();
         File file = filechooser.showSaveDialog(null);
         if (file != null) {
-            WriteFile.writeToRLE(activeBoard.getBoundingBoxBoard(), file.toPath());
+            byte[][] boardToWrite = activeBoard.getBoundingBoxBoard();
+            if (boardToWrite.length != 0) {
+                fileSucsessCreated = WriteFile.writeToRLE(activeBoard.getBoundingBoxBoard(), file.toPath());
+            }
         }
+        labelWriteFileFdBck.setText(fileSucsessCreated ? "Success" : "Failed.. Try again");
     }
 
     @FXML

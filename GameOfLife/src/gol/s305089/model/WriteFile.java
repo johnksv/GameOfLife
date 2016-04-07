@@ -82,9 +82,6 @@ public final class WriteFile {
         StringBuilder result = new StringBuilder();
         char[] rowArray = row.toString().toCharArray();
 
-        //ooobbo$
-        // obb$
-        //o$
         int countOfSameChar = 0;
         char currentChar;
         char lastChar;
