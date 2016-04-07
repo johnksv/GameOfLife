@@ -73,7 +73,7 @@ public class WriteFileTest {
     public void testCompressedRow5() {
         System.out.println("compressedRow5");
         StringBuilder row = new StringBuilder("bbb$");
-        String expResult = "b$";
+        String expResult = "$";
         StringBuilder result = WriteFile.compressedRow(row);
         assertEquals(expResult, result.toString());
     }
@@ -91,6 +91,15 @@ public class WriteFileTest {
         System.out.println("compressedRow7");
         StringBuilder row = new StringBuilder("b$");
         String expResult = "b$";
+        StringBuilder result = WriteFile.compressedRow(row);
+        assertEquals(expResult, result.toString());
+    }
+    
+    @Test
+    public void testCompressedRow8() {
+        System.out.println("compressedRow7");
+        StringBuilder row = new StringBuilder("bob!");
+        String expResult = "bob!";
         StringBuilder result = WriteFile.compressedRow(row);
         assertEquals(expResult, result.toString());
     }

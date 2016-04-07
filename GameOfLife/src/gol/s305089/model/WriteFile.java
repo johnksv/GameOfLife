@@ -77,10 +77,11 @@ public final class WriteFile {
     }
 
     /**
-     * TODO: If time: fix:
-     * If an row is bbb$, it will append b$, an not 2$ to the previous row
+     * TODO: If time: fix: If an row is bbb$, it will append b$, an not 2$ to
+     * the previous row
+     *
      * @param row
-     * @return 
+     * @return
      */
     public static StringBuilder compressedRow(StringBuilder row) {
         //TODO Rewrite Method. Returns wrong
@@ -102,7 +103,6 @@ public final class WriteFile {
             if (i == rowArray.length - 1) {
                 if (countOfSameChar > 1) {
                     if (lastChar == 'b' && countOfSameChar == rowArray.length - 1) {
-                        result.append('b');
                     } else {
                         result.append(countOfSameChar);
                         result.append(lastChar);
@@ -132,6 +132,7 @@ public final class WriteFile {
     private static StringBuilder parseGameBoard(byte[][] boardToWrite) {
         StringBuilder patternFile = new StringBuilder();
         StringBuilder row = new StringBuilder();
+        int numberOfEmptyRows = 0;
         for (int i = 0; i < boardToWrite.length; i++) {
             for (int j = 0; j < boardToWrite[i].length; j++) {
                 if (boardToWrite[i][j] == 64) {
@@ -146,9 +147,21 @@ public final class WriteFile {
             } else {
                 row.append('!');
             }
-            patternFile.append(compressedRow(row));
+            String compressedRow = compressedRow(row).toString();
+            if (compressedRow.equals("$")) {
+                numberOfEmptyRows++;
+            } else {
+                if (numberOfEmptyRows > 0) {
+                    patternFile.append(numberOfEmptyRows);
+                    patternFile.append('$');
+                    patternFile.append(compressedRow);
+                    numberOfEmptyRows = 0;
+                } else {
+                    patternFile.append(compressedRow);
+                }
+            }
 
-            if (i % 5 == 0) {
+            if (i % 8 == 1) {
                 patternFile.append(System.lineSeparator());
             }
 
