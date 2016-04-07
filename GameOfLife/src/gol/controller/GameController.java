@@ -43,6 +43,7 @@ import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.BorderPane;
@@ -335,7 +336,8 @@ public class GameController implements Initializable {
     private void handleSEditor() {
         try {
             Stage editor = new Stage();
-
+            editor.getIcons().add(new Image(getClass().getResourceAsStream("icon.png")));
+        
             editor.initModality(Modality.WINDOW_MODAL);
             editor.initOwner(canvas.getScene().getWindow());
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/gol/s305084/view/Editor.fxml"));

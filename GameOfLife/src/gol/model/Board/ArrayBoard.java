@@ -22,8 +22,8 @@ public class ArrayBoard extends Board {
      */
     public ArrayBoard() {
         super();
-        WIDTH = (int)Math.pow(2, 6);
-        HEIGHT = (int)Math.pow(2, 6);;
+        WIDTH = (int) Math.pow(2, 6);
+        HEIGHT = (int) Math.pow(2, 6);;
         gameBoard = new byte[WIDTH][HEIGHT];
     }
 
@@ -41,8 +41,9 @@ public class ArrayBoard extends Board {
 
     }
     /*
-    * Bruker gameBoard.length i stedet for getArrayLength(i/j) for å ta med ramme.
-    */
+     * Bruker gameBoard.length i stedet for getArrayLength(i/j) for å ta med ramme.
+     */
+
     @Override
     public void clearBoard() {
         for (int i = 0; i < gameBoard.length; i++) {
@@ -101,25 +102,33 @@ public class ArrayBoard extends Board {
             }
         }
     }
+
     @Override
-    public void insertList(ArrayList<ArrayList<Number>> board){
+    public void insertList(ArrayList<ArrayList<Number>> board) {
         int x = 0;
-        int y = 0;       
-        for(ArrayList<Number> list : board){
-            for(Number nr :list){
-                if(x <= WIDTH && y < HEIGHT){
-                    gameBoard[y++][x++]= nr.byteValue();
+        int y = 0;
+        for (ArrayList<Number> list : board) {
+            for (Number nr : list) {
+                if (x < WIDTH && y < HEIGHT) {
+                    gameBoard[y][x++] = nr.byteValue();
                 }
             }
+            y++;
+            x = 0;
         }
-        
+
     }
+
     @Override
     public void setCellState(int y, int x, boolean alive) {
         byte value = 0;
         if (alive) {
             value = 64;
         }
+        if (y <= 0 || x <= 0) {
+            return;
+        }
+
         if (y < gameBoard.length && y >= 0) {
             if (x < gameBoard[y].length && x >= 0) {
                 gameBoard[y][x] = value;
@@ -232,6 +241,12 @@ public class ArrayBoard extends Board {
 
     @Override
     public boolean getCellState(int y, int x) {
+        if (y < 0 || x < 0) {
+            return false;
+        }
+        if(y >= gameBoard.length ||x >= gameBoard[0].length){
+            return false;
+        }
         return gameBoard[y][x] >= 64;
     }
 

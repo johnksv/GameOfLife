@@ -18,7 +18,7 @@ public final class HashLife {
 
     private static Board activeBoard;
     private static final ArrayList<ArrayList<Number>> nextlist = new ArrayList<>();
-    private static byte[][] nextBoard = new byte[(int) Math.pow(2, 6)][(int) Math.pow(2, 6)];
+    private static byte[][] nextBoard = new byte[(int) Math.pow(2, 7)][(int) Math.pow(2, 7)];
     private static final Hashtable<String, byte[]> hash = new Hashtable<>();
     private static final StringBuilder macroCell = new StringBuilder();
     //TODO save macrocells as short
@@ -43,7 +43,11 @@ public final class HashLife {
     public static void loadeBoard(Board otherBoard) {
         activeBoard = otherBoard;
     }
-
+    /**
+     * Preps the hash method before it gets called.
+     * 
+     * 
+     */
     public static void dynamicHash() {
 
         int k = 1;
@@ -53,21 +57,17 @@ public final class HashLife {
         while (nextlist.size() != Math.pow(2, k)) {
             if (nextlist.size() < Math.pow(2, k)) {
                 nextlist.add(nextlist.size(), new ArrayList<>());
+                
             } else {
-                System.out.println("ififiu");
                 nextlist.remove(nextlist.size() - 1);
             }
-        }/*
-        for (int i = 0; i < nextlist.size(); i++) {
-            nextlist.get(i).add(64);
-        }*/
+        }
         
-        evolve(0, 0, k);
-        activeBoard.insertArray(nextBoard, 0, 0);
-        //dynamicEvolve(0, 0, k);
-        //TODO Make this insert lists to
+        //evolve(0, 0, k);
+        //activeBoard.insertArray(nextBoard, 0, 0);
         
-        //activeBoard.insertList(nextlist);
+        dynamicEvolve(0, 0, k);
+        activeBoard.insertList(nextlist);
 
     }
 
@@ -91,6 +91,9 @@ public final class HashLife {
             if (hash.containsKey(macroCell.toString())) {
                 for (int i = 0; i < 4; i++) {
                     //nextBoard[y + (int) (i / 2)][x + i % 2] = hash.get(macroCell.toString())[i];
+                    if(!(nextlist.get(y + (int) (i / 2)).size() <= x + i % 2)){
+                        nextlist.get(y + (int) (i / 2)).remove(x + i % 2);
+                    }
                     nextlist.get(y + (int) (i / 2)).add(x + i % 2, hash.get(macroCell.toString())[i]);
                 }
 
@@ -100,8 +103,11 @@ public final class HashLife {
 
                 for (int i = 0; i < 4; i++) {
                     //nextBoard[y + (int) (i / 2)][x + i % 2] = nextgen[i];
-
+                    if(!(nextlist.get(y + (int) (i / 2)).size() <= x + i % 2)){
+                        nextlist.get(y + (int) (i / 2)).remove(x + i % 2);
+                    }
                     nextlist.get(y + (int) (i / 2)).add(x + i % 2, nextgen[i]);
+                    
                 }
             }
             return;
