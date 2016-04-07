@@ -76,6 +76,12 @@ public final class WriteFile {
         comment = patternComment;
     }
 
+    /**
+     * TODO: If time: fix:
+     * If an row is bbb$, it will append b$, an not 2$ to the previous row
+     * @param row
+     * @return 
+     */
     public static StringBuilder compressedRow(StringBuilder row) {
         //TODO Rewrite Method. Returns wrong
 
@@ -96,6 +102,7 @@ public final class WriteFile {
             if (i == rowArray.length - 1) {
                 if (countOfSameChar > 1) {
                     if (lastChar == 'b' && countOfSameChar == rowArray.length - 1) {
+                        result.append('b');
                     } else {
                         result.append(countOfSameChar);
                         result.append(lastChar);
@@ -141,7 +148,7 @@ public final class WriteFile {
             }
             patternFile.append(compressedRow(row));
 
-            if (i != boardToWrite.length - 1) {
+            if (i % 5 == 0) {
                 patternFile.append(System.lineSeparator());
             }
 
