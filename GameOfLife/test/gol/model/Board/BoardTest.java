@@ -53,7 +53,7 @@ public class BoardTest {
             {0, 64, 0, 0},
             {0, 0, 0, 0}};
         Board gol = new ArrayBoard(2, 2);
-        gol.setGameBoard(gameBoard);
+        //gol.setGameBoard(gameBoard);
         gol.nextGen();
         assertEquals(gol.toString(), "0000011001100000");
     }

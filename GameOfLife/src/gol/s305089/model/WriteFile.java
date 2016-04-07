@@ -78,45 +78,50 @@ public final class WriteFile {
 
     public static StringBuilder compressedRow(StringBuilder row) {
         //TODO Rewrite Method. Returns wrong
-        
+
         StringBuilder result = new StringBuilder();
         char[] rowArray = row.toString().toCharArray();
 
+        //ooobbo$
+        // obb$
+        //o$
         int countOfSameChar = 0;
-        char curentChar;
+        char currentChar;
         char lastChar;
         for (int i = 0; i < rowArray.length; i++) {
-            curentChar = rowArray[i];
-
+            currentChar = rowArray[i];
             if (i == 0) {
-                lastChar = curentChar;
+                lastChar = currentChar;
             } else {
                 lastChar = rowArray[i - 1];
             }
 
-            if (curentChar == lastChar) {
-                if (rowArray.length - 1 == 1) {
-                    result.append(lastChar);
-                } else {
-                    countOfSameChar++;
-                }
-            } else {
+            if (i == rowArray.length - 1) {
                 if (countOfSameChar > 1) {
-                    result.append(countOfSameChar);
-                    result.append(lastChar);
-                    if (i == rowArray.length - 1) {
-                        result.append(curentChar);
+                    if (lastChar == 'b' && countOfSameChar == rowArray.length - 1) {
+                    } else {
+                        result.append(countOfSameChar);
+                        result.append(lastChar);
                     }
-                } else if (countOfSameChar == rowArray.length - 1) {
-                    result.append(countOfSameChar);
-                } else if (curentChar == '$' || curentChar == '!') {
-                    result.append(curentChar);
                 } else {
                     result.append(lastChar);
                 }
-                countOfSameChar = 0;
+                result.append(currentChar);
+            } else {
+                if (lastChar == currentChar) {
+                    countOfSameChar++;
+                } else {
+                    if (countOfSameChar > 1) {
+                        result.append(countOfSameChar);
+                        result.append(lastChar);
+                    } else {
+                        result.append(lastChar);
+                    }
+                    countOfSameChar = 1;
+                }
             }
         }
+
         return result;
     }
 
