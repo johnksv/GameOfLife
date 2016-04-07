@@ -4,10 +4,8 @@ import gol.model.Logic.Rule;
 import java.util.Arrays;
 
 /**
- * //TODO Comment about Arrayboard
- *
- *
- *
+ *  This class implements all needed features for a Board in game of Life.
+ *  The most vital are the nexGen method.
  *
  * @author s305054, s305084, s305089
  */
