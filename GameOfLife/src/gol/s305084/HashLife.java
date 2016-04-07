@@ -18,13 +18,13 @@ public final class HashLife {
 
     private static Board activeBoard;
     private static final ArrayList<ArrayList<Number>> nextlist = new ArrayList<>();
-    private static byte[][] nextBoard;
+    private static byte[][] nextBoard = new byte[(int) Math.pow(2, 6)][(int) Math.pow(2, 6)];
     private static final Hashtable<String, byte[]> hash = new Hashtable<>();
     private static final StringBuilder macroCell = new StringBuilder();
     //TODO save macrocells as short
     private static short macroCell_;
-    private static int startX;
-    private static int startY;
+    private static int startX = 0;
+    private static int startY = 0;
 
     /**
      * Don't let anyone instantiate this class.
@@ -47,19 +47,27 @@ public final class HashLife {
     public static void dynamicHash() {
 
         int k = 1;
-        while (activeBoard.getArrayLength() >= Math.pow(2, k) || activeBoard.getArrayLength(0) >= Math.pow(2, k)) {
+        while (activeBoard.getArrayLength() + 1 >= Math.pow(2, k) || activeBoard.getArrayLength(0) + 1 >= Math.pow(2, k)) {
             k += 1;
         }
         while (nextlist.size() != Math.pow(2, k)) {
             if (nextlist.size() < Math.pow(2, k)) {
                 nextlist.add(nextlist.size(), new ArrayList<>());
             } else {
+                System.out.println("ififiu");
                 nextlist.remove(nextlist.size() - 1);
             }
-        }
-        dynamicEvolve(0, 0, k);
+        }/*
+        for (int i = 0; i < nextlist.size(); i++) {
+            nextlist.get(i).add(64);
+        }*/
+        
+        evolve(0, 0, k);
+        activeBoard.insertArray(nextBoard, 0, 0);
+        //dynamicEvolve(0, 0, k);
         //TODO Make this insert lists to
-        activeBoard.insertList(nextlist);
+        
+        //activeBoard.insertList(nextlist);
 
     }
 
@@ -71,16 +79,12 @@ public final class HashLife {
             for (int i = -1; i < 3; i++) {
                 for (int j = -1; j < 3; j++) {
 
-                    //TODO remove this if we get dynamic board
-                    if (y + i > 0 && x + j > 0) {
-                        if (y + i < activeBoard.getArrayLength() && x + j < activeBoard.getArrayLength(0)) {
-                            if (activeBoard.getCellState(y + i, x + j)) {
-                                macroCell.append('1');
-                            } else {
-                                macroCell.append('0');
-                            }
-                        }
+                    if (activeBoard.getCellState(y + i, x + j)) {
+                        macroCell.append('1');
+                    } else {
+                        macroCell.append('0');
                     }
+
                 }
             }
             //Hashing
@@ -91,7 +95,7 @@ public final class HashLife {
                 }
 
             } else {
-                byte[] nextgen = nextgenDynamic(y, x);
+                byte[] nextgen = nextgen(y, x);
                 hash.put(macroCell.toString(), nextgen);
 
                 for (int i = 0; i < 4; i++) {
@@ -111,7 +115,6 @@ public final class HashLife {
     }
 
     //a macrocell is the size 2^n + 2  
-
     /**
      *
      */
@@ -188,37 +191,31 @@ public final class HashLife {
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 2; j++) {
                 int counter = 0;
-                
+
                 for (int l = -1; l <= 1; l++) {
                     for (int k = -1; k <= 1; k++) {
                         //TODO remove this if we get dynamic board
-                        if (y + i + l > 0 && x + j + k > 0) {
-                            if (y + i + l < activeBoard.getArrayLength() && x + j + k < activeBoard.getArrayLength(0)) {
-                                if (activeBoard.getCellState(y + i + l, x + j + k)
-                                        && (l != 0 || k != 0)) {
-                                    counter++;
-                                }
-                            }
+                        if (activeBoard.getCellState(y + i + l, x + j + k)
+                                && (l != 0 || k != 0)) {
+                            counter++;
                         }
 
                     }
                 }
                 //System.out.println(counter);
-                //TODO remove this if we get dynamic board
-                if (y < activeBoard.getArrayLength() && x < activeBoard.getArrayLength(0)) {
 
-                    if (counter == 3 && !activeBoard.getCellState(y + i, x + j)) {
+                if (counter == 3 && !activeBoard.getCellState(y + i, x + j)) {
 
-                        nexGen[i * 2 + j] = 64;
-                    } else if ((counter == 2 || counter == 3) && activeBoard.getCellState(y + i, x + j)) {
+                    nexGen[i * 2 + j] = 64;
+                } else if ((counter == 2 || counter == 3) && activeBoard.getCellState(y + i, x + j)) {
 
-                        nexGen[i * 2 + j] = 64;
-                    } else {
-                        nexGen[i * 2 + j] = 0;
-                    }
+                    nexGen[i * 2 + j] = 64;
+                } else {
+                    nexGen[i * 2 + j] = 0;
                 }
             }
         }
+
         System.out.println(Arrays.toString(nexGen));
         return nexGen;
     }

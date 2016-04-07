@@ -34,8 +34,8 @@ public class PatternEditorController implements Initializable {
         gc = canvas.getGraphicsContext2D();
         activeBoard = new ArrayBoard(150, 150);
         
-        activeBoard.setCellSize(10);
-        activeBoard.setGridSpacing(0.5);
+        activeBoard.setCellSize(13);
+        activeBoard.setGridSpacing(0.6);
         mouseInit();
     }
     
