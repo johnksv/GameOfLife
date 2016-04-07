@@ -25,10 +25,10 @@ public final class WriteFile {
 
         int xRows = 0;
         int yCols = 0;
-        xRows = boardToWrite.length;
+        yCols = boardToWrite.length;
         for (byte[] gameRow : boardToWrite) {
-            if (gameRow.length > yCols) {
-                yCols = gameRow.length;
+            if (gameRow.length > xRows) {
+                xRows = gameRow.length;
             }
         }
         String bordDimensions = "x = " + xRows + ", y = " + yCols;
@@ -46,7 +46,7 @@ public final class WriteFile {
                 writer.append("#C: " + comment.replace("\n", " "));
                 writer.newLine();
             }
-            
+
             writer.append(bordDimensions);
             //TODO append rules
             writer.newLine();
@@ -76,7 +76,9 @@ public final class WriteFile {
         comment = patternComment;
     }
 
-    private static StringBuilder compressedRow(StringBuilder row) {
+    public static StringBuilder compressedRow(StringBuilder row) {
+        //TODO Rewrite Method. Returns wrong
+        
         StringBuilder result = new StringBuilder();
         char[] rowArray = row.toString().toCharArray();
 
@@ -84,22 +86,30 @@ public final class WriteFile {
         char curentChar;
         char lastChar;
         for (int i = 0; i < rowArray.length; i++) {
+            curentChar = rowArray[i];
+
             if (i == 0) {
-                lastChar = rowArray[i];
+                lastChar = curentChar;
             } else {
                 lastChar = rowArray[i - 1];
             }
-            curentChar = rowArray[i];
+
             if (curentChar == lastChar) {
-                countOfSameChar++;
+                if (rowArray.length - 1 == 1) {
+                    result.append(lastChar);
+                } else {
+                    countOfSameChar++;
+                }
             } else {
                 if (countOfSameChar > 1) {
                     result.append(countOfSameChar);
                     result.append(lastChar);
-                    result.append('$');
+                    if (i == rowArray.length - 1) {
+                        result.append(curentChar);
+                    }
                 } else if (countOfSameChar == rowArray.length - 1) {
                     result.append(countOfSameChar);
-                } else if (curentChar == '$') {
+                } else if (curentChar == '$' || curentChar == '!') {
                     result.append(curentChar);
                 } else {
                     result.append(lastChar);
@@ -113,19 +123,26 @@ public final class WriteFile {
     private static StringBuilder parseGameBoard(byte[][] boardToWrite) {
         StringBuilder patternFile = new StringBuilder();
         StringBuilder row = new StringBuilder();
-        for (byte[] gameRow : boardToWrite) {
-            for (int j = 0; j < gameRow.length; j++) {
-                if (gameRow[j] == 64) {
+        for (int i = 0; i < boardToWrite.length; i++) {
+            for (int j = 0; j < boardToWrite[i].length; j++) {
+                if (boardToWrite[i][j] == 64) {
                     row.append('o');
                 } else {
                     row.append('b');
                 }
             }
-            row.append('$');
-            row = compressedRow(row);
 
-            patternFile.append(row);
-            patternFile.append(System.lineSeparator());
+            if (i != boardToWrite.length - 1) {
+                row.append('$');
+            } else {
+                row.append('!');
+            }
+            patternFile.append(compressedRow(row));
+
+            if (i != boardToWrite.length - 1) {
+                patternFile.append(System.lineSeparator());
+            }
+
             row.delete(0, row.length());
         }
         return patternFile;
