@@ -114,11 +114,11 @@ public class PatternEditorController implements Initializable {
     @FXML
     private void savePatternRLE() {
         boolean fileSucsessCreated = false;
-        FileChooser filechooser = new FileChooser();
-        File file = filechooser.showSaveDialog(null);
-        if (file != null) {
-            byte[][] boardToWrite = activeBoard.getBoundingBoxBoard();
-            if (boardToWrite.length != 0) {
+        byte[][] boardToWrite = activeBoard.getBoundingBoxBoard();
+        if (boardToWrite[0].length != 0) {
+            FileChooser filechooser = new FileChooser();
+            File file = filechooser.showSaveDialog(null);
+            if (file != null) {
                 fileSucsessCreated = WriteFile.writeToRLE(activeBoard.getBoundingBoxBoard(), file.toPath());
             }
         }
