@@ -1,6 +1,5 @@
 package gol.s305089.model;
 
-import gol.model.Board.Board;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -83,7 +82,7 @@ public final class WriteFile {
      * @param row
      * @return
      */
-    public static StringBuilder compressedRow(StringBuilder row) {
+    private static StringBuilder compressedRow(StringBuilder row) {
         //TODO Rewrite Method. Returns wrong
 
         StringBuilder result = new StringBuilder();
