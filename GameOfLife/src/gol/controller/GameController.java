@@ -110,12 +110,14 @@ public class GameController implements Initializable {
         canvas.heightProperty().bind(borderpane.heightProperty());
         cellSizeSlider.setBlockIncrement(0.75);
 
-        activeBoard = new ArrayBoard();
+        //activeBoard = new ArrayBoard();
+        activeBoard = new DynamicBoard();
         cellCP.setValue(Color.BLACK);
         backgroundCP.setValue(Color.web("#F4F4F4"));
         //TODO bug if used like this with new zoom!
         mouseInit();
-        handleZoom();
+        //handleZoom();
+        activeBoard.setCellSize(10);
         handleGridSpacingSlider();
         handleColor();
         handleAnimationSpeedSlider();
@@ -479,8 +481,6 @@ public class GameController implements Initializable {
             moveGridValues[2] = e.getX();
             moveGridValues[3] = e.getY();
         } else {
-            double maxValueX = -((activeBoard.getCellSize() + activeBoard.getGridSpacing()) * activeBoard.getArrayLength() - canvas.getWidth());
-            double maxValueY = -((activeBoard.getCellSize() + activeBoard.getGridSpacing()) * activeBoard.getArrayLength(0) - canvas.getHeight());
 
             double newXoffset = moveGridValues[0] + e.getX() - moveGridValues[2];
             double newYoffset = moveGridValues[1] + e.getY() - moveGridValues[3];
@@ -489,6 +489,8 @@ public class GameController implements Initializable {
                 moveGridValues[1] = newYoffset;
 
             } else {
+                double maxValueX = -((activeBoard.getCellSize() + activeBoard.getGridSpacing()) * activeBoard.getArrayLength() - canvas.getWidth());
+                double maxValueY = -((activeBoard.getCellSize() + activeBoard.getGridSpacing()) * activeBoard.getArrayLength(0) - canvas.getHeight());
 
                 if (newXoffset < 0) {
                     if (newXoffset > maxValueX) {
@@ -533,6 +535,15 @@ public class GameController implements Initializable {
             activeBoard.setCellState(y, x, true, moveGridValues[0], moveGridValues[1]);
 
         }
+
+        if (moveGridValues[0] > x) {
+            moveGridValues[0] = (x + moveGridValues[0]);
+            moveGridValues[0]=(int)x;
+        }
+        if (moveGridValues[1] > y) {
+            moveGridValues[1] = (y + moveGridValues[1]);
+            moveGridValues[1]=(int)y;
+        }
         draw();
     }
 
@@ -545,7 +556,7 @@ public class GameController implements Initializable {
 
             moveGridValues[0] = -(oldx * (newCellSize) - canvas.getWidth() / 2);
             moveGridValues[1] = -(oldy * (newCellSize) - canvas.getHeight() / 2);
-            
+
             if (!(activeBoard instanceof DynamicBoard)) {
                 double maxvalueX = -(newCellSize * activeBoard.getArrayLength() - canvas.getWidth());
                 double maxvalueY = -(newCellSize * activeBoard.getArrayLength(0) - canvas.getHeight());
@@ -567,7 +578,7 @@ public class GameController implements Initializable {
 
             moveGridValues[0] = -(oldx * (newCellSize) - mousePositionX);
             moveGridValues[1] = -(oldy * (newCellSize) - mousePositionY);
-            
+
             if (!(activeBoard instanceof DynamicBoard)) {
                 double maxvalueX = -(newCellSize * activeBoard.getArrayLength() - canvas.getWidth());
                 double maxvalueY = -(newCellSize * activeBoard.getArrayLength(0) - canvas.getHeight());

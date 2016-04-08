@@ -12,6 +12,7 @@ public class DynamicBoard extends Board {
 
     public DynamicBoard() {
         super();
+        gameBoard = new CopyOnWriteArrayList<>();
     }
 
     @Override
@@ -76,12 +77,28 @@ public class DynamicBoard extends Board {
 
     @Override
     public void setCellState(int y, int x, boolean alive) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+
+        expandBoard(y, x);
+
+        y = (y < 1) ? 1 : y;
+        x = (x < 1) ? 1 : x;
+
+        if (alive) {
+            gameBoard.get(y).set(x, (byte) 64);
+        } else {
+            gameBoard.get(y).set(x, (byte) 0);
+        }
     }
 
     @Override
     public void setCellState(double y, double x, boolean alive, double offsetX, double offsetY) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        y = y / (cellSize + gridSpacing);
+        x = x / (cellSize + gridSpacing);
+        offsetY = offsetY / (cellSize + gridSpacing);
+        offsetX = offsetX / (cellSize + gridSpacing);
+
+        setCellState((int) Math.floor(y - offsetY), (int) Math.floor(x - offsetX), alive);
+
     }
 
     @Override
@@ -171,13 +188,27 @@ public class DynamicBoard extends Board {
     }
 
     private void incrementCellValue(int y, int x) {
-        while (y > gameBoard.size()) {
-            gameBoard.add(new CopyOnWriteArrayList<>());
-        }
-        while (x > gameBoard.get(y).size()) {
-            gameBoard.get(y).add(gameBoard.get(y).size(), (byte) 0);
-        }
+        expandBoard(y, x);
         byte value = gameBoard.get(y).get(x);
         gameBoard.get(y).set(x, ++value);
+    }
+
+    private void expandBoard(int y, int x) {
+        while (y < 1) {
+            gameBoard.add(0, new CopyOnWriteArrayList<>());
+            y++;
+        }
+        while (x < 1) {
+            for (CopyOnWriteArrayList<Byte> row : gameBoard) {
+                row.add(0, (byte) 0);
+            }
+            x++;
+        }
+        while (y >= gameBoard.size()) {
+            gameBoard.add(new CopyOnWriteArrayList<>());
+        }
+        while (x >= gameBoard.get(y).size()) {
+            gameBoard.get(y).add((byte) 0);
+        }
     }
 }
