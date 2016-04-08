@@ -101,16 +101,10 @@ public abstract class Board {
     public double getGridSpacing() {
         return gridSpacing;
     }
+
     //TODO comments.
+
     public abstract byte[][] getBoundingBoxBoard();
-    /**
-     * Get the representation of the smallest possible bord
-     * <p>
-     * Author: Henrik Lieng (Vedlegg 1 ark 5)
-     *
-     * @return String of the smallest possible board
-     */
-    public abstract String getBoundingBoxPattern();
 
     /**
      * Calculates the smallest possible gamebord
@@ -148,18 +142,18 @@ public abstract class Board {
      * Inserts a byte 2D-array into the current gameboard at the given (y, x)
      * position.
      * <p>
-     * For example: To insert boardFromFile to upper left corner of the current 
-     * gameboard, insert at position (0,0). 
+     * For example: To insert boardFromFile to upper left corner of the current
+     * gameboard, insert at position (0,0).
      * <p>
-     * Elements from boardFromFile that exceeds the dimensions of the
-     * current gameboard is not inserted.
+     * Elements from boardFromFile that exceeds the dimensions of the current
+     * gameboard is not inserted.
      *
      *
-     * @param boardFromFile bytearray to insert into the current gameboard.
+     * @param boardToInsert bytearray to insert into the current gameboard.
      * @param y coordinate for where the first row is placed
      * @param x coordinate for where the first column is placed
      */
-    public abstract void insertArray(byte[][] boardFromFile, int y, int x);
+    public abstract void insertArray(byte[][] boardToInsert, int y, int x);
 
     /**
      * Sets the cell state at position (y,x)
@@ -206,22 +200,5 @@ public abstract class Board {
      * @return The cells state at position (y,x). true if alive. false if dead.
      */
     public abstract boolean getCellState(int y, int x);
-
-    /**
-     * Returns the cell state from canvas coordinats, given from a mouse click.
-     * Mouse clicks are column major, therefore it recieves the parameters as
-     * (x,y).
-     *
-     * @param x the x coordinate of the mouse click.
-     * @param y the y coordinate of the mouse click.
-     * @return The cells state at position (y,x). true if alive. false if dead.
-     */
-    public abstract boolean getCellState(double x, double y);
-
-    /**
-     *
-     * @return
-     */
-    public abstract Object getGameBoard();
 
 }

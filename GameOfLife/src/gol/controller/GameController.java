@@ -2,6 +2,7 @@ package gol.controller;
 
 import gol.model.Board.ArrayBoard;
 import gol.model.Board.Board;
+import gol.model.Board.DynamicBoard;
 import gol.model.FileIO.PatternFormatException;
 import gol.model.FileIO.ReadFile;
 import gol.model.Logic.ConwaysRule;
@@ -115,11 +116,14 @@ public class GameController implements Initializable {
 
         canvas.widthProperty().bind(borderpane.widthProperty().subtract(tabpane.widthProperty()));
         canvas.heightProperty().bind(borderpane.heightProperty());
+        cellSizeSlider.setBlockIncrement(0.75);
 
-        activeBoard = new ArrayBoard();
+        //TODO Valg for Array eller dynamisk brett
+        //activeBoard = new ArrayBoard();
+        activeBoard = new DynamicBoard();
         cellCP.setValue(Color.BLACK);
         backgroundCP.setValue(Color.web("#F4F4F4"));
-        //TODO bug if used like this with new zoom!
+        
         mouseInit();
         handleZoom();
         handleGridSpacingSlider();
@@ -229,12 +233,16 @@ public class GameController implements Initializable {
     private void handleZoom() {
         double x = cellSizeSlider.getValue();
         double newValue = 0.2 * Math.exp(0.05 * x);
-        if ((newValue) * activeBoard.getArrayLength() > canvas.getHeight()
-                && (newValue) * activeBoard.getArrayLength(0) > canvas.getWidth()) {
-
+        if (((newValue) * activeBoard.getArrayLength() > canvas.getHeight()
+                && (newValue) * activeBoard.getArrayLength(0) > canvas.getWidth()) || activeBoard instanceof DynamicBoard) {
             handleGridSpacingSlider();
 
-            calcNewOffset(activeBoard.getCellSize(), newValue);
+            if (cellSizeSlider.isFocused()) {
+
+                calcNewOffset(activeBoard.getCellSize(), newValue);
+            } else {
+                calcNewOffsetMouse(activeBoard.getCellSize(), newValue);
+            }
             activeBoard.setCellSize(newValue);
         } else {
             cellSizeSlider.setValue(20 * Math.log(5 * activeBoard.getCellSize()));
@@ -434,19 +442,19 @@ public class GameController implements Initializable {
 
         canvas.addEventHandler(MouseEvent.MOUSE_MOVED,
                 (MouseEvent e) -> {
+                    mousePositionX = (int) e.getX();
+                    mousePositionY = (int) e.getY();
                     if (boardFromFile != null) {
 
-                        mousePositionX = (int) e.getX();
-                        mousePositionY = (int) e.getY();
                         draw();
                         //TODO SUPPORT FOR OFFSET++
                         drawGhostTiles();
                     }
                 });
 
-        //TODO Scroll in at mouse position
         canvas.setOnScroll((ScrollEvent event) -> {
-
+            //TODO Talk about with the group
+            canvas.requestFocus();
             if (event.getDeltaY() > 0) {
                 cellSizeSlider.increment();
             } else {
@@ -537,22 +545,39 @@ public class GameController implements Initializable {
             moveGridValues[2] = e.getX();
             moveGridValues[3] = e.getY();
         } else {
-            if (moveGridValues[0] + e.getX() - moveGridValues[2] < 0) {
-                if (moveGridValues[1] + e.getY() - moveGridValues[3] < 0) {
 
-                    moveGridValues[0] += e.getX() - moveGridValues[2]; //Offset x = x position - old y
-                    moveGridValues[1] += e.getY() - moveGridValues[3]; //Offset y = y position - old y
+            double newXoffset = moveGridValues[0] + e.getX() - moveGridValues[2];
+            double newYoffset = moveGridValues[1] + e.getY() - moveGridValues[3];
+            if (activeBoard instanceof DynamicBoard) {
+                moveGridValues[0] = newXoffset;
+                moveGridValues[1] = newYoffset;
+
+            } else {
+                double maxValueX = -((activeBoard.getCellSize() + activeBoard.getGridSpacing()) * activeBoard.getArrayLength() - canvas.getWidth());
+                double maxValueY = -((activeBoard.getCellSize() + activeBoard.getGridSpacing()) * activeBoard.getArrayLength(0) - canvas.getHeight());
+
+                if (newXoffset < 0) {
+                    if (newXoffset > maxValueX) {
+                        moveGridValues[0] = newXoffset;
+                    } else {
+                        moveGridValues[0] = maxValueX;
+                    }
+
+                } else {
+                    moveGridValues[0] = 0;
+                }
+                if (newYoffset < 0) {
+                    if (newYoffset > maxValueY) {
+                        moveGridValues[1] = newYoffset;
+                    } else {
+                        moveGridValues[1] = maxValueY;
+                    }
+
                 } else {
                     moveGridValues[1] = 0;
-                    moveGridValues[0] += e.getX() - moveGridValues[2]; //Offset x = x position - old y
                 }
-            } else {
-                moveGridValues[0] = 0;
-                if (moveGridValues[1] + e.getY() - moveGridValues[3] < 0) {
-                    moveGridValues[1] += e.getY() - moveGridValues[3]; //Offset y = y position - old y
-                }
-
             }
+
             moveGridValues[2] = e.getX();
             moveGridValues[3] = e.getY();
         }
@@ -572,14 +597,15 @@ public class GameController implements Initializable {
         } else if (rbMoveGrid.isSelected()) {
         } else {
             activeBoard.setCellState(y, x, true, moveGridValues[0], moveGridValues[1]);
-
         }
+        
+        
+
         draw();
     }
 
     //Does not calc gridspacing yet.
     private void calcNewOffset(double cellSize, double newCellSize) {
-        double gridSpace = activeBoard.getGridSpacing();
         if (cellSize != 0) {
 
             double oldx = (canvas.getWidth() / 2 - moveGridValues[0]) / (cellSize);
@@ -588,9 +614,38 @@ public class GameController implements Initializable {
             moveGridValues[0] = -(oldx * (newCellSize) - canvas.getWidth() / 2);
             moveGridValues[1] = -(oldy * (newCellSize) - canvas.getHeight() / 2);
 
-            moveGridValues[0] = (moveGridValues[0] > 0) ? 0 : moveGridValues[0];
-            moveGridValues[1] = (moveGridValues[1] > 0) ? 0 : moveGridValues[1];
+            if (!(activeBoard instanceof DynamicBoard)) {
+                double maxvalueX = -(newCellSize * activeBoard.getArrayLength() - canvas.getWidth());
+                double maxvalueY = -(newCellSize * activeBoard.getArrayLength(0) - canvas.getHeight());
 
+                moveGridValues[0] = (moveGridValues[0] > 0) ? 0 : moveGridValues[0];
+                moveGridValues[1] = (moveGridValues[1] > 0) ? 0 : moveGridValues[1];
+
+                moveGridValues[0] = (moveGridValues[0] < maxvalueX) ? maxvalueX : moveGridValues[0];
+                moveGridValues[1] = (moveGridValues[1] < maxvalueY) ? maxvalueY : moveGridValues[1];
+            }
+        }
+
+    }
+
+    private void calcNewOffsetMouse(double cellSize, double newCellSize) {
+        if (cellSize != 0) {
+            double oldx = (mousePositionX - moveGridValues[0]) / (cellSize);
+            double oldy = (mousePositionY - moveGridValues[1]) / (cellSize);
+
+            moveGridValues[0] = -(oldx * (newCellSize) - mousePositionX);
+            moveGridValues[1] = -(oldy * (newCellSize) - mousePositionY);
+
+            if (!(activeBoard instanceof DynamicBoard)) {
+                double maxvalueX = -(newCellSize * activeBoard.getArrayLength() - canvas.getWidth());
+                double maxvalueY = -(newCellSize * activeBoard.getArrayLength(0) - canvas.getHeight());
+
+                moveGridValues[0] = (moveGridValues[0] > 0) ? 0 : moveGridValues[0];
+                moveGridValues[1] = (moveGridValues[1] > 0) ? 0 : moveGridValues[1];
+
+                moveGridValues[0] = (moveGridValues[0] < maxvalueX) ? maxvalueX : moveGridValues[0];
+                moveGridValues[1] = (moveGridValues[1] < maxvalueY) ? maxvalueY : moveGridValues[1];
+            }
         }
 
     }
