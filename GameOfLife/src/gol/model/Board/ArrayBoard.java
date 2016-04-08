@@ -4,8 +4,8 @@ import gol.model.Logic.Rule;
 import java.util.Arrays;
 
 /**
- *  This class implements all needed features for a Board in game of Life.
- *  The most vital are the nexGen method.
+ * This class implements all needed features for a Board in game of Life. The
+ * most vital are the nexGen method.
  *
  * @author s305054, s305084, s305089
  */
@@ -38,8 +38,9 @@ public class ArrayBoard extends Board {
 
     }
     /*
-    * Bruker gameBoard.length i stedet for getArrayLength(i/j) for å ta med ramme.
-    */
+     * Bruker gameBoard.length i stedet for getArrayLength(i/j) for å ta med ramme.
+     */
+
     @Override
     public void clearBoard() {
         for (int i = 0; i < gameBoard.length; i++) {
@@ -87,12 +88,12 @@ public class ArrayBoard extends Board {
     }
 
     @Override
-    public void insertArray(byte[][] boardFromFile, int y, int x) {
-        for (int i = 0; i < boardFromFile.length; i++) {
-            for (int j = 0; j < boardFromFile[i].length; j++) {
+    public void insertArray(byte[][] boardToInsert, int y, int x) {
+        for (int i = 0; i < boardToInsert.length; i++) {
+            for (int j = 0; j < boardToInsert[i].length; j++) {
                 if (i + y < gameBoard.length && j + x < gameBoard[y + i].length) {
                     if (i + y >= 1 && j + x >= 1) {
-                        gameBoard[i + y][j + x] = boardFromFile[i][j];
+                        gameBoard[i + y][j + x] = boardToInsert[i][j];
                     }
                 }
             }
@@ -143,41 +144,25 @@ public class ArrayBoard extends Board {
     }
 
     @Override
-    public String getBoundingBoxPattern() {
-        if (gameBoard.length == 0) {
-            return "";
-        }
-        int[] boundingBox = getBoundingBox();
-        StringBuilder result = new StringBuilder();
-        for (int y = boundingBox[0]; y <= boundingBox[1]; y++) {
-            for (int x = boundingBox[2]; x <= boundingBox[3]; x++) {
-                if (gameBoard[y][x] == 64) {
-                    result.append("1");
-                } else {
-                    result.append("0");
-                }
-            }
-            result.append("\n");
-        }
-        return result.toString();
-    }
-
-    //TODO: Er denne nødvendig?
-    @Override
     public byte[][] getBoundingBoxBoard() {
 
         int[] boundingBox = getBoundingBox();
-        byte[][] board = new byte[boundingBox[1] - boundingBox[0] + 1][boundingBox[3] - boundingBox[2] + 1];
-        for (int y = 0; y < board.length; y++) {
-            for (int x = 0; x < board[y].length; x++) {
-                if (gameBoard[boundingBox[0] + y][x + boundingBox[2]] == 64) {
-                    board[y][x] = 64;
-                } else {
-                    board[y][x] = 0;
+        if ((boundingBox[1] - boundingBox[0] + 1) > 0  || (boundingBox[3] - boundingBox[2] + 1) > 0) {
+            byte[][] board = new byte[boundingBox[1] - boundingBox[0] + 1][boundingBox[3] - boundingBox[2] + 1];
+
+            for (int y = 0; y < board.length; y++) {
+                for (int x = 0; x < board[y].length; x++) {
+                    if (gameBoard[boundingBox[0] + y][x + boundingBox[2]] == 64) {
+                        board[y][x] = 64;
+                    } else {
+                        board[y][x] = 0;
+                    }
                 }
             }
+            return board;
+        } else {
+            return new byte[][] {{}};
         }
-        return board;
     }
 
     @Override
@@ -211,26 +196,13 @@ public class ArrayBoard extends Board {
 
     @Override
     public boolean getCellState(int y, int x) {
-        return gameBoard[y][x] >= 64;
-    }
-
-    @Override
-    public boolean getCellState(double x, double y) {
-        y = y / (cellSize + gridSpacing);
-        x = x / (cellSize + gridSpacing);
-
-        if (((int) y) < gameBoard.length && y >= 0) {
-            if (((int) x) < gameBoard[(int) y].length && x >= 0) {
-                return gameBoard[(int) y][(int) x] == 64;
-            }
+        if (y < 1 || y > gameBoard.length) {
+            return false;
         }
-        System.err.println("x and y was not in gameboard.");
-        return false;
-    }
-
-    @Override
-    public byte[][] getGameBoard() {
-        return gameBoard;
+        if (x < 1 || x > gameBoard[y].length) {
+            return false;
+        }
+        return gameBoard[y][x] >= 64;
     }
 
     @Override
