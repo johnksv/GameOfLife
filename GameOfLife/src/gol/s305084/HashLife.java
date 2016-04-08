@@ -19,10 +19,10 @@ public final class HashLife {
     private static Board activeBoard;
     private static final ArrayList<ArrayList<Number>> nextlist = new ArrayList<>();
     private static byte[][] nextBoard = new byte[(int) Math.pow(2, 7)][(int) Math.pow(2, 7)];
-    private static final Hashtable<String, byte[]> hash = new Hashtable<>();
+    private static final HashMap<Number, byte[]> hash = new HashMap<>();
     private static final StringBuilder macroCell = new StringBuilder();
     //TODO save macrocells as short
-    private static short macroCell_;
+    private static int macroCell_;
     private static int startX = 0;
     private static int startY = 0;
 
@@ -43,10 +43,11 @@ public final class HashLife {
     public static void loadeBoard(Board otherBoard) {
         activeBoard = otherBoard;
     }
+
     /**
-     * Preps the hash method before it gets called.
-     * 
-     * 
+     * Prepares the hash method before it gets called.
+     *
+     *
      */
     public static void dynamicHash() {
 
@@ -57,15 +58,14 @@ public final class HashLife {
         while (nextlist.size() != Math.pow(2, k)) {
             if (nextlist.size() < Math.pow(2, k)) {
                 nextlist.add(nextlist.size(), new ArrayList<>());
-                
+
             } else {
                 nextlist.remove(nextlist.size() - 1);
             }
         }
-        
+
         //evolve(0, 0, k);
         //activeBoard.insertArray(nextBoard, 0, 0);
-        
         dynamicEvolve(0, 0, k);
         activeBoard.insertList(nextlist);
 
@@ -75,39 +75,36 @@ public final class HashLife {
         if (k <= 1) {
 
             //Creating Macrocell
-            macroCell.delete(0, macroCell.length());
+            macroCell_ = 0;
             for (int i = -1; i < 3; i++) {
                 for (int j = -1; j < 3; j++) {
 
                     if (activeBoard.getCellState(y + i, x + j)) {
-                        macroCell.append('1');
+                        macroCell_ =(++macroCell_<< 1);
+                     
                     } else {
-                        macroCell.append('0');
+                        macroCell_ =(macroCell_<< 1);
+                        
                     }
 
                 }
             }
             //Hashing
-            if (hash.containsKey(macroCell.toString())) {
+            if (hash.containsKey(macroCell_)) {
                 for (int i = 0; i < 4; i++) {
                     //nextBoard[y + (int) (i / 2)][x + i % 2] = hash.get(macroCell.toString())[i];
-                    if(!(nextlist.get(y + (int) (i / 2)).size() <= x + i % 2)){
-                        nextlist.get(y + (int) (i / 2)).remove(x + i % 2);
-                    }
-                    nextlist.get(y + (int) (i / 2)).add(x + i % 2, hash.get(macroCell.toString())[i]);
+
+                    nextlist.get(y + (int) (i / 2)).set(x + i % 2, hash.get(macroCell_)[i]);
                 }
 
             } else {
                 byte[] nextgen = nextgen(y, x);
-                hash.put(macroCell.toString(), nextgen);
+                hash.put(macroCell_, nextgen);
 
                 for (int i = 0; i < 4; i++) {
                     //nextBoard[y + (int) (i / 2)][x + i % 2] = nextgen[i];
-                    if(!(nextlist.get(y + (int) (i / 2)).size() <= x + i % 2)){
-                        nextlist.get(y + (int) (i / 2)).remove(x + i % 2);
-                    }
-                    nextlist.get(y + (int) (i / 2)).add(x + i % 2, nextgen[i]);
-                    
+                    nextlist.get(y + (int) (i / 2)).set(x + i % 2, nextgen[i]);
+
                 }
             }
             return;
@@ -123,7 +120,7 @@ public final class HashLife {
     //a macrocell is the size 2^n + 2  
     /**
      *
-     */
+     *//*
     public static void preEvolve() {
 
         if (activeBoard != null) {
@@ -187,7 +184,7 @@ public final class HashLife {
         evolve(y, x + (int) Math.pow(2, k), k); //Topp Rigth
         evolve(y + (int) Math.pow(2, k), x, k); //Bottom Left
         evolve(y + (int) Math.pow(2, k), x + (int) Math.pow(2, k), k); //Bottom Rigth
-    }
+    }*/
     /*
      * Helping method for hashlife, it is used to calculate non hashed macrocells.
      */
