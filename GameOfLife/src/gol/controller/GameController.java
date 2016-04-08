@@ -110,14 +110,14 @@ public class GameController implements Initializable {
         canvas.heightProperty().bind(borderpane.heightProperty());
         cellSizeSlider.setBlockIncrement(0.75);
 
+        //TODO Valg for Array eller dynamisk brett
         //activeBoard = new ArrayBoard();
         activeBoard = new DynamicBoard();
         cellCP.setValue(Color.BLACK);
         backgroundCP.setValue(Color.web("#F4F4F4"));
-        //TODO bug if used like this with new zoom!
+        
         mouseInit();
-        //handleZoom();
-        activeBoard.setCellSize(10);
+        handleZoom();
         handleGridSpacingSlider();
         handleColor();
         handleAnimationSpeedSlider();
@@ -438,7 +438,7 @@ public class GameController implements Initializable {
                     if (canvas.getWidth() < j * activeBoard.getCellSize() + j * activeBoard.getGridSpacing()) {
                         //TODO Så den ikke tegner det som er utenfor
                     }
-                    gc.fillRect((j - 1) * activeBoard.getCellSize() + j * activeBoard.getGridSpacing() + moveGridValues[0],
+                    gc.fillRect(j * activeBoard.getCellSize() + j * activeBoard.getGridSpacing() + moveGridValues[0],
                             i * activeBoard.getCellSize() + i * activeBoard.getGridSpacing() + moveGridValues[1],
                             activeBoard.getCellSize(),
                             activeBoard.getCellSize());
@@ -534,6 +534,8 @@ public class GameController implements Initializable {
         } else {
             activeBoard.setCellState(y, x, true, moveGridValues[0], moveGridValues[1]);
         }
+        
+        
 
         draw();
     }
