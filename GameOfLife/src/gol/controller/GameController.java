@@ -438,7 +438,7 @@ public class GameController implements Initializable {
                     if (canvas.getWidth() < j * activeBoard.getCellSize() + j * activeBoard.getGridSpacing()) {
                         //TODO Så den ikke tegner det som er utenfor
                     }
-                    gc.fillRect(j * activeBoard.getCellSize() + j * activeBoard.getGridSpacing() + moveGridValues[0],
+                    gc.fillRect((j - 1) * activeBoard.getCellSize() + j * activeBoard.getGridSpacing() + moveGridValues[0],
                             i * activeBoard.getCellSize() + i * activeBoard.getGridSpacing() + moveGridValues[1],
                             activeBoard.getCellSize(),
                             activeBoard.getCellSize());
@@ -533,17 +533,8 @@ public class GameController implements Initializable {
         } else if (rbMoveGrid.isSelected()) {
         } else {
             activeBoard.setCellState(y, x, true, moveGridValues[0], moveGridValues[1]);
-
         }
 
-        if (moveGridValues[0] > x) {
-            moveGridValues[0] = (x + moveGridValues[0]);
-            moveGridValues[0]=(int)x;
-        }
-        if (moveGridValues[1] > y) {
-            moveGridValues[1] = (y + moveGridValues[1]);
-            moveGridValues[1]=(int)y;
-        }
         draw();
     }
 
