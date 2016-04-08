@@ -2,6 +2,7 @@ package gol.controller;
 
 import gol.model.Board.ArrayBoard;
 import gol.model.Board.Board;
+import gol.model.Board.DynamicBoard;
 import gol.model.FileIO.PatternFormatException;
 import gol.model.FileIO.ReadFile;
 import gol.model.Logic.ConwaysRule;
@@ -221,10 +222,10 @@ public class GameController implements Initializable {
     private void handleZoom() {
         double x = cellSizeSlider.getValue();
         double newValue = 0.2 * Math.exp(0.05 * x);
-        if ((newValue) * activeBoard.getArrayLength() > canvas.getHeight()
-                && (newValue) * activeBoard.getArrayLength(0) > canvas.getWidth()) {
+        if (((newValue) * activeBoard.getArrayLength() > canvas.getHeight()
+                && (newValue) * activeBoard.getArrayLength(0) > canvas.getWidth()) || activeBoard instanceof DynamicBoard) {
             handleGridSpacingSlider();
-            
+
             if (cellSizeSlider.isFocused()) {
 
                 calcNewOffset(activeBoard.getCellSize(), newValue);
@@ -477,33 +478,40 @@ public class GameController implements Initializable {
         if (moveGridValues[2] == -Double.MAX_VALUE && moveGridValues[3] == -Double.MAX_VALUE) {
             moveGridValues[2] = e.getX();
             moveGridValues[3] = e.getY();
-        } else {           
-            double maxValueX = -((activeBoard.getCellSize()+activeBoard.getGridSpacing()) * activeBoard.getArrayLength() - canvas.getWidth());
-            double maxValueY = -((activeBoard.getCellSize()+activeBoard.getGridSpacing()) * activeBoard.getArrayLength(0) - canvas.getHeight());
-            
+        } else {
+            double maxValueX = -((activeBoard.getCellSize() + activeBoard.getGridSpacing()) * activeBoard.getArrayLength() - canvas.getWidth());
+            double maxValueY = -((activeBoard.getCellSize() + activeBoard.getGridSpacing()) * activeBoard.getArrayLength(0) - canvas.getHeight());
+
             double newXoffset = moveGridValues[0] + e.getX() - moveGridValues[2];
             double newYoffset = moveGridValues[1] + e.getY() - moveGridValues[3];
-            if (newXoffset < 0) {
-                if (newXoffset > maxValueX) {
-                    moveGridValues[0] = newXoffset;
-                } else {
-                    moveGridValues[0] = maxValueX;
-                }
+            if (activeBoard instanceof DynamicBoard) {
+                moveGridValues[0] = newXoffset;
+                moveGridValues[1] = newYoffset;
 
             } else {
-                moveGridValues[0] = 0;
-            }
-            if (newYoffset < 0) {
-                if (newYoffset > maxValueY) {
-                    moveGridValues[1] = newYoffset;
-                } else {
-                    moveGridValues[1] = maxValueY;
-                }
 
-            } else {
-                moveGridValues[1] = 0;
+                if (newXoffset < 0) {
+                    if (newXoffset > maxValueX) {
+                        moveGridValues[0] = newXoffset;
+                    } else {
+                        moveGridValues[0] = maxValueX;
+                    }
+
+                } else {
+                    moveGridValues[0] = 0;
+                }
+                if (newYoffset < 0) {
+                    if (newYoffset > maxValueY) {
+                        moveGridValues[1] = newYoffset;
+                    } else {
+                        moveGridValues[1] = maxValueY;
+                    }
+
+                } else {
+                    moveGridValues[1] = 0;
+                }
             }
-            
+
             moveGridValues[2] = e.getX();
             moveGridValues[3] = e.getY();
         }
@@ -537,15 +545,17 @@ public class GameController implements Initializable {
 
             moveGridValues[0] = -(oldx * (newCellSize) - canvas.getWidth() / 2);
             moveGridValues[1] = -(oldy * (newCellSize) - canvas.getHeight() / 2);
+            
+            if (!(activeBoard instanceof DynamicBoard)) {
+                double maxvalueX = -(newCellSize * activeBoard.getArrayLength() - canvas.getWidth());
+                double maxvalueY = -(newCellSize * activeBoard.getArrayLength(0) - canvas.getHeight());
 
-            moveGridValues[0] = (moveGridValues[0] > 0) ? 0 : moveGridValues[0];
-            moveGridValues[1] = (moveGridValues[1] > 0) ? 0 : moveGridValues[1];
+                moveGridValues[0] = (moveGridValues[0] > 0) ? 0 : moveGridValues[0];
+                moveGridValues[1] = (moveGridValues[1] > 0) ? 0 : moveGridValues[1];
 
-            double maxvalueX = -(newCellSize * activeBoard.getArrayLength() - canvas.getWidth());
-            double maxvalueY = -(newCellSize * activeBoard.getArrayLength(0) - canvas.getHeight());
-
-            moveGridValues[0] = (moveGridValues[0] < maxvalueX) ? maxvalueX : moveGridValues[0];
-            moveGridValues[1] = (moveGridValues[1] < maxvalueY) ? maxvalueY : moveGridValues[1];
+                moveGridValues[0] = (moveGridValues[0] < maxvalueX) ? maxvalueX : moveGridValues[0];
+                moveGridValues[1] = (moveGridValues[1] < maxvalueY) ? maxvalueY : moveGridValues[1];
+            }
         }
 
     }
@@ -557,15 +567,17 @@ public class GameController implements Initializable {
 
             moveGridValues[0] = -(oldx * (newCellSize) - mousePositionX);
             moveGridValues[1] = -(oldy * (newCellSize) - mousePositionY);
+            
+            if (!(activeBoard instanceof DynamicBoard)) {
+                double maxvalueX = -(newCellSize * activeBoard.getArrayLength() - canvas.getWidth());
+                double maxvalueY = -(newCellSize * activeBoard.getArrayLength(0) - canvas.getHeight());
 
-            moveGridValues[0] = (moveGridValues[0] > 0) ? 0 : moveGridValues[0];
-            moveGridValues[1] = (moveGridValues[1] > 0) ? 0 : moveGridValues[1];
+                moveGridValues[0] = (moveGridValues[0] > 0) ? 0 : moveGridValues[0];
+                moveGridValues[1] = (moveGridValues[1] > 0) ? 0 : moveGridValues[1];
 
-            double maxvalueX = -(newCellSize * activeBoard.getArrayLength() - canvas.getWidth());
-            double maxvalueY = -(newCellSize * activeBoard.getArrayLength(0) - canvas.getHeight());
-
-            moveGridValues[0] = (moveGridValues[0] < maxvalueX) ? maxvalueX : moveGridValues[0];
-            moveGridValues[1] = (moveGridValues[1] < maxvalueY) ? maxvalueY : moveGridValues[1];
+                moveGridValues[0] = (moveGridValues[0] < maxvalueX) ? maxvalueX : moveGridValues[0];
+                moveGridValues[1] = (moveGridValues[1] < maxvalueY) ? maxvalueY : moveGridValues[1];
+            }
         }
 
     }
