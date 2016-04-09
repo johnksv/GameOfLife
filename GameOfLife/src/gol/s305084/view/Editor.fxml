@@ -29,9 +29,9 @@
                   <Button minWidth="80.0" mnemonicParsing="false" text="Save as gif" />
                </children>
             </HBox>
-            <TextField promptText="Pattern Name" />
-            <TextField prefHeight="25.0" prefWidth="132.0" promptText="Author" />
-            <TextField promptText="Comments" />
+            <TextField fx:id="txtName" promptText="Pattern Name" />
+            <TextField fx:id="txtAuthor" prefHeight="25.0" prefWidth="132.0" promptText="Author" />
+            <TextField fx:id="txtComment" promptText="Comment" />
             <Button mnemonicParsing="false" onAction="#handlebtnRLE" text="Save as RLE" />
             <Button mnemonicParsing="false" text="Close" />
          </children>

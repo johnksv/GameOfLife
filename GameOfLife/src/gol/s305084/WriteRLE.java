@@ -2,17 +2,15 @@ package gol.s305084;
 
 import gol.model.Board.Board;
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
  * Contains static methods for writing a board to an rle file.
  *
- * @author Stian
+ * @author s305084
  */
 public final class WriteRLE {
 
@@ -21,56 +19,108 @@ public final class WriteRLE {
 
     /**
      * Converts a non empty Board to RLE format. Supports the metadata: name,
-     * author, comments
+     * author, comment
      *
      * @param path
      * @param board
+     * @param name
+     * @param author
+     * @param comment
      * @throws java.io.IOException
      */
-    public static void toRLE(Path path, Board board) throws IOException {
+    public static void toRLE(Path path, Board board, String name, String author, String comment) throws IOException {
         byte[][] g = board.getBoundingBoxBoard();
-        List<String> lines = new ArrayList<>();
-        lines.add("x = " + g[0].length + ", y = " + g.length+", Rule = ");
-        Files.write(path, lines);
-    }
-/*
-    private void toRLE(Sprite[][] k) throws IOException {
-        String line = "";
-        List<String> lines = new ArrayList<>();
-        Path file = Paths.get("the-file-name.rle");
-        for (Sprite[] l : k) {
+        List<String> lines = new LinkedList<>();
 
-            int teller = 0;
+        //Meta tags
+        if (!name.equals("")) {
+            lines.add("#N " + name);
+        }
+        if (!author.equals("")) {
+            lines.add("#O " + author);
+        }
+        if (!comment.equals("")) {
+            lines.add("#C " + comment);
+        }
+        //Pattern dimensions
+        lines.add("x = " + g[0].length + ", y = " + g.length + ", Rule = ");
+        //TODO Inport rule
+        int counter = 0;
 
-            line = "";
-            for (int i = 0; i < l.length; i++) {
-                if (i != 0) {
+        StringBuilder line = new StringBuilder();
+        for (int i = 0; i < g.length; i++) {
+            byte last = g[i][0];
 
-                    if (l[i].getAlive() == l[i - 1].getAlive()) {
-                        teller++;
-                    } else {
-
-                        if (l[i - 1].getAlive() == true) {
-                            line += teller + "l";//skriv til fil.
+            for (byte cell : g[i]) {
+                if (cell != last) {
+                    if (last == 64) {
+                        //TODO make own helping method?
+                        if (counter == 1) {
+                            line.append("o");
                         } else {
-                            line += teller + "d";//skriv til fil.
+                            line.append(counter + "o");
                         }
-                        teller = 1;
+
+                    } else {
+                        if (counter == 1) {
+                            line.append("b");
+                        } else {
+                            line.append(counter + "b");
+                        }
                     }
+                    if (line.length() > 70) {
+                        lines.add(line.toString());
+                        line.delete(0, line.length());
+                    }
+
+                    counter = 1;
+                    last = cell;
+
                 } else {
-                    teller++;
+                    counter++;
                 }
             }
-            if (l[l.length - 1].getAlive() == false) {
-                line += teller + "d";
-            } else {
-                line += teller + "l";
+            if (last == 64) {
+                if (counter == 1) {
+                    line.append("o");
+                } else {
+                    line.append(counter + "o");
+                }
             }
+            counter = 0;
+            i = appendBlank(line, g, i);
+        }
+        line.append("!");
+        lines.add(line.toString());
 
-            lines.add(line);
+        Files.write(path, lines);
+
+    }
+
+    private static int appendBlank(StringBuilder line, byte[][] pattern, int i) {
+        //To make sure that the last line has ! and not $
+        if (i + 1 >= pattern.length) {
+            return i;
+        }
+        int blankCount = 1;
+        boolean blankLine = true;
+        for (int j = i + 1; j < pattern.length; j++) {
+            for (byte cell : pattern[j]) {
+                if (cell == 64) {
+                    blankLine = false;
+                }
+            }
+            if (blankLine) {
+                blankCount++;
+            }
         }
 
-        Files.write(file, lines, Charset.forName("UTF-8"));
+        if (blankCount == 1) {
+            line.append("$");
+            return i;
+        } else {
+            line.append(blankCount + "$");
+            return i + blankCount - 1;
+        }
     }
-*/
 }

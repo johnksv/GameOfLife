@@ -13,6 +13,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
@@ -28,7 +29,13 @@ public class PatternEditorController implements Initializable {
     private Canvas canvas;
     @FXML
     private RadioButton rbRemoveCell;
-
+    @FXML
+    private TextField txtName;
+    @FXML
+    private TextField txtAuthor;
+    @FXML
+    private TextField txtComment;
+    
     private Board activeBoard;
     private GraphicsContext gc;
     private Color bgColor;
@@ -45,7 +52,7 @@ public class PatternEditorController implements Initializable {
 
             File selected = fileChooser.showSaveDialog(null);
             if (selected != null) {
-                WriteRLE.toRLE(selected.toPath(), activeBoard);
+                WriteRLE.toRLE(selected.toPath(), activeBoard, txtName.getText(),txtAuthor.getText(),txtComment.getText());
             }
         } catch (IOException ex) {
             Logger.getLogger(PatternEditorController.class.getName()).log(Level.SEVERE, null, ex);
