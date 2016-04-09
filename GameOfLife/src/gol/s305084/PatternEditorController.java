@@ -6,20 +6,20 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Alert;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Affine;
 import javafx.stage.FileChooser;
+import lieng.GIFWriter;
 
+//TODO make close button
 /**
  * Controller
  *
@@ -28,7 +28,6 @@ import javafx.stage.FileChooser;
 public class PatternEditorController implements Initializable {
 
     //TODO Make junit tester
-    //TODO Make error if anything is wrong;
     @FXML
     private Canvas canvas;
     @FXML
@@ -48,22 +47,72 @@ public class PatternEditorController implements Initializable {
     private Color bgColor;
     private Color cellColor;
 
+    @FXML
+    private void handleClear() {
+        activeBoard.clearBoard();
+        draw();
+        drawStrip();
+    }
+
+    @FXML
+    private void handleGIF() {
+        //neagtiv value means that there are no alive cells on the board
+        if (activeBoard.getBoundingBox()[1] - activeBoard.getBoundingBox()[0] < 0) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("Sorry, but you cant make a gif with no cells alive.");
+            alert.showAndWait();
+        } else {
+            
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.getExtensionFilters().addAll(
+                    new FileChooser.ExtensionFilter("Game of Life Files", "*.gif"),
+                    new FileChooser.ExtensionFilter("All Files", "*.*"));
+            File selected = fileChooser.showSaveDialog(null);
+            if (selected != null) {
+                try {
+                    java.awt.Color awtCellColor = new java.awt.Color((float) cellColor.getRed(), (float) cellColor.getGreen(), (float) cellColor.getBlue());
+                    java.awt.Color awtBgColor = new java.awt.Color((float) bgColor.getRed(), (float) bgColor.getGreen(), (float) bgColor.getBlue());
+
+                    GifMaker.makeGif(activeBoard.getGameBoard(), new GIFWriter(140, 140, selected.toString(),
+                            500), 140, 140, awtBgColor, awtCellColor, 20);
+
+                } catch (IOException ex) {
+                    Alert alert = new Alert(Alert.AlertType.ERROR, ex.getMessage());
+                    alert.setTitle("Error");
+                    alert.setHeaderText("Sorry, something  went wrong during the saving");
+                    alert.showAndWait();
+                }
+            }
+        }
+    }
 
     @FXML
     private void handlebtnRLE() {
-        try {
-            FileChooser fileChooser = new FileChooser();
+        //neagtiv value means that there are no alive cells on the board
+        if (activeBoard.getBoundingBox()[1] - activeBoard.getBoundingBox()[0] < 0) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("Sorry, but you cant make a file with no cells alive.");
+            alert.showAndWait();
+        } else {
+            try {
+                FileChooser fileChooser = new FileChooser();
 
-            fileChooser.getExtensionFilters().addAll(
-                    new FileChooser.ExtensionFilter("Game of Life Files", "*.rle"),
-                    new FileChooser.ExtensionFilter("All Files", "*.*"));
+                fileChooser.getExtensionFilters().addAll(
+                        new FileChooser.ExtensionFilter("Game of Life Files", "*.rle"),
+                        new FileChooser.ExtensionFilter("All Files", "*.*"));
 
-            File selected = fileChooser.showSaveDialog(null);
-            if (selected != null) {
-                WriteRLE.toRLE(selected.toPath(), activeBoard, txtName.getText(), txtAuthor.getText(), txtComment.getText());
+                File selected = fileChooser.showSaveDialog(null);
+                if (selected != null) {
+                    WriteRLE.toRLE(selected.toPath(), activeBoard, txtName.getText(), txtAuthor.getText(), txtComment.getText());
+                }
+            } catch (IOException ex) {
+                Alert alert = new Alert(Alert.AlertType.ERROR, ex.getMessage());
+                alert.setTitle("Error");
+                alert.setHeaderText("Sorry, something  went wrong during the saving \n please try again.");
+                alert.showAndWait();
             }
-        } catch (IOException ex) {
-            Logger.getLogger(PatternEditorController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -103,7 +152,6 @@ public class PatternEditorController implements Initializable {
 
     public void setCellColor(Color cellColor) {
         this.cellColor = cellColor;
-
     }
 
     private void handleMouseClick(MouseEvent e) {

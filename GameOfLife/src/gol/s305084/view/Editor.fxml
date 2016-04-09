@@ -35,7 +35,7 @@
                         <RadioButton fx:id="rbRemoveCell" mnemonicParsing="false" prefHeight="17.0" prefWidth="119.0" text="Remove cells" />
                      </children>
                   </VBox>
-                  <Button mnemonicParsing="false" text="Clear" />
+                  <Button mnemonicParsing="false" onAction="#handleClear" prefWidth="70.0" text="Clear" />
                </children>
             </HBox>
             <HBox alignment="CENTER" prefHeight="37.0" prefWidth="155.0" />
@@ -65,7 +65,7 @@
                   <Canvas fx:id="theStrip" height="140.0" width="2700.0" />
                </content>
             </ScrollPane>
-            <Button fx:id="btnGif" minWidth="80.0" mnemonicParsing="false" text="Save as gif">
+            <Button onAction="#handleGIF" minWidth="80.0" mnemonicParsing="false" text="Save as gif">
                <StackPane.margin>
                   <Insets right="10.0" top="10.0" />
                </StackPane.margin></Button>

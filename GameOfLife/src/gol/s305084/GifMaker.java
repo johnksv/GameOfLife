@@ -3,24 +3,31 @@ package gol.s305084;
 import gol.model.Board.*;
 import java.awt.Color;
 import java.io.IOException;
+import java.util.Arrays;
 import lieng.GIFWriter;
 
 /**
- *
+ * Draws a board to GIF format.
+ * 
  * @author s305084
  */
 public class GifMaker {
 
     private static GIFWriter gifWriter;
 
-    private static int sizeCell;
+    private static byte[][] orginalPattern;
+    private static int cellSize;
     private static Color cellColor;
     private static int width;
     private static int height;
-    //TODO make a copy and compare.
+
+    private final static int maxCellSize = 20;
 
     /**
-     *
+     * Draws a boards next generations on a GIF.
+     * Stops drawing if the next generation is the same as the first.
+     * Stops drawing if the next generation is empty.
+     * 
      * @param board
      * @param gw
      * @param newWidth
@@ -42,6 +49,7 @@ public class GifMaker {
         Board activeboard = new ArrayBoard(board.length, board[0].length);
         activeboard.insertArray(board, 1, 1);
 
+        orginalPattern = activeboard.getBoundingBoxBoard();
         makeFrame(activeboard, counter);
     }
 
@@ -52,6 +60,7 @@ public class GifMaker {
     private static void makeFrame(Board frame, int counter) throws IOException {
         int xoffset = 0;
         int yoffset = 0;
+        byte[][] boarders = frame.getBoundingBoxBoard();
 
         if (counter <= 0) {
             gifWriter.close();
@@ -59,43 +68,60 @@ public class GifMaker {
         }
         gifWriter.createNextImage();
         gifWriter.flush();
-        byte[][] boarders = frame.getBoundingBoxBoard();
 
         if (height / boarders.length < width / boarders[0].length) {
-            sizeCell = height / boarders.length;
-            xoffset = width / 2 - (boarders[0].length * sizeCell) / 2;
+            cellSize = height / boarders.length;
+            xoffset = width / 2 - (boarders[0].length * cellSize) / 2;
             if (xoffset < 0) {
                 xoffset = 0;
             }
         } else {
-            sizeCell = width / boarders[0].length;
-            yoffset = height / 2 - (boarders.length * sizeCell) / 2;
+            cellSize = width / boarders[0].length;
+            yoffset = height / 2 - (boarders.length * cellSize) / 2;
             if (yoffset < 0) {
                 yoffset = 0;
             }
         }
+        //Sets the cell size to a maximum value if the new cell size is bigger then the maximum
+        if (cellSize > maxCellSize) {
+            cellSize = maxCellSize;
+            yoffset = height / 2 - (boarders.length * cellSize) / 2;
+            xoffset = width / 2 - (boarders[0].length * cellSize) / 2;
+        }
+
         for (int i = 0; i < boarders.length; i++) {
             for (int j = 0; j < boarders[i].length; j++) {
 
-                if (i * sizeCell + sizeCell > height && j * sizeCell + sizeCell > width) {
+                if (i * cellSize + cellSize > height && j * cellSize + cellSize > width) {
                     break;
                 } else {
 
                     if (boarders[i][j] == 64) {
-                        if (sizeCell < 3) {
+                        if (cellSize < 3) {
                             gifWriter.setPixelValue(j, i, cellColor);
                         } else {
-                            gifWriter.fillRect(j * sizeCell + 1 + xoffset, xoffset + j * sizeCell + sizeCell - 1,
-                                    yoffset + i * sizeCell + 1, yoffset + i * sizeCell + sizeCell - 1, cellColor);
+                            gifWriter.fillRect(j * cellSize + 1 + xoffset, xoffset + j * cellSize + cellSize - 1,
+                                    yoffset + i * cellSize + 1, yoffset + i * cellSize + cellSize - 1, cellColor);
 
                         }
                     }
                 }
             }
         }
-
-        frame.nextGen();
+        System.out.println("Insertet");
         gifWriter.insertCurrentImage();
+        frame.nextGen();
+
+        //Returns if the next generation is the same as the first
+        if (Arrays.deepEquals(orginalPattern, frame.getBoundingBoxBoard())) {
+            System.out.println("It did it!");
+            gifWriter.close();
+            return;
+        } else if (frame.getBoundingBox()[1] - frame.getBoundingBox()[0] < 0) {
+            System.out.println("empty");
+            gifWriter.close();
+            return;
+        }
         makeFrame(frame, --counter);
     }
 }
