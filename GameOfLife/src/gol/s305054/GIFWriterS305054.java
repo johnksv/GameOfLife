@@ -5,6 +5,7 @@ import gol.model.Board.Board;
 import java.io.IOException;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.paint.Color;
 import lieng.GIFWriter;
 
 /**
@@ -17,10 +18,12 @@ public class GIFWriterS305054 {
 
     private Board copiedBoard; //deep copy of board - TODO check if boundBox or not.
 
-    int width = 100; //Width of .gif - Hardcoded value will be changed
-    int height = 100; //Height of .gif - Hardcoded value will be changed
-    int time = 1000; // 1000 ms = 1s - later, listener to a slider
-    private short nPicturesLeft = 5; //number of pictures left
+    private int width = 100; //Width of .gif - Hardcoded value will be changed - rows
+    private int height = 100; //Height of .gif - Hardcoded value will be changed - columns
+    private int time = 1000; // 1000 ms = 1s - later, listener to a slider
+    private short nPicturesLeft = 5; //number of pictures left - TODO nPictures cannot be less than 1
+    private Color bgColor;
+    private Color cColor;
     String path = "testGif.gif"; //Filepath - later, normal output stream
 
     private GIFWriter gifWriter;
@@ -29,33 +32,43 @@ public class GIFWriterS305054 {
      * Deep copy the active gameboard into a copied gameboard. When changing the
      * copied board, the originale board will stay the same.
      * @param originaleBoard Active board that is being displayed in the Game of Life GUI.
+     * @param bgColor Background color of the board
+     * @param cColor Color of cell in board.
      */
-    public void setCopiedBoard(Board originaleBoard) {
+    public void prepareGIF(Board originaleBoard, Color bgColor, Color cColor) throws IOException { //TODO add parameters height width
+        byte[][] originaleArray = originaleBoard.getBoundingBoxBoard();
+        copiedBoard = new ArrayBoard(width, height);
         /*
          Param originaleBoard - get array, each element in originaleArray, assigned to copied array
          assigns copied array to copiedBoard.
          */
-        byte[][] originaleArray = originaleBoard.getBoundingBoxBoard();      
         copiedBoard.insertArray(originaleArray, 1, 1); //Get boundingBox and insert it to an empty.
+        this.bgColor = bgColor;
+        this.cColor = cColor;
+        
+        gifWriter = new GIFWriter(width, height, path, time);
+        
     }
     /**
      * This method is used for creating a .gif file with x generations (pictures), with dimension ixj, and speed y.
      * makeGif() uses recursion to create pictures that is loaded into a gifstream. when there is one picture left, it will
      * create that last image, and close the stream.
      */
-    public void makeGif() { //TODO method should be changed to propely work recursion wise
+    public void makeGIF() { //TODO method should be changed to propely work recursion wise
         try {
             if (nPicturesLeft == 1) { //number of pictures left == 1
-                gifWriter.insertAndProceed();
+                gifWriter.flush();
+                gifWriter.createNextImage();
+                gifWriter.insertCurrentImage();
                 gifWriter.close();
                 //return the finished gif, ready to be exported            
             } else {
                 gifWriter.createNextImage(); //creates the image
-                gifWriter.insertAndProceed(); //insert the image to gifStream?
+                gifWriter.insertCurrentImage(); //insert the image to gifStream?
 
                 copiedBoard.nextGen(); //calculates the next generation of the board.
                 nPicturesLeft -= 1;
-                makeGif(); //recursive call.
+                makeGIF(); //recursive call.
             }
         }  catch (IOException e) { //TODO catch stackoverflow error
             e.printStackTrace();

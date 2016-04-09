@@ -88,6 +88,8 @@ public class GameController implements Initializable {
     @FXML
     private CheckBox cbShowGrid;
     //TODO Show grid is not working yet. Implement it
+    @FXML
+    private Button saveGifTrygve;
 
     private Board activeBoard;
     private final Timeline timeline = new Timeline();
@@ -311,6 +313,10 @@ public class GameController implements Initializable {
             alert.showAndWait();
 
         }
+    }
+    @FXML
+    private void handleGIFTrygve() {
+        
     }
 
     @FXML
