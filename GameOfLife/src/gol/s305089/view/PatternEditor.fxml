@@ -118,11 +118,9 @@
                         </ToolBar>
                         <ScrollPane BorderPane.alignment="CENTER">
                             <content>
-                                <VBox prefHeight="150.0">
-                                    <children>
-                                        <Canvas fx:id="theStripCanvas" height="150.0" width="600.0" />
-                                    </children>
-                                </VBox>
+                                <HBox fx:id="theStripCanvasContainer" prefHeight="150.0">
+
+                                </HBox>
                             </content>
                         </ScrollPane>
                     </children>

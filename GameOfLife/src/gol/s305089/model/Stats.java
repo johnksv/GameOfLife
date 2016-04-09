@@ -57,7 +57,7 @@ public class Stats {
             }
 
             int livingThisGen = 0;
-            for (byte[] row : (byte[][]) gameboard.getGameBoard()) {
+            for (byte[] row : (byte[][]) gameboard.getBoundingBoxBoard()) {
                 for (byte value : row) {
                     if (value == 64) {
                         livingThisGen++;

@@ -11,16 +11,24 @@ import gol.s305089.model.WriteFile;
 import java.io.File;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
+import javafx.beans.value.ObservableValue;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Affine;
 import javafx.stage.FileChooser;
@@ -39,33 +47,61 @@ public class PatternEditorController implements Initializable {
     @FXML
     private CheckBox chboxAutoUpdateStrip;
     @FXML
-    private Canvas theStripCanvas;
+    private HBox theStripCanvasContainer;
     @FXML
     private RadioButton rbRemoveCell;
     @FXML
     private Label labelWriteFileFdBck;
 
     private Board activeBoard;
+    private Board theStripBoard;
     private GraphicsContext gc;
     private byte[][] byteBoard;
-    private GraphicsContext theStripGc;
 
-    private Color cellColor = Color.BLACK;
-    private Color backgroundColor = Color.web("#F4F4F4");
-    int mousePositionX, mousePositionY;
+    private final Color cellColor = Color.BLACK;
+    private final Color backgroundColor;
+    private int mousePositionX, mousePositionY;
+    private final List<GraphicsContext> theStripGC = new ArrayList<>();
+    private double theStripOffset = 20;
+
+    public PatternEditorController() {
+        this.backgroundColor = Color.web("#F4F4F4");
+    }
 
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        gc = canvas.getGraphicsContext2D();
-        theStripGc = theStripCanvas.getGraphicsContext2D();
-
         canvas.widthProperty().bind(rootBorderPane.widthProperty());
         canvas.heightProperty().bind(rootBorderPane.heightProperty());
+        gc = canvas.getGraphicsContext2D();
 
         mouseInit();
+    }
+
+    private void initTheStrip() {
+        theStripCanvasContainer.getChildren().clear();
+        theStripGC.clear();
+        double cellSize = theStripBoard.getCellSize();
+        for (int i = 0; i < 20; i++) {
+            byte[][] boundingBox = theStripBoard.getBoundingBoxBoard();
+            Canvas striptCanvas = new Canvas(cellSize * boundingBox[0].length + theStripOffset, cellSize * boundingBox.length + theStripOffset);
+            theStripCanvasContainer.getChildren().add(striptCanvas);
+            theStripGC.add(striptCanvas.getGraphicsContext2D());
+            striptCanvas.setOnMousePressed((MouseEvent e) -> {
+                Canvas picked = (Canvas) e.getPickResult().getIntersectedNode();
+                if (theStripGC.contains(picked.getGraphicsContext2D())) {
+                    int position = theStripGC.indexOf(picked.getGraphicsContext2D());
+                    for (int iterations = 0; iterations < position; iterations++) {
+                        activeBoard.nextGen();
+                    }
+                    updateTheStrip();
+                    draw();
+                }
+            });
+            theStripBoard.nextGen();
+        }
     }
 
     private void mouseInit() {
@@ -109,6 +145,7 @@ public class PatternEditorController implements Initializable {
     @FXML
     private void handleClearBtn() {
         activeBoard.clearBoard();
+        draw();
     }
 
     @FXML
@@ -127,39 +164,19 @@ public class PatternEditorController implements Initializable {
 
     @FXML
     private void updateTheStrip() {
-        Board tempBoard = activeBoard;
-        theStripCanvas.setWidth(5000);
-        theStripGc.clearRect(0, 0, theStripCanvas.widthProperty().get(), theStripCanvas.heightProperty().get());
-        Affine xform = new Affine();
-        double tx = 10;
-        double lastTx = 0;
+        byte[][] patternToDraw = activeBoard.getBoundingBoxBoard();
 
-        //TODO FIX BUG: First two is drawn on top of each other
+        //int[] largestDimension = UsefullMethods.getBiggestDimension(patternToDraw, 20);
+        theStripBoard = new ArrayBoard(100, 100);
+        theStripBoard.insertArray(patternToDraw, 10, 10);
+        initTheStrip();
+        theStripBoard.clearBoard();
+        theStripBoard.insertArray(patternToDraw, 10, 10);
+
         for (int iteration = 0; iteration < 20; iteration++) {
-
-            byte[][] tempByteBoard = tempBoard.getBoundingBoxBoard();
-            int longestRow = 0;
-
-            for (byte[] row : tempByteBoard) {
-                if (row.length > longestRow) {
-                    longestRow = row.length;
-                }
-            }
-            tempBoard = new ArrayBoard(tempByteBoard.length + 4, longestRow + 4);
-            tempBoard.insertArray(tempByteBoard, 2, 2);
-            tempBoard.setCellSize(10);
-            tempBoard.nextGen();
-
-            drawTheStrip(tempBoard);
-
-            theStripGc.setTransform(xform);
-            lastTx = longestRow * tempBoard.getCellSize() + 50;
-            tx += lastTx;
-            xform.setTx(tx);
+            drawTheStrip(theStripGC.get(iteration));
+            theStripBoard.nextGen();
         }
-        theStripCanvas.setWidth(tx - lastTx);
-        xform.setTx(0.0);
-        theStripGc.setTransform(xform);
 
     }
 
@@ -174,20 +191,6 @@ public class PatternEditorController implements Initializable {
         activeBoard = new ArrayBoard(rows, columns);
         this.activeBoard.setCellSize(gameBoardToCopy.getCellSize());
 
-    }
-
-    private void drawTheStrip(Board boardToDraw) {
-        theStripGc.setFill(cellColor);
-        for (int i = 1; i < boardToDraw.getArrayLength(); i++) {
-            for (int j = 1; j < boardToDraw.getArrayLength(i); j++) {
-                if (boardToDraw.getCellState(i, j)) {
-                    theStripGc.fillRect(j * boardToDraw.getCellSize(),
-                            i * boardToDraw.getCellSize(),
-                            boardToDraw.getCellSize(),
-                            boardToDraw.getCellSize());
-                }
-            }
-        }
     }
 
     private void draw() {
@@ -233,6 +236,25 @@ public class PatternEditorController implements Initializable {
                                 activeBoard.getCellSize(),
                                 activeBoard.getCellSize());
                     }
+                }
+            }
+        }
+    }
+
+    private void drawTheStrip(GraphicsContext stripGC) {
+        stripGC.setGlobalAlpha(1);
+        stripGC.setFill(backgroundColor);
+        stripGC.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+        stripGC.setFill(cellColor);
+        byte[][] boundedPattern = theStripBoard.getBoundingBoxBoard();
+        int longestRow = 0;
+        double cellSize = theStripBoard.getCellSize();
+        for (int i = 0; i < boundedPattern.length; i++) {
+            longestRow = boundedPattern[i].length > longestRow ? boundedPattern[i].length : longestRow;
+
+            for (int j = 0; j < boundedPattern[i].length; j++) {
+                if (boundedPattern[i][j] == 64) {
+                    stripGC.fillRect(j * cellSize + theStripOffset, i * cellSize + theStripOffset, cellSize, cellSize);
                 }
             }
         }
