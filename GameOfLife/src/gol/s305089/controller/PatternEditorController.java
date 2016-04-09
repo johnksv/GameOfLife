@@ -26,6 +26,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -52,6 +53,15 @@ public class PatternEditorController implements Initializable {
     private RadioButton rbRemoveCell;
     @FXML
     private Label labelWriteFileFdBck;
+    @FXML
+    private TextField tfName;
+    @FXML
+    private TextField tfAuthor;
+    @FXML
+    private TextField tfDescription;
+    @FXML
+    private TextField tfRules;
+    
 
     private Board activeBoard;
     private Board theStripBoard;
@@ -84,7 +94,7 @@ public class PatternEditorController implements Initializable {
         theStripCanvasContainer.getChildren().clear();
         theStripGC.clear();
         double cellSize = theStripBoard.getCellSize();
-        for (int i = 0; i < 20; i++) {
+        for (int i = 0; i <= 20; i++) {
             byte[][] boundingBox = theStripBoard.getBoundingBoxBoard();
             Canvas striptCanvas = new Canvas(cellSize * boundingBox[0].length + theStripOffset, cellSize * boundingBox.length + theStripOffset);
             theStripCanvasContainer.getChildren().add(striptCanvas);
@@ -153,7 +163,13 @@ public class PatternEditorController implements Initializable {
         boolean fileSucsessCreated = false;
         byte[][] boardToWrite = activeBoard.getBoundingBoxBoard();
         if (boardToWrite[0].length != 0) {
+            WriteFile.setPatternName(tfName.getText());
+            WriteFile.setAuthor(tfAuthor.getText());
+            WriteFile.setComment(tfDescription.getText());
+            
             FileChooser filechooser = new FileChooser();
+            filechooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("RLE-format", ".rle"));
+            filechooser.setInitialFileName(tfName.getText());
             File file = filechooser.showSaveDialog(null);
             if (file != null) {
                 fileSucsessCreated = WriteFile.writeToRLE(activeBoard.getBoundingBoxBoard(), file.toPath());
@@ -173,7 +189,7 @@ public class PatternEditorController implements Initializable {
         theStripBoard.clearBoard();
         theStripBoard.insertArray(patternToDraw, 10, 10);
 
-        for (int iteration = 0; iteration < 20; iteration++) {
+        for (int iteration = 0; iteration <= 20; iteration++) {
             drawTheStrip(theStripGC.get(iteration));
             theStripBoard.nextGen();
         }

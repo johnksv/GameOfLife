@@ -54,28 +54,28 @@
                                             <children>
                                                 <Label text="Name:" />
                                                 <Region prefHeight="25.0" prefWidth="44.0" />
-                                                <TextField promptText="Pattername" />
+                                                <TextField fx:id="tfName" promptText="Pattername" />
                                             </children>
                                         </HBox>
                                         <HBox>
                                             <children>
                                                 <Label text="Author:" />
                                                 <Region prefHeight="25.0" prefWidth="39.0" />
-                                                <TextField promptText="Author" />
+                                                <TextField fx:id="tfAuthor" promptText="Author" />
                                             </children>
                                         </HBox>
                                         <HBox>
                                             <children>
-                                                <Label text="Desciption:" />
+                                                <Label text="Description:" />
                                                 <Region prefHeight="25.0" prefWidth="20.0" />
-                                                <TextField promptText="Description" />
+                                                <TextField fx:id="tfDescription" promptText="Description" />
                                             </children>
                                         </HBox>
                                         <HBox>
                                             <children>
                                                 <Label text="Rules:" />
                                                 <Region prefHeight="25.0" prefWidth="47.0" />
-                                                <TextField promptText="Survive/Birth" />
+                                                <TextField fx:id="tfRules" promptText="Survive/Birth" />
                                             </children>
                                         </HBox>
                                         <Label text="Leave &quot;Rules&quot; blank for standard rules:" />
@@ -105,7 +105,7 @@
         </AnchorPane>
     </center>
     <bottom>
-        <TitledPane alignment="BOTTOM_LEFT" animated="false" prefWidth="800.0" text="Preview generations" BorderPane.alignment="BOTTOM_LEFT">
+        <TitledPane alignment="BOTTOM_LEFT" animated="false" prefWidth="800.0" text="Preview generations (current and next 20)" BorderPane.alignment="BOTTOM_LEFT">
             <content>
                 <VBox>
                     <children>

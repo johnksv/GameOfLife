@@ -33,15 +33,15 @@ public final class WriteFile {
         String bordDimensions = "x = " + xRows + ", y = " + yCols;
 
         try (BufferedWriter writer = Files.newBufferedWriter(saveLocation)) {
-            if (patternName != null) {
+            if (patternName != null && !patternName.equals("")) {
                 writer.append("#N: " + patternName);
                 writer.newLine();
             }
-            if (author != null) {
+            if (author != null && !author.equals("")) {
                 writer.append("#O: " + author);
                 writer.newLine();
             }
-            if (comment != null) {
+            if (comment != null && !comment.equals("")) {
                 writer.append("#C: " + comment.replace("\n", " "));
                 writer.newLine();
             }
