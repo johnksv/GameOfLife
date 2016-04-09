@@ -48,10 +48,6 @@ public class PatternEditorController implements Initializable {
     private Color bgColor;
     private Color cellColor;
 
-    @FXML
-    private void handleExit() {
-        //Close window
-    }
 
     @FXML
     private void handlebtnRLE() {
@@ -108,7 +104,6 @@ public class PatternEditorController implements Initializable {
     public void setCellColor(Color cellColor) {
         this.cellColor = cellColor;
 
-        draw();
     }
 
     private void handleMouseClick(MouseEvent e) {

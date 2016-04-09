@@ -8,11 +8,12 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="455.0" prefWidth="666.0" style="-fx-background-color: #66ccff;" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gol.s305084.PatternEditorController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="455.0" prefWidth="670.0" style="-fx-background-color: #66ccff;" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gol.s305084.PatternEditorController">
    <children>
       <Canvas id="canvasEditor" fx:id="canvas" height="316.0" width="437.0" />
       <VBox layoutX="446.0" layoutY="14.0" prefHeight="271.0" prefWidth="169.0" spacing="10.0">
@@ -22,17 +23,32 @@
                   <Font name="Arial" size="23.0" />
                </font>
             </Text>
-            <RadioButton mnemonicParsing="false" text="Add cells" />
-            <RadioButton fx:id="rbRemoveCell" mnemonicParsing="false" prefHeight="17.0" prefWidth="119.0" text="Remove cells" />
-            <HBox alignment="CENTER" prefHeight="37.0" prefWidth="155.0">
+            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="15.0">
                <children>
-                  <Button minWidth="80.0" mnemonicParsing="false" text="Save as gif" />
+                  <VBox prefHeight="200.0" prefWidth="100.0">
+                     <children>
+                        <RadioButton mnemonicParsing="false" text="Add cells">
+                           <VBox.margin>
+                              <Insets bottom="5.0" top="5.0" />
+                           </VBox.margin>
+                        </RadioButton>
+                        <RadioButton fx:id="rbRemoveCell" mnemonicParsing="false" prefHeight="17.0" prefWidth="119.0" text="Remove cells" />
+                     </children>
+                  </VBox>
+                  <Button mnemonicParsing="false" text="Clear" />
                </children>
             </HBox>
-            <TextField fx:id="txtName" promptText="Pattern Name" />
+            <HBox alignment="CENTER" prefHeight="37.0" prefWidth="155.0" />
+            <TextField fx:id="txtName" promptText="Pattern Name">
+               <VBox.margin>
+                  <Insets top="5.0" />
+               </VBox.margin></TextField>
             <TextField fx:id="txtAuthor" prefHeight="25.0" prefWidth="132.0" promptText="Author" />
             <TextField fx:id="txtComment" promptText="Comment" />
-            <Button mnemonicParsing="false" onAction="#handlebtnRLE" text="Save as RLE" />
+            <Button mnemonicParsing="false" onAction="#handlebtnRLE" text="Save as RLE">
+               <VBox.margin>
+                  <Insets top="5.0" />
+               </VBox.margin></Button>
             <Button mnemonicParsing="false" text="Close" />
          </children>
          <opaqueInsets>
@@ -42,10 +58,18 @@
             <Insets left="5.0" top="5.0" />
          </padding>
       </VBox>
-      <ScrollPane layoutY="315.0" prefHeight="140.0" prefWidth="666.0">
-         <content>
-            <Canvas height="121.0" width="1019.0" />
-         </content>
-      </ScrollPane>
+      <StackPane alignment="TOP_RIGHT" layoutY="309.0" prefHeight="156.0" prefWidth="680.0">
+         <children>
+            <ScrollPane prefHeight="140.0" prefWidth="680.0">
+               <content>
+                  <Canvas fx:id="theStrip" height="140.0" width="2700.0" />
+               </content>
+            </ScrollPane>
+            <Button fx:id="btnGif" minWidth="80.0" mnemonicParsing="false" text="Save as gif">
+               <StackPane.margin>
+                  <Insets right="10.0" top="10.0" />
+               </StackPane.margin></Button>
+         </children>
+      </StackPane>
    </children>
 </AnchorPane>
