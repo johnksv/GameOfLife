@@ -8,6 +8,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
@@ -16,6 +17,7 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
+import javafx.scene.transform.Affine;
 import javafx.stage.FileChooser;
 
 /**
@@ -25,8 +27,12 @@ import javafx.stage.FileChooser;
  */
 public class PatternEditorController implements Initializable {
 
+    //TODO Make junit tester
+    //TODO Make error if anything is wrong;
     @FXML
     private Canvas canvas;
+    @FXML
+    private Canvas theStrip;
     @FXML
     private RadioButton rbRemoveCell;
     @FXML
@@ -35,11 +41,17 @@ public class PatternEditorController implements Initializable {
     private TextField txtAuthor;
     @FXML
     private TextField txtComment;
-    
+
     private Board activeBoard;
     private GraphicsContext gc;
+    private GraphicsContext gcStrip;
     private Color bgColor;
     private Color cellColor;
+
+    @FXML
+    private void handleExit() {
+        //Close window
+    }
 
     @FXML
     private void handlebtnRLE() {
@@ -52,7 +64,7 @@ public class PatternEditorController implements Initializable {
 
             File selected = fileChooser.showSaveDialog(null);
             if (selected != null) {
-                WriteRLE.toRLE(selected.toPath(), activeBoard, txtName.getText(),txtAuthor.getText(),txtComment.getText());
+                WriteRLE.toRLE(selected.toPath(), activeBoard, txtName.getText(), txtAuthor.getText(), txtComment.getText());
             }
         } catch (IOException ex) {
             Logger.getLogger(PatternEditorController.class.getName()).log(Level.SEVERE, null, ex);
@@ -62,11 +74,14 @@ public class PatternEditorController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         gc = canvas.getGraphicsContext2D();
-        activeBoard = new ArrayBoard(150, 150);
+        gcStrip = theStrip.getGraphicsContext2D();
+        activeBoard = new ArrayBoard(100, 100);
 
-        activeBoard.setCellSize(13);
+        activeBoard.setCellSize(15);
         activeBoard.setGridSpacing(0.6);
+
         mouseInit();
+        drawStrip();
     }
 
     private void mouseInit() {
@@ -86,14 +101,14 @@ public class PatternEditorController implements Initializable {
         this.bgColor = bgColor;
 
         gc.setFill(bgColor);
-        gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+        draw();
+        drawStrip();
     }
 
     public void setCellColor(Color cellColor) {
         this.cellColor = cellColor;
 
-        gc.setFill(bgColor);
-        gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+        draw();
     }
 
     private void handleMouseClick(MouseEvent e) {
@@ -106,10 +121,10 @@ public class PatternEditorController implements Initializable {
             activeBoard.setCellState(y, x, true, 0, 0);
         }
         draw();
+        drawStrip();
     }
 
     private void draw() {
-        gc.setGlobalAlpha(1);
         gc.setFill(bgColor);
         gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
         gc.setFill(cellColor);
@@ -126,4 +141,80 @@ public class PatternEditorController implements Initializable {
         }
     }
 
+    private void drawStrip() {
+        byte[][] trimmedBoard = activeBoard.getBoundingBoxBoard();
+        Board boardStrip = new ArrayBoard(trimmedBoard.length + 40, trimmedBoard[0].length + 40);
+        boardStrip.insertArray(trimmedBoard, 20, 20);
+        Affine xform = new Affine();
+
+        double tx = 0;
+        xform.setTx(tx);
+        gcStrip.setTransform(xform);
+
+        gcStrip.clearRect(0, 0, theStrip.getWidth(), theStrip.getHeight());
+        gcStrip.setFill(bgColor);
+        gcStrip.fillRect(0, 0, theStrip.getWidth(), theStrip.getHeight());
+        gcStrip.setLineWidth(1);
+
+        for (int i = 0; i < 20; i++) {
+
+            boardStrip.nextGen();
+            drawStripPart(boardStrip.getBoundingBoxBoard());
+            tx += theStrip.getWidth() / 20;
+
+            gcStrip.strokeLine(theStrip.getWidth() / 20, 0, theStrip.getWidth() / 20, theStrip.getHeight());
+
+            xform.setTx(tx);
+            gcStrip.setTransform(xform);
+        }
+        xform.setTx(0.0);
+        gcStrip.setTransform(xform);
+
+        // reset transform
+    }
+
+    private void drawStripPart(byte[][] pattern) {
+        double cellSize;
+        double xoffset = 0;
+        double yoffset = 0;
+
+        double height = theStrip.getHeight();
+        double width = theStrip.getWidth() / 20;
+
+        //Finding the rigth cellSize and finding the rigth offset
+        //The offset sets the pattern in the middel of the width or heigth
+        if (height / pattern.length < width / pattern[0].length) {
+            cellSize = height / pattern.length;
+            xoffset = width / 2 - (pattern[0].length * cellSize) / 2;
+            if (xoffset < 0) {
+                xoffset = 0;
+            }
+        } else {
+            cellSize = width / pattern[0].length;
+            yoffset = height / 2 - (pattern.length * cellSize) / 2;
+            if (yoffset < 0) {
+                yoffset = 0;
+            }
+        }
+
+        //Calculating offset with if above max-cellSize
+        if (cellSize > activeBoard.getCellSize()) {
+            cellSize = activeBoard.getCellSize();
+            yoffset = height / 2 - (pattern.length * cellSize) / 2;
+            xoffset = width / 2 - (pattern[0].length * cellSize) / 2;
+        }
+
+        //Draw method
+        gcStrip.setFill(cellColor);
+        for (int i = 0; i < pattern.length; i++) {
+            for (int j = 0; j < pattern[i].length; j++) {
+                if (pattern[i][j] == 64) {
+
+                    gcStrip.fillRect(j * cellSize + xoffset, i * cellSize + yoffset,
+                            cellSize - cellSize * 0.05, cellSize - cellSize * 0.05);
+
+                }
+            }
+        }
+    }
 }

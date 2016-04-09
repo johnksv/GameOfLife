@@ -33,7 +33,6 @@ public class GifMaker {
     public static void makeGif(byte[][] board, GIFWriter gw,
             int newWidth, int newHeight, Color bgCl, Color cellCl, int counter) throws IOException {
 
-
         cellColor = cellCl;
         gifWriter = gw;
         height = newHeight;
@@ -61,17 +60,17 @@ public class GifMaker {
         gifWriter.createNextImage();
         gifWriter.flush();
         byte[][] boarders = frame.getBoundingBoxBoard();
-        //sizeCell = (height > width) ? height / boarders.length : width / boarders[0].length;
+
         if (height / boarders.length < width / boarders[0].length) {
             sizeCell = height / boarders.length;
-            xoffset = width/2 - (boarders[0].length * sizeCell)/2;
-            if(xoffset < 0){
+            xoffset = width / 2 - (boarders[0].length * sizeCell) / 2;
+            if (xoffset < 0) {
                 xoffset = 0;
             }
         } else {
             sizeCell = width / boarders[0].length;
-            yoffset = height/2 - (boarders.length * sizeCell)/2;
-            if(yoffset < 0){
+            yoffset = height / 2 - (boarders.length * sizeCell) / 2;
+            if (yoffset < 0) {
                 yoffset = 0;
             }
         }
@@ -86,7 +85,6 @@ public class GifMaker {
                         if (sizeCell < 3) {
                             gifWriter.setPixelValue(j, i, cellColor);
                         } else {
-                            System.out.println(j * sizeCell + sizeCell - 2);
                             gifWriter.fillRect(j * sizeCell + 1 + xoffset, xoffset + j * sizeCell + sizeCell - 1,
                                     yoffset + i * sizeCell + 1, yoffset + i * sizeCell + sizeCell - 1, cellColor);
 
@@ -94,9 +92,8 @@ public class GifMaker {
                     }
                 }
             }
-            }
-        
-        System.out.println("next gen");
+        }
+
         frame.nextGen();
         gifWriter.insertCurrentImage();
         makeFrame(frame, --counter);

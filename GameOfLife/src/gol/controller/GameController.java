@@ -336,6 +336,7 @@ public class GameController implements Initializable {
     private void handleSEditor() {
         try {
             Stage editor = new Stage();
+            editor.setResizable(false);
             editor.getIcons().add(new Image(getClass().getResourceAsStream("icon.png")));
         
             editor.initModality(Modality.WINDOW_MODAL);
