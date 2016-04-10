@@ -8,6 +8,10 @@ import gol.model.FileIO.ReadFile;
 import gol.model.Logic.ConwaysRule;
 import gol.model.Logic.CustomRule;
 import gol.model.Logic.unsupportedRuleException;
+import gol.s305089.controller.PatternEditorController;
+import gol.s305089.model.GifMaker;
+import gol.s305089.controller.GifMakerController;
+import gol.s305089.controller.StatsController;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -15,14 +19,16 @@ import java.util.Optional;
 
 import java.util.ResourceBundle;
 import javafx.animation.Animation;
-import javafx.animation.Animation.Status;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Alert;
@@ -44,6 +50,8 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
 
@@ -120,6 +128,7 @@ public class GameController implements Initializable {
         handleZoom();
         handleGridSpacingSlider();
         handleColor();
+        handleZoom();
         handleAnimationSpeedSlider();
         initAnimation();
         initGameRulesListner();
@@ -156,7 +165,7 @@ public class GameController implements Initializable {
     @FXML
     private void handleAnimation() {
 
-        if (timeline.getStatus() == Status.RUNNING) {
+        if (timeline.getStatus() == Animation.Status.RUNNING) {
             timeline.pause();
             startPauseBtn.setText("Start game");
         } else {
@@ -271,8 +280,8 @@ public class GameController implements Initializable {
             FileChooser fileChooser = new FileChooser();
 
             fileChooser.getExtensionFilters().addAll(
-                    new ExtensionFilter("Game of Life Files", "*.rle", "*.lif", "*.cells"),
-                    new ExtensionFilter("All Files", "*.*"));
+                    new FileChooser.ExtensionFilter("Game of Life Files", "*.rle", "*.lif", "*.cells"),
+                    new FileChooser.ExtensionFilter("All Files", "*.*"));
 
             timeline.pause();
             File selected = fileChooser.showOpenDialog(null);
@@ -314,6 +323,61 @@ public class GameController implements Initializable {
             alert.showAndWait();
 
         }
+    }
+
+    @FXML
+    public void openPatternEditor() throws IOException {
+        timeline.pause();
+
+        Stage editor = new Stage();
+        FXMLLoader root = new FXMLLoader(getClass().getResource("/gol/s305089/view/PatternEditor.fxml"));
+
+        Scene scene = new Scene((Parent) root.load());
+        PatternEditorController editorController = root.<PatternEditorController>getController();
+        editorController.setActiveBoard(activeBoard);
+
+        editor.setTitle("Pattern Editor");
+        editor.initModality(Modality.WINDOW_MODAL);
+        editor.show();
+        editor.setMinWidth(800);
+        editor.setMinHeight(600);
+        editor.setScene(scene);
+    }
+
+    public void currentBoardToGIF() throws IOException {
+        timeline.pause();
+
+        Stage gifMaker = new Stage();
+        FXMLLoader root = new FXMLLoader(getClass().getResource("/gol/s305089/view/GifMaker.fxml"));
+
+        Scene scene = new Scene((Parent) root.load());
+
+        GifMakerController gifcontroller = root.<GifMakerController>getController();
+        gifcontroller.setByteBoard(activeBoard);
+
+        gifMaker.setScene(scene);
+        gifMaker.setTitle("Generate GIF - Game of Life");
+        gifMaker.initModality(Modality.APPLICATION_MODAL);
+        gifMaker.setMaxHeight(600.00);
+        gifMaker.show();
+    }
+
+    @FXML
+    public void showStats() throws IOException {
+        timeline.pause();
+
+        Stage golStats = new Stage();
+        FXMLLoader root = new FXMLLoader(getClass().getResource("/gol/s305089/view/Stats.fxml"));
+
+        Scene scene = new Scene((Parent) root.load());
+
+        StatsController statsController = root.<StatsController>getController();
+        statsController.setByteBoard(activeBoard);
+
+        golStats.setScene(scene);
+        golStats.setTitle("Stats - Game of Life");
+
+        golStats.show();
     }
 
     @FXML

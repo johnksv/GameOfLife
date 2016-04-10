@@ -8,7 +8,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  */
 public class DynamicBoard extends Board {
 
-    private CopyOnWriteArrayList<CopyOnWriteArrayList<Byte>> gameBoard;
+    private final CopyOnWriteArrayList<CopyOnWriteArrayList<Byte>> gameBoard;
 
     public DynamicBoard() {
         super();
@@ -58,10 +58,7 @@ public class DynamicBoard extends Board {
     @Override
     public void insertArray(byte[][] boardToInsert, int y, int x) {
 
-        while (gameBoard.size() < boardToInsert.length) {
-            gameBoard.add(gameBoard.size(), new CopyOnWriteArrayList<>());
-        }
-
+        
         for (int i = 0; i < boardToInsert.length; i++) {
             for (int j = 0; j < boardToInsert[i].length; j++) {
                 if (j + x < gameBoard.get(y + i).size()) {
@@ -148,9 +145,10 @@ public class DynamicBoard extends Board {
         int[] boundingBox = new int[4]; // minrow maxrow mincolumn maxcolumn 
         boundingBox[0] = gameBoard.size();
         boundingBox[1] = 0;
-        boundingBox[2] = gameBoard.get(0).size();
+        boundingBox[2] = Integer.MAX_VALUE;
         boundingBox[3] = 0;
         for (int i = 0; i < gameBoard.size(); i++) {
+            boundingBox[2] = gameBoard.get(i).size();
             for (int j = 0; j < gameBoard.get(i).size(); j++) {
                 if (gameBoard.get(i).get(j) != 64) {
                     continue;
@@ -168,6 +166,9 @@ public class DynamicBoard extends Board {
                     boundingBox[3] = j;
                 }
             }
+        }
+        if (boundingBox[2] == Integer.MAX_VALUE) {
+            boundingBox[2] = 0;
         }
         return boundingBox;
     }
