@@ -331,7 +331,12 @@ public class GameController implements Initializable {
             boardFromFile = usefullMethods.rotateArray90Deg(boardFromFile);
         }
     }
-
+    
+    @FXML
+    private void handleShowSStats(){
+        gol.s305084.Statistics.showStatistics(new Stage(),activeBoard);
+    }
+    
     @FXML
     private void handleSEditor() {
         try {
@@ -351,7 +356,7 @@ public class GameController implements Initializable {
             Scene scene = new Scene(root);
             editor.setScene(scene);
 
-            editor.setTitle("Pattern Editor");
+            editor.setTitle("Gol: Pattern Editor");
             editor.showAndWait();
         } catch (IOException ex) {
             Logger.getLogger(GameController.class.getName()).log(Level.SEVERE, null, ex);

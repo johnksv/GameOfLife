@@ -80,7 +80,7 @@ public class PatternEditorController implements Initializable {
                 } catch (IOException ex) {
                     Alert alert = new Alert(Alert.AlertType.ERROR, ex.getMessage());
                     alert.setTitle("Error");
-                    alert.setHeaderText("Sorry, something  went wrong during the saving");
+                    alert.setHeaderText("Sorry, something  went wrong during saving");
                     alert.showAndWait();
                 }
             }
@@ -110,7 +110,7 @@ public class PatternEditorController implements Initializable {
             } catch (IOException ex) {
                 Alert alert = new Alert(Alert.AlertType.ERROR, ex.getMessage());
                 alert.setTitle("Error");
-                alert.setHeaderText("Sorry, something  went wrong during the saving \n please try again.");
+                alert.setHeaderText("Sorry, something  went wrong during saving \n please try again.");
                 alert.showAndWait();
             }
         }

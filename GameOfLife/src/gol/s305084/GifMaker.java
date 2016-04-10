@@ -8,7 +8,7 @@ import lieng.GIFWriter;
 
 /**
  * Draws a board to GIF format.
- * 
+ *
  * @author s305084
  */
 public class GifMaker {
@@ -24,10 +24,10 @@ public class GifMaker {
     private final static int maxCellSize = 20;
 
     /**
-     * Draws a boards next generations on a GIF.
-     * Stops drawing if the next generation is the same as the first.
-     * Stops drawing if the next generation is empty.
-     * 
+     * Draws a boards next generations on a GIF. Stops drawing if the next
+     * generation is the same as the first. Stops drawing if the next generation
+     * is empty.
+     *
      * @param board
      * @param gw
      * @param newWidth
@@ -46,8 +46,12 @@ public class GifMaker {
         width = newWidth;
 
         gifWriter.setBackgroundColor(bgCl);
-        Board activeboard = new ArrayBoard(board.length, board[0].length);
-        activeboard.insertArray(board, 1, 1);
+        
+        //Makes an array that can handle every possibility of how the pattern evolves 
+        //After chosen number of generations.
+        // More info see https://en.wikipedia.org/wiki/Speed_of_light_(cellular_automaton)
+        Board activeboard = new ArrayBoard(board.length + counter * 2, board[0].length + counter * 2);
+        activeboard.insertArray(board, counter, counter);
 
         orginalPattern = activeboard.getBoundingBoxBoard();
         makeFrame(activeboard, counter);
