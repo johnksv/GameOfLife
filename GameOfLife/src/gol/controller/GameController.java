@@ -7,6 +7,7 @@ import gol.model.FileIO.ReadFile;
 import gol.model.Logic.ConwaysRule;
 import gol.model.Logic.CustomRule;
 import gol.model.Logic.unsupportedRuleException;
+import gol.s305054.GIFWriterS305054;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -102,6 +103,7 @@ public class GameController implements Initializable {
     private int mousePositionY;
     //Offset x, offset y, old x, old y
     private final double[] moveGridValues = {0, 0, -Double.MAX_VALUE, -Double.MAX_VALUE};
+    private GIFWriterS305054 gifTrygve;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -316,6 +318,9 @@ public class GameController implements Initializable {
     }
     @FXML
     private void handleGIFTrygve() {
+        gifTrygve = new GIFWriterS305054();
+        gifTrygve.prepareGIF(activeBoard, backgroundColor, cellColor);
+        gifTrygve.makeGIF();
         
     }
 
