@@ -71,8 +71,7 @@ public class GifMaker {
             return;
         }
         gifWriter.createNextImage();
-        gifWriter.flush();
-
+        
         if (height / boarders.length < width / boarders[0].length) {
             cellSize = height / boarders.length;
             xoffset = width / 2 - (boarders[0].length * cellSize) / 2;
@@ -112,17 +111,14 @@ public class GifMaker {
                 }
             }
         }
-        System.out.println("Insertet");
         gifWriter.insertCurrentImage();
         frame.nextGen();
 
         //Returns if the next generation is the same as the first
         if (Arrays.deepEquals(orginalPattern, frame.getBoundingBoxBoard())) {
-            System.out.println("It did it!");
             gifWriter.close();
             return;
         } else if (frame.getBoundingBox()[1] - frame.getBoundingBox()[0] < 0) {
-            System.out.println("empty");
             gifWriter.close();
             return;
         }
