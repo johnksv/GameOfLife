@@ -1,11 +1,7 @@
-/*
- * Here comes the text of your license
- * Each line should be prefixed with  * 
- */
+
 package gol.model.FileIO;
 
-import java.lang.reflect.Method;
-import java.net.URI;
+import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import org.junit.After;
@@ -24,83 +20,36 @@ public class ReadFileTest {
     public ReadFileTest() {
     }
 
-    @BeforeClass
-    public static void setUpClass() {
-    }
-
-    @AfterClass
-    public static void tearDownClass() {
-    }
-
-    @Before
-    public void setUp() throws Exception {
-        readRLEMethod = ReadFile.class.getDeclaredMethod("readRLE", String[].class);
-        readRLEMethod.setAccessible(true);
-        readPlainText = ReadFile.class.getDeclaredMethod("readPlainText", String[].class);
-        readPlainText.setAccessible(true);
-    }
-
-    @After
-    public void tearDown() {
-    }
-
-    Method readRLEMethod;
-    Method readPlainText;
-
-    //@Test
+    @Test
     public void testReadFileFromDisk() throws Exception {
         System.out.println("readFileFromDisk");
-        String url = "file:///glider.cells";
-        Path file = Paths.get(URI.create(url));
-        byte[][] expResult = {{0, 64, 0}, {0, 0, 64}, {64, 64, 64}};
-        byte[][] result = ReadFile.readFileFromDisk(file);
+        File url;
+        Path file;
+        byte[][] expResult;
+        byte[][] result;
+
+        
+        url = new File("test/patternTestFiles/glider.cells");
+        file = Paths.get(url.toURI());
+        expResult = new byte[][]{{0, 64, 0}, {0, 0, 64}, {64, 64, 64}};
+        result = ReadFile.readFileFromDisk(file);
         assertArrayEquals(expResult, result);
-    }
 
-    //@Test
-    public void testReadRLE() throws Exception {
-        System.out.println("testReadRLE");
-        String[] a = new String[]{"x = 3, y = 3", "bob$2b1o$3o!"};
-        Object[] param = {a};
+        url = new File("test/patternTestFiles/glider.rle");
+        file = Paths.get(url.toURI());
+        result = ReadFile.readFileFromDisk(file);
+        assertArrayEquals(expResult, result);
 
-        byte[][] expected = {{0, 64, 0}, {0, 0, 64}, {64, 64, 64}};
-
-        byte[][] output = (byte[][]) readRLEMethod.invoke(null, new Object[]{a});
-        for (byte[] line : output) {
-            for (byte value : line) {
-                System.out.print(value);
-            }
-            System.out.println("");
-        }
+        url = new File("test/patternTestFiles/custom.cells");
+        file = Paths.get(url.toURI());
+        expResult = new byte[][]{{0, 0, 0}, {0, 64, 64}, {0, 64, 64}};
+        result = ReadFile.readFileFromDisk(file);
+        assertArrayEquals(expResult, result);
         
-        assertArrayEquals(expected, output);
+        url = new File("test/patternTestFiles/custom.rle");
+        file = Paths.get(url.toURI());
+        result = ReadFile.readFileFromDisk(file);
+        assertArrayEquals(expResult, result);
 
-        //  fail("Not implemented yet ");
     }
-
-        @Test
-    public void testReadRLE2() throws Exception {
-        System.out.println("testReadRLE2");
-        String[] a = new String[]{"#This is a comment","x = 7, y = 5", "2bobo2b3$3bo!"};
-        Object[] param = {a};
-
-        byte[][] expected = {{0, 0, 64, 0, 64, 0,0},
-                            {0, 0, 0, 0, 0, 0,0},
-                            {0, 0, 0, 0, 0, 0,0},
-                            {0, 0, 0, 0, 0, 0,0},
-                            {0, 0, 0, 64, 0, 0, 0}};
-
-        byte[][] output = (byte[][]) readRLEMethod.invoke(null, new Object[]{a});
-        for (byte[] line : output) {
-            for (byte value : line) {
-                System.out.print(value);
-            }
-            System.out.println("");
-        }
-        
-        assertArrayEquals(expected, output);
-
-        //  fail("Not implemented yet ");
-    }
-    
 }

@@ -53,7 +53,7 @@ public class BoardTest {
             {0, 64, 0, 0},
             {0, 0, 0, 0}};
         Board gol = new ArrayBoard(2, 2);
-        gol.setGameBoard(gameBoard);
+        //gol.setGameBoard(gameBoard);
         gol.nextGen();
         assertEquals(gol.toString(), "0000011001100000");
     }
@@ -226,18 +226,6 @@ public class BoardTest {
         System.out.println("checkRules");
         Rule activeRule = null;
         instance.checkRules(activeRule);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of setGameBoard method, of class Board.
-     */
-    @Test
-    public void testSetGameBoard() {
-        System.out.println("setGameBoard");
-        Object gameBoard = null;
-        instance.setGameBoard(gameBoard);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
