@@ -65,57 +65,31 @@ public class BoardTest {
     }
 
     @Test
-    public void testSetCellState() {
-        System.out.println("setCellState");
-        Board instance = new ArrayBoard(4,4);
-        Board instance2 = new ArrayBoard(5,5);
-        Board instance3 = new DynamicBoard();
+    public void testSetGetCellState() {
+        System.out.println("setCellState & getCellState");
 
-        instance.setCellState(1, 1, true);
-        instance.setCellState(1, 2, true);
-        instance.setCellState(2, 1, true);
-        String result1 = instance.toString();
+        arrayInstance.setCellState(1, 1, true);
+        arrayInstance.setCellState(1, 2, true);
+        arrayInstance.setCellState(2, 1, true);
+        String result1 = arrayInstance.toString();
         
-        instance2.setCellState(1, 1, true);
-        instance2.setCellState(2, 1, true);
-        instance2.setCellState(2, 2, true);
-        instance2.setCellState(3, 2, true);
-        instance2.setCellState(3, 3, true);
-        String result2 = instance2.toString();
+        dynamicInstance.setCellState(-1, -1, true);
+        assertEquals(true, dynamicInstance.getCellState(1, 1));
+        dynamicInstance.setCellState(-1, -2, true);
+        assertEquals(true, dynamicInstance.getCellState(1, 1));
         
-        instance3.setCellState(-1, -1, true);
-        instance3.setCellState(-1, -2, true);
-        instance3.setCellState(-2, -1, true);
-        
-        String expResult1 = "0000011001000000";
-        String expResult2 = "0000001000011000011000000";
-        
-        
-        
+        String expResult1 = "0000001100010000000000000";
+               
         assertEquals(result1, expResult1);
-        assertEquals(result2, expResult2);
-        assertEquals(instance3.getCellState(-1, -1), true);
-        assertEquals(instance3.getCellState(-5, -5), false);
-        assertEquals(instance3.getCellState(-1, -3), false);
+        assertEquals(true, arrayInstance.getCellState(1, 1));
+        assertEquals(false, arrayInstance.getCellState(2, 2));
+        assertEquals(false, dynamicInstance.getCellState(-5, -5));
+        assertEquals(false, dynamicInstance.getCellState(-1, -3));
         
         
     }
 
-    /**
-     * Test of getCellState method, of class Board.
-     */
-    @Test
-    public void testGetCellState() {
-        System.out.println("getCellState");
-        int x = 0;
-        int y = 0;
-
-        boolean expResult = false;
-        boolean result = arrayInstance.getCellState(x, y);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
+    
 
     /**
      * Test of clearBoard method, of class Board.
