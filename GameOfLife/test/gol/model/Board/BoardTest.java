@@ -54,29 +54,51 @@ public class BoardTest {
     @Test
     public void testNextGen() {
         System.out.println("nextGen");
-        byte[][] gameBoard = {
-            {0, 0, 0, 0},
-            {0, 64, 64, 0},
-            {0, 64, 0, 0},
-            {0, 0, 0, 0}};
-        Board gol = new ArrayBoard(2, 2);
+        byte[][] gameBoard = {           
+            {64, 64},
+            {64, 0 }};
+        Board gol = new ArrayBoard(4, 4);
+        gol.insertArray(gameBoard, 1,1);
         gol.nextGen();
-        assertEquals(gol.toString(), "0000011001100000");
+        String expResult ="0000011001100000";
+        assertEquals(gol.toString(), expResult);
     }
 
-    /**
-     * Test of setCellState method, of class Board.
-     */
     @Test
     public void testSetCellState() {
         System.out.println("setCellState");
-        int x = 0;
-        int y = 0;
-        boolean alive = false;
+        instance = new ArrayBoard(4,4);
+        Board instance2 = new ArrayBoard(5,5);
+        Board instance3 = new DynamicBoard();
 
-        arrayInstance.setCellState(x, y, alive);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        instance.setCellState(1, 1, true);
+        instance.setCellState(1, 2, true);
+        instance.setCellState(2, 1, true);
+        String result1 = instance.toString();
+        
+        instance2.setCellState(1, 1, true);
+        instance2.setCellState(2, 1, true);
+        instance2.setCellState(2, 2, true);
+        instance2.setCellState(3, 2, true);
+        instance2.setCellState(3, 3, true);
+        String result2 = instance2.toString();
+        
+        instance3.setCellState(-1, -1, true);
+        instance3.setCellState(-1, -2, true);
+        instance3.setCellState(-2, -1, true);
+        
+        String expResult1 = "0000011001000000";
+        String expResult2 = "0000001000011000011000000";
+        
+        
+        
+        assertEquals(result1, expResult1);
+        assertEquals(result2, expResult2);
+        assertEquals(instance3.getCellState(-1, -1), true);
+        assertEquals(instance3.getCellState(-5, -5), false);
+        assertEquals(instance3.getCellState(-1, -3), false);
+        
+        
     }
 
     /**
