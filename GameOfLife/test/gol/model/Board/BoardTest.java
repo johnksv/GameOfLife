@@ -6,6 +6,7 @@
 package gol.model.Board;
 
 import gol.model.Logic.Rule;
+import java.util.Arrays;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -54,51 +55,48 @@ public class BoardTest {
     @Test
     public void testNextGen() {
         System.out.println("nextGen");
-        byte[][] gameBoard = {           
+        byte[][] gameBoard = {
             {64, 64},
-            {64, 0 }};
+            {64, 0}};
         Board gol = new ArrayBoard(4, 4);
-        gol.insertArray(gameBoard, 1,1);
+        gol.insertArray(gameBoard, 1, 1);
         gol.nextGen();
-        String expResult ="0000011001100000";
+        String expResult = "0000011001100000";
         assertEquals(gol.toString(), expResult);
     }
 
     @Test
     public void testSetCellState() {
         System.out.println("setCellState");
-        Board instance = new ArrayBoard(4,4);
-        Board instance2 = new ArrayBoard(5,5);
+        Board instance = new ArrayBoard(4, 4);
+        Board instance2 = new ArrayBoard(5, 5);
         Board instance3 = new DynamicBoard();
 
         instance.setCellState(1, 1, true);
         instance.setCellState(1, 2, true);
         instance.setCellState(2, 1, true);
         String result1 = instance.toString();
-        
+
         instance2.setCellState(1, 1, true);
         instance2.setCellState(2, 1, true);
         instance2.setCellState(2, 2, true);
         instance2.setCellState(3, 2, true);
         instance2.setCellState(3, 3, true);
         String result2 = instance2.toString();
-        
+
         instance3.setCellState(-1, -1, true);
         instance3.setCellState(-1, -2, true);
         instance3.setCellState(-2, -1, true);
-        
+
         String expResult1 = "0000011001000000";
         String expResult2 = "0000001000011000011000000";
-        
-        
-        
+
         assertEquals(result1, expResult1);
         assertEquals(result2, expResult2);
         assertEquals(instance3.getCellState(-1, -1), true);
         assertEquals(instance3.getCellState(-5, -5), false);
         assertEquals(instance3.getCellState(-1, -3), false);
-        
-        
+
     }
 
     /**
@@ -174,10 +172,13 @@ public class BoardTest {
         result = dynamicInstance.getBoundingBoxBoard();
         assertArrayEquals(expResult, result);
 
+        dynamicInstance.clearBoard();
         dynamicInstance.insertArray(patternGlider, -10, -10);
         result = dynamicInstance.getBoundingBoxBoard();
+        System.out.println(Arrays.deepToString(result));
         assertArrayEquals(expResult, result);
 
+        dynamicInstance.clearBoard();
         dynamicInstance.insertArray(patternGlider, 1, 1);
         result = dynamicInstance.getBoundingBoxBoard();
         assertArrayEquals(expResult, result);
@@ -205,7 +206,7 @@ public class BoardTest {
         arrayInstance.clearBoard();
         arrayInstance.insertArray(patternGlider, 2, 2);
         assertEquals("0000000000000100000100111", arrayInstance.toString());
-        
+
         arrayInstance.clearBoard();
         arrayInstance.insertArray(patternGlider, 3, 2);
         assertEquals("0000000000000000001000001", arrayInstance.toString());
@@ -213,6 +214,9 @@ public class BoardTest {
         //see test for setCellState, for DynamicBoard
         dynamicInstance.insertArray(patternGlider, 1, 1);
         assertEquals("00100010111000000", dynamicInstance.toString());
+
+        dynamicInstance.insertArray(patternGlider, -2, -2);
+       // assertEquals("00100010111000000000000000000000", dynamicInstance.toString());
 
     }
 
