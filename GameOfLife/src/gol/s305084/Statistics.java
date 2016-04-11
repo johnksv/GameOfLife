@@ -35,7 +35,7 @@ public class Statistics {
         final LineChart<Number, Number> lineChart
                 = new LineChart<>(xAxis, yAxis);
 
-        lineChart.setTitle("Stock Monitoring, 2010");
+        lineChart.setTitle("Game of life: Statistics");
         XYChart.Series livingCells = new XYChart.Series();
         XYChart.Series cellChange = new XYChart.Series();
         XYChart.Series simProcent = new XYChart.Series();
@@ -91,8 +91,9 @@ public class Statistics {
         int geoSum = 0;
         for (int i = 0; i < pattern.length; i++) {
             for (int j = 0; j < pattern[0].length; j++) {
+                //Problem with 0,0 cells?
                 if (pattern[i][j] == 64) {
-                    geoSum += i + j;
+                    geoSum += 2 * (i + 1) + (j + 1);
                 }
             }
         }
