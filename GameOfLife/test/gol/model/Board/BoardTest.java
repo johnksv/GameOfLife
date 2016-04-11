@@ -67,7 +67,7 @@ public class BoardTest {
     @Test
     public void testSetCellState() {
         System.out.println("setCellState");
-        instance = new ArrayBoard(4,4);
+        Board instance = new ArrayBoard(4,4);
         Board instance2 = new ArrayBoard(5,5);
         Board instance3 = new DynamicBoard();
 
