@@ -27,8 +27,8 @@ public class DynamicBoard extends Board {
 
     @Override
     protected void countNeigh() {
-        for (int i = 0; i < gameBoard.size(); i++) {
-            for (int j = 0; j < gameBoard.get(i).size(); j++) {
+        for (int i = 1; i < gameBoard.size(); i++) {
+            for (int j = 1; j < gameBoard.get(i).size(); j++) {
 
                 //If cell is alive
                 if (gameBoard.get(i).get(j) >= 64) {
@@ -40,6 +40,10 @@ public class DynamicBoard extends Board {
                             //To not count itself
                             if (!(k == 0 && l == 0)) {
                                 incrementCellValue(i + k, j + l);
+
+                                i = (i + k < 1) ? i + 1 : i;
+                                j = (j + l < 1) ? j + 1 : j;
+
                             }
                         }
                     }
@@ -51,10 +55,15 @@ public class DynamicBoard extends Board {
 
     @Override
     protected void checkRules(Rule activeRule) {
-        for (int i = 0; i < gameBoard.size(); i++) {
-            for (int j = 0; j < gameBoard.get(i).size(); j++) {
+        for (int i = 1; i < gameBoard.size(); i++) {
+            for (int j = 1; j < gameBoard.get(i).size(); j++) {
                 if (gameBoard.get(i).get(j) != 0) {
-                    gameBoard.get(i).set(j, activeRule.setLife(gameBoard.get(i).get(j)));
+                    if (activeRule.setLife(gameBoard.get(i).get(j)) == 64) {
+                        setCellState(i, j, true);
+                    } else {
+                        setCellState(i, j, false);
+                    }
+
                 }
             }
         }
