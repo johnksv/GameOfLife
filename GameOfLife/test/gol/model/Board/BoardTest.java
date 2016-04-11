@@ -230,4 +230,100 @@ public class BoardTest {
         fail("The test case is a prototype.");
     }
 
+    @Test
+    public void testGetBoundingBoxBoard() {
+        System.out.println("getBoundingBoxBoard");
+        Board instance = new BoardImpl();
+        byte[][] expResult = null;
+        byte[][] result = instance.getBoundingBoxBoard();
+        assertArrayEquals(expResult, result);
+        fail("The test case is a prototype.");
+    }
+
+    @Test
+    public void testGetBoundingBox() {
+        System.out.println("getBoundingBox");
+        Board instance = new BoardImpl();
+        int[] expResult = null;
+        int[] result = instance.getBoundingBox();
+        assertArrayEquals(expResult, result);
+        fail("The test case is a prototype.");
+    }
+
+    @Test
+    public void testInsertArray() {
+        System.out.println("insertArray");
+        byte[][] boardToInsert = null;
+        int y = 0;
+        int x = 0;
+        Board instance = new BoardImpl();
+        instance.insertArray(boardToInsert, y, x);
+        fail("The test case is a prototype.");
+    }
+
+    @Test
+    public void testSetCellState_3args() {
+        System.out.println("setCellState");
+        int y = 0;
+        int x = 0;
+        boolean alive = false;
+        Board instance = new BoardImpl();
+        instance.setCellState(y, x, alive);
+        fail("The test case is a prototype.");
+    }
+
+    @Test
+    public void testSetCellState_5args() {
+        System.out.println("setCellState");
+        double y = 0.0;
+        double x = 0.0;
+        boolean alive = false;
+        double offsetX = 0.0;
+        double offsetY = 0.0;
+        Board instance = new BoardImpl();
+        instance.setCellState(y, x, alive, offsetX, offsetY);
+        fail("The test case is a prototype.");
+    }
+
+    public class BoardImpl extends Board {
+
+        public byte[][] getBoundingBoxBoard() {
+            return null;
+        }
+
+        public int[] getBoundingBox() {
+            return null;
+        }
+
+        public void clearBoard() {
+        }
+
+        public void countNeigh() {
+        }
+
+        public void checkRules(Rule activeRule) {
+        }
+
+        public void insertArray(byte[][] boardToInsert, int y, int x) {
+        }
+
+        public void setCellState(int y, int x, boolean alive) {
+        }
+
+        public void setCellState(double y, double x, boolean alive, double offsetX, double offsetY) {
+        }
+
+        public int getArrayLength() {
+            return 0;
+        }
+
+        public int getArrayLength(int i) {
+            return 0;
+        }
+
+        public boolean getCellState(int y, int x) {
+            return false;
+        }
+    }
+
 }
