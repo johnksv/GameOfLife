@@ -4,6 +4,7 @@
  */
 package gol.s305089.controller;
 
+import gol.s305089.sound.Tone;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
@@ -68,8 +69,8 @@ public class SoundController implements Initializable {
 
                 // Fill the buffer, one tone per channel
                 for (int s = 0; s < toWrite; s++, frameCounter++) {
-                    buffer[0][s] = Math.sin(2.0 * Math.PI * 440 * frameCounter / sampleRate);
-                    buffer[1][s] = Math.sin(2.0 * Math.PI * 800 * frameCounter / sampleRate);
+                        buffer[0][s] = Math.sin(2.0 * Math.PI * Tone.A4.getFrequency() * frameCounter / sampleRate);
+                        buffer[1][s] = Math.sin(2.0 * Math.PI * Tone.A4.getFrequency() * frameCounter / sampleRate);
                 }
 
                 // Write the buffer
