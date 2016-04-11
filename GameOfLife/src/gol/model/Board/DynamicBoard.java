@@ -16,8 +16,7 @@ public class DynamicBoard extends Board {
     }
 
     public DynamicBoard(int y, int x) {
-        super();
-        gameBoard = new CopyOnWriteArrayList<>();
+        this();
         expandBoard(y, x);
     }
 
