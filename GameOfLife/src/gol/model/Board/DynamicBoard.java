@@ -63,19 +63,17 @@ public class DynamicBoard extends Board {
 
     @Override
     public void insertArray(byte[][] boardToInsert, int y, int x) {
-
+        if (x < 0 || y < 0) {
+            expandBoard(y - 1, x - 1);
+            y = (y < 1) ? 1 : y;
+            x = (x < 1) ? 1 : x;
+        }
         for (int i = 0; i < boardToInsert.length; i++) {
             for (int j = 0; j < boardToInsert[i].length; j++) {
                 if (boardToInsert[i][j] == 64) {
-                    if (x < 0 || y < 0) {
-                        setCellState(y + i, x + j, true);
-                        //The negativ position was set to be the 1 postion.
-                        //And there for x and y most change before the next value.
-                        y = (y < 1) ? 1 : y;
-                        x = (x < 1) ? 1 : x;
-                    } else {
-                        setCellState(y + i, x + j, true);
-                    }
+
+                    setCellState(y + i, x + j, true);
+
                 }
             }
         }
