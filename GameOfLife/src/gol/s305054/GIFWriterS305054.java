@@ -29,46 +29,50 @@ public class GIFWriterS305054 {
     String path = "testGif.gif"; //Filepath - later, normal output stream
 
     private GIFWriter gifWriter;
-    
+
     public GIFWriterS305054() {
-        
+
     }
 
     /**
      * Deep copy the active gameboard into a copied gameboard. When changing the
      * copied board, the originale board will stay the same.
-     * @param originaleBoard Active board that is being displayed in the Game of Life GUI.
+     *
+     * @param originaleBoard Active board that is being displayed in the Game of
+     * Life GUI.
      * @param bgColor Background color of the board
      * @param cColor Color of cell in board.
      */
-    public void prepareGIF(Board originaleBoard, Color bgColor, Color cColor)  { //TODO add parameters height width
-        byte[][] originaleArray = originaleBoard.getBoundingBoxBoard();
-        copiedBoard = new ArrayBoard(width, height);
-        /*
-         Param originaleBoard - get array, each element in originaleArray, assigned to copied array
-         assigns copied array to copiedBoard.
-         */
-        copiedBoard.insertArray(originaleArray, 1, 1); //Get boundingBox and insert it to an empty.
-        this.bgColor = bgColor;
-        this.cColor = cColor;
-        
+    public void prepareGIF(Board originaleBoard, Color bgColor, Color cColor) { //TODO add parameters height width
         try {
+            byte[][] originaleArray = originaleBoard.getBoundingBoxBoard();
+            copiedBoard = new ArrayBoard(width, height);
+            /*
+             Param originaleBoard - get array, each element in originaleArray, assigned to copied array
+             assigns copied array to copiedBoard.
+             */
+            copiedBoard.insertArray(originaleArray, 1, 1); //Get boundingBox and insert it to an empty.
+            this.bgColor = bgColor;
+            this.cColor = cColor;
+
             gifWriter = new GIFWriter(width, height, path, time);
         } catch (IOException ex) {
             Logger.getLogger(GIFWriterS305054.class.getName()).log(Level.SEVERE, null, ex);
-            
+
             Alert alert = new Alert(AlertType.ERROR);
             alert.setTitle("Something went wrong");
             alert.setHeaderText("There was an input/output error");
             alert.setContentText("Could not proceed. Please try again.");
             alert.showAndWait();
         }
-        
+
     }
+
     /**
-     * This method is used for creating a .gif file with x generations (pictures), with dimension ixj, and speed y.
-     * makeGif() uses recursion to create pictures that is loaded into a gifstream. when there is one picture left, it will
-     * create that last image, and close the stream.
+     * This method is used for creating a .gif file with x generations
+     * (pictures), with dimension ixj, and speed y. makeGif() uses recursion to
+     * create pictures that is loaded into a gifstream. when there is one
+     * picture left, it will create that last image, and close the stream.
      */
     public void makeGIF() { //TODO method should be changed to propely work recursion wise
         try {
@@ -89,9 +93,9 @@ public class GIFWriterS305054 {
                 nPicturesLeft -= 1;
                 makeGIF(); //recursive call.
             }
-        }  catch (IOException e) { //TODO catch stackoverflow error
+        } catch (IOException e) { //TODO catch stackoverflow error
             e.printStackTrace();
-            
+
             Alert alert = new Alert(AlertType.ERROR);
             alert.setTitle("Something went wrong");
             alert.setHeaderText("There was an input/output error");
