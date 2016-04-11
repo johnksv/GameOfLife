@@ -111,9 +111,11 @@ public class BoardTest {
     public void testGetArrayLength_0args() {
         System.out.println("getArrayLength");
 
-        int expResult = 5;
+        int expResult = 0;
         int result = arrayInstance.getArrayLength();
         assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
     }
 
     /**
