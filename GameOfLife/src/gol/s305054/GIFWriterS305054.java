@@ -56,6 +56,12 @@ public class GIFWriterS305054 {
             gifWriter = new GIFWriter(width, height, path, time);
         } catch (IOException ex) {
             Logger.getLogger(GIFWriterS305054.class.getName()).log(Level.SEVERE, null, ex);
+            
+            Alert alert = new Alert(AlertType.ERROR);
+            alert.setTitle("Something went wrong");
+            alert.setHeaderText("There was an input/output error");
+            alert.setContentText("Could not proceed. Please try again.");
+            alert.showAndWait();
         }
         
     }
@@ -67,13 +73,15 @@ public class GIFWriterS305054 {
     public void makeGIF() { //TODO method should be changed to propely work recursion wise
         try {
             if (nPicturesLeft == 1) { //number of pictures left == 1
-                gifWriter.createNextImage();
+                gifWriter.createNextImageNF();
+                gifWriter.flush();
                 gifWriter.insertCurrentImage();
                 gifWriter.close();
                 System.out.println("Done.");
                 //return the finished gif, ready to be exported            
             } else {
-                gifWriter.createNextImage(); //creates the image
+                gifWriter.createNextImageNF(); //creates the image
+                gifWriter.flush();
                 gifWriter.insertCurrentImage(); //insert the image to gifStream?
 
                 copiedBoard.nextGen(); //calculates the next generation of the board.
