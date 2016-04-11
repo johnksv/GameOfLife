@@ -115,7 +115,7 @@ public class GameController implements Initializable {
         activeBoard = new DynamicBoard();
         cellCP.setValue(Color.BLACK);
         backgroundCP.setValue(Color.web("#F4F4F4"));
-        
+
         mouseInit();
         handleZoom();
         handleGridSpacingSlider();
@@ -534,8 +534,19 @@ public class GameController implements Initializable {
         } else {
             activeBoard.setCellState(y, x, true, moveGridValues[0], moveGridValues[1]);
         }
+
+        double h = activeBoard.getCellSize();
         
-        
+        if (moveGridValues[0] > x) {
+            double under = moveGridValues[0] - x;
+            double up = h + (h - (under % h));
+            moveGridValues[0] = moveGridValues[0] - under - up;
+        }
+        if (moveGridValues[1] > y) {
+            double under = moveGridValues[1] - y;
+            double up = h + (h - (under % h));
+            moveGridValues[1] = moveGridValues[1] - under - up;
+        }
 
         draw();
     }
