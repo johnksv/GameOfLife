@@ -20,7 +20,6 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
@@ -29,12 +28,10 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Slider;
-import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
@@ -89,9 +86,6 @@ public class GameController implements Initializable {
     private TextField tfCellsToSurvive;
     @FXML
     private Button btnUseRule;
-    @FXML
-    private CheckBox cbShowGrid;
-    //TODO Show grid is not working yet. Implement it
 
     private Board activeBoard;
     private final Timeline timeline = new Timeline();
@@ -403,31 +397,6 @@ public class GameController implements Initializable {
                 cellSizeSlider.decrement();
             }
         });
-    }
-
-    /**
-     * //TODO Fix Comments QUICK NOTE: Draws the grid. First decide where to
-     * draw based on size and gridspacing, then calculates to draw in the middle
-     * of gridspcaing (see - halfGridSpace) after this is done it adds the
-     * offset
-     */
-    private void drawGrid() {
-        gc.setFill(Color.BLUE);
-        //TODO Så den ikke tegner det som er utenfor det vi ser
-        double sizeAndSpacing = activeBoard.getCellSize() + activeBoard.getGridSpacing();
-        double halfGridSpace = activeBoard.getGridSpacing() / 2;
-        for (int i = 0; i <= activeBoard.getArrayLength(); i++) {
-            gc.strokeLine((i * sizeAndSpacing - halfGridSpace) + moveGridValues[0], 0,
-                    (i * sizeAndSpacing - halfGridSpace) + moveGridValues[0], canvas.getHeight());
-
-            for (int j = 0; j <= activeBoard.getArrayLength(i); j++) {
-
-                gc.strokeLine(0, (j * sizeAndSpacing - halfGridSpace) + moveGridValues[1],
-                        canvas.getWidth(), (j * sizeAndSpacing - halfGridSpace) + moveGridValues[1]);
-
-            }
-        }
-
     }
 
     private void draw() {
