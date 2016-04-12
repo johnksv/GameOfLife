@@ -68,9 +68,7 @@ public class ReadFileTest {
         
         ReadFile.readFileFromDisk(file);
         Rule importedRule = ReadFile.getParsedRule();
-        System.out.println(Arrays.toString(importedRule.getSurvive()));
         
-        System.out.println(Arrays.toString(importedRule.getToBorn()));
         assertArrayEquals(expResultSurvive, importedRule.getSurvive());
         assertArrayEquals(expResultToBorn, importedRule.getToBorn());
         
@@ -83,9 +81,7 @@ public class ReadFileTest {
         
         ReadFile.readFileFromDisk(file);
         importedRule = ReadFile.getParsedRule();
-        System.out.println(Arrays.toString(importedRule.getSurvive()));
         
-        System.out.println(Arrays.toString(importedRule.getToBorn()));
         assertArrayEquals(expResultSurvive, importedRule.getSurvive());
         assertArrayEquals(expResultToBorn, importedRule.getToBorn());
         
@@ -98,9 +94,7 @@ public class ReadFileTest {
         
         ReadFile.readFileFromDisk(file);
         importedRule = ReadFile.getParsedRule();
-        System.out.println(Arrays.toString(importedRule.getSurvive()));
         
-        System.out.println(Arrays.toString(importedRule.getToBorn()));
         assertArrayEquals(expResultSurvive, importedRule.getSurvive());
         assertArrayEquals(expResultToBorn, importedRule.getToBorn());
         

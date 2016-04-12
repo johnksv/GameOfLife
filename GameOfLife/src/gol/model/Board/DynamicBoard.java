@@ -7,6 +7,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * @author s305054, s305089, s305084
  */
 public class DynamicBoard extends Board {
+    private final int MAXWIDTH = 2000;
+    private final int MAXHEIGHT = 2000;
 
     private CopyOnWriteArrayList<CopyOnWriteArrayList<Byte>> gameBoard;
 
@@ -228,22 +230,28 @@ public class DynamicBoard extends Board {
     }
 
     private void expandBoard(int y, int x) {
-        while (y < 1) {
-            gameBoard.add(0, new CopyOnWriteArrayList<>());
-            y++;
-        }
-        while (x < 1) {
-            for (CopyOnWriteArrayList<Byte> row : gameBoard) {
-                row.add(0, (byte) 0);
+        if (gameBoard.size() < MAXHEIGHT) {
+            while (y < 1) {
+                gameBoard.add(0, new CopyOnWriteArrayList<>());
+                y++;
             }
-            x++;
+            while (y >= gameBoard.size()) {
+                gameBoard.add(new CopyOnWriteArrayList<>());
+            }
         }
-        while (y >= gameBoard.size()) {
-            gameBoard.add(new CopyOnWriteArrayList<>());
+        if (getMaxRowLength() < MAXWIDTH) {
+            while (x < 1) {
+                for (CopyOnWriteArrayList<Byte> row : gameBoard) {
+                    row.add(0, (byte) 0);
+                }
+                x++;
+            }
+
+            while (x >= gameBoard.get(y).size()) {
+                gameBoard.get(y).add((byte) 0);
+            }
         }
-        while (x >= gameBoard.get(y).size()) {
-            gameBoard.get(y).add((byte) 0);
-        }
+
     }
 
     @Override
