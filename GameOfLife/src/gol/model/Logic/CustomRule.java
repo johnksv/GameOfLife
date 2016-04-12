@@ -1,6 +1,7 @@
 package gol.model.Logic;
 
 /**
+ * This class bear all the logic behind making a custom rule for Game of Life.
  * @author s305054, s305084, s305089
  */
 public class CustomRule implements Rule {
