@@ -43,7 +43,7 @@ public final class WriteRLE {
             lines.add("#C " + comment);
         }
         //Pattern dimensions
-        lines.add("x = " + g[0].length + ", y = " + g.length + ", Rule = ");
+        lines.add("x = " + g[0].length + ", y = " + g.length + ", Rule = B3/23S");
         //TODO Inport rule
         int counter = 0;
 

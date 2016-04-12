@@ -131,7 +131,7 @@ public class ReadFile {
         int emptyLines = 0;
 
         //Reads x and y value from file.
-        String[] attributes = file[commentLines].replaceAll("\\s", "").split(",");
+        String[] attributes = file[commentLines].trim().split(",");
         for (String line : attributes) {
             if (line.matches("x=\\d+")) {
                 xLength = Integer.parseInt(line.replaceAll("\\D", ""));
