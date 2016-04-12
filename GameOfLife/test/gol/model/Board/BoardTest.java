@@ -63,6 +63,12 @@ public class BoardTest {
         gol.nextGen();
         String expResult = "0000011001100000";
         assertEquals(gol.toString(), expResult);
+        
+        
+        dynamicInstance.insertArray(gameBoard, 1, 1);
+        dynamicInstance.nextGen();
+        expResult = "0000011001100000";
+        assertEquals(gol.toString(), expResult);
     }
 
     @Test
