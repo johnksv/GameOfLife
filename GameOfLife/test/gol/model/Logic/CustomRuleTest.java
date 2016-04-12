@@ -71,7 +71,7 @@ public class CustomRuleTest {
     public void testSetLifeSpecialRule() {
 
         toSurvive = new byte[]{-1};
-        toBeBorn = new byte[]{0};
+        toBeBorn = new byte[]{1};
 
         try {
             rule = new CustomRule(toSurvive, toBeBorn);
@@ -83,7 +83,7 @@ public class CustomRuleTest {
 
         //First line is dead cells from 0-9 neighbours 
         // and the second line is alive cells with 0 to 9
-        byte[] expResult = new byte[]{64, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        byte[] expResult = new byte[]{0, 64, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
         byte[] result = new byte[length * 2];
@@ -103,5 +103,11 @@ public class CustomRuleTest {
         rule = new CustomRule(toSurvive, toBeBorn);
 
     }
+    @Test (expected = Exception.class)
+    public void testSetLifeZero() throws unsupportedRuleException {
+        toSurvive = new byte[]{0};
+        toBeBorn = new byte[]{0};
+        rule = new CustomRule(toSurvive, toBeBorn);
 
+    }
 }

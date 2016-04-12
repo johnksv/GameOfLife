@@ -104,33 +104,6 @@ public class BoardTest {
 
     }
 
-    /**
-     * Test of getArrayLength method, of class Board.
-     */
-    @Test
-    public void testGetArrayLength_0args() {
-        System.out.println("getArrayLength");
-
-        int expResult = 0;
-        int result = arrayInstance.getArrayLength();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of getArrayLength method, of class Board.
-     */
-    @Test
-    public void testGetArrayLength_int() {
-        System.out.println("getArrayLength");
-        int i = 0;
-        int expResult = 0;
-        int result = arrayInstance.getArrayLength(i);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
 
     @Test
     public void testGetBoundingBoxBoard() {
@@ -161,11 +134,24 @@ public class BoardTest {
     @Test
     public void testGetBoundingBox() {
         System.out.println("getBoundingBox");
-
-        int[] expResult = null;
+        arrayInstance =new ArrayBoard(100, 100);
+        arrayInstance.clearBoard();
+        arrayInstance.setCellState(7, 5, true);
+        arrayInstance.setCellState(6, 4, true);
+        arrayInstance.setCellState(5, 11, true);
+        arrayInstance.setCellState(3, 8, true);
+        
+        int[] expResult = new int[4];
+        expResult[0]=3;
+        expResult[1]=7;
+        expResult[2]=4;
+        expResult[3]=11;
+        
         int[] result = arrayInstance.getBoundingBox();
+        System.out.println("");
+        System.out.println(Arrays.toString(result));
+        System.out.println(Arrays.toString(expResult));
         assertArrayEquals(expResult, result);
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -194,27 +180,11 @@ public class BoardTest {
 
     }
 
-    @Test
-    public void testSetCellState_3args() {
-        System.out.println("setCellState");
-        int y = 0;
-        int x = 0;
-        boolean alive = false;
-
-        arrayInstance.setCellState(y, x, alive);
-        fail("The test case is a prototype.");
-    }
-
+    
     @Test
     public void testSetCellState_5args() {
-        System.out.println("setCellState");
-        double y = 0.0;
-        double x = 0.0;
-        boolean alive = false;
-        double offsetX = 0.0;
-        double offsetY = 0.0;
-
-        arrayInstance.setCellState(y, x, alive, offsetX, offsetY);
-        fail("The test case is a prototype.");
+            //This is a method witch calculates a mouse click to a point on the board
+            //Testing this is much easier with a visual test.
+        assertEquals(1, 1);
     }
 }

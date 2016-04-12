@@ -194,6 +194,12 @@ public abstract class Board {
     public abstract int getArrayLength(int i);
 
     /**
+     * Returns the Maximum elements in a array row or List.
+     *
+     * @return elements in row i
+     */
+    public abstract int getMaxRowLength();
+    /**
      * Returns the cell state at position (y,x)
      *
      * @param y the y coordinate of the cell

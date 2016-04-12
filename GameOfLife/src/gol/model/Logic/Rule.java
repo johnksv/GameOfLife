@@ -15,4 +15,17 @@ public interface Rule {
      */
     byte setLife(byte cellToCheck);
 
+    /**
+     * Returns an array of how many neighbors you need to survive.
+     *
+     * @return 
+     */
+    byte[] getSurvive();
+    
+    /**
+     * Returns an array of how many neighbors you need to be born.
+     *
+     * @return 
+     */
+    byte[] getToBorn();
 }
