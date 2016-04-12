@@ -38,6 +38,7 @@ import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.ToolBar;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.BorderPane;
@@ -57,7 +58,7 @@ public class GameController implements Initializable {
     @FXML
     private BorderPane borderpane;
     @FXML
-    private TabPane tabpane;
+    private ToolBar toolBarQuickStats;
     @FXML
     private Slider cellSizeSlider;
     @FXML
@@ -105,8 +106,9 @@ public class GameController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         gc = canvas.getGraphicsContext2D();
 
-        canvas.widthProperty().bind(borderpane.widthProperty().subtract(tabpane.widthProperty()));
-        canvas.heightProperty().bind(borderpane.heightProperty());
+        canvas.widthProperty().bind(borderpane.widthProperty());
+        canvas.heightProperty().bind(borderpane.heightProperty().subtract(toolBarQuickStats.heightProperty()));
+        toolBarQuickStats.prefWidthProperty().bind(borderpane.widthProperty());
         cellSizeSlider.setBlockIncrement(0.75);
 
         //TODO Valg for Array eller dynamisk brett
