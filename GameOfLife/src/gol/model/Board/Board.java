@@ -125,8 +125,6 @@ public abstract class Board {
      * Counts the number of living neighbors. This is done by going through each
      * living cell, and incrementing its neighbors.
      *
-     * @see gol.model.Board.ArrayBoard#gameBoard
-     * @see gol.model.Board.DynamicBoard TODO DynamicBoard
      */
     protected abstract void countNeigh();
 

@@ -251,7 +251,6 @@ public class GameController implements Initializable {
 
     @FXML
     private void handleColor() {
-        //TODO
         cellColor = cellCP.getValue();
         backgroundColor = backgroundCP.getValue();
         draw();
@@ -383,13 +382,11 @@ public class GameController implements Initializable {
                     if (boardFromFile != null) {
 
                         draw();
-                        //TODO SUPPORT FOR OFFSET++
                         drawGhostTiles();
                     }
                 });
 
         canvas.setOnScroll((ScrollEvent event) -> {
-            //TODO Talk about with the group
             canvas.requestFocus();
             if (event.getDeltaY() > 0) {
                 cellSizeSlider.increment();
