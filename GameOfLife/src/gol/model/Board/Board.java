@@ -20,6 +20,9 @@ public abstract class Board {
      */
     protected double cellSize;
 
+    //Offset x, offset y, old x, old y
+    private final double[] moveGridValues = {0, 0, -Double.MAX_VALUE, -Double.MAX_VALUE};
+    
     /**
      * Padding between cells, defined in pixels
      */
@@ -198,5 +201,13 @@ public abstract class Board {
      * @return The cells state at position (y,x). true if alive. false if dead.
      */
     public abstract boolean getCellState(int y, int x);
+
+    /**
+     * Offset x, offset y, old x, old y
+     * @return 
+     */
+    public double[] getMoveGridValues() {
+        return moveGridValues;
+    }
 
 }

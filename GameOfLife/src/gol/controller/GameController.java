@@ -99,9 +99,8 @@ public class GameController implements Initializable {
     private byte[][] boardFromFile;
     private int mousePositionX;
     private int mousePositionY;
-    //Offset x, offset y, old x, old y
-    private final double[] moveGridValues = {0, 0, -Double.MAX_VALUE, -Double.MAX_VALUE};
-
+    private double[] moveGridValues;
+    
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         gc = canvas.getGraphicsContext2D();
@@ -111,10 +110,11 @@ public class GameController implements Initializable {
         cellSizeSlider.setBlockIncrement(0.75);
 
         //TODO Valg for Array eller dynamisk brett
-        //activeBoard = new ArrayBoard();
-        activeBoard = new DynamicBoard();
+        activeBoard = new ArrayBoard();
+        //activeBoard = new DynamicBoard();
         cellCP.setValue(Color.BLACK);
         backgroundCP.setValue(Color.web("#F4F4F4"));
+        moveGridValues = activeBoard.getMoveGridValues();
 
         mouseInit();
         handleZoom();
@@ -530,19 +530,6 @@ public class GameController implements Initializable {
         } else if (rbMoveGrid.isSelected()) {
         } else {
             activeBoard.setCellState(y, x, true, moveGridValues[0], moveGridValues[1]);
-        }
-
-        double h = activeBoard.getCellSize();
-        
-        if (moveGridValues[0] > x) {
-            double under = moveGridValues[0] - x;
-            double up = h + (h - (under % h));
-            moveGridValues[0] = moveGridValues[0] - under - up;
-        }
-        if (moveGridValues[1] > y) {
-            double under = moveGridValues[1] - y;
-            double up = h + (h - (under % h));
-            moveGridValues[1] = moveGridValues[1] - under - up;
         }
 
         draw();
