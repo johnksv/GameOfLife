@@ -62,4 +62,14 @@ public class CustomRule implements Rule {
         return 0;
     }
 
+    @Override
+    public byte[] getSurvive() {
+        return toSurvive;
+    }
+
+    @Override
+    public byte[] getToBorn() {
+        return toBeBorn;
+    }
+
 }

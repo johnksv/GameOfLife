@@ -7,9 +7,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * @author s305054, s305089, s305084
  */
 public class DynamicBoard extends Board {
-
-    private final int MAXHEIGHT = 2000;
     private final int MAXWIDTH = 2000;
+    private final int MAXHEIGHT = 2000;
 
     private CopyOnWriteArrayList<CopyOnWriteArrayList<Byte>> gameBoard;
 
@@ -263,7 +262,7 @@ public class DynamicBoard extends Board {
                 max = row.size();
             }
         }
-
+        
         return max;
     }
 }
