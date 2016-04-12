@@ -63,7 +63,7 @@ public class GIFWriterS305054 {
 
             gifWriter = new GIFWriter(width, height, path, time);
             gifWriter.setBackgroundColor(this.bgColor);
-            gifWriter.fillRekt(1,10,1,10,cColor); //hva er problemet her?
+            gifWriter.fillRect(1,10,1,10,cColor); 
             
         } catch (IOException ex) {
             Logger.getLogger(GIFWriterS305054.class.getName()).log(Level.SEVERE, null, ex);
