@@ -7,7 +7,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.paint.Color;
+import java.awt.Color;
 import lieng.GIFWriter;
 
 /**
@@ -24,8 +24,8 @@ public class GIFWriterS305054 {
     private int height = 100; //Height of .gif - Hardcoded value will be changed - columns
     private int time = 1000; // 1000 ms = 1s - later, listener to a slider
     private short nPicturesLeft = 5; //number of pictures left - TODO nPictures cannot be less than 1
-    private Color bgColor;
-    private Color cColor;
+    private Color bgColor = Color.WHITE; //Standard color
+    private Color cColor = Color.BLACK; //Standard color
     String path = "testGif.gif"; //Filepath - later, normal output stream
 
     private GIFWriter gifWriter;
@@ -52,10 +52,19 @@ public class GIFWriterS305054 {
              assigns copied array to copiedBoard.
              */
             copiedBoard.insertArray(originaleArray, 1, 1); //Get boundingBox and insert it to an empty.
-            this.bgColor = bgColor;
-            this.cColor = cColor;
+
+            if (bgColor != null) {
+                this.bgColor = bgColor;
+            }
+            
+            if (cColor != null) {
+                this.cColor = cColor;
+            }
 
             gifWriter = new GIFWriter(width, height, path, time);
+            gifWriter.setBackgroundColor(this.bgColor);
+            gifWriter.fillRekt(1,10,1,10,cColor); //hva er problemet her?
+            
         } catch (IOException ex) {
             Logger.getLogger(GIFWriterS305054.class.getName()).log(Level.SEVERE, null, ex);
 
