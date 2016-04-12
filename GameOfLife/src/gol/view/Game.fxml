@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.canvas.Canvas?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
@@ -16,15 +17,14 @@
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.Region?>
-<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 
-<BorderPane fx:id="borderpane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gol.controller.GameController">
+<BorderPane fx:id="borderpane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gol.controller.GameController">
     <bottom>
         <ToolBar fx:id="toolBarQuickStats" prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
             <items>
-                <Label text="Generation:" />
+                <Label fx:id="labelGenCount" text="Generation: 0" />
             </items>
         </ToolBar>
     </bottom>
@@ -37,19 +37,19 @@
                         <Canvas fx:id="canvas" height="460.0" width="800.0" />
                     </children>
                 </HBox>
-                <VBox fillWidth="false" AnchorPane.rightAnchor="0.0">
+                <VBox fillWidth="false" prefHeight="600.0" prefWidth="250.0" AnchorPane.rightAnchor="0.0">
                     <children>
-                        <TitledPane prefWidth="250.0" text="Menu (press to hide/show)">
+                        <TitledPane prefHeight="600.0" prefWidth="250.0" text="Menu (press to hide/show)">
                             <content>
                                 <TabPane prefHeight="400.0" prefWidth="250.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
                                     <tabs>
                                         <Tab text="General">
                                             <content>
-                                                <VBox>
+                                                <VBox prefWidth="248.0">
                                                     <children>
-                                                        <TitledPane collapsible="false" prefWidth="250.0">
+                                                        <TitledPane collapsible="false" prefWidth="248.0">
                                                             <content>
-                                                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="176.0" prefWidth="246.0">
                                                                     <children>
                                                                         <Label layoutX="8.0" layoutY="14.0" text="Speed/Itterations per second:" />
                                                                         <Label fx:id="animationSpeedLabel" layoutX="168.0" layoutY="32.0" text="1,00" />
@@ -59,10 +59,16 @@
                                                                         <Label layoutX="12.0" layoutY="98.0" text="Gridspacing" />
                                                                         <Slider fx:id="gridSpacingSlider" layoutX="17.0" layoutY="118.0" max="20" min="0" onValueChange="#handleGridSpacingSlider" value="3" />
                                                                         <Button fx:id="startPauseBtn" layoutX="6.0" layoutY="145.0" mnemonicParsing="false" onAction="#handleAnimation" text="Start game" />
-                                                                        <Button layoutX="146.0" layoutY="145.0" mnemonicParsing="false" onAction="#handleClearBtn" text="Clean board" />
+                                                                        <Button layoutX="146.0" layoutY="145.0" mnemonicParsing="false" onAction="#handleClearBtn" text="Clear board" />
                                                                     </children>
+                                                   <padding>
+                                                      <Insets bottom="13.0" />
+                                                   </padding>
                                                                 </AnchorPane>
                                                             </content>
+                                             <VBox.margin>
+                                                <Insets />
+                                             </VBox.margin>
                                                         </TitledPane>
                                                         <TitledPane animated="false" collapsible="false">
                                                             <content>

@@ -68,6 +68,8 @@ public class GameController implements Initializable {
     @FXML
     private Label animationSpeedLabel;
     @FXML
+    private Label labelGenCount;
+    @FXML
     private Button startPauseBtn;
     @FXML
     private ColorPicker cellCP;
@@ -101,7 +103,8 @@ public class GameController implements Initializable {
     private int mousePositionX;
     private int mousePositionY;
     private double[] moveGridValues;
-    
+    private long gencount = 0;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         gc = canvas.getGraphicsContext2D();
@@ -109,6 +112,7 @@ public class GameController implements Initializable {
         canvas.widthProperty().bind(borderpane.widthProperty());
         canvas.heightProperty().bind(borderpane.heightProperty().subtract(toolBarQuickStats.heightProperty()));
         toolBarQuickStats.prefWidthProperty().bind(borderpane.widthProperty());
+
         cellSizeSlider.setBlockIncrement(0.75);
 
         //TODO Valg for Array eller dynamisk brett
@@ -148,6 +152,8 @@ public class GameController implements Initializable {
         Duration duration = Duration.millis(1000);
         KeyFrame keyframe = new KeyFrame(duration, (ActionEvent e) -> {
             activeBoard.nextGen();
+            gencount++;
+            labelGenCount.setText("Generation: " + gencount);
             draw();
         });
         timeline.setCycleCount(Animation.INDEFINITE);
@@ -260,6 +266,7 @@ public class GameController implements Initializable {
 
     @FXML
     private void handleClearBtn() {
+        gencount = 0;
         activeBoard.clearBoard();
         timeline.pause();
         startPauseBtn.setText("Start game");
