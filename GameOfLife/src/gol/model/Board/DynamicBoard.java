@@ -245,4 +245,16 @@ public class DynamicBoard extends Board {
             gameBoard.get(y).add((byte) 0);
         }
     }
+
+    @Override
+    public int getMaxRowLength() {
+        int max = 0;
+        for (CopyOnWriteArrayList<Byte> row : gameBoard) {
+            if (max < row.size()) {
+                max = row.size();
+            }
+        }
+        
+        return max;
+    }
 }

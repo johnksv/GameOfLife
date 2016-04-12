@@ -220,4 +220,9 @@ public class ArrayBoard extends Board {
         }
         return result.toString();
     }
+
+    @Override
+    public int getMaxRowLength() {
+        return HEIGHT;
+    }
 }
