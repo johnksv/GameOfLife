@@ -110,8 +110,8 @@ public class GameController implements Initializable {
         cellSizeSlider.setBlockIncrement(0.75);
 
         //TODO Valg for Array eller dynamisk brett
-        activeBoard = new ArrayBoard();
-        //activeBoard = new DynamicBoard();
+        //activeBoard = new ArrayBoard();
+        activeBoard = new DynamicBoard(1800,1800);
         cellCP.setValue(Color.BLACK);
         backgroundCP.setValue(Color.web("#F4F4F4"));
         moveGridValues = activeBoard.getMoveGridValues();

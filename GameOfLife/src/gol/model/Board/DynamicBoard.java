@@ -7,6 +7,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * @author s305054, s305089, s305084
  */
 public class DynamicBoard extends Board {
+
     private final int MAXWIDTH = 2000;
     private final int MAXHEIGHT = 2000;
 
@@ -143,18 +144,6 @@ public class DynamicBoard extends Board {
         int[] boundingBox = getBoundingBox();
         if ((boundingBox[1] - boundingBox[0] + 1) > 0 && (boundingBox[3] - boundingBox[2] + 1) > 0) {
             byte[][] board = new byte[boundingBox[1] - boundingBox[0] + 1][boundingBox[3] - boundingBox[2] + 1];
-            /*
-             for (int y = 0; y < board.length; y++) {
-             for (int x = 0; x < board[y].length; x++) {
-             if (gameBoard.get(boundingBox[0] + y).get(x + boundingBox[2]) == 64) {
-             board[y][x] = 64;
-             } else {
-             board[y][x] = 0;
-             }
-             }
-             }
-             */
-            //Forsøk Stian (har ansvar) =>
             for (int y = 0; y < board.length; y++) {
                 for (int x = 0; x < board[y].length; x++) {
                     if (getArrayLength(boundingBox[0] + y) > x + boundingBox[2]) {
@@ -262,7 +251,7 @@ public class DynamicBoard extends Board {
                 max = row.size();
             }
         }
-        
+
         return max;
     }
 }
