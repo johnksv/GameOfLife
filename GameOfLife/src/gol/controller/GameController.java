@@ -321,7 +321,7 @@ public class GameController implements Initializable {
         java.awt.Color bgColor = new java.awt.Color((float) backgroundColor.getRed(), (float) backgroundColor.getGreen(), (float) backgroundColor.getBlue());
         java.awt.Color cColor = new java.awt.Color((float) cellColor.getRed(), (float) cellColor.getGreen(), (float) cellColor.getBlue());
         gifTrygve = new GIFWriterS305054();
-        gifTrygve.prepareGIF(activeBoard, bgColor, cColor);
+        gifTrygve.prepareGIF(activeBoard,(int) activeBoard.getCellSize(), bgColor, cColor);
         gifTrygve.makeGIF();
         
     }
