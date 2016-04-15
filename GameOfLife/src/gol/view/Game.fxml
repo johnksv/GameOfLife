@@ -61,14 +61,14 @@
                                                                         <Button fx:id="startPauseBtn" layoutX="6.0" layoutY="145.0" mnemonicParsing="false" onAction="#handleAnimation" text="Start game" />
                                                                         <Button layoutX="146.0" layoutY="145.0" mnemonicParsing="false" onAction="#handleClearBtn" text="Clear board" />
                                                                     </children>
-                                                   <padding>
-                                                      <Insets bottom="13.0" />
-                                                   </padding>
+                                                                    <padding>
+                                                                        <Insets bottom="13.0" />
+                                                                    </padding>
                                                                 </AnchorPane>
                                                             </content>
-                                             <VBox.margin>
-                                                <Insets />
-                                             </VBox.margin>
+                                                            <VBox.margin>
+                                                                <Insets />
+                                                            </VBox.margin>
                                                         </TitledPane>
                                                         <TitledPane animated="false" collapsible="false">
                                                             <content>
@@ -167,7 +167,10 @@
                                                             <content>
                                                                 <AnchorPane minHeight="0.0" minWidth="0.0" prefWidth="200.0">
                                                                     <children>
-                                              
+                                                                        <Button layoutX="15.0" layoutY="14.0" mnemonicParsing="false" onAction="#openPatternEditor" text="Open Pattern Editor" />
+                                                                        <Button layoutX="14.0" layoutY="46.0" mnemonicParsing="false" onAction="#currentBoardToGIF" text="Save current patter to GIF" />
+                                                                        <Button layoutX="14.0" layoutY="78.0" mnemonicParsing="false" onAction="#showStats" text="Show Stats" />
+
                                                                     </children>
                                                                 </AnchorPane>
                                                             </content>
