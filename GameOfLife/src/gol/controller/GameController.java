@@ -91,6 +91,10 @@ public class GameController implements Initializable {
     //TODO Show grid is not working yet. Implement it
     @FXML
     private Button saveGifTrygve;
+    @FXML
+    private Slider timeSliderGifTrygve;
+    @FXML
+    private Label timeLabelGifTrygve;
 
     private Board activeBoard;
     private final Timeline timeline = new Timeline();
@@ -321,9 +325,14 @@ public class GameController implements Initializable {
         java.awt.Color bgColor = new java.awt.Color((float) backgroundColor.getRed(), (float) backgroundColor.getGreen(), (float) backgroundColor.getBlue());
         java.awt.Color cColor = new java.awt.Color((float) cellColor.getRed(), (float) cellColor.getGreen(), (float) cellColor.getBlue());
         gifTrygve = new GIFWriterS305054();
-        gifTrygve.prepareGIF(activeBoard,(int) activeBoard.getCellSize(), bgColor, cColor);
-        gifTrygve.makeGIF();
-        
+        gifTrygve.prepareGIF(activeBoard,(int) activeBoard.getCellSize(), timeSliderGifTrygve.getValue(), bgColor, cColor);
+        gifTrygve.makeGIF();    
+    }
+    @FXML
+    private void handleGifSliderTrygve() {
+        timeSliderGifTrygve.setMin(0.001);
+        timeSliderGifTrygve.setMax(2.0);
+        timeLabelGifTrygve.setText("Time Between pictures: " + (float)timeSliderGifTrygve.getValue());
     }
 
     @FXML

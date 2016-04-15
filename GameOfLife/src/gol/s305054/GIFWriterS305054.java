@@ -21,8 +21,8 @@ public class GIFWriterS305054 {
 
     private Board copiedBoard; //deep copy of board - TODO check if boundBox or not.
 
-    private int width = 10; //Width of .gif - Hardcoded value will be changed - rows
-    private int height = 10; //Height of .gif - Hardcoded value will be changed - columns
+    private int width = 30; //Width of .gif - Hardcoded value will be changed - rows
+    private int height = 30; //Height of .gif - Hardcoded value will be changed - columns
     private int time = 300; // 1000 ms = 1s - later, listener to a slider
     private int cellSize = 10;
     private short nPicturesLeft = 15; //number of pictures left - TODO nPictures cannot be less than 1
@@ -39,7 +39,7 @@ public class GIFWriterS305054 {
      * @param bgColor Background color of the board
      * @param cColor Color of cell in board.
      */
-    public void prepareGIF(Board originaleBoard, int cellSize, Color bgColor, Color cColor) { //TODO add parameters height width
+    public void prepareGIF(Board originaleBoard, int cellSize, double time, Color bgColor, Color cColor) { //TODO add parameters height width
         try {
             byte[][] originaleArray = originaleBoard.getBoundingBoxBoard();
             copiedBoard = new ArrayBoard(width, height);
@@ -49,6 +49,17 @@ public class GIFWriterS305054 {
              */
             copiedBoard.insertArray(originaleArray, 3, 3); //Get boundingBox and insert it to an empty.
 
+            if (cellSize < 10) {
+                this.cellSize = 10;
+            } else {
+                this.cellSize = cellSize;
+            }
+            
+            if (time < 0.1) {
+                this.time = 100;
+            } else {
+                this.time = (int)(time*1000);
+            }
             if (bgColor != null) {
                 this.bgColor = bgColor;
             }
@@ -57,13 +68,7 @@ public class GIFWriterS305054 {
                 this.cColor = cColor;
             }
 
-            if (cellSize < 10) {
-                this.cellSize = 10;
-            } else {
-                this.cellSize = cellSize;
-            }
-
-            gifWriter = new GIFWriter(200, 200, path, time);
+            gifWriter = new GIFWriter(300, 300, path, this.time);
             gifWriter.setBackgroundColor(this.bgColor);
 
         } catch (IOException ex) {
