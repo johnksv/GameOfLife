@@ -6,6 +6,7 @@
 package gol.model.Board;
 
 import gol.model.Logic.Rule;
+import java.util.Arrays;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -15,7 +16,7 @@ import static org.junit.Assert.*;
 
 /**
  *
- * @author 
+ * @author
  */
 public class BoardTest {
 
@@ -32,14 +33,21 @@ public class BoardTest {
 
     @Before
     public void setUp() {
-        Board instance = new ArrayBoard();
+        arrayInstance = new ArrayBoard(5, 5);
+        dynamicInstance = new DynamicBoard(5, 5);
+        patternGlider = new byte[][]{
+            {0, 64},
+            {0, 0, 64},
+            {64, 64, 64}};
     }
 
     @After
     public void tearDown() {
     }
-    
-    Board instance;
+
+    Board arrayInstance;
+    Board dynamicInstance;
+    byte[][] patternGlider;
 
     /**
      * Test of nextGen method, of class Board.
@@ -48,110 +56,44 @@ public class BoardTest {
     public void testNextGen() {
         System.out.println("nextGen");
         byte[][] gameBoard = {
-            {0, 0, 0, 0},
-            {0, 64, 64, 0},
-            {0, 64, 0, 0},
-            {0, 0, 0, 0}};
-        Board gol = new ArrayBoard(2, 2);
-        //gol.setGameBoard(gameBoard);
+            {64, 64},
+            {64, 0}};
+        Board gol = new ArrayBoard(4, 4);
+        gol.insertArray(gameBoard, 1, 1);
         gol.nextGen();
-        assertEquals(gol.toString(), "0000011001100000");
+        String expResult = "0000011001100000";
+        assertEquals(gol.toString(), expResult);
+        
+        
+        dynamicInstance.insertArray(gameBoard, 1, 1);
+        dynamicInstance.nextGen();
+        expResult = "0000011001100000";
+        assertEquals(gol.toString(), expResult);
     }
 
-    /**
-     * Test of setCellSize method, of class Board.
-     */
     @Test
-    public void testSetCellSize() {
-        System.out.println("setCellSize");
-        double cellSize = 0.0;
-        instance.setCellSize(cellSize);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
+    public void testSetGetCellState() {
+        System.out.println("setCellState & getCellState");
 
-    /**
-     * Test of getGridSpacing method, of class Board.
-     */
-    @Test
-    public void testGetGridSpacing() {
-        System.out.println("getGridSpacing");
-        double expResult = 0.0;
-        double result = instance.getGridSpacing();
-        assertEquals(expResult, result, 0.0);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of setGridSpacing method, of class Board.
-     */
-    @Test
-    public void testSetGridSpacing() {
-        System.out.println("setGridSpacing");
-        double gridSpacing = 0.0;
-        instance.setGridSpacing(gridSpacing);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of getCellSize method, of class Board.
-     */
-    @Test
-    public void testGetCellSize() {
-        System.out.println("getCellSize");
-
-        double expResult = 0.0;
-        double result = instance.getCellSize();
-        assertEquals(expResult, result, 0.0);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of setGameRule method, of class Board.
-     */
-    @Test
-    public void testSetGameRule() {
-        System.out.println("setGameRule");
-        Rule activeRule = null;
-
-        instance.setGameRule(activeRule);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of setCellState method, of class Board.
-     */
-    @Test
-    public void testSetCellState() {
-        System.out.println("setCellState");
-        int x = 0;
-        int y = 0;
-        boolean alive = false;
-
-        instance.setCellState(x, y, alive);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of getCellState method, of class Board.
-     */
-    @Test
-    public void testGetCellState() {
-        System.out.println("getCellState");
-        int x = 0;
-        int y = 0;
-
-        boolean expResult = false;
-        boolean result = instance.getCellState(x, y);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
+        arrayInstance.setCellState(1, 1, true);
+        arrayInstance.setCellState(1, 2, true);
+        arrayInstance.setCellState(2, 1, true);
+        String result1 = arrayInstance.toString();
+        
+        dynamicInstance.setCellState(-1, -1, true);
+        assertEquals(true, dynamicInstance.getCellState(1, 1));
+        dynamicInstance.setCellState(-1, -2, true);
+        assertEquals(true, dynamicInstance.getCellState(1, 1));
+        
+        String expResult1 = "0000001100010000000000000";
+               
+        assertEquals(result1, expResult1);
+        assertEquals(true, arrayInstance.getCellState(1, 1));
+        assertEquals(false, arrayInstance.getCellState(2, 2));
+        assertEquals(false, dynamicInstance.getCellState(-5, -5));
+        assertEquals(false, dynamicInstance.getCellState(-1, -3));
+    }     
+    
 
     /**
      * Test of clearBoard method, of class Board.
@@ -159,75 +101,96 @@ public class BoardTest {
     @Test
     public void testClearBoard() {
         System.out.println("clearBoard");
+        arrayInstance.insertArray(patternGlider, 1, 1);
+        arrayInstance.clearBoard();
+        String result = arrayInstance.toString();
 
-        instance.clearBoard();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of getGameBoard method, of class Board.
-     */
-    @Test
-    public void testGetGameBoard() {
-        System.out.println("getGameBoard");
-
-        Object expResult = null;
-        Object result = instance.getGameBoard();
+        String expResult = "0000000000000000000000000";
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+
+    }
+
+
+    @Test
+    public void testGetBoundingBoxBoard() {
+        System.out.println("getBoundingBoxBoard");
+        byte[][] expResult = new byte[][]{{0, 64, 0}, {0, 0, 64}, {64, 64, 64}};
+        byte[][] result;
+
+        arrayInstance.insertArray(patternGlider, 1, 1);
+        result = arrayInstance.getBoundingBoxBoard();
+        assertArrayEquals(expResult, result);
+
+        dynamicInstance.insertArray(patternGlider, 1, 1);
+        result = dynamicInstance.getBoundingBoxBoard();
+        assertArrayEquals(expResult, result);
+
+        dynamicInstance.clearBoard();
+        dynamicInstance.insertArray(patternGlider, -10, -10);
+        result = dynamicInstance.getBoundingBoxBoard();
+        System.out.println(Arrays.deepToString(result));
+        assertArrayEquals(expResult, result);
+
+        dynamicInstance.clearBoard();
+        dynamicInstance.insertArray(patternGlider, 1, 1);
+        result = dynamicInstance.getBoundingBoxBoard();
+        assertArrayEquals(expResult, result);
+    }
+
+    @Test
+    public void testGetBoundingBox() {
+        System.out.println("getBoundingBox");
+        arrayInstance =new ArrayBoard(100, 100);
+        arrayInstance.clearBoard();
+        arrayInstance.setCellState(7, 5, true);
+        arrayInstance.setCellState(6, 4, true);
+        arrayInstance.setCellState(5, 11, true);
+        arrayInstance.setCellState(3, 8, true);
+        
+        int[] expResult = new int[4];
+        expResult[0]=3;
+        expResult[1]=7;
+        expResult[2]=4;
+        expResult[3]=11;
+        
+        int[] result = arrayInstance.getBoundingBox();
+        System.out.println("");
+        System.out.println(Arrays.toString(result));
+        System.out.println(Arrays.toString(expResult));
+        assertArrayEquals(expResult, result);
     }
 
     /**
-     * Test of getArrayLength method, of class Board.
+     * DynamicBoards insert array is tested through setCellState.
      */
     @Test
-    public void testGetArrayLength_0args() {
-        System.out.println("getArrayLength");
+    public void testInsertArray() {
+        System.out.println("insertArray");
+        arrayInstance.insertArray(patternGlider, 1, 1);
+        assertEquals("0000000100000100111000000", arrayInstance.toString());
 
-        int expResult = 0;
-        int result = instance.getArrayLength();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        arrayInstance.clearBoard();
+        arrayInstance.insertArray(patternGlider, 2, 2);
+        assertEquals("0000000000000100000100111", arrayInstance.toString());
+
+        arrayInstance.clearBoard();
+        arrayInstance.insertArray(patternGlider, 3, 2);
+        assertEquals("0000000000000000001000001", arrayInstance.toString());
+
+        //see test for setCellState, for DynamicBoard
+        dynamicInstance.insertArray(patternGlider, 1, 1);
+        assertEquals("00100010111000000", dynamicInstance.toString());
+
+        dynamicInstance.insertArray(patternGlider, -2, -2);
+       // assertEquals("00100010111000000000000000000000", dynamicInstance.toString());
+
     }
 
-    /**
-     * Test of getArrayLength method, of class Board.
-     */
+    
     @Test
-    public void testGetArrayLength_int() {
-        System.out.println("getArrayLength");
-        int i = 0;
-        int expResult = 0;
-        int result = instance.getArrayLength(i);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+    public void testSetCellState_5args() {
+            //This is a method witch calculates a mouse click to a point on the board
+            //Testing this is much easier with a visual test.
+        assertEquals(1, 1);
     }
-
-    /**
-     * Test of countNeigh method, of class Board.
-     */
-    @Test
-    public void testCountNeigh() {
-        System.out.println("countNeigh");
-        instance.countNeigh();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of checkRules method, of class Board.
-     */
-    @Test
-    public void testCheckRules() {
-        System.out.println("checkRules");
-        Rule activeRule = null;
-        instance.checkRules(activeRule);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
 }

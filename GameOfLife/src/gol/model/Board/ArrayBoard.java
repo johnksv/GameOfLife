@@ -196,10 +196,10 @@ public class ArrayBoard extends Board {
 
     @Override
     public boolean getCellState(int y, int x) {
-        if (y < 1 || y > gameBoard.length) {
+        if (y < 1 || y >= gameBoard.length) {
             return false;
         }
-        if (x < 1 || x > gameBoard[y].length) {
+        if (x < 1 || x >= gameBoard[y].length) {
             return false;
         }
         return gameBoard[y][x] >= 64;
@@ -219,5 +219,10 @@ public class ArrayBoard extends Board {
             }
         }
         return result.toString();
+    }
+
+    @Override
+    public int getMaxRowLength() {
+        return HEIGHT;
     }
 }

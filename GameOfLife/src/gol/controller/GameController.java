@@ -23,7 +23,6 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -35,15 +34,14 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Slider;
-import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.ToolBar;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.BorderPane;
@@ -65,7 +63,7 @@ public class GameController implements Initializable {
     @FXML
     private BorderPane borderpane;
     @FXML
-    private TabPane tabpane;
+    private ToolBar toolBarQuickStats;
     @FXML
     private Slider cellSizeSlider;
     @FXML
@@ -74,6 +72,8 @@ public class GameController implements Initializable {
     private Slider animationSpeedSlider;
     @FXML
     private Label animationSpeedLabel;
+    @FXML
+    private Label labelGenCount;
     @FXML
     private Button startPauseBtn;
     @FXML
@@ -94,9 +94,6 @@ public class GameController implements Initializable {
     private TextField tfCellsToSurvive;
     @FXML
     private Button btnUseRule;
-    @FXML
-    private CheckBox cbShowGrid;
-    //TODO Show grid is not working yet. Implement it
 
     private Board activeBoard;
     private final Timeline timeline = new Timeline();
@@ -107,23 +104,26 @@ public class GameController implements Initializable {
     private byte[][] boardFromFile;
     private int mousePositionX;
     private int mousePositionY;
-    //Offset x, offset y, old x, old y
-    private final double[] moveGridValues = {0, 0, -Double.MAX_VALUE, -Double.MAX_VALUE};
+    private double[] moveGridValues;
+    private long gencount = 0;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         gc = canvas.getGraphicsContext2D();
 
-        canvas.widthProperty().bind(borderpane.widthProperty().subtract(tabpane.widthProperty()));
-        canvas.heightProperty().bind(borderpane.heightProperty());
+        canvas.widthProperty().bind(borderpane.widthProperty());
+        canvas.heightProperty().bind(borderpane.heightProperty().subtract(toolBarQuickStats.heightProperty()));
+        toolBarQuickStats.prefWidthProperty().bind(borderpane.widthProperty());
+
         cellSizeSlider.setBlockIncrement(0.75);
 
         //TODO Valg for Array eller dynamisk brett
         //activeBoard = new ArrayBoard();
-        activeBoard = new DynamicBoard();
+        activeBoard = new DynamicBoard(1800,1800);
         cellCP.setValue(Color.BLACK);
         backgroundCP.setValue(Color.web("#F4F4F4"));
-        
+        moveGridValues = activeBoard.getMoveGridValues();
+
         mouseInit();
         handleZoom();
         handleGridSpacingSlider();
@@ -155,6 +155,8 @@ public class GameController implements Initializable {
         Duration duration = Duration.millis(1000);
         KeyFrame keyframe = new KeyFrame(duration, (ActionEvent e) -> {
             activeBoard.nextGen();
+            gencount++;
+            labelGenCount.setText("Generation: " + gencount);
             draw();
         });
         timeline.setCycleCount(Animation.INDEFINITE);
@@ -260,7 +262,6 @@ public class GameController implements Initializable {
 
     @FXML
     private void handleColor() {
-        //TODO
         cellColor = cellCP.getValue();
         backgroundColor = backgroundCP.getValue();
         draw();
@@ -268,6 +269,7 @@ public class GameController implements Initializable {
 
     @FXML
     private void handleClearBtn() {
+        gencount = 0;
         activeBoard.clearBoard();
         timeline.pause();
         startPauseBtn.setText("Start game");
@@ -447,13 +449,11 @@ public class GameController implements Initializable {
                     if (boardFromFile != null) {
 
                         draw();
-                        //TODO SUPPORT FOR OFFSET++
                         drawGhostTiles();
                     }
                 });
 
         canvas.setOnScroll((ScrollEvent event) -> {
-            //TODO Talk about with the group
             canvas.requestFocus();
             if (event.getDeltaY() > 0) {
                 cellSizeSlider.increment();
@@ -461,31 +461,6 @@ public class GameController implements Initializable {
                 cellSizeSlider.decrement();
             }
         });
-    }
-
-    /**
-     * //TODO Fix Comments QUICK NOTE: Draws the grid. First decide where to
-     * draw based on size and gridspacing, then calculates to draw in the middle
-     * of gridspcaing (see - halfGridSpace) after this is done it adds the
-     * offset
-     */
-    private void drawGrid() {
-        gc.setFill(Color.BLUE);
-        //TODO Så den ikke tegner det som er utenfor det vi ser
-        double sizeAndSpacing = activeBoard.getCellSize() + activeBoard.getGridSpacing();
-        double halfGridSpace = activeBoard.getGridSpacing() / 2;
-        for (int i = 0; i <= activeBoard.getArrayLength(); i++) {
-            gc.strokeLine((i * sizeAndSpacing - halfGridSpace) + moveGridValues[0], 0,
-                    (i * sizeAndSpacing - halfGridSpace) + moveGridValues[0], canvas.getHeight());
-
-            for (int j = 0; j <= activeBoard.getArrayLength(i); j++) {
-
-                gc.strokeLine(0, (j * sizeAndSpacing - halfGridSpace) + moveGridValues[1],
-                        canvas.getWidth(), (j * sizeAndSpacing - halfGridSpace) + moveGridValues[1]);
-
-            }
-        }
-
     }
 
     private void draw() {
@@ -598,8 +573,6 @@ public class GameController implements Initializable {
         } else {
             activeBoard.setCellState(y, x, true, moveGridValues[0], moveGridValues[1]);
         }
-        
-        
 
         draw();
     }

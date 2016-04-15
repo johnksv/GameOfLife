@@ -8,11 +8,19 @@ import java.util.concurrent.CopyOnWriteArrayList;
  */
 public class DynamicBoard extends Board {
 
-    private final CopyOnWriteArrayList<CopyOnWriteArrayList<Byte>> gameBoard;
+    private final int MAXWIDTH = 2000;
+    private final int MAXHEIGHT = 2000;
+
+    private CopyOnWriteArrayList<CopyOnWriteArrayList<Byte>> gameBoard;
 
     public DynamicBoard() {
         super();
         gameBoard = new CopyOnWriteArrayList<>();
+    }
+
+    public DynamicBoard(int y, int x) {
+        this();
+        expandBoard(y, x);
     }
 
     @Override
@@ -22,8 +30,8 @@ public class DynamicBoard extends Board {
 
     @Override
     protected void countNeigh() {
-        for (int i = 0; i < gameBoard.size(); i++) {
-            for (int j = 0; j < gameBoard.get(i).size(); j++) {
+        for (int i = 1; i < gameBoard.size(); i++) {
+            for (int j = 1; j < gameBoard.get(i).size(); j++) {
 
                 //If cell is alive
                 if (gameBoard.get(i).get(j) >= 64) {
@@ -35,6 +43,10 @@ public class DynamicBoard extends Board {
                             //To not count itself
                             if (!(k == 0 && l == 0)) {
                                 incrementCellValue(i + k, j + l);
+
+                                i = (i + k < 1) ? i + 1 : i;
+                                j = (j + l < 1) ? j + 1 : j;
+
                             }
                         }
                     }
@@ -46,10 +58,15 @@ public class DynamicBoard extends Board {
 
     @Override
     protected void checkRules(Rule activeRule) {
-        for (int i = 0; i < gameBoard.size(); i++) {
-            for (int j = 0; j < gameBoard.get(i).size(); j++) {
+        for (int i = 1; i < gameBoard.size(); i++) {
+            for (int j = 1; j < gameBoard.get(i).size(); j++) {
                 if (gameBoard.get(i).get(j) != 0) {
-                    gameBoard.get(i).set(j, activeRule.setLife(gameBoard.get(i).get(j)));
+                    if (activeRule.setLife(gameBoard.get(i).get(j)) == 64) {
+                        setCellState(i, j, true);
+                    } else {
+                        setCellState(i, j, false);
+                    }
+
                 }
             }
         }
@@ -57,16 +74,17 @@ public class DynamicBoard extends Board {
 
     @Override
     public void insertArray(byte[][] boardToInsert, int y, int x) {
-
-        
+        if (x < 0 || y < 0) {
+            expandBoard(y - 1, x - 1);
+            y = (y < 1) ? 1 : y;
+            x = (x < 1) ? 1 : x;
+        }
         for (int i = 0; i < boardToInsert.length; i++) {
             for (int j = 0; j < boardToInsert[i].length; j++) {
-                if (j + x < gameBoard.get(y + i).size()) {
-                    if (i + y >= 1 && j + x >= 1) {
-                        gameBoard.get(i + y).set(j + x, boardToInsert[i][j]);
-                    }
-                } else {
-                    gameBoard.get(i + y).add(j + x, boardToInsert[i][j]);
+                if (boardToInsert[i][j] == 64) {
+
+                    setCellState(y + i, x + j, true);
+
                 }
             }
         }
@@ -77,6 +95,8 @@ public class DynamicBoard extends Board {
 
         expandBoard(y, x);
 
+        //All zero or less cordinates will be set to 1.
+        //This is a fundamental part of DynamicBoard.
         y = (y < 1) ? 1 : y;
         x = (x < 1) ? 1 : x;
 
@@ -122,16 +142,18 @@ public class DynamicBoard extends Board {
     @Override
     public byte[][] getBoundingBoxBoard() {
         int[] boundingBox = getBoundingBox();
-        if ((boundingBox[1] - boundingBox[0] + 1) > 0 || (boundingBox[3] - boundingBox[2] + 1) > 0) {
+        if ((boundingBox[1] - boundingBox[0] + 1) > 0 && (boundingBox[3] - boundingBox[2] + 1) > 0) {
             byte[][] board = new byte[boundingBox[1] - boundingBox[0] + 1][boundingBox[3] - boundingBox[2] + 1];
-
             for (int y = 0; y < board.length; y++) {
                 for (int x = 0; x < board[y].length; x++) {
-                    if (gameBoard.get(boundingBox[0] + y).get(x + boundingBox[2]) == 64) {
-                        board[y][x] = 64;
-                    } else {
-                        board[y][x] = 0;
+                    if (getArrayLength(boundingBox[0] + y) > x + boundingBox[2]) {
+                        if (gameBoard.get(boundingBox[0] + y).get(x + boundingBox[2]) == 64) {
+                            board[y][x] = 64;
+                        } else {
+                            board[y][x] = 0;
+                        }
                     }
+
                 }
             }
             return board;
@@ -148,7 +170,6 @@ public class DynamicBoard extends Board {
         boundingBox[2] = Integer.MAX_VALUE;
         boundingBox[3] = 0;
         for (int i = 0; i < gameBoard.size(); i++) {
-            boundingBox[2] = gameBoard.get(i).size();
             for (int j = 0; j < gameBoard.get(i).size(); j++) {
                 if (gameBoard.get(i).get(j) != 64) {
                     continue;
@@ -166,9 +187,6 @@ public class DynamicBoard extends Board {
                     boundingBox[3] = j;
                 }
             }
-        }
-        if (boundingBox[2] == Integer.MAX_VALUE) {
-            boundingBox[2] = 0;
         }
         return boundingBox;
     }
@@ -190,26 +208,50 @@ public class DynamicBoard extends Board {
 
     private void incrementCellValue(int y, int x) {
         expandBoard(y, x);
+
+        //All zero or less cordinates will be set to 1.
+        //This is a fundamental part of DynamicBoard.
+        y = (y < 1) ? 1 : y;
+        x = (x < 1) ? 1 : x;
+
         byte value = gameBoard.get(y).get(x);
         gameBoard.get(y).set(x, ++value);
     }
 
     private void expandBoard(int y, int x) {
-        while (y < 1) {
-            gameBoard.add(0, new CopyOnWriteArrayList<>());
-            y++;
-        }
-        while (x < 1) {
-            for (CopyOnWriteArrayList<Byte> row : gameBoard) {
-                row.add(0, (byte) 0);
+        if (gameBoard.size() < MAXHEIGHT) {
+            while (y < 1) {
+                gameBoard.add(0, new CopyOnWriteArrayList<>());
+                y++;
             }
-            x++;
+            while (y >= gameBoard.size()) {
+                gameBoard.add(new CopyOnWriteArrayList<>());
+            }
         }
-        while (y >= gameBoard.size()) {
-            gameBoard.add(new CopyOnWriteArrayList<>());
+        if (getMaxRowLength() < MAXWIDTH) {
+            while (x < 1) {
+                for (CopyOnWriteArrayList<Byte> row : gameBoard) {
+                    row.add(0, (byte) 0);
+                }
+                x++;
+            }
+
+            while (x >= gameBoard.get(y).size()) {
+                gameBoard.get(y).add((byte) 0);
+            }
         }
-        while (x >= gameBoard.get(y).size()) {
-            gameBoard.get(y).add((byte) 0);
+
+    }
+
+    @Override
+    public int getMaxRowLength() {
+        int max = 0;
+        for (CopyOnWriteArrayList<Byte> row : gameBoard) {
+            if (max < row.size()) {
+                max = row.size();
+            }
         }
+
+        return max;
     }
 }
