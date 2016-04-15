@@ -9,6 +9,7 @@ import gol.model.Board.Board;
 import gol.s305089.UsefullMethods;
 import gol.s305089.model.WriteFile;
 import java.io.File;
+import java.io.IOException;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -18,7 +19,10 @@ import java.util.ResourceBundle;
 import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Alert;
@@ -33,6 +37,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Affine;
 import javafx.stage.FileChooser;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
 /**
  * FXML Controller class
@@ -193,7 +199,24 @@ public class PatternEditorController implements Initializable {
             drawTheStrip(theStripGC.get(iteration));
             theStripBoard.nextGen();
         }
+    }
+    
+    @FXML
+    private void saveAsGIF() throws IOException{
+        Stage gifMaker = new Stage();
+        FXMLLoader root = new FXMLLoader(getClass().getResource("/gol/s305089/view/GifMaker.fxml"));
 
+        Scene scene = new Scene((Parent) root.load());
+
+        GifMakerController gifcontroller = root.<GifMakerController>getController();
+        gifcontroller.setByteBoard(activeBoard);
+
+        gifMaker.setScene(scene);
+        gifMaker.setTitle("Generate GIF - Game of Life");
+        gifMaker.initModality(Modality.APPLICATION_MODAL);
+        gifMaker.setMaxHeight(600.00);
+        gifMaker.show();
+        
     }
 
     public void setActiveBoard(Board gameBoardToCopy) {

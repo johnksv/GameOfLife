@@ -345,8 +345,9 @@ public class GameController implements Initializable {
         editor.setMinHeight(600);
         editor.setScene(scene);
     }
-
-    public void currentBoardToGIF() throws IOException {
+    
+    @FXML
+    private void saveAsGIF() throws IOException {
         timeline.pause();
 
         Stage gifMaker = new Stage();

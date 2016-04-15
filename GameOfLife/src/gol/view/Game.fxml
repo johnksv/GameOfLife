@@ -20,7 +20,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane fx:id="borderpane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gol.controller.GameController">
+<BorderPane fx:id="borderpane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gol.controller.GameController">
     <bottom>
         <ToolBar fx:id="toolBarQuickStats" prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
             <items>
@@ -168,7 +168,7 @@
                                                                 <AnchorPane minHeight="0.0" minWidth="0.0" prefWidth="200.0">
                                                                     <children>
                                                                         <Button layoutX="15.0" layoutY="14.0" mnemonicParsing="false" onAction="#openPatternEditor" text="Open Pattern Editor" />
-                                                                        <Button layoutX="14.0" layoutY="46.0" mnemonicParsing="false" onAction="#currentBoardToGIF" text="Save current patter to GIF" />
+                                                                        <Button layoutX="14.0" layoutY="46.0" mnemonicParsing="false" onAction="#saveAsGIF" text="Save current patter to GIF" />
                                                                         <Button layoutX="14.0" layoutY="78.0" mnemonicParsing="false" onAction="#showStats" text="Show Stats" />
 
                                                                     </children>
