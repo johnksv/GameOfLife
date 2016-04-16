@@ -20,6 +20,7 @@ public final class GifMaker {
     private String saveLocation;
     private int durationBetweenFrames = 1000;
     private double[] moveGridValues;
+    private double cellSize;
 
     public GifMaker() throws IOException {
     }
@@ -28,6 +29,7 @@ public final class GifMaker {
         gifWriter = new GIFWriter(gifWidth, gifHeight, saveLocation, durationBetweenFrames);
         if (activeBoard != null || pattern != null) {
             //If not called, manipulations is done on the current gen of this activeBoard.
+            //Makes an new board with the "start" pattern.
             setPattern(pattern);
             writeGIF(iterations);
         } else {
@@ -46,12 +48,13 @@ public final class GifMaker {
     private void writeGIF(int iterations) throws IOException {
         if (iterations > 0) {
             iterations--;
-            double cellSize = activeBoard.getCellSize();
+
             
+            //TODO Center board on center
             for (int y = 1; y < activeBoard.getArrayLength(); y++) {
                 for (int x = 1; x < activeBoard.getArrayLength(y); x++) {
                     if (activeBoard.getCellState(y, x)) {
-                        
+
                         int x1 = (int) (x * cellSize + moveGridValues[0]);
                         int x2 = (int) (x * cellSize + cellSize + moveGridValues[0]);
                         int y1 = (int) (y * cellSize + moveGridValues[1]);
@@ -76,8 +79,8 @@ public final class GifMaker {
     /**
      * @param cellSize the cellSize to set
      */
-    public void setCellSize(int cellSize) {
-        activeBoard.setCellSize(cellSize);
+    public void setCellSize(double cellSize) {
+        this.cellSize = cellSize;
     }
 
     /**
@@ -119,5 +122,6 @@ public final class GifMaker {
         moveGridValues = activeBoard.getMoveGridValues();
         this.pattern = patternToSet;
         activeBoard.insertArray(patternToSet, 2, 2);
+        activeBoard.setCellSize(cellSize);
     }
 }

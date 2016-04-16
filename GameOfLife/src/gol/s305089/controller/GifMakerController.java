@@ -65,7 +65,7 @@ public class GifMakerController implements Initializable {
 
     private void initSpinners() {
         spinnNumIterations.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 100, 20, 1));
-        spinnTimeBetween.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 10000, 200, 1));
+        spinnTimeBetween.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 10000, 200, 100));
         spinnNumIterations.setEditable(true);
         spinnTimeBetween.setEditable(true);
         spinnNumIterations.valueProperty().addListener((ObservableValue observable, Object oldValue, Object newValue) -> {
@@ -90,10 +90,6 @@ public class GifMakerController implements Initializable {
         setGIFSaveLocation();
     }
 
-    @FXML
-    private void handleCellSizeChange() {
-        gifmaker.setCellSize((int) sliderCellSize.getValue());
-    }
 
     @FXML
     private void generateGIF() {
@@ -137,6 +133,7 @@ public class GifMakerController implements Initializable {
 
     private void setGIFValuesFromSpinners() {
         iterations = (int) spinnNumIterations.getValue();
+        gifmaker.setCellSize( sliderCellSize.getValue());
         gifmaker.setDurationBetweenFrames((int) spinnTimeBetween.getValue());
     }
 
