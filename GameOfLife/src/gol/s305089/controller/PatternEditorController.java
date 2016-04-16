@@ -105,6 +105,7 @@ public class PatternEditorController implements Initializable {
             Canvas striptCanvas = new Canvas(cellSize * boundingBox[0].length + theStripOffset, cellSize * boundingBox.length + theStripOffset);
             theStripCanvasContainer.getChildren().add(striptCanvas);
             theStripGC.add(striptCanvas.getGraphicsContext2D());
+            
             striptCanvas.setOnMousePressed((MouseEvent e) -> {
                 Canvas picked = (Canvas) e.getPickResult().getIntersectedNode();
                 if (theStripGC.contains(picked.getGraphicsContext2D())) {
@@ -116,6 +117,7 @@ public class PatternEditorController implements Initializable {
                     draw();
                 }
             });
+            
             theStripBoard.nextGen();
         }
     }
@@ -188,7 +190,8 @@ public class PatternEditorController implements Initializable {
     private void updateTheStrip() {
         byte[][] patternToDraw = activeBoard.getBoundingBoxBoard();
 
-        //int[] largestDimension = UsefullMethods.getBiggestDimension(patternToDraw, 20);
+        //TODO for strip to be dynamic after size
+        //int[] largestDimension = UsefullMethods.calculateBiggestDimension(patternToDraw, 20);
         theStripBoard = new ArrayBoard(100, 100);
         theStripBoard.insertArray(patternToDraw, 10, 10);
         initTheStrip();

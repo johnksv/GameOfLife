@@ -1,5 +1,6 @@
 package gol.s305089;
 
+import gol.model.Board.ArrayBoard;
 import gol.model.Board.Board;
 import gol.model.Board.DynamicBoard;
 import javafx.stage.Screen;
@@ -12,13 +13,15 @@ public class UsefullMethods {
     private UsefullMethods() {
     }
 
-    public static int[] getBiggestDimension(byte[][] patternToCalculate, int iterations) {
+    public static int[] calculateBiggestDimension(byte[][] patternToCalculate, int iterations) {
         int[] result = new int[2];
-        Board board = new DynamicBoard();
+        Board board = new ArrayBoard(1800, 1800);
         board.insertArray(patternToCalculate, 1, 1);
-        for (int i = 0; i < iterations; i++) {
-            result[0] = patternToCalculate.length > result[0] ? patternToCalculate.length : result[0];
-            for (byte[] row : patternToCalculate) {
+
+        for (int it = 0; it < iterations; it++) {
+            byte[][] boundedBoard = board.getBoundingBoxBoard();
+            result[0] = boundedBoard.length > result[0] ? boundedBoard.length : result[0];
+            for (byte[] row : boundedBoard) {
                 result[1] = row.length > result[1] ? row.length : result[1];
             }
             board.nextGen();
@@ -26,32 +29,10 @@ public class UsefullMethods {
         return result;
     }
 
-    //TODO REMOVE
-    //Made by håkon. Not used
-    public byte[][] deepCopy(byte[][] board) {
-        byte[][] deepCopyArray = new byte[board.length][];
-        for (int i = 0; i < board.length; i++) {
-            byte[] matrix = new byte[board[i].length];
-            int length = matrix.length;
-            System.arraycopy(board, 0, matrix, 0, length);
-            deepCopyArray[i] = matrix;
-        }
-        return deepCopyArray;
-    }
-
     /**
-     * Returns the max board size (row*column) for t iteterations
+     * Retrives the users screens width and height in pixels.
      *
-     */
-    public static int[] calcualteMaxSize(int iterationsToCalculate) {
-
-        return null;
-    }
-
-    /**
-     * Gets the size of the screens width and height in pixels.
-     *
-     * @return Array with width at index 0, and Height at index 1
+     * @return Array with screen width at index 0, and screen height at index 1
      */
     public static double[] getScreenSize() {
         double[] result = new double[2];

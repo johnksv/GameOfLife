@@ -22,12 +22,12 @@ public class UsefullMethodsTest {
     }
 
     @Test
-    public void testGetBiggestDimension() {
+    public void testCalculateBiggestDimension() {
         System.out.println("getBiggestDimension");
         byte[][] patternToCalculate = new byte[][]{{64, 64, 64}};
         int iterations = 10;
         int[] expResult = new int[]{3,3};
-        int[] result = UsefullMethods.getBiggestDimension(patternToCalculate, iterations);
+        int[] result = UsefullMethods.calculateBiggestDimension(patternToCalculate, iterations);
         assertArrayEquals(expResult, result);
         
     }

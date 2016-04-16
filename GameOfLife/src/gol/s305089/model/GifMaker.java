@@ -37,7 +37,7 @@ public final class GifMaker {
     }
 
     /**
-     *
+     * //TODO Svar på spørmål om halerekursjon
      * Forstå hva halerekursjon (eng: tail recursion) er og fordelen er med slik
      * rekursjon. Test om metoden dere har implementert over utfører slik
      * halerekursjon. Ut ifra denne testen, diskuter nå fordeler/ulemper med
