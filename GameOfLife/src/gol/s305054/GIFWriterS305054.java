@@ -23,9 +23,9 @@ public class GIFWriterS305054 {
 
     private int width = 30; //Width of .gif - Hardcoded value will be changed - rows
     private int height = 30; //Height of .gif - Hardcoded value will be changed - columns
-    private int time = 300; // 1000 ms = 1s - later, listener to a slider
+    private int time; // 1000 ms = 1s - later, listener to a slider
     private int cellSize = 10;
-    private short nPicturesLeft = 15; //number of pictures left - TODO nPictures cannot be less than 1
+    private short nPicturesLeft = 40; //number of pictures left - TODO nPictures cannot be less than 1
     private Color bgColor = Color.WHITE; //Standard color
     private Color cColor = Color.BLACK; //Standard color
     String path = "testGif.gif"; //Filepath - later, normal output stream
