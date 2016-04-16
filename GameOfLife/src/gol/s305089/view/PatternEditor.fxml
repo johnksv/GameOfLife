@@ -115,6 +115,9 @@
                                 <Region prefHeight="30.0" prefWidth="17.0" />
                                 <CheckBox fx:id="chboxAutoUpdateStrip" mnemonicParsing="false" text="Automatically update strip" />
                             </items>
+                     <VBox.margin>
+                        <Insets top="-10.0" />
+                     </VBox.margin>
                         </ToolBar>
                         <ScrollPane prefHeight="127.0" prefWidth="778.0" BorderPane.alignment="CENTER">
                             <content>

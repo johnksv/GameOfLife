@@ -21,6 +21,7 @@ public final class GifMaker {
     private int durationBetweenFrames = 1000;
     private double[] moveGridValues;
     private double cellSize;
+    private boolean centerPattern = true;
 
     public GifMaker() throws IOException {
     }
@@ -49,8 +50,7 @@ public final class GifMaker {
         if (iterations > 0) {
             iterations--;
 
-            
-            //TODO Center board on center
+            byte[][] boundedBoard = activeBoard.getBoundingBoxBoard();
             for (int y = 1; y < activeBoard.getArrayLength(); y++) {
                 for (int x = 1; x < activeBoard.getArrayLength(y); x++) {
                     if (activeBoard.getCellState(y, x)) {
@@ -121,7 +121,17 @@ public final class GifMaker {
         activeBoard = new DynamicBoard(10, 10);
         moveGridValues = activeBoard.getMoveGridValues();
         this.pattern = patternToSet;
-        activeBoard.insertArray(patternToSet, 2, 2);
+        if (centerPattern) {
+            int y = (int) ((gifHeight / cellSize) / 2  - patternToSet.length/2);
+            int x = (int) ((gifWidth / cellSize) / 2 - patternToSet[0].length/2);
+            activeBoard.insertArray(patternToSet, y, x);
+        } else {
+            activeBoard.insertArray(patternToSet, 2, 2);
+        }
         activeBoard.setCellSize(cellSize);
+    }
+
+    public void setCenterPattern(boolean centerPattern) {
+        this.centerPattern = centerPattern;
     }
 }
