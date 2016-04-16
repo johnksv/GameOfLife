@@ -222,6 +222,7 @@ public class DynamicBoard extends Board {
         if (gameBoard.size() < MAXHEIGHT) {
             while (y < 1) {
                 gameBoard.add(0, new CopyOnWriteArrayList<>());
+                getMoveGridValues()[1] -= (cellSize + gridSpacing);
                 y++;
             }
             while (y >= gameBoard.size()) {
@@ -233,6 +234,7 @@ public class DynamicBoard extends Board {
                 for (CopyOnWriteArrayList<Byte> row : gameBoard) {
                     row.add(0, (byte) 0);
                 }
+                getMoveGridValues()[0] -= (cellSize+gridSpacing);
                 x++;
             }
 
