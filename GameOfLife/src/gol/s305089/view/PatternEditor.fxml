@@ -116,13 +116,14 @@
                                 <CheckBox fx:id="chboxAutoUpdateStrip" mnemonicParsing="false" text="Automatically update strip" />
                             </items>
                         </ToolBar>
-                        <ScrollPane BorderPane.alignment="CENTER">
+                        <ScrollPane prefHeight="127.0" prefWidth="778.0" BorderPane.alignment="CENTER">
                             <content>
                                 <HBox fx:id="theStripCanvasContainer" prefHeight="150.0">
 
                                 </HBox>
                             </content>
                         </ScrollPane>
+                  <Label text="Hint: Click on the generation you want to edit" />
                     </children>
                 </VBox>
             </content>
