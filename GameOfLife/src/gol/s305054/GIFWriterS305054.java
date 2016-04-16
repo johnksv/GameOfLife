@@ -21,14 +21,14 @@ public class GIFWriterS305054 {
 
     private Board copiedBoard; //deep copy of board - TODO check if boundBox or not.
 
-    private int width = 30; //Width of .gif - Hardcoded value will be changed - rows
-    private int height = 30; //Height of .gif - Hardcoded value will be changed - columns
+    private int width = 50; //Width of .gif - Hardcoded value will be changed - rows
+    private int height = 50; //Height of .gif - Hardcoded value will be changed - columns
     private int time; // 1000 ms = 1s - later, listener to a slider
     private int cellSize = 10;
-    private short nPicturesLeft = 40; //number of pictures left - TODO nPictures cannot be less than 1
+    private short nPicturesLeft = 10; //number of pictures left - TODO nPictures cannot be less than 1
     private Color bgColor = Color.WHITE; //Standard color
     private Color cColor = Color.BLACK; //Standard color
-    String path = "testGif.gif"; //Filepath - later, normal output stream
+    String savePath = "testGif.gif"; //Filepath - later, normal output stream
     private GIFWriter gifWriter;
     /**
      * Deep copy the active gameboard into a copied gameboard. When changing the
@@ -42,12 +42,12 @@ public class GIFWriterS305054 {
     public void prepareGIF(Board originaleBoard, int cellSize, double time, Color bgColor, Color cColor) { //TODO add parameters height width
         try {
             byte[][] originaleArray = originaleBoard.getBoundingBoxBoard();
-            copiedBoard = new ArrayBoard(width, height);
+            copiedBoard = new ArrayBoard(originaleArray.length*5, originaleArray.length*5);
             /*
              Param originaleBoard - get array, each element in originaleArray, assigned to copied array
              assigns copied array to copiedBoard.
              */
-            copiedBoard.insertArray(originaleArray, 3, 3); //Get boundingBox and insert it to an empty.
+            copiedBoard.insertArray(originaleArray, 1, 1); //Get boundingBox and insert it to an empty.
 
             if (cellSize < 10) {
                 this.cellSize = 10;
@@ -68,7 +68,7 @@ public class GIFWriterS305054 {
                 this.cColor = cColor;
             }
 
-            gifWriter = new GIFWriter(300, 300, path, this.time);
+            gifWriter = new GIFWriter(copiedBoard.getArrayLength()*10, copiedBoard.getArrayLength()*10, savePath, this.time);
             gifWriter.setBackgroundColor(this.bgColor);
 
         } catch (IOException ex) {
