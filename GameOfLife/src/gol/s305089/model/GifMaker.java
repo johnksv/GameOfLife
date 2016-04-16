@@ -1,7 +1,7 @@
 package gol.s305089.model;
 
-import gol.model.Board.ArrayBoard;
 import gol.model.Board.Board;
+import gol.model.Board.DynamicBoard;
 import java.awt.Color;
 import java.io.IOException;
 import lieng.GIFWriter;
@@ -11,24 +11,23 @@ import lieng.GIFWriter;
  */
 public final class GifMaker {
 
-    private Board gameboard;
+    private Board activeBoard;
     private byte[][] pattern;
 
     private GIFWriter gifWriter;
-    private int gifWidth = 100;
-    private int gifHeight = 100;
+    private int gifWidth = 200;
+    private int gifHeight = 200;
     private String saveLocation;
     private int durationBetweenFrames = 1000;
-    private int cellSize = 10;
-    private boolean centerPattern = false;
+    private double[] moveGridValues;
 
     public GifMaker() throws IOException {
     }
 
     public void writePatternToGIF(int iterations) throws IOException {
         gifWriter = new GIFWriter(gifWidth, gifHeight, saveLocation, durationBetweenFrames);
-        if (gameboard != null || pattern != null) {
-            //If not called, manipulations is done on current gen of activeBoard.
+        if (activeBoard != null || pattern != null) {
+            //If not called, manipulations is done on the current gen of this activeBoard.
             setPattern(pattern);
             writeGIF(iterations);
         } else {
@@ -37,73 +36,69 @@ public final class GifMaker {
     }
 
     /**
-     * //TODO Svar på spørmål om halerekursjon
-     * Forstå hva halerekursjon (eng: tail recursion) er og fordelen er med slik
-     * rekursjon. Test om metoden dere har implementert over utfører slik
-     * halerekursjon. Ut ifra denne testen, diskuter nå fordeler/ulemper med
-     * rekursjon for dette problemet. Til slutt, bruk Internett til å finne ut
-     * om Java/JVM støtter halerekursjon og eventuelt hvordan.
+     * //TODO Svar på spørmål om halerekursjon Forstå hva halerekursjon (eng:
+     * tail recursion) er og fordelen er med slik rekursjon. Test om metoden
+     * dere har implementert over utfører slik halerekursjon. Ut ifra denne
+     * testen, diskuter nå fordeler/ulemper med rekursjon for dette problemet.
+     * Til slutt, bruk Internett til å finne ut om Java/JVM støtter
+     * halerekursjon og eventuelt hvordan.
      */
     private void writeGIF(int iterations) throws IOException {
         if (iterations > 0) {
             iterations--;
+            double cellSize = activeBoard.getCellSize();
+            
+            for (int y = 1; y < activeBoard.getArrayLength(); y++) {
+                for (int x = 1; x < activeBoard.getArrayLength(y); x++) {
+                    if (activeBoard.getCellState(y, x)) {
+                        
+                        int x1 = (int) (x * cellSize + moveGridValues[0]);
+                        int x2 = (int) (x * cellSize + cellSize + moveGridValues[0]);
+                        int y1 = (int) (y * cellSize + moveGridValues[1]);
+                        int y2 = (int) (y * cellSize + cellSize + moveGridValues[1]);
 
-            for (int y = 0; y < gameboard.getArrayLength(); y++) {
-                for (int x = 0; x < gameboard.getArrayLength(y); x++) {
-                    if (gameboard.getCellState(x, y)) {
-                        gifWriter.fillRect(y * cellSize, y * cellSize + cellSize, x * cellSize, x * cellSize + cellSize, Color.BLACK);
+                        if (x1 >= 0 && x2 >= 0 && y1 >= 0 && y2 >= 0) {
+                            if (x1 < gifWidth && x2 < gifWidth && y1 < gifHeight && y2 < gifHeight) {
+                                gifWriter.fillRect(x1, x2, y1, y2, Color.BLACK);
+                            }
+                        }
                     }
                 }
             }
             gifWriter.insertAndProceed();
-            if (centerPattern) {
-                centerGameBoard();
-            }
-            gameboard.nextGen();
+            activeBoard.nextGen();
             writeGIF(iterations);
         } else {
             gifWriter.close();
         }
     }
 
-    private void centerGameBoard() {
-        //TODO centerGameboard
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    /**
+     * @param cellSize the cellSize to set
+     */
+    public void setCellSize(int cellSize) {
+        activeBoard.setCellSize(cellSize);
     }
 
     /**
-     * @param CellSize the cellSize to set
+     * @param durationBetweenFrames the durationBetweenFrames to set
      */
-    public void setCellSize(int CellSize) {
-        this.cellSize = CellSize;
+    public void setDurationBetweenFrames(int durationBetweenFrames) {
+        this.durationBetweenFrames = durationBetweenFrames;
     }
 
     /**
-     * @param CenterPreview the centerPattern to set
+     * @param gifWidth the gifWidth to set
      */
-    public void setCenterPreview(boolean CenterPreview) {
-        this.centerPattern = CenterPreview;
+    public void setGifWidth(int gifWidth) {
+        this.gifWidth = gifWidth;
     }
 
     /**
-     * @param DurationBetweenFrames the durationBetweenFrames to set
+     * @param gifHeight the gifHeight to set
      */
-    public void setDurationBetweenFrames(int DurationBetweenFrames) {
-        this.durationBetweenFrames = DurationBetweenFrames;
-    }
-
-    /**
-     * @param GifWidth the gifWidth to set
-     */
-    public void setGifWidth(int GifWidth) {
-        this.gifWidth = GifWidth;
-    }
-
-    /**
-     * @param GifHeight the gifHeight to set
-     */
-    public void setGifHeight(int GifHeight) {
-        this.gifHeight = GifHeight;
+    public void setGifHeight(int gifHeight) {
+        this.gifHeight = gifHeight;
     }
 
     /**
@@ -115,13 +110,14 @@ public final class GifMaker {
 
     /**
      * Constructs an new Board instance, and inserts this board
-     * @see gol.model.Board.Board#insertArray(byte[][], int, int) 
-     * @param Pattern the pattern to set
+     *
+     * @see gol.model.Board.Board#insertArray(byte[][], int, int)
+     * @param patternToSet the pattern to set
      */
-    public void setPattern(byte[][] Pattern) {
-        //TODO dynaimc size of board
-        gameboard = new ArrayBoard(10, 10);
-        this.pattern = Pattern;
-        gameboard.insertArray(pattern, 2, 2);
+    public void setPattern(byte[][] patternToSet) {
+        activeBoard = new DynamicBoard(10, 10);
+        moveGridValues = activeBoard.getMoveGridValues();
+        this.pattern = patternToSet;
+        activeBoard.insertArray(patternToSet, 2, 2);
     }
 }
