@@ -70,8 +70,8 @@
                                                     </VBox.margin>
                                                 </Spinner>
                                                 <Separator prefWidth="200.0" />
-                                                <CheckBox mnemonicParsing="false" text="Center pattern" />
-                                                <CheckBox mnemonicParsing="false" text="Automatically preview" />
+                                                <CheckBox fx:id="cbCenterPattern" mnemonicParsing="false" text="Center pattern" />
+                                                <CheckBox fx:id="cbAutoPreview" mnemonicParsing="false" text="Automatically preview" />
                                             </children>
                                             <padding>
                                                 <Insets left="10.0" top="15.0" />
@@ -84,31 +84,31 @@
                                         <VBox prefWidth="198.0" spacing="10.0">
                                             <children>
                                                 <Label text="Width (in pixels)" />
-                                                <Spinner>
+                                                <Spinner fx:id="spinnWidth">
                                        <VBox.margin>
                                           <Insets top="-7.0" />
                                        </VBox.margin></Spinner>
                                     <Separator prefWidth="200.0" />
                                                 <Label text="Height (in pixels)" />
-                                                <Spinner>
+                                                <Spinner fx:id="spinnHeight">
                                        <VBox.margin>
                                           <Insets top="-7.0" />
                                        </VBox.margin></Spinner>
                                     <Separator prefWidth="200.0" />
                                                 <Label text="Cell color" />
-                                                <ColorPicker>
+                                                <ColorPicker fx:id="cpCellColor">
                                        <VBox.margin>
                                           <Insets top="-7.0" />
                                        </VBox.margin></ColorPicker>
-                                                <CheckBox mnemonicParsing="false" text="Random cell colors" />
+                                                <CheckBox fx:id="cbRndCellColor" mnemonicParsing="false" text="Random cell colors" />
                                                 <Separator prefWidth="200.0" />
                                                 <Label text="Background color" />
-                                                <ColorPicker>
+                                                <ColorPicker fx:id="cpBackColor">
                                        <VBox.margin>
                                           <Insets top="-7.0" />
                                        </VBox.margin></ColorPicker>
                                     <Separator prefWidth="200.0" />
-                                    <CheckBox mnemonicParsing="false" text="Infinity loop" />
+                                    <CheckBox fx:id="cbInfinityLoop" mnemonicParsing="false" text="Infinity loop" />
                                             </children>
                                             <padding>
                                                 <Insets left="10.0" top="15.0" />

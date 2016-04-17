@@ -15,13 +15,13 @@ public final class GifMaker {
     private byte[][] pattern;
 
     private GIFWriter gifWriter;
-    private int gifWidth = 200;
-    private int gifHeight = 200;
+    private int gifWidth;
+    private int gifHeight;
     private String saveLocation;
-    private int durationBetweenFrames = 1000;
+    private int durationBetweenFrames;
     private double[] moveGridValues;
     private double cellSize;
-    private boolean centerPattern = true;
+    private boolean centerPattern;
 
     public GifMaker() throws IOException {
     }

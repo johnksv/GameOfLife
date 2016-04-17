@@ -1,7 +1,3 @@
-/*
- * Here comes the text of your license
- * Each line should be prefixed with  * 
- */
 package gol.s305089.controller;
 
 import gol.s305089.model.GifMaker;
@@ -14,6 +10,9 @@ import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.ColorPicker;
+import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.Spinner;
@@ -21,6 +20,8 @@ import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Region;
 import javafx.stage.FileChooser;
 
 /**
@@ -31,13 +32,31 @@ import javafx.stage.FileChooser;
 public class GifMakerController implements Initializable {
 
     @FXML
+    private BorderPane borderpane;
+    @FXML
     private Label labelCurrentDest;
     @FXML
     private Slider sliderCellSize;
     @FXML
+    private Spinner spinnTimeBetween;
+    @FXML
     private Spinner spinnNumIterations;
     @FXML
-    private Spinner spinnTimeBetween;
+    private Spinner spinnWidth;
+    @FXML
+    private Spinner spinnHeight;
+    @FXML
+    private ColorPicker cpCellColor;
+    @FXML
+    private ColorPicker cpBackColor;
+    @FXML
+    private CheckBox cbCenterPattern;
+    @FXML
+    private CheckBox cbAutoPreview;
+    @FXML
+    private CheckBox cbRndCellColor;
+    @FXML
+    private CheckBox cbInfinityLoop;
     @FXML
     private Tooltip tooltipSaveLoc;
     @FXML
@@ -55,25 +74,37 @@ public class GifMakerController implements Initializable {
         try {
             gifmaker = new GifMaker();
         } catch (IOException ex) {
-            System.err.println("File stream could not be established.. Try again");
+            System.err.println("File stream could not be established.. Try to open GIF-maker again..");
         }
         saveLocation = System.getProperty("user.home") + "\\golGif.gif";
         initSpinners();
         setGIFSaveLocation();
-        setGIFValuesFromSpinners();
+        setGIFValues();
     }
 
     private void initSpinners() {
         spinnNumIterations.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 100, 20, 1));
         spinnNumIterations.setEditable(true);
         spinnNumIterations.valueProperty().addListener((ObservableValue observable, Object oldValue, Object newValue) -> {
-            setGIFValuesFromSpinners();
+            autoUpdatedPreview();
         });
-        
+
         spinnTimeBetween.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 10000, 200, 100));
         spinnTimeBetween.setEditable(true);
         spinnTimeBetween.valueProperty().addListener((ObservableValue observable, Object oldValue, Object newValue) -> {
-            setGIFValuesFromSpinners();
+            autoUpdatedPreview();
+        });
+
+        spinnWidth.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 10000, 200, 100));
+        spinnWidth.setEditable(true);
+        spinnWidth.valueProperty().addListener((ObservableValue observable, Object oldValue, Object newValue) -> {
+            autoUpdatedPreview();
+        });
+
+        spinnHeight.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 10000, 200, 100));
+        spinnHeight.setEditable(true);
+        spinnHeight.valueProperty().addListener((ObservableValue observable, Object oldValue, Object newValue) -> {
+            autoUpdatedPreview();
         });
     }
 
@@ -91,11 +122,10 @@ public class GifMakerController implements Initializable {
         setGIFSaveLocation();
     }
 
-
     @FXML
     private void generateGIF() {
         setGIFSaveLocation();
-        setGIFValuesFromSpinners();
+        setGIFValues();
         try {
             gifmaker.writePatternToGIF(iterations);
             labelGenerateFeedback.setText("GIF was successfully created");
@@ -113,17 +143,22 @@ public class GifMakerController implements Initializable {
             File previewFile = File.createTempFile("golPreview", ".gif");
             gifmaker.setSaveLocation(previewFile.getAbsolutePath());
 
-            setGIFValuesFromSpinners();
+            setGIFValues();
 
             gifmaker.writePatternToGIF(iterations);
             Image previewGif = new Image(previewFile.toURI().toString());
             imgViewPreview.setImage(previewGif);
-            
+
             previewFile.delete();
 
         } catch (IOException ex) {
             System.err.println("There was an error previewing the file...\n" + ex);
         }
+    }
+
+    public void setByteBoard(Board activeBoard) {
+        this.activeByteBoard = activeBoard.getBoundingBoxBoard();
+        gifmaker.setPattern(activeByteBoard);
     }
 
     private void setGIFSaveLocation() {
@@ -132,14 +167,18 @@ public class GifMakerController implements Initializable {
         tooltipSaveLoc.setText(saveLocation);
     }
 
-    private void setGIFValuesFromSpinners() {
+    private void setGIFValues() {
         iterations = (int) spinnNumIterations.getValue();
-        gifmaker.setCellSize( sliderCellSize.getValue());
+        gifmaker.setCellSize(sliderCellSize.getValue());
         gifmaker.setDurationBetweenFrames((int) spinnTimeBetween.getValue());
+        gifmaker.setGifHeight((int) spinnHeight.getValue());
+        gifmaker.setGifWidth((int) spinnWidth.getValue());
+        gifmaker.setCenterPattern(cbCenterPattern.isSelected());
     }
 
-    public void setByteBoard(Board activeBoard) {
-        this.activeByteBoard = activeBoard.getBoundingBoxBoard();
-        gifmaker.setPattern(activeByteBoard);
+    private void autoUpdatedPreview() {
+        if (cbAutoPreview.isSelected()) {
+            previewGif();
+        }
     }
 }
