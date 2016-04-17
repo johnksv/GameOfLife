@@ -10,9 +10,9 @@ import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ColorPicker;
-import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.Spinner;
@@ -21,7 +21,7 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Region;
+import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 
 /**
@@ -63,21 +63,21 @@ public class GifMakerController implements Initializable {
     private Label labelGenerateFeedback;
     @FXML
     private ImageView imgViewPreview;
-
-    private byte[][] activeByteBoard;
+    //TODO Rnd Cell color, infity loop, automatic size of borderPane, OR clean code and GUI of it
     private GifMaker gifmaker;
     private String saveLocation;
     private int iterations;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        try {
-            gifmaker = new GifMaker();
-        } catch (IOException ex) {
-            System.err.println("File stream could not be established.. Try to open GIF-maker again..");
-        }
+
+        gifmaker = new GifMaker();
+
         saveLocation = System.getProperty("user.home") + "\\golGif.gif";
+
+        cpCellColor.setValue(Color.BLACK);
         initSpinners();
+        initListners();
         setGIFSaveLocation();
         setGIFValues();
     }
@@ -85,27 +85,27 @@ public class GifMakerController implements Initializable {
     private void initSpinners() {
         spinnNumIterations.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 100, 20, 1));
         spinnNumIterations.setEditable(true);
-        spinnNumIterations.valueProperty().addListener((ObservableValue observable, Object oldValue, Object newValue) -> {
-            autoUpdatedPreview();
-        });
 
         spinnTimeBetween.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 10000, 200, 100));
         spinnTimeBetween.setEditable(true);
-        spinnTimeBetween.valueProperty().addListener((ObservableValue observable, Object oldValue, Object newValue) -> {
-            autoUpdatedPreview();
-        });
 
         spinnWidth.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 10000, 200, 100));
         spinnWidth.setEditable(true);
-        spinnWidth.valueProperty().addListener((ObservableValue observable, Object oldValue, Object newValue) -> {
-            autoUpdatedPreview();
-        });
 
         spinnHeight.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 10000, 200, 100));
         spinnHeight.setEditable(true);
-        spinnHeight.valueProperty().addListener((ObservableValue observable, Object oldValue, Object newValue) -> {
-            autoUpdatedPreview();
-        });
+
+    }
+
+    private void initListners() {
+        sliderCellSize.valueProperty().addListener(this::autoUpdatedPreview);
+        spinnNumIterations.valueProperty().addListener(this::autoUpdatedPreview);
+        spinnTimeBetween.valueProperty().addListener(this::autoUpdatedPreview);
+        spinnWidth.valueProperty().addListener(this::autoUpdatedPreview);
+        spinnHeight.valueProperty().addListener(this::autoUpdatedPreview);
+        cpCellColor.valueProperty().addListener(this::autoUpdatedPreview);
+        cpBackColor.valueProperty().addListener(this::autoUpdatedPreview);
+        cbCenterPattern.selectedProperty().addListener(this::autoUpdatedPreview);
     }
 
     @FXML
@@ -126,6 +126,9 @@ public class GifMakerController implements Initializable {
     private void generateGIF() {
         setGIFSaveLocation();
         setGIFValues();
+        Alert alertGenerating = new Alert(Alert.AlertType.NONE, "Generating GIF");
+        alertGenerating.getButtonTypes().add(new ButtonType("Please wait..."));
+        alertGenerating.show();
         try {
             gifmaker.writePatternToGIF(iterations);
             labelGenerateFeedback.setText("GIF was successfully created");
@@ -134,11 +137,17 @@ public class GifMakerController implements Initializable {
             alert.setTitle("Error");
             alert.setHeaderText("Pattern to GIF");
             alert.showAndWait();
+        } finally {
+            alertGenerating.close();
         }
     }
 
     @FXML
     private void previewGif() {
+
+        Alert alert = new Alert(Alert.AlertType.NONE, "Generating preview");
+        alert.getButtonTypes().add(new ButtonType("Please wait..."));
+        alert.show();
         try {
             File previewFile = File.createTempFile("golPreview", ".gif");
             gifmaker.setSaveLocation(previewFile.getAbsolutePath());
@@ -153,12 +162,13 @@ public class GifMakerController implements Initializable {
 
         } catch (IOException ex) {
             System.err.println("There was an error previewing the file...\n" + ex);
+        } finally {
+            alert.close();
         }
     }
 
     public void setByteBoard(Board activeBoard) {
-        this.activeByteBoard = activeBoard.getBoundingBoxBoard();
-        gifmaker.setPattern(activeByteBoard);
+        gifmaker.setPattern(activeBoard.getBoundingBoxBoard());
     }
 
     private void setGIFSaveLocation() {
@@ -171,12 +181,16 @@ public class GifMakerController implements Initializable {
         iterations = (int) spinnNumIterations.getValue();
         gifmaker.setCellSize(sliderCellSize.getValue());
         gifmaker.setDurationBetweenFrames((int) spinnTimeBetween.getValue());
+
+        gifmaker.setCellColor(cpCellColor.getValue());
+        gifmaker.setBackgroundColor(cpBackColor.getValue());
+
         gifmaker.setGifHeight((int) spinnHeight.getValue());
         gifmaker.setGifWidth((int) spinnWidth.getValue());
         gifmaker.setCenterPattern(cbCenterPattern.isSelected());
     }
 
-    private void autoUpdatedPreview() {
+    private void autoUpdatedPreview(ObservableValue ob, Object oldValue, Object newValue) {
         if (cbAutoPreview.isSelected()) {
             previewGif();
         }

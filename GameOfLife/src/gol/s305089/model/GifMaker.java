@@ -2,12 +2,24 @@ package gol.s305089.model;
 
 import gol.model.Board.Board;
 import gol.model.Board.DynamicBoard;
-import java.awt.Color;
 import java.io.IOException;
+import javafx.scene.paint.Color;
 import lieng.GIFWriter;
 
 /**
- * @author s305089 Created: 18.03.2016 Last edited: 20.03.2016
+ * The GifMaker class delivers functionality to write GIFs with the GIFLib
+ * library by Henrik Lieng. It acts as an helper class between the Controller
+ * {@link gol.s305089.controller.GifMakerController} and the GIF library.
+ * <p>
+ * Be sure to call all set methods before calling
+ * {@link #writePatternToGIF(int)}, else an NullPointerException will occur.
+ * <p>
+ * For answers regarding recursion (from assignment paper) see
+ * {@link  #writePatternToGIF(int)}.
+ * <p>
+ * Created: 18.03.2016 Last edited: 17.04.2016
+ *
+ * @author s305089
  */
 public final class GifMaker {
 
@@ -22,20 +34,13 @@ public final class GifMaker {
     private double[] moveGridValues;
     private double cellSize;
     private boolean centerPattern;
+    private java.awt.Color cellColor;
+    private java.awt.Color backgroundColor;
 
-    public GifMaker() throws IOException {
-    }
-
-    public void writePatternToGIF(int iterations) throws IOException {
-        gifWriter = new GIFWriter(gifWidth, gifHeight, saveLocation, durationBetweenFrames);
-        if (activeBoard != null || pattern != null) {
-            //If not called, manipulations is done on the current gen of this activeBoard.
-            //Makes an new board with the "start" pattern.
-            setPattern(pattern);
-            writeGIF(iterations);
-        } else {
-            System.err.println("Pattern is not set. Be sure that setPattern() is called first");
-        }
+    /**
+     * Class constructor.
+     */
+    public GifMaker() {
     }
 
     /**
@@ -45,12 +50,28 @@ public final class GifMaker {
      * testen, diskuter nå fordeler/ulemper med rekursjon for dette problemet.
      * Til slutt, bruk Internett til å finne ut om Java/JVM støtter
      * halerekursjon og eventuelt hvordan.
+     *
+     * @param iterations Number of iterations to draw in GIF.
+     * @throws java.io.IOException
      */
+    public void writePatternToGIF(int iterations) throws IOException {
+        gifWriter = new GIFWriter(gifWidth, gifHeight, saveLocation, durationBetweenFrames);
+        if (activeBoard != null || pattern != null) {
+            //If not called, manipulations is done on the current gen of this activeBoard.
+            //Makes an new board with the "start" pattern.
+            setPattern(pattern);
+            gifWriter.setBackgroundColor(backgroundColor);
+            writeGIF(iterations);
+        } else {
+            System.err.println("Pattern is not set. Be sure that setPattern() is called first");
+        }
+    }
+
     private void writeGIF(int iterations) throws IOException {
         if (iterations > 0) {
             iterations--;
+            gifWriter.flush();
 
-            byte[][] boundedBoard = activeBoard.getBoundingBoxBoard();
             for (int y = 1; y < activeBoard.getArrayLength(); y++) {
                 for (int x = 1; x < activeBoard.getArrayLength(y); x++) {
                     if (activeBoard.getCellState(y, x)) {
@@ -62,7 +83,7 @@ public final class GifMaker {
 
                         if (x1 >= 0 && x2 >= 0 && y1 >= 0 && y2 >= 0) {
                             if (x1 < gifWidth && x2 < gifWidth && y1 < gifHeight && y2 < gifHeight) {
-                                gifWriter.fillRect(x1, x2, y1, y2, Color.BLACK);
+                                gifWriter.fillRect(x1, x2, y1, y2, cellColor);
                             }
                         }
                     }
@@ -77,35 +98,41 @@ public final class GifMaker {
     }
 
     /**
-     * @param cellSize the cellSize to set
+     * Set the size for each cell in the GIF.
+     *
+     * @param cellSize the size given in pixels
      */
     public void setCellSize(double cellSize) {
         this.cellSize = cellSize;
     }
 
     /**
-     * @param durationBetweenFrames the durationBetweenFrames to set
+     * Sets the duration between each frame in the GIF.
+     *
+     * @param durationBetweenFrames Given in milliseconds. If this value is 0 or
+     * less, the value is set to 1.
      */
     public void setDurationBetweenFrames(int durationBetweenFrames) {
-        this.durationBetweenFrames = durationBetweenFrames;
+        this.durationBetweenFrames = durationBetweenFrames <= 0 ? 1 : durationBetweenFrames;
     }
 
     /**
-     * @param gifWidth the gifWidth to set
+     * @param gifWidth set the width of the GIF, in pixels
      */
     public void setGifWidth(int gifWidth) {
         this.gifWidth = gifWidth;
     }
 
     /**
-     * @param gifHeight the gifHeight to set
+     * @param gifHeight set the height of the GIF, in pixels
      */
     public void setGifHeight(int gifHeight) {
         this.gifHeight = gifHeight;
     }
 
     /**
-     * @param SaveLocation the saveLocation to set
+     * @param SaveLocation set the save location to be used when generating a
+     * GIF.
      */
     public void setSaveLocation(String SaveLocation) {
         this.saveLocation = SaveLocation;
@@ -122,8 +149,8 @@ public final class GifMaker {
         moveGridValues = activeBoard.getMoveGridValues();
         this.pattern = patternToSet;
         if (centerPattern) {
-            int y = (int) ((gifHeight / cellSize) / 2  - patternToSet.length/2);
-            int x = (int) ((gifWidth / cellSize) / 2 - patternToSet[0].length/2);
+            int y = (int) ((gifHeight / cellSize) / 2 - patternToSet.length / 2);
+            int x = (int) ((gifWidth / cellSize) / 2 - patternToSet[0].length / 2);
             activeBoard.insertArray(patternToSet, y, x);
         } else {
             activeBoard.insertArray(patternToSet, 2, 2);
@@ -131,7 +158,29 @@ public final class GifMaker {
         activeBoard.setCellSize(cellSize);
     }
 
+    /**
+     * Set if the pattern should be centered on GIF or not.
+     *
+     * @param centerPattern If false, the pattern will be placed at top-left
+     * corner
+     */
     public void setCenterPattern(boolean centerPattern) {
         this.centerPattern = centerPattern;
+    }
+
+    public void setCellColor(Color cellColor) {
+        //Converts each rgb double values to int (in domain 0-255).
+        java.awt.Color newColor = new java.awt.Color((int) (cellColor.getRed() * 255),
+                (int) (cellColor.getGreen() * 255),
+                (int) (cellColor.getBlue() * 255));
+        this.cellColor = newColor;
+    }
+
+    public void setBackgroundColor(Color backgroundColor) {
+        //Converts each rgb double values to int (in domain 0-255).
+        java.awt.Color newColor = new java.awt.Color((int) (backgroundColor.getRed() * 255),
+                (int) (backgroundColor.getGreen() * 255),
+                (int) (backgroundColor.getBlue() * 255));
+        this.backgroundColor = newColor;
     }
 }

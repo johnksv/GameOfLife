@@ -18,7 +18,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane fx:id="borderpane" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="519.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gol.s305089.controller.GifMakerController">
+<BorderPane fx:id="borderpane" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="519.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gol.s305089.controller.GifMakerController">
     <left>
      
     </left>
@@ -85,30 +85,34 @@
                                             <children>
                                                 <Label text="Width (in pixels)" />
                                                 <Spinner fx:id="spinnWidth">
-                                       <VBox.margin>
-                                          <Insets top="-7.0" />
-                                       </VBox.margin></Spinner>
-                                    <Separator prefWidth="200.0" />
+                                                    <VBox.margin>
+                                                        <Insets top="-7.0" />
+                                                    </VBox.margin>
+                                                </Spinner>
+                                                <Separator prefWidth="200.0" />
                                                 <Label text="Height (in pixels)" />
                                                 <Spinner fx:id="spinnHeight">
-                                       <VBox.margin>
-                                          <Insets top="-7.0" />
-                                       </VBox.margin></Spinner>
-                                    <Separator prefWidth="200.0" />
+                                                    <VBox.margin>
+                                                        <Insets top="-7.0" />
+                                                    </VBox.margin>
+                                                </Spinner>
+                                                <Separator prefWidth="200.0" />
                                                 <Label text="Cell color" />
                                                 <ColorPicker fx:id="cpCellColor">
-                                       <VBox.margin>
-                                          <Insets top="-7.0" />
-                                       </VBox.margin></ColorPicker>
+                                                    <VBox.margin>
+                                                        <Insets top="-7.0" />
+                                                    </VBox.margin>
+                                                </ColorPicker>
                                                 <CheckBox fx:id="cbRndCellColor" mnemonicParsing="false" text="Random cell colors" />
                                                 <Separator prefWidth="200.0" />
                                                 <Label text="Background color" />
                                                 <ColorPicker fx:id="cpBackColor">
-                                       <VBox.margin>
-                                          <Insets top="-7.0" />
-                                       </VBox.margin></ColorPicker>
-                                    <Separator prefWidth="200.0" />
-                                    <CheckBox fx:id="cbInfinityLoop" mnemonicParsing="false" text="Infinity loop" />
+                                                    <VBox.margin>
+                                                        <Insets top="-7.0" />
+                                                    </VBox.margin>
+                                                </ColorPicker>
+                                                <Separator prefWidth="200.0" />
+                                                <CheckBox fx:id="cbInfinityLoop" mnemonicParsing="false" text="Infinity loop" />
                                             </children>
                                             <padding>
                                                 <Insets left="10.0" top="15.0" />
@@ -117,41 +121,41 @@
                                     </content>
                                 </Tab>
                             </tabs>
-                     <padding>
-                        <Insets bottom="60.0" />
-                     </padding>
+                            <padding>
+                                <Insets bottom="60.0" />
+                            </padding>
                         </TabPane>
-                  <VBox layoutY="393" AnchorPane.bottomAnchor="0.0">
-                     <children>
-                        <Separator prefWidth="200.0">
-                           <padding>
-                              <Insets bottom="5.0" />
-                           </padding>
-                        </Separator>
-                              <HBox spacing="38.0">
-                                  <children>
-                                      <Button mnemonicParsing="false" onAction="#previewGif" text="Preview">
-                                          <HBox.margin>
-                                              <Insets />
-                                          </HBox.margin>
-                                      </Button>
-                                      <Button mnemonicParsing="false" onAction="#generateGIF" text="Generate GIF" />
-                                  </children>
-                           <padding>
-                              <Insets left="10.0" />
-                           </padding>
-                              </HBox>
-                              <Label fx:id="labelGenerateFeedback">
-                                  <VBox.margin>
-                                      <Insets left="10.0" />
-                                  </VBox.margin>
-                              </Label>
-                     </children>
-                  </VBox>
+                        <VBox layoutY="393" AnchorPane.bottomAnchor="0.0">
+                            <children>
+                                <Separator prefWidth="200.0">
+                                    <padding>
+                                        <Insets bottom="5.0" />
+                                    </padding>
+                                </Separator>
+                                <HBox spacing="38.0">
+                                    <children>
+                                        <Button mnemonicParsing="false" onAction="#previewGif" text="Preview">
+                                            <HBox.margin>
+                                                <Insets />
+                                            </HBox.margin>
+                                        </Button>
+                                        <Button mnemonicParsing="false" onAction="#generateGIF" text="Generate GIF" />
+                                    </children>
+                                    <padding>
+                                        <Insets left="10.0" />
+                                    </padding>
+                                </HBox>
+                                <Label fx:id="labelGenerateFeedback">
+                                    <VBox.margin>
+                                        <Insets left="10.0" />
+                                    </VBox.margin>
+                                </Label>
+                            </children>
+                        </VBox>
                     </children>
-               <padding>
-                  <Insets top="-4.0" />
-               </padding>
+                    <padding>
+                        <Insets top="-4.0" />
+                    </padding>
                 </AnchorPane>
             </content>
         </TitledPane>
