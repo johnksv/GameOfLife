@@ -13,7 +13,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
-import javafx.scene.control.ProgressIndicator;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 
@@ -27,9 +28,15 @@ public class StatsController implements Initializable {
     @FXML
     private LineChart chart;
     @FXML
-    private ProgressIndicator progIndicator;
-    @FXML
     private Spinner spinnerIterations;
+    @FXML
+    private CheckBox cbLivingCells;
+    @FXML
+    private CheckBox cbChangeLiving;
+    @FXML
+    private CheckBox cbSimilarity;
+    @FXML
+    private RadioButton rbCheckPrev;
 
     private Stats gameStats;
 
@@ -43,8 +50,8 @@ public class StatsController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         gameStats = new Stats();
-        gameStats.setPattern(new byte[][]{{0, 1, 0}, {0, 1, 0}, {0, 1, 0}});
         initView();
+        intiListners();
     }
 
     private void initView() {
@@ -55,36 +62,52 @@ public class StatsController implements Initializable {
 
         spinnerIterations.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(3, 100, 20, 1));
         spinnerIterations.setEditable(true);
-        spinnerIterations.valueProperty().addListener((ObservableValue observable, Object oldValue, Object newValue) -> {
-            calculatGameStats();
-        });
     }
 
-    @FXML
-    private void calculatGameStats() {
+    private void intiListners() {
+        spinnerIterations.valueProperty().addListener(this::calculatGameStats);
+        cbLivingCells.selectedProperty().addListener(this::calculatGameStats);
+        cbChangeLiving.selectedProperty().addListener(this::calculatGameStats);
+        cbSimilarity.selectedProperty().addListener(this::calculatGameStats);
+        rbCheckPrev.selectedProperty().addListener(this::calculatGameStats);
+    }
+
+    private void calculatGameStats(ObservableValue observable, Object oldValue, Object newValue) {
         displayData((int) spinnerIterations.getValue());
+    }
+    @FXML
+    private void onActionCalculate(){
+        calculatGameStats(null, null, null);
     }
 
     private void displayData(int iterations) {
-        progIndicator.setVisible(true);
 
         livingCells.getData().clear();
         changeLivingCells.getData().clear();
         similarityMeasure.getData().clear();
 
-        //TODO Thread
-        int[][] gameData = gameStats.getStatistics(iterations);
+        gameStats.setCheckSimilarityPrevGen(rbCheckPrev.isSelected());
 
-        //ignors the last iteration
+        //TODO Threading(?)
+        int[][] gameData = gameStats.getStatistics(iterations,
+                cbChangeLiving.isSelected(), cbSimilarity.isSelected());
+
+        //Ignors the last iteration of the list
         for (int i = 0; i < gameData.length - 1; i++) {
-            livingCells.getData().add(new XYChart.Data("" + i, gameData[i][0]));
-            changeLivingCells.getData().add(new XYChart.Data("" + i, gameData[i][1]));
-            similarityMeasure.getData().add(new XYChart.Data("" + i, gameData[i][2]));
+            if (cbLivingCells.isSelected()) {
+                livingCells.getData().add(new XYChart.Data("" + i, gameData[i][0]));
+            }
+            if (cbChangeLiving.isSelected()) {
+                changeLivingCells.getData().add(new XYChart.Data("" + i, gameData[i][1]));
+            }
+            if (cbSimilarity.isSelected()) {
+                similarityMeasure.getData().add(new XYChart.Data("" + i, gameData[i][2]));
+            }
+
         }
-        
-        progIndicator.setVisible(false);
+
     }
-    
+
     public void setByteBoard(Board activeBoard) {
         gameStats.setPattern(activeBoard.getBoundingBoxBoard());
     }
