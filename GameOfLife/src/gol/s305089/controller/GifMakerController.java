@@ -57,7 +57,7 @@ public class GifMakerController implements Initializable {
         } catch (IOException ex) {
             System.err.println("File stream could not be established.. Try again");
         }
-        saveLocation = System.getProperty("user.home") + "/golGif.gif";
+        saveLocation = System.getProperty("user.home") + "\\golGif.gif";
         initSpinners();
         setGIFSaveLocation();
         setGIFValuesFromSpinners();
@@ -65,12 +65,13 @@ public class GifMakerController implements Initializable {
 
     private void initSpinners() {
         spinnNumIterations.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 100, 20, 1));
-        spinnTimeBetween.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 10000, 200, 100));
         spinnNumIterations.setEditable(true);
-        spinnTimeBetween.setEditable(true);
         spinnNumIterations.valueProperty().addListener((ObservableValue observable, Object oldValue, Object newValue) -> {
             setGIFValuesFromSpinners();
         });
+        
+        spinnTimeBetween.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 10000, 200, 100));
+        spinnTimeBetween.setEditable(true);
         spinnTimeBetween.valueProperty().addListener((ObservableValue observable, Object oldValue, Object newValue) -> {
             setGIFValuesFromSpinners();
         });
@@ -79,13 +80,13 @@ public class GifMakerController implements Initializable {
     @FXML
     private void chooseSaveDest() {
         FileChooser filechooser = new FileChooser();
-        //TODO set filter for filechooser to .gif
+        filechooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Graphics Interchange Format", ".gif"));
         File fileSaveLocation = filechooser.showSaveDialog(null);
 
         if (fileSaveLocation != null) {
             saveLocation = fileSaveLocation.toPath().toString();
         } else {
-            saveLocation = System.getProperty("user.home");
+            saveLocation = System.getProperty("user.home") + "\\golGif.gif";
         }
         setGIFSaveLocation();
     }
