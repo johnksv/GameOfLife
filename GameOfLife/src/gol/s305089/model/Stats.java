@@ -164,7 +164,6 @@ public class Stats {
         //TODO Move Method to helper method?
         gameboard = new DynamicBoard(10, 10);
         originalPattern = Pattern;
-        gameboard.clearBoard();
         gameboard.insertArray(originalPattern, 1, 1);
     }
 

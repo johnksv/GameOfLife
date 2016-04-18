@@ -8,9 +8,9 @@ import javafx.stage.Screen;
 /**
  * @author John Kasper
  */
-public class UsefullMethods {
+public class Util {
 
-    private UsefullMethods() {
+    private Util() {
     }
 
     public static int[] calculateBiggestDimension(byte[][] patternToCalculate, int iterations) {

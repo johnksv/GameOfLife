@@ -2,7 +2,7 @@ package gol.s305089.controller;
 
 import gol.model.Board.ArrayBoard;
 import gol.model.Board.Board;
-import gol.s305089.UsefullMethods;
+import gol.s305089.Util;
 import gol.s305089.model.WriteFile;
 import java.io.File;
 import java.io.IOException;
@@ -181,7 +181,7 @@ public class PatternEditorController implements Initializable {
         byte[][] patternToDraw = activeBoard.getBoundingBoxBoard();
 
         //TODO for strip to be dynamic after size
-        //int[] largestDimension = UsefullMethods.calculateBiggestDimension(patternToDraw, 20);
+        //int[] largestDimension = Util.calculateBiggestDimension(patternToDraw, 20);
         theStripBoard = new ArrayBoard(100, 100);
         theStripBoard.insertArray(patternToDraw, 10, 10);
         initTheStrip();
@@ -215,9 +215,9 @@ public class PatternEditorController implements Initializable {
     public void setActiveBoard(Board gameBoardToCopy) {
         byteBoard = gameBoardToCopy.getBoundingBoxBoard();
 
-        int rows = (int) (UsefullMethods.getScreenSize()[1]
+        int rows = (int) (Util.getScreenSize()[1]
                 / gameBoardToCopy.getCellSize());
-        int columns = (int) (UsefullMethods.getScreenSize()[0]
+        int columns = (int) (Util.getScreenSize()[0]
                 / gameBoardToCopy.getCellSize());
 
         activeBoard = new ArrayBoard(rows, columns);

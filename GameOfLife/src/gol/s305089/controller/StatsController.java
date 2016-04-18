@@ -30,6 +30,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.PopupWindow;
 
 /**
  * FXML Controller class
@@ -130,15 +131,19 @@ public class StatsController implements Initializable {
     }
 
     private void updateToolTips() throws IOException {
+        setPattern(originalPattern);
+        
         GifMaker gifmaker = new GifMaker();
         gifmaker.setCenterPattern(true);
 
-        //Set ImgView original first.
+        //Set the original pattern to imgView First.
+        // gifmaker.setAutoCellSize(true);
         generateTolltipGIF(gifmaker, imgViewOriginalPattern);
+       
 
         for (XYChart.Data<String, Integer> data : similarityMeasure.getData()) {
             Tooltip tooltip = new Tooltip();
-           
+
             ImageView imgViewCurrentPattern = new ImageView();
             generateTolltipGIF(gifmaker, imgViewCurrentPattern);
 
@@ -146,7 +151,12 @@ public class StatsController implements Initializable {
             container.getChildren().addAll(new Label("Current:"), imgViewCurrentPattern);
 
             tooltip.setGraphic(container);
-            Tooltip.install(data.getNode(), tooltip);
+            data.getNode().setOnMouseEntered(event -> {
+                double anchorX = data.getNode().getScene().getWindow().getX() + 20;
+                double anchorY = data.getNode().getScene().getWindow().getY() + 20;
+                tooltip.show(data.getNode(), anchorX + event.getSceneX(), anchorY + event.getSceneY());
+            });
+            data.getNode().setOnMouseExited(event -> tooltip.hide());
 
             activeBoard.nextGen();
         }
@@ -165,10 +175,16 @@ public class StatsController implements Initializable {
     }
 
     public void setByteBoard(Board activeBoard) {
-        this.activeBoard = new DynamicBoard(10, 10);
-        originalPattern = activeBoard.getBoundingBoxBoard();
-        this.activeBoard.insertArray(originalPattern, 1, 1);
-
-        gameStats.setPattern(originalPattern);
+        setPattern(activeBoard.getBoundingBoxBoard());
+        gameStats.setPattern(activeBoard.getBoundingBoxBoard());
     }
+
+    public void setPattern(byte[][] Pattern) {
+        //TODO dynaimc size of board
+        //TODO Move Method to helper method?
+        activeBoard = new DynamicBoard(10, 10);
+        originalPattern = Pattern;
+        activeBoard.insertArray(originalPattern, 1, 1);
+    }
+
 }

@@ -1,5 +1,6 @@
 package gol.s305089.model;
 
+import gol.controller.UsefullMethods;
 import gol.model.Board.Board;
 import gol.model.Board.DynamicBoard;
 import java.io.IOException;
@@ -31,6 +32,7 @@ public final class GifMaker {
     private double[] moveGridValues;
     private double cellSize = 10;
     private boolean centerPattern = false;
+    private boolean autoCellSize = false;
     private java.awt.Color cellColor = java.awt.Color.BLACK;
     private java.awt.Color backgroundColor = java.awt.Color.WHITE;
 
@@ -52,6 +54,10 @@ public final class GifMaker {
      * @throws java.io.IOException
      */
     public void writePatternToGIF(int iterations) throws IOException {
+        if (autoCellSize) {
+            calculateCellSize();
+        }
+        
         gifWriter = new GIFWriter(gifWidth, gifHeight, saveLocation, durationBetweenFrames);
         if (activeBoard != null || originalPattern != null) {
             //If not called, manipulations is done on the current gen of this activeBoard.
@@ -92,6 +98,16 @@ public final class GifMaker {
         } else {
             gifWriter.close();
         }
+    }
+
+    private void calculateCellSize() {
+        int longestRow = UsefullMethods.longestRow(originalPattern);
+        cellSize = gifHeight / originalPattern.length;
+        cellSize = cellSize < gifWidth / longestRow ? gifWidth / longestRow : cellSize;
+
+        //For spacing
+        gifHeight += 2*cellSize;
+        gifWidth += 2*cellSize;
     }
 
     /**
@@ -158,11 +174,27 @@ public final class GifMaker {
     /**
      * Set if the originalPattern should be centered on GIF or not.
      *
-     * @param centerPattern If false, the originalPattern will be placed at top-left
- corner
+     * @param centerPattern If false, the originalPattern will be placed at
+     * top-left corner
      */
     public void setCenterPattern(boolean centerPattern) {
         this.centerPattern = centerPattern;
+    }
+
+    /**
+     * Calculates the maximum cell size so all cells in first generation will
+     * fill the gif.
+     *
+     * Be aware that this only set the cell size based on the length/size of the
+     * first generation of the board.
+     *
+     * If this method is set to false under runtime, be sure to call
+     * {@link #setCellSize(double)} to not use this value.
+     *
+     * @param autoCellSize
+     */
+    public void setAutoCellSize(boolean autoCellSize) {
+        this.autoCellSize = autoCellSize;
     }
 
     public void setCellColor(Color cellColor) {

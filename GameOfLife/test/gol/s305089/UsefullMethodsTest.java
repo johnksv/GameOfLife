@@ -27,7 +27,7 @@ public class UsefullMethodsTest {
         byte[][] patternToCalculate = new byte[][]{{64, 64, 64}};
         int iterations = 10;
         int[] expResult = new int[]{3,3};
-        int[] result = UsefullMethods.calculateBiggestDimension(patternToCalculate, iterations);
+        int[] result = Util.calculateBiggestDimension(patternToCalculate, iterations);
         assertArrayEquals(expResult, result);
         
     }
