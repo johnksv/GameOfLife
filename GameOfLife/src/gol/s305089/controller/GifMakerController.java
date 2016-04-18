@@ -144,10 +144,6 @@ public class GifMakerController implements Initializable {
 
     @FXML
     private void previewGif() {
-
-        Alert alert = new Alert(Alert.AlertType.NONE, "Generating preview");
-        alert.getButtonTypes().add(new ButtonType("Please wait..."));
-        alert.show();
         try {
             File previewFile = File.createTempFile("golPreview", ".gif");
             gifmaker.setSaveLocation(previewFile.getAbsolutePath());
@@ -162,8 +158,6 @@ public class GifMakerController implements Initializable {
 
         } catch (IOException ex) {
             System.err.println("There was an error previewing the file...\n" + ex);
-        } finally {
-            alert.close();
         }
     }
 
