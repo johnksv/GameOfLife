@@ -9,7 +9,7 @@ import gol.model.Board.DynamicBoard;
 public class Stats {
 
     private Board gameboard;
-    private byte[][] startPattern;
+    private byte[][] originalPattern;
     private int[] livingCells;
     private int[] changeLivingCells;
     private int[] similarityMeasure;
@@ -59,7 +59,7 @@ public class Stats {
         int[] countOfLiving = new int[iterationsToCalcualte];
         for (int i = 0; i < countOfLiving.length; i++) {
             if (i == 0) {
-                setPattern(startPattern);
+                setPattern(originalPattern);
             }
 
             int livingThisGen = 0;
@@ -82,7 +82,7 @@ public class Stats {
             countLiving(iterationsToCalcualte + 1);
         }
         int[] countChangeOfLiving = new int[iterationsToCalcualte];
-        setPattern(startPattern);
+        setPattern(originalPattern);
         for (int time = 0; time < iterationsToCalcualte - 1; time++) {
             countChangeOfLiving[time] = livingCells[time + 1] - livingCells[time];
             gameboard.nextGen();
@@ -94,7 +94,7 @@ public class Stats {
         int[] similarity = new int[iterationsToCalcualte + 1];
         calculateGeometricFactor(iterationsToCalcualte);
 
-        setPattern(startPattern);
+        setPattern(originalPattern);
 
         for (int time1 = 0; time1 < iterationsToCalcualte; time1++) {
             double thetaTime1 = getTheta(time1);
@@ -137,7 +137,7 @@ public class Stats {
      */
     private void calculateGeometricFactor(int iterationsToCalcualte) {
         geometricFactor = new int[iterationsToCalcualte + 1];
-        setPattern(startPattern);
+        setPattern(originalPattern);
 
         for (int iterations = 0; iterations < iterationsToCalcualte; iterations++) {
             byte[][] boundedBoard = gameboard.getBoundingBoxBoard();
@@ -163,9 +163,9 @@ public class Stats {
         //TODO dynaimc size of board
         //TODO Move Method to helper method?
         gameboard = new DynamicBoard(10, 10);
-        startPattern = Pattern;
+        originalPattern = Pattern;
         gameboard.clearBoard();
-        gameboard.insertArray(startPattern, 1, 1);
+        gameboard.insertArray(originalPattern, 1, 1);
     }
 
     public void setCheckSimilarityPrevGen(boolean checkSimilarityPrevGen) {

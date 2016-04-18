@@ -11,9 +11,6 @@ import lieng.GIFWriter;
  * library by Henrik Lieng. It acts as an helper class between the Controller
  * {@link gol.s305089.controller.GifMakerController} and the GIF library.
  * <p>
- * Be sure to call all set methods before calling
- * {@link #writePatternToGIF(int)}, else an NullPointerException will occur.
- * <p>
  * For answers regarding recursion (from assignment paper) see
  * {@link  #writePatternToGIF(int)}.
  * <p>
@@ -24,18 +21,18 @@ import lieng.GIFWriter;
 public final class GifMaker {
 
     private Board activeBoard;
-    private byte[][] pattern;
+    private byte[][] originalPattern;
 
     private GIFWriter gifWriter;
-    private int gifWidth;
-    private int gifHeight;
+    private int gifWidth = 200;
+    private int gifHeight = 200;
     private String saveLocation;
-    private int durationBetweenFrames;
+    private int durationBetweenFrames = 500;
     private double[] moveGridValues;
-    private double cellSize;
-    private boolean centerPattern;
-    private java.awt.Color cellColor;
-    private java.awt.Color backgroundColor;
+    private double cellSize = 10;
+    private boolean centerPattern = false;
+    private java.awt.Color cellColor = java.awt.Color.BLACK;
+    private java.awt.Color backgroundColor = java.awt.Color.WHITE;
 
     /**
      * Class constructor.
@@ -56,10 +53,10 @@ public final class GifMaker {
      */
     public void writePatternToGIF(int iterations) throws IOException {
         gifWriter = new GIFWriter(gifWidth, gifHeight, saveLocation, durationBetweenFrames);
-        if (activeBoard != null || pattern != null) {
+        if (activeBoard != null || originalPattern != null) {
             //If not called, manipulations is done on the current gen of this activeBoard.
-            //Makes an new board with the "start" pattern.
-            setPattern(pattern);
+            //Makes an new board with the "start" originalPattern.
+            setPattern(originalPattern);
             gifWriter.setBackgroundColor(backgroundColor);
             writeGIF(iterations);
         } else {
@@ -142,12 +139,12 @@ public final class GifMaker {
      * Constructs an new Board instance, and inserts this board
      *
      * @see gol.model.Board.Board#insertArray(byte[][], int, int)
-     * @param patternToSet the pattern to set
+     * @param patternToSet the originalPattern to set
      */
     public void setPattern(byte[][] patternToSet) {
         activeBoard = new DynamicBoard(10, 10);
         moveGridValues = activeBoard.getMoveGridValues();
-        this.pattern = patternToSet;
+        this.originalPattern = patternToSet;
         if (centerPattern) {
             int y = (int) ((gifHeight / cellSize) / 2 - patternToSet.length / 2);
             int x = (int) ((gifWidth / cellSize) / 2 - patternToSet[0].length / 2);
@@ -159,10 +156,10 @@ public final class GifMaker {
     }
 
     /**
-     * Set if the pattern should be centered on GIF or not.
+     * Set if the originalPattern should be centered on GIF or not.
      *
-     * @param centerPattern If false, the pattern will be placed at top-left
-     * corner
+     * @param centerPattern If false, the originalPattern will be placed at top-left
+ corner
      */
     public void setCenterPattern(boolean centerPattern) {
         this.centerPattern = centerPattern;

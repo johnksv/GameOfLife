@@ -13,11 +13,12 @@
 <?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane prefHeight="450.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gol.s305089.controller.StatsController">
+<BorderPane prefHeight="450.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gol.s305089.controller.StatsController">
    <center>
       <StackPane>
          <children>
@@ -67,6 +68,13 @@
                   </VBox>
                   <Separator prefWidth="200.0" />
                   <Button mnemonicParsing="false" onAction="#onActionCalculate" text="Calculate stats" />
+                  <Separator prefWidth="200.0" />
+                  <Label text="Original:">
+                     <VBox.margin>
+                        <Insets bottom="-7.0" top="-7.0" />
+                     </VBox.margin>
+                  </Label>
+                  <ImageView fx:id="imgViewOriginalPattern" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
                </children>
             </VBox>
          </content>

@@ -1,7 +1,3 @@
-/*
- * Here comes the text of your license
- * Each line should be prefixed with  * 
- */
 package gol.s305089.controller;
 
 import gol.model.Board.ArrayBoard;
@@ -14,10 +10,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.ResourceBundle;
-import javafx.beans.value.ObservableValue;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -25,8 +18,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
@@ -35,7 +26,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
-import javafx.scene.transform.Affine;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -43,7 +33,7 @@ import javafx.stage.Stage;
 /**
  * FXML Controller class
  *
- * @author John Kasper
+ * @author s305089
  */
 public class PatternEditorController implements Initializable {
 
@@ -78,7 +68,7 @@ public class PatternEditorController implements Initializable {
     private final Color backgroundColor;
     private int mousePositionX, mousePositionY;
     private final List<GraphicsContext> theStripGC = new ArrayList<>();
-    private double theStripOffset = 20;
+    private final double theStripOffset = 20;
 
     public PatternEditorController() {
         this.backgroundColor = Color.web("#F4F4F4");
@@ -241,14 +231,8 @@ public class PatternEditorController implements Initializable {
         gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
         gc.setFill(cellColor);
         for (int i = 1; i < activeBoard.getArrayLength(); i++) {
-            if (canvas.getHeight() < i * activeBoard.getCellSize() + i * activeBoard.getGridSpacing()) {
-                //TODO Så den ikke tegner det som er utenfor
-            }
             for (int j = 1; j < activeBoard.getArrayLength(i); j++) {
                 if (activeBoard.getCellState(i, j)) {
-                    if (canvas.getWidth() < j * activeBoard.getCellSize() + j * activeBoard.getGridSpacing()) {
-                        //TODO Så den ikke tegner det som er utenfor
-                    }
                     gc.fillRect(j * activeBoard.getCellSize() + j * activeBoard.getGridSpacing(),
                             i * activeBoard.getCellSize() + i * activeBoard.getGridSpacing(),
                             activeBoard.getCellSize(),
