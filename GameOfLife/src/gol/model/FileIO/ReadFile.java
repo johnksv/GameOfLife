@@ -30,9 +30,7 @@ public class ReadFile {
         String path = file.toString();
         String[] token = path.split("\\.");
         String fileExt = token[token.length - 1];
-        List<String> list = Files.readAllLines(file);
-
-        String[] readFile = list.toArray(new String[0]);
+        String[] readFile = Files.readAllLines(file).toArray(new String[0]);
 
         switch (fileExt) {
             case "cells":

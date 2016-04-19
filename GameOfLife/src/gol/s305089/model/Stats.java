@@ -12,7 +12,7 @@ public class Stats {
     private byte[][] originalPattern;
     private int[] livingCells;
     private int[] changeLivingCells;
-    private int[] similarityMeasure;
+    private int[][] similarityMeasure;
     private int[] geometricFactor;
 
     private final double alpha = 0.5;
@@ -21,7 +21,7 @@ public class Stats {
     private boolean checkSimilarityPrevGen;
 
     public int[][] getStatistics(int iterations, boolean calcChangeLiving, boolean calcSimilarity) {
-        int[][] stats = new int[iterations + 1][3];
+        int[][] stats = new int[iterations + 1][4];
 
         livingCells = countLiving(iterations);
         changeLivingCells = calcChangeLiving ? changeInLiving(iterations) : null;
@@ -38,7 +38,8 @@ public class Stats {
                 stats[i][1] = changeLivingCells[i];
             }
             if (similarityMeasure != null) {
-                stats[i][2] = similarityMeasure[i];
+                stats[i][2] = similarityMeasure[i][0];
+                stats[i][3] = similarityMeasure[i][1];
             }
         }
 
@@ -90,8 +91,13 @@ public class Stats {
         return countChangeOfLiving;
     }
 
-    public int[] similarityMeasure(int iterationsToCalcualte) {
-        int[] similarity = new int[iterationsToCalcualte + 1];
+    /**
+     * 
+     * @param iterationsToCalcualte
+     * @return First index: similarityMeasure, second index: itNr of closest match.
+     */
+    public int[][] similarityMeasure(int iterationsToCalcualte) {
+        int[][] similarity = new int[iterationsToCalcualte + 1][2];
         calculateGeometricFactor(iterationsToCalcualte);
 
         setPattern(originalPattern);
@@ -100,16 +106,18 @@ public class Stats {
             double thetaTime1 = getTheta(time1);
 
             int max = 0;
-            //Checks if future generations is similar
+            int itClosestMatch = -1;
+            //Checks if future or prev generations is similar
             for (int time2 = 0; time2 < iterationsToCalcualte; time2++) {
                 if (!checkSimilarityPrevGen && time2 == 0) {
+                    //Check only future generations
                     time2 = time1;
                 }
                 if (time1 != time2) {
                     double thetaTime2 = getTheta(time2);
                     double measure = Math.min(thetaTime1, thetaTime2) / Math.max(thetaTime1, thetaTime2);
-                    if (Math.floor(measure * 100) <= max) {
-                    } else {
+                    if (Math.floor(measure * 100) > max) {
+                        itClosestMatch = time2;
                         max = (int) Math.floor(measure * 100);
                         if (max == 100) {
                             time2 = iterationsToCalcualte - 1;
@@ -117,7 +125,8 @@ public class Stats {
                     }
                 }
             }
-            similarity[time1] = max;
+            similarity[time1][0] = max;
+            similarity[time1][1] = itClosestMatch;
         }
 
         return similarity;

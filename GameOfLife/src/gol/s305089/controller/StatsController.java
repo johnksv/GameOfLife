@@ -1,7 +1,3 @@
-/*2
- * Here comes the text of your license
- * Each line should be prefixed with  * 
- */
 package gol.s305089.controller;
 
 import gol.model.Board.Board;
@@ -11,9 +7,8 @@ import gol.s305089.model.Stats;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -27,10 +22,8 @@ import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.stage.PopupWindow;
+import javafx.scene.text.Font;
 
 /**
  * FXML Controller class
@@ -57,10 +50,12 @@ public class StatsController implements Initializable {
     private Stats gameStats;
     private Board activeBoard;
     private byte[][] originalPattern;
+    private int[][] gameData;
 
     private final XYChart.Series<String, Integer> livingCells = new XYChart.Series();
     private final XYChart.Series<String, Integer> changeLivingCells = new XYChart.Series();
     private final XYChart.Series<String, Integer> similarityMeasure = new XYChart.Series();
+    private final ArrayList<Integer> simMeasureClosest = new ArrayList();
 
     /**
      * Initializes the controller class.
@@ -101,27 +96,16 @@ public class StatsController implements Initializable {
 
     private void displayData(int iterations) {
 
-        livingCells.getData().clear();
-        changeLivingCells.getData().clear();
-        similarityMeasure.getData().clear();
+        if (iterations < livingCells.getData().size()) {
+            plotDataOnChart(iterations);
+        } else {
+            gameStats.setCheckSimilarityPrevGen(rbCheckPrev.isSelected());
 
-        gameStats.setCheckSimilarityPrevGen(rbCheckPrev.isSelected());
+            //TODO Threading(?)
+            gameData = gameStats.getStatistics(iterations,
+                    cbChangeLiving.isSelected(), cbSimilarity.isSelected());
 
-        //TODO Threading(?)
-        int[][] gameData = gameStats.getStatistics(iterations,
-                cbChangeLiving.isSelected(), cbSimilarity.isSelected());
-
-        //Ignors the last iteration of the list
-        for (int i = 0; i < gameData.length - 1; i++) {
-            if (cbLivingCells.isSelected()) {
-                livingCells.getData().add(new XYChart.Data("" + i, gameData[i][0]));
-            }
-            if (cbChangeLiving.isSelected()) {
-                changeLivingCells.getData().add(new XYChart.Data("" + i, gameData[i][1]));
-            }
-            if (cbSimilarity.isSelected()) {
-                similarityMeasure.getData().add(new XYChart.Data("" + i, gameData[i][2]));
-            }
+            plotDataOnChart(gameData.length - 1);
         }
         try {
             updateToolTips();
@@ -130,24 +114,51 @@ public class StatsController implements Initializable {
         }
     }
 
+    private void plotDataOnChart(int iterations) {
+        //Removes previous data
+        livingCells.getData().clear();
+        changeLivingCells.getData().clear();
+        similarityMeasure.getData().clear();
+        simMeasureClosest.clear();
+
+        //Ignors the last iteration of the list
+        for (int i = 0; i < iterations; i++) {
+            if (cbLivingCells.isSelected()) {
+                livingCells.getData().add(new XYChart.Data("" + i, gameData[i][0]));
+            }
+            if (cbChangeLiving.isSelected()) {
+                changeLivingCells.getData().add(new XYChart.Data("" + i, gameData[i][1]));
+            }
+            if (cbSimilarity.isSelected()) {
+                similarityMeasure.getData().add(new XYChart.Data("" + i, gameData[i][2]));
+                simMeasureClosest.add(gameData[i][3]);
+            }
+        }
+    }
+
     private void updateToolTips() throws IOException {
         setPattern(originalPattern);
-        
+
         GifMaker gifmaker = new GifMaker();
 
         //Set the original pattern to imgView First.
         gifmaker.setAutoCellSize(true);
         generateTolltipGIF(gifmaker, imgViewOriginalPattern);
-       
- 
-        for (XYChart.Data<String, Integer> data : similarityMeasure.getData()) {
+
+        for (int i = 0; i < similarityMeasure.getData().size(); i++) {
+            XYChart.Data<String, Integer> data = similarityMeasure.getData().get(i);
+
             Tooltip tooltip = new Tooltip();
 
             ImageView imgViewCurrentPattern = new ImageView();
             generateTolltipGIF(gifmaker, imgViewCurrentPattern);
+            Label labelMatch = new Label("First/closest match on iteration number: " + simMeasureClosest.get(i));
+            labelMatch.setFont(new Font(20));
+            Label labelInfo = new Label("Iteration " + i + ". Current pattern:");
+            labelInfo.setFont(new Font(20));
 
             VBox container = new VBox();
-            container.getChildren().addAll(new Label("Current:"), imgViewCurrentPattern);
+            container.getChildren().addAll(labelInfo, imgViewCurrentPattern,labelMatch);
 
             tooltip.setGraphic(container);
             data.getNode().setOnMouseEntered(event -> {
