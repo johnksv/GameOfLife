@@ -23,11 +23,11 @@ public class Stats {
     public int[][] getStatistics(int iterations, boolean calcChangeLiving, boolean calcSimilarity) {
         int[][] stats = new int[iterations + 1][4];
 
-        livingCells = countLiving(iterations);
-        changeLivingCells = calcChangeLiving ? changeInLiving(iterations) : null;
+        livingCells = getCountLiving(iterations);
+        changeLivingCells = calcChangeLiving ? getChangeInLiving(iterations) : null;
         if (calcSimilarity) {
-            changeLivingCells = changeInLiving(iterations);
-            similarityMeasure = similarityMeasure(iterations);
+            changeLivingCells = getChangeInLiving(iterations);
+            similarityMeasure = getSimilarityMeasure(iterations);
         } else {
             similarityMeasure = null;
         }
@@ -48,11 +48,10 @@ public class Stats {
 
     /**
      *
-     *
      * @param iterationsToCalcualte
      * @return
      */
-    public int[] countLiving(int iterationsToCalcualte) {
+    public int[] getCountLiving(int iterationsToCalcualte) {
         if (iterationsToCalcualte == 0) {
             return new int[]{0};
         }
@@ -78,9 +77,9 @@ public class Stats {
         return countOfLiving;
     }
 
-    public int[] changeInLiving(int iterationsToCalcualte) {
+    public int[] getChangeInLiving(int iterationsToCalcualte) {
         if (livingCells == null) {
-            countLiving(iterationsToCalcualte + 1);
+            getCountLiving(iterationsToCalcualte + 1);
         }
         int[] countChangeOfLiving = new int[iterationsToCalcualte];
         setPattern(originalPattern);
@@ -88,16 +87,21 @@ public class Stats {
             countChangeOfLiving[time] = livingCells[time + 1] - livingCells[time];
             gameboard.nextGen();
         }
+        changeLivingCells = countChangeOfLiving;
         return countChangeOfLiving;
     }
 
     /**
-     * 
+     *
      * @param iterationsToCalcualte
-     * @return First index: similarityMeasure, second index: itNr of closest match.
+     * @return First index: similarity measure, second index: iteration number
+     * of closest match.
      */
-    public int[][] similarityMeasure(int iterationsToCalcualte) {
+    public int[][] getSimilarityMeasure(int iterationsToCalcualte) {
         int[][] similarity = new int[iterationsToCalcualte + 1][2];
+        if (changeLivingCells == null) {
+            getChangeInLiving(iterationsToCalcualte);
+        }
         calculateGeometricFactor(iterationsToCalcualte);
 
         setPattern(originalPattern);

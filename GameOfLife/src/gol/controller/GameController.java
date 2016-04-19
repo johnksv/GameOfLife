@@ -378,7 +378,7 @@ public class GameController implements Initializable {
         Scene scene = new Scene((Parent) root.load());
 
         StatsController statsController = root.<StatsController>getController();
-        statsController.setByteBoard(activeBoard);
+        statsController.setByteBoard(activeBoard.getBoundingBoxBoard());
 
         golStats.setScene(scene);
         golStats.setTitle("Stats - Game of Life");

@@ -166,10 +166,10 @@ public class StatsController implements Initializable {
 
             ImageView imgViewCurrentPattern = new ImageView();
             generateTolltipGIF(gifmaker, imgViewCurrentPattern);
-            Label labelMatch = new Label("First/closest match on iteration number: " + simMeasureClosest.get(i));
-            labelMatch.setFont(new Font(15));
             Label labelInfo = new Label("Iteration " + i + ". Current pattern:");
             labelInfo.setFont(new Font(15));
+            Label labelMatch = new Label("First/closest match on iteration number: " + simMeasureClosest.get(i));
+            labelMatch.setFont(new Font(15));
 
             VBox container = new VBox();
             container.getChildren().addAll(labelInfo, imgViewCurrentPattern, labelMatch);
@@ -202,9 +202,9 @@ public class StatsController implements Initializable {
         tempFileToolTip.delete();
     }
 
-    public void setByteBoard(Board activeBoard) {
-        setPattern(activeBoard.getBoundingBoxBoard());
-        gameStats.setPattern(activeBoard.getBoundingBoxBoard());
+    public void setByteBoard(byte[][] Pattern) {
+        setPattern(Pattern);
+        gameStats.setPattern(Pattern);
     }
 
     public void setPattern(byte[][] Pattern) {

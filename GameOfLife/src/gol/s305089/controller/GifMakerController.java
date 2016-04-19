@@ -1,15 +1,21 @@
 package gol.s305089.controller;
 
+import gol.controller.GameController;
 import gol.s305089.model.GifMaker;
 import gol.model.Board.Board;
+import gol.s305089.model.Stats;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
-import javafx.beans.value.ChangeListener;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
@@ -22,8 +28,10 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
 /**
  * FXML Controller class
@@ -35,7 +43,11 @@ public class GifMakerController implements Initializable {
     @FXML
     private BorderPane borderpane;
     @FXML
+    private VBox vBoxThreashold;
+    @FXML
     private Label labelCurrentDest;
+    @FXML
+    private Label labelLoopStatus;
     @FXML
     private Slider sliderCellSize;
     @FXML
@@ -46,6 +58,8 @@ public class GifMakerController implements Initializable {
     private Spinner spinnWidth;
     @FXML
     private Spinner spinnHeight;
+    @FXML
+    private Spinner spinnThreshold;
     @FXML
     private ColorPicker cpCellColor;
     @FXML
@@ -59,15 +73,18 @@ public class GifMakerController implements Initializable {
     @FXML
     private CheckBox cbInfinityLoop;
     @FXML
+    private CheckBox cbCheckPrevGen;
+    @FXML
     private Tooltip tooltipSaveLoc;
     @FXML
     private Label labelGenerateFeedback;
     @FXML
     private ImageView imgViewPreview;
-    //TODO Rnd Cell color, infity loop, automatic size of borderPane, OR clean code and GUI of it
+
     private GifMaker gifmaker;
     private String saveLocation;
     private int iterations;
+    private byte[][] originalPattern;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -96,6 +113,9 @@ public class GifMakerController implements Initializable {
         spinnHeight.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 10000, 200, 100));
         spinnHeight.setEditable(true);
 
+        spinnThreshold.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 100, 90, 1));
+        spinnThreshold.setEditable(true);
+
     }
 
     private void initListners() {
@@ -109,7 +129,33 @@ public class GifMakerController implements Initializable {
         cbCenterPattern.selectedProperty().addListener(this::autoUpdatedPreview);
         cbRndCellColor.selectedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
             gifmaker.setRandomColor(newValue);
+            autoUpdatedPreview(observable, oldValue, newValue);
         });
+        cbInfinityLoop.selectedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+            vBoxThreashold.setVisible(newValue);
+            autoUpdatedPreview(observable, oldValue, newValue);
+        });
+    }
+
+    @FXML
+    private void openStats() {
+        try {
+            Stage golStats = new Stage();
+            FXMLLoader root = new FXMLLoader(getClass().getResource("/gol/s305089/view/Stats.fxml"));
+
+            Scene scene = new Scene((Parent) root.load());
+
+            StatsController statsController = root.<StatsController>getController();
+            statsController.setByteBoard(originalPattern);
+
+            golStats.setScene(scene);
+            golStats.setTitle("Stats - Game of Life");
+
+            golStats.show();
+        } catch (IOException ex) {
+            Alert errorAlert = new Alert(Alert.AlertType.ERROR, "Sorry, an error occured...\n" + ex);
+            errorAlert.showAndWait();
+        }
     }
 
     @FXML
@@ -130,6 +176,8 @@ public class GifMakerController implements Initializable {
     private void generateGIF() {
         setGIFSaveLocation();
         setGIFValues();
+        calculateInfinity();
+
         Alert alertGenerating = new Alert(Alert.AlertType.NONE, "Generating GIF");
         alertGenerating.getButtonTypes().add(new ButtonType("Please wait..."));
         alertGenerating.show();
@@ -153,6 +201,7 @@ public class GifMakerController implements Initializable {
             gifmaker.setSaveLocation(previewFile.getAbsolutePath());
 
             setGIFValues();
+            calculateInfinity();
 
             gifmaker.writePatternToGIF(iterations);
             Image previewGif = new Image(previewFile.toURI().toString());
@@ -166,6 +215,7 @@ public class GifMakerController implements Initializable {
     }
 
     public void setByteBoard(Board activeBoard) {
+        originalPattern = activeBoard.getBoundingBoxBoard();
         gifmaker.setPattern(activeBoard.getBoundingBoxBoard());
     }
 
@@ -191,6 +241,36 @@ public class GifMakerController implements Initializable {
     private void autoUpdatedPreview(ObservableValue ob, Object oldValue, Object newValue) {
         if (cbAutoPreview.isSelected()) {
             previewGif();
+        }
+    }
+
+    private void calculateInfinity() {
+        if (cbInfinityLoop.isSelected()) {
+
+            int threshold = (int) spinnThreshold.getValue();
+            int closestIteration = -1;
+
+            Stats stats = new Stats();
+            stats.setPattern(originalPattern);
+
+            stats.setCheckSimilarityPrevGen(cbCheckPrevGen.isSelected());
+
+            //Checks which iteration the 0-th generation matches best with.
+            if (stats.getSimilarityMeasure(iterations)[0][0] > threshold) {
+                closestIteration = stats.getSimilarityMeasure(iterations)[0][1];
+            }
+            //Checks if some other generation matches with the 0-th generation
+            for (int[] it : stats.getSimilarityMeasure(iterations)) {
+                if (it[0] > threshold && it[1] == 0) {
+                    closestIteration = it[1];
+                }
+            }
+            if (closestIteration != -1) {
+                iterations = closestIteration;
+                labelLoopStatus.setText("Match found at iteration: " + iterations + "\n looping..");
+            } else {
+                labelLoopStatus.setText("Could not find an good enough match..");
+            }
         }
     }
 }
