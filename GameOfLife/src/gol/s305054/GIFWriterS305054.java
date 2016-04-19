@@ -9,6 +9,8 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import java.awt.Color;
 import java.util.Arrays;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import lieng.GIFWriter;
 
 /**
