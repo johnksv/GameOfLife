@@ -141,11 +141,8 @@
                                 <TitledPane animated="false" collapsible="false" text="Trygve">
                                     <content>
                                         <AnchorPane minHeight="0.0" minWidth="0.0" prefWidth="200.0">
-                                 <children>
-                                    <Slider fx:id="timeSliderGifTrygve" onValueChange="#handleGifSliderTrygve"/>
-                                    <Button fx:id="saveGifTrygve" layoutY="58.0" mnemonicParsing="false" onAction="#handleGIFTrygve" text="Save as .gif" />
-                                    <Label fx:id="timeLabelGifTrygve" layoutY="16.0" text="Time Between pictures: " />
-                                 </children>
+                                            <children>
+                                            </children>
                                         </AnchorPane>
                                     </content>
                                 </TitledPane>
