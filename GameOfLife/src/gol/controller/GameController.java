@@ -89,7 +89,7 @@ public class GameController implements Initializable {
     @FXML
     private CheckBox cbShowGrid;
     //TODO Show grid is not working yet. Implement it
-    
+
     private Board activeBoard;
     private final Timeline timeline = new Timeline();
     private GraphicsContext gc;
