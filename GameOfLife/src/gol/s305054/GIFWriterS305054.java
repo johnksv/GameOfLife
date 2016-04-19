@@ -74,7 +74,6 @@ public class GIFWriterS305054 {
 
         } catch (IOException ex) {
             Logger.getLogger(GIFWriterS305054.class.getName()).log(Level.SEVERE, null, ex);
-
             Alert alert = new Alert(AlertType.ERROR);
             alert.setTitle("Something went wrong");
             alert.setHeaderText("There was an input/output error");
