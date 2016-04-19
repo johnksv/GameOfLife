@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -106,6 +107,9 @@ public class GifMakerController implements Initializable {
         cpCellColor.valueProperty().addListener(this::autoUpdatedPreview);
         cpBackColor.valueProperty().addListener(this::autoUpdatedPreview);
         cbCenterPattern.selectedProperty().addListener(this::autoUpdatedPreview);
+        cbRndCellColor.selectedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+            gifmaker.setRandomColor(newValue);
+        });
     }
 
     @FXML

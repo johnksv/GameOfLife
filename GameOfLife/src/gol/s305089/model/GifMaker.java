@@ -4,6 +4,7 @@ import gol.controller.UsefullMethods;
 import gol.model.Board.Board;
 import gol.model.Board.DynamicBoard;
 import java.io.IOException;
+import java.util.Random;
 import javafx.scene.paint.Color;
 import lieng.GIFWriter;
 
@@ -33,6 +34,7 @@ public final class GifMaker {
     private double cellSize = 10;
     private boolean centerPattern = false;
     private boolean autoCellSize = false;
+    private boolean randomColor = false;
     private java.awt.Color cellColor = java.awt.Color.BLACK;
     private java.awt.Color backgroundColor = java.awt.Color.WHITE;
 
@@ -78,7 +80,10 @@ public final class GifMaker {
             for (int y = 1; y < activeBoard.getArrayLength(); y++) {
                 for (int x = 1; x < activeBoard.getArrayLength(y); x++) {
                     if (activeBoard.getCellState(y, x)) {
-
+                        if (randomColor) {
+                            Random random = new Random();
+                            cellColor = new java.awt.Color(random.nextInt(255), random.nextInt(255), random.nextInt(255));
+                        }
                         //Need moveGridValues so the GIF dosn't follow top left when expanding.
                         int x1 = (int) (x * cellSize + moveGridValues[0]);
                         int x2 = (int) (x * cellSize + cellSize + moveGridValues[0]);
@@ -215,5 +220,9 @@ public final class GifMaker {
                 (int) (backgroundColor.getGreen() * 255),
                 (int) (backgroundColor.getBlue() * 255));
         this.backgroundColor = newColor;
+    }
+
+    public void setRandomColor(boolean randomColor) {
+        this.randomColor = randomColor;
     }
 }
