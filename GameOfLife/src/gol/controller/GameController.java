@@ -89,13 +89,7 @@ public class GameController implements Initializable {
     @FXML
     private CheckBox cbShowGrid;
     //TODO Show grid is not working yet. Implement it
-    @FXML
-    private Button saveGifTrygve;
-    @FXML
-    private Slider timeSliderGifTrygve;
-    @FXML
-    private Label timeLabelGifTrygve;
-
+    
     private Board activeBoard;
     private final Timeline timeline = new Timeline();
     private GraphicsContext gc;
@@ -107,7 +101,6 @@ public class GameController implements Initializable {
     private int mousePositionY;
     //Offset x, offset y, old x, old y
     private final double[] moveGridValues = {0, 0, -Double.MAX_VALUE, -Double.MAX_VALUE};
-    private GIFWriterS305054 gifTrygve;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -320,21 +313,6 @@ public class GameController implements Initializable {
 
         }
     }
-    @FXML
-    private void handleGIFTrygve() {
-        java.awt.Color bgColor = new java.awt.Color((float) backgroundColor.getRed(), (float) backgroundColor.getGreen(), (float) backgroundColor.getBlue());
-        java.awt.Color cColor = new java.awt.Color((float) cellColor.getRed(), (float) cellColor.getGreen(), (float) cellColor.getBlue());
-        gifTrygve = new GIFWriterS305054();
-        gifTrygve.prepareGIF(activeBoard,(int) activeBoard.getCellSize(), timeSliderGifTrygve.getValue(), bgColor, cColor);
-        gifTrygve.makeGIF();    
-    }
-    @FXML
-    private void handleGifSliderTrygve() {
-        timeSliderGifTrygve.setMin(0.001);
-        timeSliderGifTrygve.setMax(2.0);
-        timeLabelGifTrygve.setText("Time Between pictures: " + (float)timeSliderGifTrygve.getValue());
-    }
-
     @FXML
     private void rotateBoardFromFile() {
         if (boardFromFile != null) {
