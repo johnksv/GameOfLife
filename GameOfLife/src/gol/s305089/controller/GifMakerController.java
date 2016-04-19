@@ -92,7 +92,7 @@ public class GifMakerController implements Initializable {
         gifmaker = new GifMaker();
 
         saveLocation = System.getProperty("user.home") + "\\golGif.gif";
-
+        
         cpCellColor.setValue(Color.BLACK);
         initSpinners();
         initListners();
@@ -196,6 +196,8 @@ public class GifMakerController implements Initializable {
 
     @FXML
     private void previewGif() {
+        borderpane.getScene().getWindow().setWidth(550);
+        
         try {
             File previewFile = File.createTempFile("golPreview", ".gif");
             gifmaker.setSaveLocation(previewFile.getAbsolutePath());

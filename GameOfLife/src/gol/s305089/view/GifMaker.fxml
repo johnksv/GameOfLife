@@ -18,7 +18,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane fx:id="borderpane" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="519.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gol.s305089.controller.GifMakerController">
+<BorderPane fx:id="borderpane" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="530.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gol.s305089.controller.GifMakerController">
     <left>
      
     </left>
@@ -26,7 +26,7 @@
         <ImageView fx:id="imgViewPreview" fitHeight="465.0" fitWidth="320.0" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER_LEFT" />
     </center>
     <left>
-        <TitledPane collapsible="false" prefWidth="200.0" text="Generate GIF" BorderPane.alignment="TOP_LEFT">
+        <TitledPane collapsible="false" prefHeight="500.0" prefWidth="210.0" text="Generate GIF" BorderPane.alignment="TOP_LEFT">
             <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefWidth="200.0">
                     <children>

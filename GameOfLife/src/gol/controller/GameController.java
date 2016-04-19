@@ -360,11 +360,9 @@ public class GameController implements Initializable {
 
         gifMaker.setScene(scene);
         gifMaker.setTitle("Generate GIF - Game of Life");
-        gifMaker.setMinHeight(500.00);
-        gifMaker.setMaxHeight(500);
-        
-        gifMaker.setMinWidth(250);
-        gifMaker.setMaxWidth(600);
+        gifMaker.setWidth(215);
+        gifMaker.setHeight(535);
+
         gifMaker.show();
     }
 
