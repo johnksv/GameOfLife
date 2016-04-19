@@ -15,6 +15,7 @@
 <?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
@@ -39,11 +40,15 @@
             <VBox prefHeight="200.0" prefWidth="220.0" spacing="10.0">
                <children>
                   <Label alignment="CENTER" text="Iterations to calculate:" textOverrun="CENTER_ELLIPSIS" />
-                  <Spinner fx:id="spinnerIterations" prefHeight="25.0" prefWidth="119.0">
+                  <HBox spacing="10.0">
                      <VBox.margin>
                         <Insets top="-7.0" />
                      </VBox.margin>
-                  </Spinner>
+                     <children>
+                        <Spinner fx:id="spinnerIterations" prefHeight="25.0" prefWidth="95.0" />
+                        <Button mnemonicParsing="false" onAction="#onActionCalculate" text="Calculate stats" />
+                     </children>
+                  </HBox>
                   <Separator prefWidth="200.0" />
                   <Label text="Show on chart:" />
                   <CheckBox fx:id="cbLivingCells" mnemonicParsing="false" selected="true" text="Living cells" />
@@ -66,8 +71,6 @@
                         <Insets left="16.0" top="-5.0" />
                      </VBox.margin>
                   </VBox>
-                  <Separator prefWidth="200.0" />
-                  <Button mnemonicParsing="false" onAction="#onActionCalculate" text="Calculate stats" />
                   <Separator prefWidth="200.0" />
                   <Label text="Original:">
                      <VBox.margin>

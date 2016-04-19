@@ -78,7 +78,6 @@ public class StatsController implements Initializable {
     }
 
     private void intiListners() {
-        spinnerIterations.valueProperty().addListener(this::calculatGameStats);
         cbLivingCells.selectedProperty().addListener(this::calculatGameStats);
         cbChangeLiving.selectedProperty().addListener(this::calculatGameStats);
         cbSimilarity.selectedProperty().addListener(this::calculatGameStats);
@@ -107,8 +106,10 @@ public class StatsController implements Initializable {
 
             plotDataOnChart(gameData.length - 1);
         }
+        //TODO Threading of tooltips    
+        updateTooltips();
         try {
-            updateToolTips();
+            updateTooltipSimilarity();
         } catch (IOException ex) {
             System.err.println("Could not update tooltips:\n" + ex);
         }
@@ -136,7 +137,20 @@ public class StatsController implements Initializable {
         }
     }
 
-    private void updateToolTips() throws IOException {
+    private void updateTooltips() {
+        for (XYChart.Data<String, Integer> data : livingCells.getData()) {
+            Tooltip tip = new Tooltip("Living: " + data.getYValue());
+            tip.setFont(new Font(15));
+            setTooltipMouseHandler(data, tip);
+        }
+        for (XYChart.Data<String, Integer> data : changeLivingCells.getData()) {
+            Tooltip tip = new Tooltip("Change in living: " + data.getYValue());
+            tip.setFont(new Font(15));
+            setTooltipMouseHandler(data, tip);
+        }
+    }
+
+    private void updateTooltipSimilarity() throws IOException {
         setPattern(originalPattern);
 
         GifMaker gifmaker = new GifMaker();
@@ -153,23 +167,27 @@ public class StatsController implements Initializable {
             ImageView imgViewCurrentPattern = new ImageView();
             generateTolltipGIF(gifmaker, imgViewCurrentPattern);
             Label labelMatch = new Label("First/closest match on iteration number: " + simMeasureClosest.get(i));
-            labelMatch.setFont(new Font(20));
+            labelMatch.setFont(new Font(15));
             Label labelInfo = new Label("Iteration " + i + ". Current pattern:");
-            labelInfo.setFont(new Font(20));
+            labelInfo.setFont(new Font(15));
 
             VBox container = new VBox();
-            container.getChildren().addAll(labelInfo, imgViewCurrentPattern,labelMatch);
+            container.getChildren().addAll(labelInfo, imgViewCurrentPattern, labelMatch);
 
             tooltip.setGraphic(container);
-            data.getNode().setOnMouseEntered(event -> {
-                double anchorX = data.getNode().getScene().getWindow().getX() + 20;
-                double anchorY = data.getNode().getScene().getWindow().getY() + 20;
-                tooltip.show(data.getNode(), anchorX + event.getSceneX(), anchorY + event.getSceneY());
-            });
-            data.getNode().setOnMouseExited(event -> tooltip.hide());
+            setTooltipMouseHandler(data, tooltip);
 
             activeBoard.nextGen();
         }
+    }
+
+    private void setTooltipMouseHandler(XYChart.Data<String, Integer> data, Tooltip tooltip) {
+        data.getNode().setOnMouseEntered(event -> {
+            double anchorX = data.getNode().getScene().getWindow().getX() + 20;
+            double anchorY = data.getNode().getScene().getWindow().getY() + 20;
+            tooltip.show(data.getNode(), anchorX + event.getSceneX(), anchorY + event.getSceneY());
+        });
+        data.getNode().setOnMouseExited(event -> tooltip.hide());
     }
 
     private void generateTolltipGIF(GifMaker gifmaker, ImageView imgViewcurrentPattern) throws IOException {
