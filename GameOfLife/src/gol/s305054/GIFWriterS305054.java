@@ -71,7 +71,7 @@ public class GIFWriterS305054 {
 
             gifWriter = new GIFWriter(copiedBoard.getArrayLength() * 10, copiedBoard.getArrayLength() * 10, savePath, this.time);
             gifWriter.setBackgroundColor(this.bgColor);
-
+            
         } catch (IOException ex) {
             Logger.getLogger(GIFWriterS305054.class.getName()).log(Level.SEVERE, null, ex);
             Alert alert = new Alert(AlertType.ERROR);
