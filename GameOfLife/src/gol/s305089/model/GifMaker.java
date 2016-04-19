@@ -54,10 +54,7 @@ public final class GifMaker {
      * @throws java.io.IOException
      */
     public void writePatternToGIF(int iterations) throws IOException {
-        if (autoCellSize) {
-            calculateCellSize();
-        }
-        
+
         gifWriter = new GIFWriter(gifWidth, gifHeight, saveLocation, durationBetweenFrames);
         if (activeBoard != null || originalPattern != null) {
             //If not called, manipulations is done on the current gen of this activeBoard.
@@ -73,12 +70,16 @@ public final class GifMaker {
     private void writeGIF(int iterations) throws IOException {
         if (iterations > 0) {
             iterations--;
+            if (autoCellSize) {
+                calculateCellSize();
+            }
             gifWriter.flush();
 
             for (int y = 1; y < activeBoard.getArrayLength(); y++) {
                 for (int x = 1; x < activeBoard.getArrayLength(y); x++) {
                     if (activeBoard.getCellState(y, x)) {
 
+                        //Need moveGridValues so the GIF dosn't follow top left when expanding.
                         int x1 = (int) (x * cellSize + moveGridValues[0]);
                         int x2 = (int) (x * cellSize + cellSize + moveGridValues[0]);
                         int y1 = (int) (y * cellSize + moveGridValues[1]);
@@ -101,13 +102,12 @@ public final class GifMaker {
     }
 
     private void calculateCellSize() {
-        int longestRow = UsefullMethods.longestRow(originalPattern);
-        cellSize = gifHeight / originalPattern.length;
-        cellSize = cellSize < gifWidth / longestRow ? gifWidth / longestRow : cellSize;
-
-        //For spacing
-        gifHeight += 2*cellSize;
-        gifWidth += 2*cellSize;
+        double spacing = 5;
+        int longestRow = UsefullMethods.longestRow(activeBoard.getBoundingBoxBoard());
+        cellSize = Math.floor(gifHeight / (activeBoard.getBoundingBoxBoard().length + spacing));
+        if (cellSize > gifWidth / (longestRow + spacing)) {
+            cellSize = Math.floor(gifWidth / (longestRow + spacing));
+        }
     }
 
     /**
@@ -161,6 +161,11 @@ public final class GifMaker {
         activeBoard = new DynamicBoard(10, 10);
         moveGridValues = activeBoard.getMoveGridValues();
         this.originalPattern = patternToSet;
+        placePattern(patternToSet);
+        activeBoard.setCellSize(cellSize);
+    }
+
+    private void placePattern(byte[][] patternToSet) {
         if (centerPattern) {
             int y = (int) ((gifHeight / cellSize) / 2 - patternToSet.length / 2);
             int x = (int) ((gifWidth / cellSize) / 2 - patternToSet[0].length / 2);
@@ -168,7 +173,6 @@ public final class GifMaker {
         } else {
             activeBoard.insertArray(patternToSet, 2, 2);
         }
-        activeBoard.setCellSize(cellSize);
     }
 
     /**

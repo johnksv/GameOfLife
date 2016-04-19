@@ -134,13 +134,12 @@ public class StatsController implements Initializable {
         setPattern(originalPattern);
         
         GifMaker gifmaker = new GifMaker();
-        gifmaker.setCenterPattern(true);
 
         //Set the original pattern to imgView First.
-        // gifmaker.setAutoCellSize(true);
+        gifmaker.setAutoCellSize(true);
         generateTolltipGIF(gifmaker, imgViewOriginalPattern);
        
-
+ 
         for (XYChart.Data<String, Integer> data : similarityMeasure.getData()) {
             Tooltip tooltip = new Tooltip();
 
