@@ -22,7 +22,6 @@ import lieng.GIFWriter;
 public class GIFWriterS305054 {
 
     private Board copiedBoard; //deep copy of board - TODO check if boundBox or not.
-
     private int width = 50; //Width of .gif - Hardcoded value will be changed - rows
     private int height = 50; //Height of .gif - Hardcoded value will be changed - columns
     private int time; // 1000 ms = 1s - later, listener to a slider
@@ -81,7 +80,6 @@ public class GIFWriterS305054 {
             alert.setContentText("Could not proceed. Please try again.");
             alert.showAndWait();
         }
-
     }
 
     /**
