@@ -130,5 +130,4 @@ public class GIFWriterS305054 {
             alert.showAndWait();
         }
     }
-
 }
