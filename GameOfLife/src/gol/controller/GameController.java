@@ -8,6 +8,7 @@ import gol.model.FileIO.ReadFile;
 import gol.model.Logic.ConwaysRule;
 import gol.model.Logic.CustomRule;
 import gol.model.Logic.unsupportedRuleException;
+import gol.s305054.GIFWriterS305054;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -86,6 +87,12 @@ public class GameController implements Initializable {
     private TextField tfCellsToSurvive;
     @FXML
     private Button btnUseRule;
+    @FXML
+    private Button saveGifTrygve;
+    @FXML
+    private Slider timeSliderGifTrygve;
+    @FXML
+    private Label timeLabelGifTrygve;
 
     private Board activeBoard;
     private final Timeline timeline = new Timeline();
@@ -98,6 +105,7 @@ public class GameController implements Initializable {
     private int mousePositionY;
     private double[] moveGridValues;
     private long gencount = 0;
+    private GIFWriterS305054 gifTrygve;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -111,7 +119,7 @@ public class GameController implements Initializable {
 
         //TODO Valg for Array eller dynamisk brett
         //activeBoard = new ArrayBoard();
-        activeBoard = new DynamicBoard(1800,1800);
+        activeBoard = new DynamicBoard(1800, 1800);
         cellCP.setValue(Color.BLACK);
         backgroundCP.setValue(Color.web("#F4F4F4"));
         moveGridValues = activeBoard.getMoveGridValues();
@@ -316,6 +324,22 @@ public class GameController implements Initializable {
             alert.showAndWait();
 
         }
+    }
+
+    @FXML
+    private void handleGIFTrygve() {
+        java.awt.Color bgColor = new java.awt.Color((float) backgroundColor.getRed(), (float) backgroundColor.getGreen(), (float) backgroundColor.getBlue());
+        java.awt.Color cColor = new java.awt.Color((float) cellColor.getRed(), (float) cellColor.getGreen(), (float) cellColor.getBlue());
+        gifTrygve = new GIFWriterS305054();
+        gifTrygve.prepareGIF(activeBoard, (int) activeBoard.getCellSize(), timeSliderGifTrygve.getValue(), bgColor, cColor);
+        gifTrygve.makeGIF();
+    }
+
+    @FXML
+    private void handleGifSliderTrygve() {
+        timeSliderGifTrygve.setMin(0.001);
+        timeSliderGifTrygve.setMax(2.0);
+        timeLabelGifTrygve.setText("Time Between pictures: " + (float) timeSliderGifTrygve.getValue());
     }
 
     @FXML
