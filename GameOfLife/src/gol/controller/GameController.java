@@ -7,7 +7,6 @@ import gol.model.FileIO.ReadFile;
 import gol.model.Logic.ConwaysRule;
 import gol.model.Logic.CustomRule;
 import gol.model.Logic.unsupportedRuleException;
-import gol.s305054.GIFWriterS305054;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;

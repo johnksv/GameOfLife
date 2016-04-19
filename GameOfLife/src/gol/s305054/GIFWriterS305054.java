@@ -31,6 +31,7 @@ public class GIFWriterS305054 {
     private Color cColor = Color.BLACK; //Standard color
     String savePath = "testGif.gif"; //Filepath - later, normal output stream
     private GIFWriter gifWriter;
+
     /**
      * Deep copy the active gameboard into a copied gameboard. When changing the
      * copied board, the originale board will stay the same.
@@ -43,7 +44,7 @@ public class GIFWriterS305054 {
     public void prepareGIF(Board originaleBoard, int cellSize, double time, Color bgColor, Color cColor) { //TODO add parameters height width
         try {
             byte[][] originaleArray = originaleBoard.getBoundingBoxBoard();
-            copiedBoard = new ArrayBoard(originaleArray.length*5, originaleArray.length*5);
+            copiedBoard = new ArrayBoard(originaleArray.length * 5, originaleArray.length * 5);
             /*
              Param originaleBoard - get array, each element in originaleArray, assigned to copied array
              assigns copied array to copiedBoard.
@@ -58,7 +59,7 @@ public class GIFWriterS305054 {
             if (time < 0.1) {
                 this.time = 100;
             } else {
-                this.time = (int)(time*1000);
+                this.time = (int) (time * 1000);
             }
             if (bgColor != null) {
                 this.bgColor = bgColor;
@@ -68,7 +69,7 @@ public class GIFWriterS305054 {
                 this.cColor = cColor;
             }
 
-            gifWriter = new GIFWriter(copiedBoard.getArrayLength()*10, copiedBoard.getArrayLength()*10, savePath, this.time);
+            gifWriter = new GIFWriter(copiedBoard.getArrayLength() * 10, copiedBoard.getArrayLength() * 10, savePath, this.time);
             gifWriter.setBackgroundColor(this.bgColor);
 
         } catch (IOException ex) {
