@@ -54,7 +54,6 @@ public class GIFWriterS305054 {
             } else {
                 this.cellSize = cellSize;
             }
-            
             if (time < 0.1) {
                 this.time = 100;
             } else {
