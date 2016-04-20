@@ -4,7 +4,7 @@
  */
 package gol.s305089.controller;
 
-import gol.s305089.sound.Tone;
+import gol.s305089.sound.Sound;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
@@ -15,6 +15,13 @@ import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.DataLine;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 
 /**
  * FXML Controller class
@@ -41,6 +48,7 @@ public class SoundController implements Initializable {
             File file = File.createTempFile("GolSound", ".wav");
             System.out.println(file.getAbsolutePath());
             makeSound(file, 44100, 5);
+
         } catch (IOException ex) {
             Logger.getLogger(SoundController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -52,10 +60,10 @@ public class SoundController implements Initializable {
             long numFrames = (long) (duration * sampleRate);
 
             // Create a wav file with the name specified as the first argument
-            WavFile wavFile = WavFile.newWavFile(file, 2, numFrames, 16, sampleRate);
+            WavFile wavFile = WavFile.newWavFile(file, 4, numFrames, 8, sampleRate);
 
             // Create a buffer of 100 frames
-            double[][] buffer = new double[2][100];
+            double[][] buffer = new double[4][100];
 
             // Initialise a local frame counter
             long frameCounter = 0;
@@ -68,9 +76,14 @@ public class SoundController implements Initializable {
                 int toWrite = (remaining > 100) ? 100 : (int) remaining;
 
                 // Fill the buffer, one tone per channel
+                    
                 for (int s = 0; s < toWrite; s++, frameCounter++) {
-                        buffer[0][s] = Math.sin(2.0 * Math.PI * Tone.A4.getFrequency() * frameCounter / sampleRate);
-                        buffer[1][s] = Math.sin(2.0 * Math.PI * Tone.A4.getFrequency() * frameCounter / sampleRate);
+                    //Math.sin(2.0 * Math.PI * tone.getFrequency() * frameCounter / sampleRate)
+                        buffer[0][s] = Sound.makeTone(Sound.Tone.A2, frameCounter, sampleRate);
+                        buffer[1][s] = Sound.makeTone(Sound.Tone.A5, frameCounter, sampleRate);
+                        buffer[2][s] = Sound.makeTone(Sound.Tone.G4, frameCounter, sampleRate);
+                        buffer[3][s] = Sound.makeTone(Sound.Tone.G4, frameCounter, sampleRate);
+                        
                 }
 
                 // Write the buffer
