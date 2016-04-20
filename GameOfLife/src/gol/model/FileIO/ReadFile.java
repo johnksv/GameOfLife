@@ -128,7 +128,13 @@ public class ReadFile {
         for (String line : file) {
             if (line.startsWith("#")) {
                 commentLines++;
-                appendMetaData(line.substring(2));
+                if (line.contains("#N")) {
+                    appendMetaData("Name:" + line.substring(3));
+                } else if (line.contains("#O")) {
+                    appendMetaData("Author:" + line.substring(3));
+                } else {
+                    appendMetaData(line.substring(3));
+                }
             }
         }
 
