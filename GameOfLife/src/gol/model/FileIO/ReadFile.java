@@ -120,7 +120,7 @@ public class ReadFile {
      */
     private static byte[][] readRLE(String[] file) throws IOException, PatternFormatException {
         parsedRule = null;
-        
+
         int commentLines = 0;
         for (String line : file) {
             if (line.startsWith("#")) {
@@ -135,7 +135,7 @@ public class ReadFile {
         int emptyLines = 0;
 
         //Reads x and y value from file.
-        String[] attributes = file[commentLines].trim().split(",");
+        String[] attributes = file[commentLines].replaceAll("\\s", "").split(",");
         for (String line : attributes) {
             if (line.matches("x=\\d+")) {
                 xLength = Integer.parseInt(line.replaceAll("\\D", ""));
@@ -227,16 +227,14 @@ public class ReadFile {
     private static void setCellStateRLE(byte[][] parsedBoard, char letter, int y, int x) throws PatternFormatException {
         if (y >= parsedBoard.length || x >= parsedBoard[y].length) {
             throw new PatternFormatException("Line exceeds the defined width. At line/\"$ number\": " + y);
+        } else if (letter == 'b') {
+            parsedBoard[y][x] = 0;
+
+        } else if (letter == 'o') {
+            parsedBoard[y][x] = 64;
+
         } else {
-            if (letter == 'b') {
-                parsedBoard[y][x] = 0;
-
-            } else if (letter == 'o') {
-                parsedBoard[y][x] = 64;
-
-            } else {
-                throw new PatternFormatException("Unknow character at line: " + y);
-            }
+            throw new PatternFormatException("Unknow character at line: " + y);
         }
 
     }
@@ -269,29 +267,25 @@ public class ReadFile {
                     born = new byte[]{-1};
                 }
 
-            } else {
-                //expected Rule=3/23  (born/survive)
-
-                if (i == 0) {
-                    if (rule[i].length() >= 1) {
-                        born = new byte[rule[i].length()];
-                        for (int j = 0; j < rule[i].length(); j++) {
-                            born[j] = (byte) Character.digit(rule[i].toCharArray()[j], 10);
-                        }
-                    } else {
-                        born = new byte[]{-1};
+            } else //expected Rule=3/23  (born/survive)
+            if (i == 0) {
+                if (rule[i].length() >= 1) {
+                    born = new byte[rule[i].length()];
+                    for (int j = 0; j < rule[i].length(); j++) {
+                        born[j] = (byte) Character.digit(rule[i].toCharArray()[j], 10);
                     }
-                } else if (i == 1) {
-                    if (rule[i].length() >= 1) {
-                        survive = new byte[rule[i].length()];
-                        for (int j = 0; j < rule[i].length(); j++) {
-                            survive[j] = (byte) Character.digit(rule[i].toCharArray()[j], 10);
-                        }
-                    } else {
-                        survive = new byte[]{-1};
-                    }
+                } else {
+                    born = new byte[]{-1};
                 }
-
+            } else if (i == 1) {
+                if (rule[i].length() >= 1) {
+                    survive = new byte[rule[i].length()];
+                    for (int j = 0; j < rule[i].length(); j++) {
+                        survive[j] = (byte) Character.digit(rule[i].toCharArray()[j], 10);
+                    }
+                } else {
+                    survive = new byte[]{-1};
+                }
             }
         }
         try {

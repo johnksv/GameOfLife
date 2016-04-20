@@ -2,6 +2,7 @@ package gol.s305084;
 
 import gol.model.Board.ArrayBoard;
 import gol.model.Board.Board;
+import gol.model.Board.DynamicBoard;
 import javafx.scene.Scene;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
@@ -24,9 +25,9 @@ public class Statistics {
     //FXML for the scene, make it start at -1 not 0
     public static void showStatistics(Stage stage, Board activeBoard) {
 
-        Board statBoard = new ArrayBoard(activeBoard.getArrayLength(), activeBoard.getArrayLength(0));
+        Board statBoard = new DynamicBoard();
         //My break :(
-        statBoard.insertArray(activeBoard.getBoundingBoxBoard(), 0, 0);
+        statBoard.insertArray(activeBoard.getBoundingBoxBoard(), 1, 1);
         stage.setTitle("Gol: Statistics");
         final NumberAxis xAxis = new NumberAxis();
         final NumberAxis yAxis = new NumberAxis();
