@@ -57,7 +57,6 @@ public class PatternEditorController implements Initializable {
     private TextField tfDescription;
     @FXML
     private TextField tfRules;
-    
 
     private Board activeBoard;
     private Board theStripBoard;
@@ -95,7 +94,7 @@ public class PatternEditorController implements Initializable {
             Canvas striptCanvas = new Canvas(cellSize * boundingBox[0].length + theStripOffset, cellSize * boundingBox.length + theStripOffset);
             theStripCanvasContainer.getChildren().add(striptCanvas);
             theStripGC.add(striptCanvas.getGraphicsContext2D());
-            
+
             striptCanvas.setOnMousePressed((MouseEvent e) -> {
                 Canvas picked = (Canvas) e.getPickResult().getIntersectedNode();
                 if (theStripGC.contains(picked.getGraphicsContext2D())) {
@@ -107,7 +106,7 @@ public class PatternEditorController implements Initializable {
                     draw();
                 }
             });
-            
+
             theStripBoard.nextGen();
         }
     }
@@ -164,7 +163,7 @@ public class PatternEditorController implements Initializable {
             WriteFile.setPatternName(tfName.getText());
             WriteFile.setAuthor(tfAuthor.getText());
             WriteFile.setComment(tfDescription.getText());
-            
+
             FileChooser filechooser = new FileChooser();
             filechooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("RLE-format", ".rle"));
             filechooser.setInitialFileName(tfName.getText());
@@ -193,9 +192,9 @@ public class PatternEditorController implements Initializable {
             theStripBoard.nextGen();
         }
     }
-    
+
     @FXML
-    private void saveAsGIF() throws IOException{
+    private void saveAsGIF() throws IOException {
         Stage gifMaker = new Stage();
         FXMLLoader root = new FXMLLoader(getClass().getResource("/gol/s305089/view/GifMaker.fxml"));
 
@@ -207,9 +206,10 @@ public class PatternEditorController implements Initializable {
         gifMaker.setScene(scene);
         gifMaker.setTitle("Generate GIF - Game of Life");
         gifMaker.initModality(Modality.APPLICATION_MODAL);
-        gifMaker.setMaxHeight(600.00);
+        gifMaker.setWidth(215);
+        gifMaker.setHeight(535);
         gifMaker.show();
-        
+
     }
 
     public void setActiveBoard(Board gameBoardToCopy) {
