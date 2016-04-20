@@ -3,7 +3,7 @@ package gol.controller;
 /**
  * @author s305054, s305084, s305089
  */
-public final class usefullMethods {
+public final class UsefullMethods {
 
     private usefullMethods() {
     }
