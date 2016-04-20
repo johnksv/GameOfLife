@@ -30,9 +30,7 @@ public class ReadFile {
         String path = file.toString();
         String[] token = path.split("\\.");
         String fileExt = token[token.length - 1];
-        List<String> list = Files.readAllLines(file);
-
-        String[] readFile = list.toArray(new String[0]);
+        String[] readFile = Files.readAllLines(file).toArray(new String[0]);
 
         switch (fileExt) {
             case "cells":
@@ -45,17 +43,19 @@ public class ReadFile {
                 throw new PatternFormatException("Pattern format is not supported");
         }
     }
+
     /**
-     * Returns the newly parsed Rule.
-     * If no rule was parsed from the last file it will return ConwaysRule. 
+     * Returns the newly parsed Rule. If no rule was parsed from the last file
+     * it will return ConwaysRule.
+     *
      * @see Rule
      * @see ConwaysRule
-     * @return Rule 
+     * @return Rule
      */
     public static Rule getParsedRule() {
         Rule returnRule = parsedRule;
         parsedRule = null;
-        
+
         if (returnRule == null) {
             return new ConwaysRule();
         }
@@ -117,6 +117,8 @@ public class ReadFile {
      * @throws PatternFormatException if the given file is corrupt
      */
     private static byte[][] readRLE(String[] file) throws IOException, PatternFormatException {
+        parsedRule = null;
+        
         int commentLines = 0;
         for (String line : file) {
             if (line.startsWith("#")) {
@@ -242,7 +244,7 @@ public class ReadFile {
         byte[] survive = null;
 
         String[] rule = ruleLine.split("=");
-        
+
         rule = rule[1].split("/");
         for (int i = 0; i < rule.length; i++) {
             if (rule[i].matches("[Ss]\\d*")) {

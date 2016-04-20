@@ -20,6 +20,9 @@ public abstract class Board {
      */
     protected double cellSize = 5;
 
+    //Offset x, offset y, old x, old y
+    private final double[] moveGridValues = {0, 0, -Double.MAX_VALUE, -Double.MAX_VALUE};
+    
     /**
      * Padding between cells, defined in pixels
      */
@@ -125,8 +128,6 @@ public abstract class Board {
      * Counts the number of living neighbors. This is done by going through each
      * living cell, and incrementing its neighbors.
      *
-     * @see gol.model.Board.ArrayBoard#gameBoard
-     * @see gol.model.Board.DynamicBoard TODO DynamicBoard
      */
     protected abstract void countNeigh();
 
@@ -193,6 +194,12 @@ public abstract class Board {
     public abstract int getArrayLength(int i);
 
     /**
+     * Returns the Maximum elements in a array row or List.
+     *
+     * @return elements in row i
+     */
+    public abstract int getMaxRowLength();
+    /**
      * Returns the cell state at position (y,x)
      *
      * @param y the y coordinate of the cell
@@ -200,5 +207,13 @@ public abstract class Board {
      * @return The cells state at position (y,x). true if alive. false if dead.
      */
     public abstract boolean getCellState(int y, int x);
+
+    /**
+     * Offset x, offset y, old x, old y
+     * @return 
+     */
+    public double[] getMoveGridValues() {
+        return moveGridValues;
+    }
 
 }

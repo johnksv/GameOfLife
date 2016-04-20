@@ -35,66 +35,72 @@ public class StatsTest {
         System.out.println("getStatistics");
 
         instance.setPattern(new byte[][]{{0, 64, 0}, {0, 0, 64}, {64, 64, 64}});
-        int[][] result = instance.getStatistics(20);
-        for (int iteration = 0; iteration < result.length-1; iteration++) {
+        int[][] result = instance.getStatistics(20, true, true);
+        for (int iteration = 0; iteration < result.length - 1; iteration++) {
 
             assertEquals(5, result[iteration][0]);
             assertEquals(0, result[iteration][1]);
-            
+
             //For each generation, there should be a 100% match with another generation
-            assertEquals(100, result[iteration][2],0.0005);
+            //unless for the two last. Only checking for generation in future.
+            if (iteration < result.length - 3) {
+                assertEquals(100, result[iteration][2], 0.0005);
+            } else if (iteration == result.length - 2) {
+                assertEquals(0, result[iteration][2], 0.0005);
+            }
         }
     }
 
-    /*  Commented out because these methods was sat to private after test.
-     @Test
-     public void testCountLiving() {
-     System.out.println("countLiving");
+    @Test
+    public void testCountLiving() {
+        System.out.println("countLiving");
 
-     int[] result = instance.countLiving(10);
-     for (int i = 0; i < result.length; i++) {
-     assertEquals(3, result[i]);
-     }
+        int[] result = instance.getCountLiving(10);
+        for (int i = 0; i < result.length; i++) {
+            assertEquals(3, result[i]);
+        }
 
-     result = instance.countLiving(0);
-     assertEquals(0, result[0]);
+        result = instance.getCountLiving(0);
+        assertEquals(0, result[0]);
 
-     expectedExeption.expect(NegativeArraySizeException.class);
-     instance.countLiving(-1);
-     instance.countLiving(Integer.MIN_VALUE);
+        expectedExeption.expect(NegativeArraySizeException.class);
+        instance.getCountLiving(-1);
+        instance.getCountLiving(Integer.MIN_VALUE);
 
-     }
+    }
 
-     @Test
-     public void testChangeInLiving() {
-     System.out.println("changeInLiving");
+    @Test
+    public void testChangeInLiving() {
+        System.out.println("changeInLiving");
 
-     instance.setPattern(new byte[][]{{0, 64, 0}, {0, 64, 0}, {0, 64, 0}});
-     int[] countChangeOfLiving = instance.changeInLiving(10);
-     for (int i = 0; i < countChangeOfLiving.length; i++) {
-     assertEquals(0, countChangeOfLiving[i]);
-     }
+        instance.setPattern(new byte[][]{{0, 64, 0}, {0, 64, 0}, {0, 64, 0}});
+        int[] countChangeOfLiving = instance.getChangeInLiving(10);
+        for (int i = 0; i < countChangeOfLiving.length; i++) {
+            assertEquals(0, countChangeOfLiving[i]);
+        }
 
-     instance.setPattern(new byte[][]{{64, 64, 0}, {0, 64, 0}, {0, 64, 0}});
-     int[] expArray = instance.changeInLiving(10);
-     System.out.println(Arrays.toString(expArray));
-     assertEquals(0, expArray[0]);
-     assertEquals(2, expArray[1]);
-     assertEquals(0, expArray[2]);
+        //Need to make an new instance, or else calcualtions is done on old pattern.
+        Stats instance = new Stats();
+        instance.setPattern(new byte[][]{{64, 64, 0}, {0, 64, 0}, {0, 64, 0}});
+        int[] resArray = instance.getChangeInLiving(10);
+        assertEquals(0, resArray[0]);
+        assertEquals(2, resArray[1]);
+        assertEquals(0, resArray[2]);
 
-     }
+    }
 
-     //@Test
-     public void testSimilarityMeasure() {
-     System.out.println("similarityMeasure");
-     int time = 10;
-     int expResult = 0;
-     instance.setPattern(new byte[][]{{0, 64, 0}, {0, 64, 0}, {0, 64, 0}});
-     int[] result = instance.similarityMeasure(time);
-     // assertEquals(expResult, result);
-     fail("The test case is a prototype.");
-     }
+    //@Test
+    public void testSimilarityMeasure() {
+        System.out.println("similarityMeasure");
+        int time = 10;
+        int expResult = 0;
+        instance.setPattern(new byte[][]{{0, 64, 0}, {0, 64, 0}, {0, 64, 0}});
+        int[][] result = instance.getSimilarityMeasure(time);
+        // assertEquals(expResult, result);
+        fail("The test case is a prototype.");
+    }
 
+    /*
      @Test
      public void testGeometricFactor() {
      System.out.println("geometricFactor");
@@ -118,14 +124,6 @@ public class StatsTest {
      assertEquals(expResult, result);
      }
 
-     }
-
-     @Test
-     public void testgetTheta() {
-     System.out.println("getTheta");
-     for (int i = 1; i < 5; i++) {
-     System.out.println(instance.getTheta(i));
-     }
      }
      */
 }

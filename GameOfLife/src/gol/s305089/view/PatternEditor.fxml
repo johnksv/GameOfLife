@@ -41,7 +41,7 @@
                                         <RadioButton fx:id="rbRemoveCell" mnemonicParsing="false" text="Remove cells" toggleGroup="$mouseActions" />
                                         <Button mnemonicParsing="false" onAction="#handleClearBtn" text="Clear board" />
                                         <Separator prefWidth="200.0" />
-                                        <Button mnemonicParsing="false" text="Send board to main window" />
+                                        <Button mnemonicParsing="false" onAction="#saveAsGIF" text="Save pattern to GIF" />
                                     </children>
                                 </VBox>
                             </content>
@@ -115,14 +115,18 @@
                                 <Region prefHeight="30.0" prefWidth="17.0" />
                                 <CheckBox fx:id="chboxAutoUpdateStrip" mnemonicParsing="false" text="Automatically update strip" />
                             </items>
+                     <VBox.margin>
+                        <Insets top="-10.0" />
+                     </VBox.margin>
                         </ToolBar>
-                        <ScrollPane BorderPane.alignment="CENTER">
+                        <ScrollPane prefHeight="127.0" prefWidth="778.0" BorderPane.alignment="CENTER">
                             <content>
                                 <HBox fx:id="theStripCanvasContainer" prefHeight="150.0">
 
                                 </HBox>
                             </content>
                         </ScrollPane>
+                  <Label text="Hint: Click on the generation you want to edit" />
                     </children>
                 </VBox>
             </content>

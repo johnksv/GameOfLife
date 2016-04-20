@@ -48,4 +48,15 @@ public class ConwaysRule implements Rule {
         return 0;
     }
 
+    @Override
+    public byte[] getSurvive() {
+        return new byte[]{2,3};
+    }
+
+    @Override
+    public byte[] getToBorn() {
+        return new byte[]{3};
+    }
+    
+
 }

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.canvas.Canvas?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
@@ -16,158 +17,175 @@
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
 <BorderPane fx:id="borderpane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gol.controller.GameController">
     <bottom>
-        <ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+        <ToolBar fx:id="toolBarQuickStats" prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
             <items>
-                <Label text="Sekunder simulering har vært i gang:" />
-                <Region prefWidth="100.0" />
-                <Separator orientation="VERTICAL" />
-                <Label text="Høyeste antall levende celler" />
+                <Label fx:id="labelGenCount" text="Generation: 0" />
             </items>
         </ToolBar>
     </bottom>
-    <right>
-        <TabPane fx:id="tabpane" prefHeight="400.0" prefWidth="250.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
-            <tabs>
-                <Tab text="General">
-                    <content>
-                        <VBox>
-                            <children>
-                                <TitledPane collapsible="false" prefWidth="250.0">
-                                    <content>
-                                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                                            <children>
-                                                <Label layoutX="8.0" layoutY="14.0" text="Speed/Itterations per second:" />
-                                                <Label fx:id="animationSpeedLabel" layoutX="168.0" layoutY="32.0" text="1,00" />
-                                                <Slider fx:id="animationSpeedSlider" layoutX="14.0" layoutY="33.0" min="1" onValueChange="#handleAnimationSpeedSlider" value="2.0" />
-                                                <Label layoutX="11.0" layoutY="54.0" text="Zoom:" />
-                                                <Slider fx:id="cellSizeSlider" layoutX="18.0" layoutY="71.0" max="95" min="0" onValueChange="#handleZoom" value="95" />
-                                                <Label layoutX="12.0" layoutY="98.0" text="Gridspacing" />
-                                                <Slider fx:id="gridSpacingSlider" layoutX="17.0" layoutY="118.0" max="20" min="0" onValueChange="#handleGridSpacingSlider" value="3" />
-                                                <Button fx:id="startPauseBtn" layoutX="6.0" layoutY="145.0" mnemonicParsing="false" onAction="#handleAnimation" text="Start game" />
-                                                <Button layoutX="146.0" layoutY="145.0" mnemonicParsing="false" onAction="#handleClearBtn" text="Clean board" />
-                                            </children>
-                                        </AnchorPane>
-                                    </content>
-                                </TitledPane>
-                                <TitledPane animated="false" collapsible="false">
-                                    <content>
-                                        <AnchorPane prefWidth="200.0">
-                                            <children>
-                                                <RadioButton fx:id="rbAddCell" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" selected="true" text="Add cells">
-                                                    <toggleGroup>
-                                                        <ToggleGroup fx:id="mouseActions" />
-                                                    </toggleGroup>
-                                                </RadioButton>
-                                                <RadioButton fx:id="rbRemoveCell" layoutX="14.0" layoutY="44.0" mnemonicParsing="false" text="Remove cells" toggleGroup="$mouseActions" />
-                                                <RadioButton fx:id="rbMoveGrid" layoutX="14.0" layoutY="74.0" mnemonicParsing="false" text="Move grid" toggleGroup="$mouseActions" />
-                                                <CheckBox fx:id="cbShowGrid" layoutX="15.0" layoutY="113.0" mnemonicParsing="false" text="Show grid" />
-                                            </children>
-                                        </AnchorPane>
-                                    </content>
-                                </TitledPane>
-                            </children>
-                        </VBox>
-                    </content>
-                </Tab>
-                <Tab text="Advanced">
-                    <content>
-                        <VBox>
-                            <children>
-                                <TitledPane animated="false" collapsible="false" text="Import Pattern">
-                                    <content>
-                                        <AnchorPane minHeight="0.0" minWidth="0.0" prefWidth="200.0">
-                                            <children>
-                                                <Button layoutX="16.0" layoutY="11.0" mnemonicParsing="false" onAction="#handleImportFileBtn" text="Import pattern from file" />
-                                                <Button layoutX="16.0" layoutY="47.0" mnemonicParsing="false" text="Import/search pattern from internet" />
-                                    <Button layoutX="170.0" layoutY="11.0" mnemonicParsing="false" onAction="#rotateBoardFromFile" text="Rotate" />
-                                            </children>
-                                        </AnchorPane>
-                                    </content>
-                                </TitledPane>
-                                <TitledPane collapsible="false" text="Color">
-                                    <content>
-                                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="150.0" prefWidth="200.0">
-                                            <children>
-                                                <ColorPicker fx:id="cellCP" layoutX="12.0" layoutY="28.0" onValueChange="#handleColor" prefWidth="176.0" />
-                                                <Label layoutX="12.0" layoutY="9.0" text="Living cells" />
-                                                <ColorPicker fx:id="backgroundCP" layoutX="14.0" layoutY="96.0" onValueChange="#handleColor" prefWidth="176.0" />
-                                                <Label layoutX="14.0" layoutY="73.0" text="Background" />
-                                                <Separator layoutX="-4.0" layoutY="60.0" prefHeight="3.0" prefWidth="227.0" />
-                                            </children>
-                                        </AnchorPane>
-                                    </content>
-                                </TitledPane>
-                                <TitledPane collapsible="false" prefHeight="225.0" prefWidth="250.0" text="Game rules">
-                                    <content>
-                                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="300.0" prefWidth="250.0">
-                                            <children>
-                                                <Label layoutX="7.0" layoutY="53.0" text="S: survive at:" />
-                                                <Label layoutX="7.0" layoutY="84.0" text="B: born at:" />
-                                                <RadioButton contentDisplay="TOP" layoutX="19.0" layoutY="17.0" mnemonicParsing="false" selected="true" text="Standard">
-                                                    <toggleGroup>
-                                                        <ToggleGroup fx:id="tgGameRules" />
-                                                    </toggleGroup>
-                                                </RadioButton>
-                                                <RadioButton fx:id="rbCustomGameRules" layoutX="123.0" layoutY="17.0" mnemonicParsing="false" text="Custom rules" toggleGroup="$tgGameRules" />
-                                                <TextField fx:id="tfCellsToSurvive" disable="true" layoutX="123.0" layoutY="49.0" prefHeight="25.0" prefWidth="92.0" text="2,3" />
-                                                <TextField fx:id="tfCellsToBeBorn" disable="true" layoutX="123.0" layoutY="80.0" onKeyTyped="#handleRuleText" prefHeight="25.0" prefWidth="92.0" text="3" />
-                                                <Button fx:id="btnUseRule" disable="true" layoutX="68.0" layoutY="120.0" mnemonicParsing="false" onAction="#handleRuleBtn" text="Use Rules" />
-                                            </children>
-                                        </AnchorPane>
-                                    </content>
-                                </TitledPane>
-                            </children>
-                        </VBox>
-                    </content>
-                </Tab>
-                <Tab text="Extra">
-                    <content>
-                        <VBox prefHeight="200.0" prefWidth="100.0">
-                            <children>
-                                <TitledPane animated="false" collapsible="false" text="Stian">
-                                    <content>
-                                        <AnchorPane minHeight="0.0" minWidth="0.0" prefWidth="200.0">
-                                            <children>
-
-                                            </children>
-                                        </AnchorPane>
-                                    </content>
-                                </TitledPane>
-                                <TitledPane animated="false" collapsible="false" text="Trygve">
-                                    <content>
-                                        <AnchorPane minHeight="0.0" minWidth="0.0" prefWidth="200.0">
-                                            <children>
-                                                
-                                            </children>
-                                        </AnchorPane>
-                                    </content>
-                                </TitledPane>
-                                <TitledPane animated="false" collapsible="false" text="John Kasper">
-                                    <content>
-                                        <AnchorPane minHeight="0.0" minWidth="0.0" prefWidth="200.0">
-                                            <children>
-                                               <Button layoutX="15.0" layoutY="14.0" mnemonicParsing="false" onAction="#openPatternEditor" text="Open Pattern Editor" />
-                                                <Button layoutX="14.0" layoutY="46.0" mnemonicParsing="false" onAction="#currentBoardToGIF" text="Save current patter to GIF" />
-                                                <Button layoutX="14.0" layoutY="78.0" mnemonicParsing="false" onAction="#showStats" text="Show Stats" />
-
-                                            </children>
-                                        </AnchorPane>
-                                    </content>
-                                </TitledPane>
-                            </children>
-                        </VBox>
-                    </content>
-                </Tab>
-            </tabs>
-        </TabPane>
-    </right>
-
+   
     <center>
-         <Canvas fx:id="canvas" height="560.0" width="548.0" BorderPane.alignment="TOP_LEFT" />
+        <AnchorPane BorderPane.alignment="TOP_LEFT">
+            <children>
+                <HBox>
+                    <children>                        
+                        <Canvas fx:id="canvas" height="460.0" width="800.0" />
+                    </children>
+                </HBox>
+                <VBox fillWidth="false" prefHeight="600.0" prefWidth="250.0" AnchorPane.rightAnchor="0.0">
+                    <children>
+                        <TitledPane prefHeight="600.0" prefWidth="250.0" text="Menu (press to hide/show)">
+                            <content>
+                                <TabPane prefHeight="400.0" prefWidth="250.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
+                                    <tabs>
+                                        <Tab text="General">
+                                            <content>
+                                                <VBox prefWidth="248.0">
+                                                    <children>
+                                                        <TitledPane collapsible="false" prefWidth="248.0">
+                                                            <content>
+                                                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="176.0" prefWidth="246.0">
+                                                                    <children>
+                                                                        <Label layoutX="8.0" layoutY="14.0" text="Speed/Itterations per second:" />
+                                                                        <Label fx:id="animationSpeedLabel" layoutX="168.0" layoutY="32.0" text="1,00" />
+                                                                        <Slider fx:id="animationSpeedSlider" layoutX="14.0" layoutY="33.0" min="1" onValueChange="#handleAnimationSpeedSlider" value="2.0" />
+                                                                        <Label layoutX="11.0" layoutY="54.0" text="Zoom:" />
+                                                                        <Slider fx:id="cellSizeSlider" layoutX="18.0" layoutY="71.0" max="95" min="0" onValueChange="#handleZoom" value="95" />
+                                                                        <Label layoutX="12.0" layoutY="98.0" text="Gridspacing" />
+                                                                        <Slider fx:id="gridSpacingSlider" layoutX="17.0" layoutY="118.0" max="20" min="0" onValueChange="#handleGridSpacingSlider" value="3" />
+                                                                        <Button fx:id="startPauseBtn" layoutX="6.0" layoutY="145.0" mnemonicParsing="false" onAction="#handleAnimation" text="Start game" />
+                                                                        <Button layoutX="146.0" layoutY="145.0" mnemonicParsing="false" onAction="#handleClearBtn" text="Clear board" />
+                                                                    </children>
+                                                                    <padding>
+                                                                        <Insets bottom="13.0" />
+                                                                    </padding>
+                                                                </AnchorPane>
+                                                            </content>
+                                                            <VBox.margin>
+                                                                <Insets />
+                                                            </VBox.margin>
+                                                        </TitledPane>
+                                                        <TitledPane animated="false" collapsible="false">
+                                                            <content>
+                                                                <AnchorPane prefWidth="200.0">
+                                                                    <children>
+                                                                        <RadioButton fx:id="rbAddCell" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" selected="true" text="Add cells">
+                                                                            <toggleGroup>
+                                                                                <ToggleGroup fx:id="mouseActions" />
+                                                                            </toggleGroup>
+                                                                        </RadioButton>
+                                                                        <RadioButton fx:id="rbRemoveCell" layoutX="14.0" layoutY="44.0" mnemonicParsing="false" text="Remove cells" toggleGroup="$mouseActions" />
+                                                                        <RadioButton fx:id="rbMoveGrid" layoutX="14.0" layoutY="74.0" mnemonicParsing="false" text="Move grid" toggleGroup="$mouseActions" />
+                                                                        <CheckBox fx:id="cbShowGrid" layoutX="15.0" layoutY="113.0" mnemonicParsing="false" text="Show grid" />
+                                                                    </children>
+                                                                </AnchorPane>
+                                                            </content>
+                                                        </TitledPane>
+                                                    </children>
+                                                </VBox>
+                                            </content>
+                                        </Tab>
+                                        <Tab text="Advanced">
+                                            <content>
+                                                <VBox>
+                                                    <children>
+                                                        <TitledPane animated="false" collapsible="false" text="Import Pattern">
+                                                            <content>
+                                                                <AnchorPane minHeight="0.0" minWidth="0.0" prefWidth="200.0">
+                                                                    <children>
+                                                                        <Button layoutX="16.0" layoutY="11.0" mnemonicParsing="false" onAction="#handleImportFileBtn" text="Import pattern from file" />
+                                                                        <Button layoutX="16.0" layoutY="47.0" mnemonicParsing="false" text="Import/search pattern from internet" />
+                                                                        <Button layoutX="170.0" layoutY="11.0" mnemonicParsing="false" onAction="#rotateBoardFromFile" text="Rotate" />
+                                                                    </children>
+                                                                </AnchorPane>
+                                                            </content>
+                                                        </TitledPane>
+                                                        <TitledPane collapsible="false" text="Color">
+                                                            <content>
+                                                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="150.0" prefWidth="200.0">
+                                                                    <children>
+                                                                        <ColorPicker fx:id="cellCP" layoutX="12.0" layoutY="28.0" onValueChange="#handleColor" prefWidth="176.0" />
+                                                                        <Label layoutX="12.0" layoutY="9.0" text="Living cells" />
+                                                                        <ColorPicker fx:id="backgroundCP" layoutX="14.0" layoutY="96.0" onValueChange="#handleColor" prefWidth="176.0" />
+                                                                        <Label layoutX="14.0" layoutY="73.0" text="Background" />
+                                                                        <Separator layoutX="-4.0" layoutY="60.0" prefHeight="3.0" prefWidth="227.0" />
+                                                                    </children>
+                                                                </AnchorPane>
+                                                            </content>
+                                                        </TitledPane>
+                                                        <TitledPane collapsible="false" prefHeight="225.0" prefWidth="250.0" text="Game rules">
+                                                            <content>
+                                                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="300.0" prefWidth="250.0">
+                                                                    <children>
+                                                                        <Label layoutX="7.0" layoutY="53.0" text="S: survive at:" />
+                                                                        <Label layoutX="7.0" layoutY="84.0" text="B: born at:" />
+                                                                        <RadioButton contentDisplay="TOP" layoutX="19.0" layoutY="17.0" mnemonicParsing="false" selected="true" text="Standard">
+                                                                            <toggleGroup>
+                                                                                <ToggleGroup fx:id="tgGameRules" />
+                                                                            </toggleGroup>
+                                                                        </RadioButton>
+                                                                        <RadioButton fx:id="rbCustomGameRules" layoutX="123.0" layoutY="17.0" mnemonicParsing="false" text="Custom rules" toggleGroup="$tgGameRules" />
+                                                                        <TextField fx:id="tfCellsToSurvive" disable="true" layoutX="123.0" layoutY="49.0" prefHeight="25.0" prefWidth="92.0" text="2,3" />
+                                                                        <TextField fx:id="tfCellsToBeBorn" disable="true" layoutX="123.0" layoutY="80.0" onKeyTyped="#handleRuleText" prefHeight="25.0" prefWidth="92.0" text="3" />
+                                                                        <Button fx:id="btnUseRule" disable="true" layoutX="68.0" layoutY="120.0" mnemonicParsing="false" onAction="#handleRuleBtn" text="Use Rules" />
+                                                                    </children>
+                                                                </AnchorPane>
+                                                            </content>
+                                                        </TitledPane>
+                                                    </children>
+                                                </VBox>
+                                            </content>
+                                        </Tab>
+                                        <Tab text="Extra">
+                                            <content>
+                                                <VBox prefHeight="200.0" prefWidth="100.0">
+                                                    <children>
+                                                        <TitledPane animated="false" collapsible="false" text="Stian">
+                                                            <content>
+                                                                <AnchorPane minHeight="0.0" minWidth="0.0" prefWidth="200.0">
+                                                                    <children>
+
+                                                                    </children>
+                                                                </AnchorPane>
+                                                            </content>
+                                                        </TitledPane>
+                                                        <TitledPane animated="false" collapsible="false" text="Trygve">
+                                                            <content>
+                                                                <AnchorPane minHeight="0.0" minWidth="0.0" prefWidth="200.0">
+                                                                    <children>
+                                                
+                                                                    </children>
+                                                                </AnchorPane>
+                                                            </content>
+                                                        </TitledPane>
+                                                        <TitledPane animated="false" collapsible="false" text="John Kasper">
+                                                            <content>
+                                                                <AnchorPane minHeight="0.0" minWidth="0.0" prefWidth="200.0">
+                                                                    <children>
+                                                                        <Button layoutX="15.0" layoutY="14.0" mnemonicParsing="false" onAction="#openPatternEditor" text="Open Pattern Editor" />
+                                                                        <Button layoutX="14.0" layoutY="46.0" mnemonicParsing="false" onAction="#saveAsGIF" text="Save current patter to GIF" />
+                                                                        <Button layoutX="14.0" layoutY="78.0" mnemonicParsing="false" onAction="#showStats" text="Show Stats" />
+
+                                                                    </children>
+                                                                </AnchorPane>
+                                                            </content>
+                                                        </TitledPane>
+                                                    </children>
+                                                </VBox>
+                                            </content>
+                                        </Tab>
+                                    </tabs>
+                                </TabPane>
+                            </content>
+                        </TitledPane>
+                    </children>
+                </VBox>
+            </children>
+        </AnchorPane>
     </center>
 </BorderPane>
