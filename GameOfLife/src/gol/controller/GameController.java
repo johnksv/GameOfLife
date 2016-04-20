@@ -39,6 +39,7 @@ import javafx.scene.control.ToolBar;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
@@ -111,7 +112,7 @@ public class GameController implements Initializable {
 
         //TODO Valg for Array eller dynamisk brett
         //activeBoard = new ArrayBoard();
-        activeBoard = new DynamicBoard(1800,1800);
+        activeBoard = new DynamicBoard(1800, 1800);
         cellCP.setValue(Color.BLACK);
         backgroundCP.setValue(Color.web("#F4F4F4"));
         moveGridValues = activeBoard.getMoveGridValues();
@@ -284,24 +285,36 @@ public class GameController implements Initializable {
                 alert.setTitle("Place pattern");
                 alert.initStyle(StageStyle.UTILITY);
                 alert.setContentText("How do you want to insert the pattern?");
+                
+                for (String line : ReadFile.getMetadata()) {
+                   
+                }
+                
+
                 ButtonType btnGhostTiles = new ButtonType("Insert with ghost tiles");
                 ButtonType btnInsert = new ButtonType("Insert at top-left");
+                ButtonType btnCancel = new ButtonType("Cancel");
 
-                alert.getButtonTypes().addAll(btnGhostTiles, btnInsert);
+                alert.getButtonTypes().addAll(btnGhostTiles, btnInsert, btnCancel);
 
                 Optional<ButtonType> result = alert.showAndWait();
-                if (result.get() == btnInsert) {
-                    KeyFrame keyframe = new KeyFrame(Duration.millis(1000), (ActionEvent event) -> {
-                        drawGhostTiles();
-                    });
-                    timeline.getKeyFrames().add(keyframe);
-                    activeBoard.insertArray(boardFromFile, 1, 1);
-                    boardFromFile = null;
-                    timeline.getKeyFrames().remove(keyframe);
+                if (result.get() != btnCancel) {
+                    if (result.get() == btnInsert) {
+                        KeyFrame keyframe = new KeyFrame(Duration.millis(1000), (ActionEvent event) -> {
+                            drawGhostTiles();
+                        });
+                        timeline.getKeyFrames().add(keyframe);
+                        activeBoard.insertArray(boardFromFile, 1, 1);
+                        boardFromFile = null;
+                        timeline.getKeyFrames().remove(keyframe);
+                    }
+
+                    activeBoard.setGameRule(ReadFile.getParsedRule());
+                    draw();
+                } else {
+                    alert.close();
                 }
 
-                activeBoard.setGameRule(ReadFile.getParsedRule());
-                draw();
             }
 
         } catch (IOException ex) {
