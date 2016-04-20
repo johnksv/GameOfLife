@@ -4,6 +4,7 @@ import gol.model.Logic.*;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -16,6 +17,8 @@ public class ReadFile {
 
     private static Rule parsedRule;
 
+    private final static List<String> METADATA = new ArrayList<>(10);
+
     /**
      * Reads a file, makes an array. This static method checks the file format,
      * and calls for the correct method for parsing the file.
@@ -27,6 +30,8 @@ public class ReadFile {
      * the file
      */
     public static byte[][] readFileFromDisk(Path file) throws IOException, PatternFormatException {
+        METADATA.clear();
+
         String path = file.toString();
         String[] token = path.split("\\.");
         String fileExt = token[token.length - 1];
@@ -62,6 +67,10 @@ public class ReadFile {
         return returnRule;
     }
 
+    public static List<String> getMetadata() {
+        return METADATA;
+    }
+
     /**
      * Parses a PlainText file into a playable board.
      *
@@ -81,7 +90,7 @@ public class ReadFile {
                     greatestlength = line.length();
                 }
             } else {
-                //TODO appendMetaData(line);
+                appendMetaData(line.substring(1));
                 commentLines++;
             }
         }
@@ -118,12 +127,18 @@ public class ReadFile {
      */
     private static byte[][] readRLE(String[] file) throws IOException, PatternFormatException {
         parsedRule = null;
-        
+
         int commentLines = 0;
         for (String line : file) {
             if (line.startsWith("#")) {
                 commentLines++;
-                //TODO appendMetaData(line);
+                if (line.contains("#N")) {
+                    appendMetaData("Name:" + line.substring(3));
+                } else if (line.contains("#O")) {
+                    appendMetaData("Author:" + line.substring(3));
+                } else {
+                    appendMetaData(line.substring(3));
+                }
             }
         }
 
@@ -225,16 +240,14 @@ public class ReadFile {
     private static void setCellStateRLE(byte[][] parsedBoard, char letter, int y, int x) throws PatternFormatException {
         if (y >= parsedBoard.length || x >= parsedBoard[y].length) {
             throw new PatternFormatException("Line exceeds the defined width. At line/\"$ number\": " + y);
+        } else if (letter == 'b') {
+            parsedBoard[y][x] = 0;
+
+        } else if (letter == 'o') {
+            parsedBoard[y][x] = 64;
+
         } else {
-            if (letter == 'b') {
-                parsedBoard[y][x] = 0;
-
-            } else if (letter == 'o') {
-                parsedBoard[y][x] = 64;
-
-            } else {
-                throw new PatternFormatException("Unknow character at line: " + y);
-            }
+            throw new PatternFormatException("Unknow character at line: " + y);
         }
 
     }
@@ -267,10 +280,8 @@ public class ReadFile {
                     born = new byte[]{-1};
                 }
 
-            } else {
-                //expected Rule=3/23  (born/survive)
-
-                if (i == 0) {
+            } else //expected Rule=3/23  (born/survive)
+             if (i == 0) {
                     if (rule[i].length() >= 1) {
                         born = new byte[rule[i].length()];
                         for (int j = 0; j < rule[i].length(); j++) {
@@ -289,8 +300,6 @@ public class ReadFile {
                         survive = new byte[]{-1};
                     }
                 }
-
-            }
         }
         try {
             parsedRule = new CustomRule(survive, born);
@@ -298,4 +307,9 @@ public class ReadFile {
             parsedRule = new ConwaysRule();
         }
     }
+
+    private static void appendMetaData(String line) {
+        METADATA.add(line);
+    }
+
 }
