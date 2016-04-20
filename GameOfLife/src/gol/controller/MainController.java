@@ -54,6 +54,14 @@ public class MainController implements Initializable {
         primaryStage.setMinHeight(650);
 
     }
+    @FXML
+    public void howToPlay() throws IOException {
+        HowToPlayController.loadStage(primaryStage);
+        Parent root = FXMLLoader.load(getClass().getResource("/gol/view/HowToPlay.fxml"));
+        Scene scene = new Scene(root);
+        setKeyEvents(scene);
+        primaryStage.setScene(scene);
+    }
 
     /**
      * Checks if the  the parameter is stored in the input list.
