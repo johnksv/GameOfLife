@@ -7,19 +7,22 @@ public final class UsefullMethods {
 
     private UsefullMethods() {
     }
-
-    public static byte[][] transposeMatrix(byte[][] matrix) {
-        byte[][] returnMatrix = new byte[matrix[0].length][matrix.length];
+    public static byte[][] transposeMatrix(byte[][] matrix){
+        byte[][] returnMatrix =new byte[matrix[0].length][matrix.length];        
         for (int i = 0; i < matrix.length; i++) {
             for (int j = 0; j < matrix[0].length; j++) {
-                returnMatrix[j][i] = matrix[i][j];
+                returnMatrix[j][i]=matrix[i][j];
             }
         }
         return matrix;
-    }
-
+    } 
     public static byte[][] rotateArray90Deg(byte[][] arrayToRotate) {
-        int longestRow = longestRow(arrayToRotate);
+        int longestRow = 0;
+        for (byte[] row : arrayToRotate) {
+            if (row.length > longestRow) {
+                longestRow = row.length;
+            }
+        }
 
         byte[][] rotatedArray = new byte[longestRow][arrayToRotate.length];
 
@@ -33,8 +36,7 @@ public final class UsefullMethods {
 
         return rotatedArray;
     }
-
-    public static int longestRow(byte[][] arrayToSearch) {
+        public static int longestRow(byte[][] arrayToSearch) {
         int longestRow = 0;
         for (byte[] row : arrayToSearch) {
             if (row.length > longestRow) {
