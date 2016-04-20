@@ -18,7 +18,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane fx:id="borderpane" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="530.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gol.s305089.controller.GifMakerController">
+<BorderPane fx:id="borderpane" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="530.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gol.s305089.controller.GifMakerController">
     <left>
      
     </left>
@@ -70,6 +70,7 @@
                                                     </VBox.margin>
                                                 </Spinner>
                                                 <Separator prefWidth="200.0" />
+                                    <CheckBox fx:id="cbFollowTpLeft" mnemonicParsing="false" text="Follow top-left expansion" />
                                                 <CheckBox fx:id="cbCenterPattern" mnemonicParsing="false" text="Center pattern" />
                                                 <CheckBox fx:id="cbAutoPreview" mnemonicParsing="false" text="Automatically preview" />
                                             </children>

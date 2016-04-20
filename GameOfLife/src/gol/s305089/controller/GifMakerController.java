@@ -10,6 +10,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -73,6 +74,8 @@ public class GifMakerController implements Initializable {
     @FXML
     private CheckBox cbInfinityLoop;
     @FXML
+    private CheckBox cbFollowTpLeft;
+    @FXML
     private CheckBox cbCheckPrevGen;
     @FXML
     private Tooltip tooltipSaveLoc;
@@ -127,6 +130,10 @@ public class GifMakerController implements Initializable {
         cpCellColor.valueProperty().addListener(this::autoUpdatedPreview);
         cpBackColor.valueProperty().addListener(this::autoUpdatedPreview);
         cbCenterPattern.selectedProperty().addListener(this::autoUpdatedPreview);
+        cbFollowTpLeft.selectedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+            gifmaker.setFollowTopLeft(newValue);
+            autoUpdatedPreview(observable, oldValue, newValue);
+        });
         cbRndCellColor.selectedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
             gifmaker.setRandomColor(newValue);
             autoUpdatedPreview(observable, oldValue, newValue);
