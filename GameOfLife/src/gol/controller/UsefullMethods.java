@@ -5,7 +5,7 @@ package gol.controller;
  */
 public final class UsefullMethods {
 
-    private usefullMethods() {
+    private UsefullMethods() {
     }
     public static byte[][] transposeMatrix(byte[][] matrix){
         byte[][] returnMatrix =new byte[matrix[0].length][matrix.length];        
