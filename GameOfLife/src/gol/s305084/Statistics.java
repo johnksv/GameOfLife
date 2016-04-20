@@ -26,7 +26,7 @@ public class Statistics {
 
         Board statBoard = new ArrayBoard(activeBoard.getArrayLength(), activeBoard.getArrayLength(0));
         //My break :(
-        statBoard.insertArray(activeBoard.getGameBoard(), 0, 0);
+        statBoard.insertArray(activeBoard.getBoundingBoxBoard(), 0, 0);
         stage.setTitle("Gol: Statistics");
         final NumberAxis xAxis = new NumberAxis();
         final NumberAxis yAxis = new NumberAxis();

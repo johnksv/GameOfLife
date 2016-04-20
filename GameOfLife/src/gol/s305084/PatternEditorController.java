@@ -74,7 +74,7 @@ public class PatternEditorController implements Initializable {
                     java.awt.Color awtCellColor = new java.awt.Color((float) cellColor.getRed(), (float) cellColor.getGreen(), (float) cellColor.getBlue());
                     java.awt.Color awtBgColor = new java.awt.Color((float) bgColor.getRed(), (float) bgColor.getGreen(), (float) bgColor.getBlue());
 
-                    GifMaker.makeGif(activeBoard.getGameBoard(), new GIFWriter(140, 140, selected.toString(),
+                    GifMaker.makeGif(activeBoard.getBoundingBoxBoard(), new GIFWriter(140, 140, selected.toString(),
                             500), 140, 140, awtBgColor, awtCellColor, 20);
 
                 } catch (IOException ex) {
