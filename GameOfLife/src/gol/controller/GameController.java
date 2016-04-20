@@ -15,6 +15,8 @@ import gol.s305089.controller.StatsController;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import java.util.ResourceBundle;
@@ -42,9 +44,12 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.ToolBar;
+import javafx.scene.effect.Bloom;
+import javafx.scene.effect.Effect;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
@@ -120,7 +125,7 @@ public class GameController implements Initializable {
         //TODO Valg for Array eller dynamisk brett
 
         //activeBoard = new ArrayBoard();
-        activeBoard = new DynamicBoard(1800,1800);
+        activeBoard = new DynamicBoard(1800, 1800);
         cellCP.setValue(Color.BLACK);
         backgroundCP.setValue(Color.web("#F4F4F4"));
         moveGridValues = activeBoard.getMoveGridValues();
@@ -294,23 +299,36 @@ public class GameController implements Initializable {
                 alert.setTitle("Place pattern");
                 alert.initStyle(StageStyle.UTILITY);
                 alert.setContentText("How do you want to insert the pattern?");
-                ButtonType btnGhostTiles = new ButtonType("Insert with ghost tiles");
-                ButtonType btnInsert = new ButtonType("Insert at top-left");
 
-                alert.getButtonTypes().addAll(btnGhostTiles, btnInsert);
-
-                Optional<ButtonType> result = alert.showAndWait();
-                if (result.get() == btnInsert) {
-                    KeyFrame keyframe = new KeyFrame(Duration.millis(1000), (ActionEvent event) -> {
-                        drawGhostTiles();
-                    });
-                    timeline.getKeyFrames().add(keyframe);
-                    activeBoard.insertArray(boardFromFile, 1, 1);
-                    boardFromFile = null;
-                    timeline.getKeyFrames().remove(keyframe);
+                VBox container = new VBox();
+                for (String line : ReadFile.getMetadata()) {
+                    container.getChildren().addAll(new Label(line));
+                }
+                
+                if (!container.getChildren().isEmpty()) {
+                    alert.getDialogPane().setExpandableContent(container);
+                    alert.getDialogPane().setExpanded(true);
                 }
 
-                activeBoard.setGameRule(ReadFile.getParsedRule());
+
+                ButtonType btnGhostTiles = new ButtonType("Insert with ghost tiles");
+                ButtonType btnInsert = new ButtonType("Insert at top-left");
+                ButtonType btnCancel = new ButtonType("Cancel");
+
+                alert.getButtonTypes().addAll(btnGhostTiles, btnInsert, btnCancel);
+
+                Optional<ButtonType> result = alert.showAndWait();
+
+                if (result.get() == btnInsert) {
+                    activeBoard.insertArray(boardFromFile, 1, 1);
+                    boardFromFile = null;
+                } else if (result.get() == btnGhostTiles) {
+                    startPauseBtn.setDisable(true);
+                    activeBoard.setGameRule(ReadFile.getParsedRule());
+                } else {
+                    boardFromFile = null;
+                    alert.close();
+                }
                 draw();
             }
 
@@ -420,6 +438,7 @@ public class GameController implements Initializable {
         canvas.addEventHandler(MouseEvent.MOUSE_PRESSED,
                 (MouseEvent e) -> {
                     if (boardFromFile != null) {
+                        startPauseBtn.setDisable(false);
                         activeBoard.insertArray(boardFromFile, (int) ((mousePositionY - moveGridValues[1]) / (activeBoard.getGridSpacing() + activeBoard.getCellSize())),
                                 (int) ((mousePositionX - moveGridValues[0]) / (activeBoard.getGridSpacing() + activeBoard.getCellSize())));
                         boardFromFile = null;

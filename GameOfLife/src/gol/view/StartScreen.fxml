@@ -19,7 +19,7 @@
                   <Font size="46.0" />
                </font>
             </Text>
-            <Button layoutX="263.0" layoutY="289.0" mnemonicParsing="false" text="How to play" />
+            <Button layoutX="263.0" layoutY="289.0" mnemonicParsing="false" onAction="#howToPlay" text="How to play" />
          </children>
       </Pane>
    </center>
