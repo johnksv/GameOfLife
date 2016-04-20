@@ -17,7 +17,7 @@ public class ReadFile {
 
     private static Rule parsedRule;
 
-    private final static List<String> metadata = new ArrayList<>(10);
+    private final static List<String> METADATA = new ArrayList<>(10);
 
     /**
      * Reads a file, makes an array. This static method checks the file format,
@@ -30,7 +30,7 @@ public class ReadFile {
      * the file
      */
     public static byte[][] readFileFromDisk(Path file) throws IOException, PatternFormatException {
-        metadata.clear();
+        METADATA.clear();
 
         String path = file.toString();
         String[] token = path.split("\\.");
@@ -65,6 +65,10 @@ public class ReadFile {
             return new ConwaysRule();
         }
         return returnRule;
+    }
+
+    public static List<String> getMetadata() {
+        return METADATA;
     }
 
     /**
@@ -305,15 +309,7 @@ public class ReadFile {
     }
 
     private static void appendMetaData(String line) {
-        metadata.add(line);
+        METADATA.add(line);
     }
 
-    /**
-     * First index: Name. Second: Author. Third, Rule. Rest, Comment
-     *
-     * @return
-     */
-    public static List<String> getMetadata() {
-        return metadata;
-    }
 }
