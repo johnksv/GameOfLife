@@ -168,20 +168,6 @@ public class ArrayBoard extends Board {
     public byte[][] getBoundingBoxBoard() {
 
         int[] boundingBox = getBoundingBox();
-<<<<<<< HEAD
-        if (boundingBox[1] - boundingBox[0] < 0 || boundingBox[3] - boundingBox[2] < 0) {
-            byte[][] board = new byte[1][1];
-
-            return board;
-        }
-        byte[][] board = new byte[boundingBox[1] - boundingBox[0] + 1][boundingBox[3] - boundingBox[2] + 1];
-        for (int y = 0; y < board.length; y++) {
-            for (int x = 0; x < board[y].length; x++) {
-                if (gameBoard[boundingBox[0] + y][x + boundingBox[2]] == 64) {
-                    board[y][x] = 64;
-                } else {
-                    board[y][x] = 0;
-=======
         if ((boundingBox[1] - boundingBox[0] + 1) > 0  || (boundingBox[3] - boundingBox[2] + 1) > 0) {
             byte[][] board = new byte[boundingBox[1] - boundingBox[0] + 1][boundingBox[3] - boundingBox[2] + 1];
 
@@ -192,18 +178,12 @@ public class ArrayBoard extends Board {
                     } else {
                         board[y][x] = 0;
                     }
->>>>>>> master
                 }
             }
             return board;
         } else {
             return new byte[][] {{}};
         }
-<<<<<<< HEAD
-        return board;
-
-=======
->>>>>>> master
     }
 
     @Override
@@ -237,29 +217,9 @@ public class ArrayBoard extends Board {
 
     @Override
     public boolean getCellState(int y, int x) {
-<<<<<<< HEAD
-        if (y < 0 || x < 0) {
-            return false;
-        }
-        if(y >= gameBoard.length ||x >= gameBoard[0].length){
-            return false;
-        }
-        return gameBoard[y][x] >= 64;
-    }
 
-    @Override
-    public boolean getCellState(double x, double y) {
-        y = y / (cellSize + gridSpacing);
-        x = x / (cellSize + gridSpacing);
-
-        if (((int) y) < gameBoard.length && y >= 0) {
-            if (((int) x) < gameBoard[(int) y].length && x >= 0) {
-                return gameBoard[(int) y][(int) x] == 64;
-            }
-=======
         if (y < 1 || y >= gameBoard.length) {
             return false;
->>>>>>> master
         }
         if (x < 1 || x >= gameBoard[y].length) {
             return false;
@@ -283,11 +243,9 @@ public class ArrayBoard extends Board {
         return result.toString();
     }
 
-<<<<<<< HEAD
-=======
+
     @Override
     public int getMaxRowLength() {
         return HEIGHT;
     }
->>>>>>> master
 }
