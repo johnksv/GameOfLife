@@ -52,7 +52,7 @@ public class GIFWriterS305054 {
              Param originaleBoard - get array, each element in originaleArray, assigned to copied array
              assigns copied array to copiedBoard.
              */
-            copiedBoard.insertArray(originaleArray, (originaleArray.length^2)-originaleArray.length/2, (originaleArray.length^2)-originaleArray.length/2); //Get boundingBox and insert it to an empty.
+            copiedBoard.insertArray(originaleArray, (copiedBoard.getArrayLength()-originaleArray.length)/2, (copiedBoard.getArrayLength()-originaleArray.length)/2); //Get boundingBox and insert it to an empty.
 
             if (cellSize < 10) {
                 this.cellSize = 10;
