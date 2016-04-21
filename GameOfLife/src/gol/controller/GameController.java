@@ -345,7 +345,7 @@ public class GameController implements Initializable {
     @FXML
     private void rotateBoardFromFile() {
         if (boardFromFile != null) {
-            boardFromFile = usefullMethods.rotateArray90Deg(boardFromFile);
+            boardFromFile = UsefullMethods.rotateArray90Deg(boardFromFile);
         }
     }
 

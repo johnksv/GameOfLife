@@ -12,9 +12,9 @@ import static org.junit.Assert.*;
  *
  * @author John Kasper
  */
-public class usefullMethodsTest {
+public class UsefullMethodsTest {
 
-    public usefullMethodsTest() {
+    public UsefullMethodsTest() {
     }
 
     @Before
@@ -30,7 +30,7 @@ public class usefullMethodsTest {
         byte[][] exp = {{0, 0, 64},
                         {0, 0, 64},
                         {0, 0, 0}};
-        byte[][] result = usefullMethods.rotateArray90Deg(arrayToRotate);
+        byte[][] result = UsefullMethods.rotateArray90Deg(arrayToRotate);
         assertArrayEquals(exp, result);
     }
     
@@ -44,7 +44,7 @@ public class usefullMethodsTest {
                         {0, 64, 64},
                         {0, 0, 0},
                         {0, 0, 64}};
-        byte[][] result = usefullMethods.rotateArray90Deg(arrayToRotate);
+        byte[][] result = UsefullMethods.rotateArray90Deg(arrayToRotate);
         assertArrayEquals(exp, result);
     }
     
@@ -57,7 +57,7 @@ public class usefullMethodsTest {
                         {0, 64,},
                         {0, 0},
                         {0, 64}};
-        byte[][] result = usefullMethods.rotateArray90Deg(arrayToRotate);
+        byte[][] result = UsefullMethods.rotateArray90Deg(arrayToRotate);
         assertArrayEquals(exp, result);
     }
     
@@ -69,7 +69,7 @@ public class usefullMethodsTest {
                         {64,},
                         {0},
                         {64}};
-        byte[][] result = usefullMethods.rotateArray90Deg(arrayToRotate);
+        byte[][] result = UsefullMethods.rotateArray90Deg(arrayToRotate);
         assertArrayEquals(exp, result);
     }
 

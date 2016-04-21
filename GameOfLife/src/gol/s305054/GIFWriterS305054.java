@@ -26,7 +26,7 @@ public class GIFWriterS305054 {
     private int height = 50; //Height of .gif - Hardcoded value will be changed - columns
     private int time; // 1000 ms = 1s - later, listener to a slider
     private int cellSize = 10;
-    private short nPicturesLeft = 40; //number of pictures left - TODO nPictures cannot be less than 1
+    private short nPicturesLeft = 50; //number of pictures left - TODO nPictures cannot be less than 1
     private Color bgColor = Color.WHITE; //Standard color
     private Color cColor = Color.BLACK; //Standard color
     String savePath = "testGif.gif"; //Filepath - later, normal output stream
@@ -46,13 +46,13 @@ public class GIFWriterS305054 {
     public void prepareGIF(Board originaleBoard, int cellSize, double time, Color bgColor, Color cColor) { //TODO add parameters height width
         try {
             byte[][] originaleArray = originaleBoard.getBoundingBoxBoard();
-            copiedBoard = new ArrayBoard(originaleArray.length + 2*nPicturesLeft, originaleArray.length + 2*nPicturesLeft);
+            copiedBoard = new ArrayBoard(originaleArray.length^2 + nPicturesLeft, originaleArray.length^2 + nPicturesLeft);
             copiedBoard.setCellSize(cellSize);
             /*
              Param originaleBoard - get array, each element in originaleArray, assigned to copied array
              assigns copied array to copiedBoard.
              */
-            copiedBoard.insertArray(originaleArray, 1, 1); //Get boundingBox and insert it to an empty.
+            copiedBoard.insertArray(originaleArray, (originaleArray.length^2)-originaleArray.length/2, (originaleArray.length^2)-originaleArray.length/2); //Get boundingBox and insert it to an empty.
 
             if (cellSize < 10) {
                 this.cellSize = 10;
@@ -72,7 +72,7 @@ public class GIFWriterS305054 {
                 this.cColor = cColor;
             }
             
-            gifWriterSize = (int)(originaleArray.length*copiedBoard.getCellSize());
+            gifWriterSize = (int)(copiedBoard.getArrayLength()*copiedBoard.getCellSize());
             gifWriter = new GIFWriter(gifWriterSize, gifWriterSize, savePath, this.time);
             gifWriter.setBackgroundColor(this.bgColor);
             gifWriter.flush(); //Flushing to set background color to the first image.
@@ -112,14 +112,9 @@ public class GIFWriterS305054 {
                                 
                 for (int i = 0; i < copiedBoard.getArrayLength(); i++) {
                     for (int j = 0; j < copiedBoard.getArrayLength(i); j++) {
-                        if (copiedBoard.getCellState(i, j)) {
-                            System.out.println("Max length row: " + copiedBoard.getArrayLength());
-                            System.out.println("Max length column: " + copiedBoard.getArrayLength(i));
-                            System.out.println("x1: "+(i*cellSize));
-                            System.out.println("x2: "+(i*cellSize+cellSize));
-                            System.out.println("y1: "+(j*cellSize));
-                            System.out.println("y2: "+(j*cellSize+cellSize));
-                            gifWriter.fillRect(i * cellSize, i * cellSize + cellSize, j * cellSize, j * cellSize + cellSize, cColor);
+                        if (copiedBoard.getCellState(i, j) && (i * cellSize < gifWriterSize && i * cellSize + cellSize < gifWriterSize && j * cellSize < gifWriterSize && j * cellSize + cellSize < gifWriterSize)) {
+                            
+                            gifWriter.fillRect(i * cellSize, (i * cellSize + cellSize), j * cellSize, (j * cellSize + cellSize), cColor);
                         }
                     }
                 }
