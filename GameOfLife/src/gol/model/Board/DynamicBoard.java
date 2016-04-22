@@ -220,17 +220,19 @@ public class DynamicBoard extends Board {
     }
 
     private void expandBoard(int y, int x) {
-        if (gameBoard.size() < MAXHEIGHT) {
+
+        if (y < 1) {
+
             while (y < EXPANSION) {
                 gameBoard.add(0, new CopyOnWriteArrayList<>());
                 getMoveGridValues()[1] -= (cellSize + gridSpacing);
                 y++;
             }
-            while (y >= gameBoard.size()) {
-                gameBoard.add(new CopyOnWriteArrayList<>());
-            }
         }
-        if (getMaxRowLength() < MAXWIDTH) {
+        while (y >= gameBoard.size() - EXPANSION) {
+            gameBoard.add(new CopyOnWriteArrayList<>());
+        }
+        if (x < 1) {
             while (x < EXPANSION) {
                 for (CopyOnWriteArrayList<Byte> row : gameBoard) {
                     row.add(0, (byte) 0);
@@ -238,10 +240,10 @@ public class DynamicBoard extends Board {
                 getMoveGridValues()[0] -= (cellSize + gridSpacing);
                 x++;
             }
+        }
 
-            while (x >= gameBoard.get(y).size()) {
-                gameBoard.get(y).add((byte) 0);
-            }
+        while (x >= gameBoard.get(y).size() - EXPANSION) {
+            gameBoard.get(y).add((byte) 0);
         }
 
     }

@@ -116,7 +116,7 @@ public class GameController implements Initializable {
 
         //TODO Valg for Array eller dynamisk brett
         //activeBoard = new ArrayBoard();
-        activeBoard = new DynamicBoard(1800, 1800);
+        activeBoard = new DynamicBoard();
         cellCP.setValue(Color.BLACK);
         backgroundCP.setValue(Color.web("#F4F4F4"));
         moveGridValues = activeBoard.getMoveGridValues();
