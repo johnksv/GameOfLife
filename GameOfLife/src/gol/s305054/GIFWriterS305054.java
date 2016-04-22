@@ -46,13 +46,13 @@ public class GIFWriterS305054 {
     public void prepareGIF(Board originaleBoard, int cellSize, double time, Color bgColor, Color cColor) { //TODO add parameters height width
         try {
             byte[][] originaleArray = originaleBoard.getBoundingBoxBoard();
-            copiedBoard = new ArrayBoard(originaleArray.length^2 + nPicturesLeft, originaleArray.length^2 + nPicturesLeft);
+            copiedBoard = new ArrayBoard(originaleArray[0].length + nPicturesLeft, originaleArray.length + nPicturesLeft);
             copiedBoard.setCellSize(cellSize);
             /*
              Param originaleBoard - get array, each element in originaleArray, assigned to copied array
              assigns copied array to copiedBoard.
              */
-            copiedBoard.insertArray(originaleArray, (copiedBoard.getArrayLength()-originaleArray.length)/2, (copiedBoard.getArrayLength()-originaleArray.length)/2); //Get boundingBox and insert it to an empty.
+            copiedBoard.insertArray(originaleArray, (int) (copiedBoard.getArrayLength()/2-originaleArray[0].length/2), (int) (copiedBoard.getArrayLength()/2-originaleArray.length/2)); //Get boundingBox and insert it to an empty.
 
             if (cellSize < 10) {
                 this.cellSize = 10;
@@ -99,7 +99,7 @@ public class GIFWriterS305054 {
                 for (int i = 0; i < copiedBoard.getArrayLength(); i++) {
                     for (int j = 0; j < copiedBoard.getArrayLength(i); j++) {
                         if (copiedBoard.getCellState(i, j) && (i * cellSize < gifWriterSize && i * cellSize + cellSize < gifWriterSize && j * cellSize < gifWriterSize && j * cellSize + cellSize < gifWriterSize)) {
-                            gifWriter.fillRect(i * cellSize, i * cellSize + cellSize, j * cellSize, j * cellSize + cellSize, cColor);
+                            gifWriter.fillRect(j * cellSize, j * cellSize + cellSize, i * cellSize, i * cellSize + cellSize, cColor);
                         }
                     }
                 }
@@ -114,7 +114,7 @@ public class GIFWriterS305054 {
                     for (int j = 0; j < copiedBoard.getArrayLength(i); j++) {
                         if (copiedBoard.getCellState(i, j) && (i * cellSize < gifWriterSize && i * cellSize + cellSize < gifWriterSize && j * cellSize < gifWriterSize && j * cellSize + cellSize < gifWriterSize)) {
                             
-                            gifWriter.fillRect(i * cellSize, (i * cellSize + cellSize), j * cellSize, (j * cellSize + cellSize), cColor);
+                            gifWriter.fillRect(j * cellSize, (j * cellSize + cellSize), i * cellSize, (i * cellSize + cellSize), cColor);
                         }
                     }
                 }

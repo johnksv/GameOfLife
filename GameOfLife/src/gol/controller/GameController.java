@@ -341,7 +341,7 @@ public class GameController implements Initializable {
         timeSliderGifTrygve.setMax(2.0);
         timeLabelGifTrygve.setText("Time Between pictures: " + (float) timeSliderGifTrygve.getValue());
     }
-
+    
     @FXML
     private void rotateBoardFromFile() {
         if (boardFromFile != null) {
