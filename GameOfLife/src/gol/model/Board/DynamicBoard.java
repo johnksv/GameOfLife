@@ -222,7 +222,6 @@ public class DynamicBoard extends Board {
     private void expandBoard(int y, int x) {
 
         if (y < 1) {
-
             while (y < EXPANSION) {
                 gameBoard.add(0, new CopyOnWriteArrayList<>());
                 getMoveGridValues()[1] -= (cellSize + gridSpacing);
