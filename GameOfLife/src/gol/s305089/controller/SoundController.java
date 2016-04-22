@@ -5,27 +5,14 @@
 package gol.s305089.controller;
 
 import gol.model.Board.Board;
-import gol.s305089.sound.Sound;
 import java.net.URL;
 import java.util.ResourceBundle;
-import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import gol.s305089.sound.WavFile;
-import gol.s305089.sound.WavFileException;
 import java.io.File;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.ArrayList;
+import java.util.List;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
-import javax.sound.sampled.AudioFormat;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-import javax.sound.sampled.DataLine;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.UnsupportedAudioFileException;
 
 /**
  * FXML Controller class
@@ -34,14 +21,18 @@ import javax.sound.sampled.UnsupportedAudioFileException;
  */
 public class SoundController implements Initializable {
 
-    Board activeBoard;
+    private Board activeBoard;
+    private final List<MediaPlayer> mediaPlayerQueue = new ArrayList<>();
 
-    Media intens1;
-    Media intens2;
-    Media intens3;
-    Media newGen;
-    Media single;
-    MediaPlayer mediaplayer;
+    private Media one;
+    private Media five;
+    private Media ten;
+    private Media twenty;
+    private Media intens1;
+    private Media intens2;
+    private Media intens3;
+    private Media newGen;
+    private Media single;
 
     /**
      * Initializes the controller class.
@@ -53,38 +44,91 @@ public class SoundController implements Initializable {
     }
 
     public void initMediaFiles() {
-        try {
-            intens1 = new Media(new File("gol/s305089/sound/files/hexagon.wav").toURI().toURL().toString());
-            intens2 = new Media(new File("gol/s305089/sound/files/pentagon.wav").toURI().toURL().toString());
-            intens3 = new Media(new File("gol/s305089/sound/files/awesome.wav").toURI().toURL().toString());
-            newGen = new Media(new File("gol/s305089/sound/files/sfx_CreateCompound.wav").toURI().toURL().toString());
-            single = new Media(new File("gol/s305089/sound/files/sfx_Popup.wav").toURI().toURL().toString());
-        } catch (MalformedURLException ex) {
-            Logger.getLogger(SoundController.class.getName()).log(Level.SEVERE, null, ex);
+        one = new Media(new File("src/gol/s305089/sound/files/1.wav").toURI().toString());
+        five = new Media(new File("src/gol/s305089/sound/files/5.wav").toURI().toString());
+        ten = new Media(new File("src/gol/s305089/sound/files/10.wav").toURI().toString());
+        twenty = new Media(new File("src/gol/s305089/sound/files/20.wav").toURI().toString());
+        intens1 = new Media(new File("src/gol/s305089/sound/files/hexagon.wav").toURI().toString());
+        intens2 = new Media(new File("src/gol/s305089/sound/files/pentagon.wav").toURI().toString());
+        intens3 = new Media(new File("src/gol/s305089/sound/files/awesome.wav").toURI().toString());
+        newGen = new Media(new File("src/gol/s305089/sound/files/sfx_CreateCompound.wav").toURI().toString());
+        single = new Media(new File("src/gol/s305089/sound/files/sfx_Popup.wav").toURI().toString());
+    }
+
+    public void parseBoardBB() {
+        byte[][] current = activeBoard.getBoundingBoxBoard();
+        int countOnRow = 0;
+        for (int i = 0; i < current.length; i++) {
+            for (int j = 0; j < current[i].length; j++) {
+                if (current[i][j] == 64 && j == current[i].length - 1) {
+                    //Last row
+                    countOnRow++;
+                    assignSound(countOnRow);
+                } else if (current[i][j] == 64) {
+                    countOnRow++;
+                } else if (countOnRow > 0) {
+                    assignSound(countOnRow);
+                    countOnRow = 0;
+                }
+            }
+            countOnRow = 0;
         }
+        mediaPlayerQueue.add(new MediaPlayer(newGen));
     }
 
     public void playSound() {
+        parseBoardBB();
+        playMediaQueue();
+        mediaPlayerQueue.clear();
 
+    }
+
+    private void playMediaQueue() {
+        mediaPlayerQueue.get(0).play();
+        for (int i = 0; i < mediaPlayerQueue.size() - 1; i++) {
+            final MediaPlayer next = mediaPlayerQueue.get(i + 1);
+            mediaPlayerQueue.get(i).setOnEndOfMedia(() -> {
+                next.play();
+            });
+        }
+    }
+
+    private void parseBoard() {
         char[] currString = activeBoard.toString().toCharArray();
         int countSameChar = 0;
-        char lastChar;
-        char currentChar = 'a';
+        char lastChar = '0';
+        char currentChar = '0';
         for (int i = 0; i < currString.length; i++) {
-            if (i == 0) {
-                lastChar = currString[i];
-            } else {
+            if (i > 1) {
                 lastChar = currString[i - 1];
                 currentChar = currString[i];
             }
-            if (lastChar == currentChar) {
+
+            if (lastChar == currentChar && currentChar == '1') {
                 countSameChar++;
-            } else if (countSameChar > 3) {
-                mediaplayer = new MediaPlayer(intens3);
-                mediaplayer.play();
+            } else {
+                if (currentChar == '1') {
+                    countSameChar++;
+                }
+                if (countSameChar > 0) {
+                    assignSound(countSameChar);
+                    countSameChar = 0;
+                }
             }
         }
+        mediaPlayerQueue.add(new MediaPlayer(newGen));
+    }
 
+    private void assignSound(int countSameChar) {
+        if (countSameChar == 1) {
+            mediaPlayerQueue.add(new MediaPlayer(one));
+        } else if (countSameChar <= 5) {
+            mediaPlayerQueue.add(new MediaPlayer(five));
+        } else if (countSameChar <= 10) {
+            mediaPlayerQueue.add(new MediaPlayer(ten));
+        } else {
+            mediaPlayerQueue.add(new MediaPlayer(twenty));
+        }
     }
 
     public void setBoard(Board activeBoard) {
