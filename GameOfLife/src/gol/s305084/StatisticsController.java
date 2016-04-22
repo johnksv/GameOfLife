@@ -3,6 +3,7 @@ package gol.s305084;
 import gol.model.Board.Board;
 import gol.model.Board.DynamicBoard;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -44,22 +45,24 @@ public class StatisticsController implements Initializable {
 
     public void loadeBoard(Board activeBoard) {
         statBoard.insertArray(activeBoard.getBoundingBoxBoard(), 1, 1);
-        System.out.println("Board Loaded");
     }
 
     public void showStats() {
         double firstSimValue = 0;
         for (int i = 0; i < 20; i++) {
             byte[][] pattern = statBoard.getBoundingBoxBoard();
+            
             //Counting
             int living = countLivingCells(statBoard);
-            System.out.println(living);
             livingCells.getData().add(new XYChart.Data(i, living));
 
-            //Life Change
+            //Next gen
             statBoard.nextGen();
+            
+            //Life Change
             int change = calcChangeCells(countLivingCells(statBoard), living);
             cellChange.getData().add(new XYChart.Data(i, change));
+            
             //Similarity measure
             if (i == 0) {
                 firstSimValue = simValue(pattern, living, change);
@@ -70,10 +73,9 @@ public class StatisticsController implements Initializable {
                 simProcent.getData().add(new XYChart.Data(i, asasgas));
             }
         }
-        
+            
         lineChart.getData().addAll(livingCells, cellChange, simProcent);
         
-        System.out.println(livingCells.getData().get(0));
     }
 
     public static int countLivingCells(Board pattern) {
