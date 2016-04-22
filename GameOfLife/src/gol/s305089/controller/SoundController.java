@@ -5,12 +5,17 @@
 package gol.s305089.controller;
 
 import gol.model.Board.Board;
+import gol.s305089.model.Stats;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.Initializable;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import javafx.fxml.FXML;
+import javafx.scene.control.CheckBox;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 
@@ -21,8 +26,17 @@ import javafx.scene.media.MediaPlayer;
  */
 public class SoundController implements Initializable {
 
+    @FXML
+    private HBox hBoxAuto;
+    @FXML
+    private VBox vBoxUser;
+    @FXML
+    private CheckBox cbEnableSound;
+    
+
     private Board activeBoard;
     private final List<MediaPlayer> mediaPlayerQueue = new ArrayList<>();
+    Stats stats = new Stats();
 
     private Media one;
     private Media five;
@@ -41,6 +55,11 @@ public class SoundController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         initMediaFiles();
 
+        stats.setPattern(activeBoard.getBoundingBoxBoard());
+        stats.getCountLiving(50);
+        
+        playSound();
+
     }
 
     public void initMediaFiles() {
@@ -54,14 +73,15 @@ public class SoundController implements Initializable {
         newGen = new Media(new File("src/gol/s305089/sound/files/sfx_CreateCompound.wav").toURI().toString());
         single = new Media(new File("src/gol/s305089/sound/files/sfx_Popup.wav").toURI().toString());
     }
-
-    public void playSound() {
+    
+    @FXML
+    private void playSound() {
         parseBoardBB();
         playMediaQueue();
         mediaPlayerQueue.clear();
 
     }
-    
+
     private void parseBoardBB() {
         byte[][] current = activeBoard.getBoundingBoxBoard();
         int countOnRow = 0;
@@ -83,8 +103,6 @@ public class SoundController implements Initializable {
         mediaPlayerQueue.add(new MediaPlayer(intens3));
     }
 
-    
-
     private void playMediaQueue() {
         for (int i = 0; i < mediaPlayerQueue.size() - 1; i++) {
             final MediaPlayer current = mediaPlayerQueue.get(i);
@@ -96,7 +114,6 @@ public class SoundController implements Initializable {
         }
         mediaPlayerQueue.get(0).play();
     }
-
 
     private void assignSound(int countSameChar) {
         if (countSameChar == 1) {

@@ -368,27 +368,22 @@ public class GameController implements Initializable {
     
     @FXML
     private void saveAsGIF() throws IOException {
-            SoundController sound = new SoundController();
-            sound.initMediaFiles();
-            sound.setBoard(activeBoard);
-            sound.playSound(); 
-        
-//        timeline.pause();
-//
-//        Stage gifMaker = new Stage();
-//        FXMLLoader root = new FXMLLoader(getClass().getResource("/gol/s305089/view/GifMaker.fxml"));
-//
-//        Scene scene = new Scene((Parent) root.load());
-//
-//        GifMakerController gifcontroller = root.<GifMakerController>getController();
-//        gifcontroller.setByteBoard(activeBoard);
-//
-//        gifMaker.setScene(scene);
-//        gifMaker.setTitle("Generate GIF - Game of Life");
-//        gifMaker.setWidth(215);
-//        gifMaker.setHeight(535);
-//
-//        gifMaker.show();
+        timeline.pause();
+
+        Stage gifMaker = new Stage();
+        FXMLLoader root = new FXMLLoader(getClass().getResource("/gol/s305089/view/GifMaker.fxml"));
+
+        Scene scene = new Scene((Parent) root.load());
+
+        GifMakerController gifcontroller = root.<GifMakerController>getController();
+        gifcontroller.setByteBoard(activeBoard);
+
+        gifMaker.setScene(scene);
+        gifMaker.setTitle("Generate GIF - Game of Life");
+        gifMaker.setWidth(215);
+        gifMaker.setHeight(535);
+
+        gifMaker.show();
     }
 
     @FXML
@@ -405,6 +400,23 @@ public class GameController implements Initializable {
 
         golStats.setScene(scene);
         golStats.setTitle("Stats - Game of Life");
+
+        golStats.show();
+    }
+    @FXML
+    private void showAudio() throws IOException{
+                timeline.pause();
+
+        Stage golStats = new Stage();
+        FXMLLoader root = new FXMLLoader(getClass().getResource("/gol/s305089/view/Audio.fxml"));
+
+        Scene scene = new Scene((Parent) root.load());
+
+        SoundController soundController = root.<SoundController>getController();
+        soundController.setBoard(activeBoard);
+
+        golStats.setScene(scene);
+        golStats.setTitle("Audio controll panel - Game of Life");
 
         golStats.show();
     }
