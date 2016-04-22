@@ -23,7 +23,7 @@ public class DynamicBoard extends Board {
         this();
         expandBoard(-y, -x);
     }
-
+    
     @Override
     public void clearBoard() {
         gameBoard.clear();
@@ -193,6 +193,17 @@ public class DynamicBoard extends Board {
     }
 
     @Override
+    public int getMaxRowLength() {
+        int max = 0;
+        for (CopyOnWriteArrayList<Byte> row : gameBoard) {
+            if (max < row.size()) {
+                max = row.size();
+            }
+        }
+        return max;
+    }
+    
+    @Override
     public String toString() {
         StringBuilder result = new StringBuilder();
         gameBoard.stream().forEach((row) -> {
@@ -247,15 +258,4 @@ public class DynamicBoard extends Board {
 
     }
 
-    @Override
-    public int getMaxRowLength() {
-        int max = 0;
-        for (CopyOnWriteArrayList<Byte> row : gameBoard) {
-            if (max < row.size()) {
-                max = row.size();
-            }
-        }
-
-        return max;
-    }
 }
