@@ -76,14 +76,12 @@ public final class WriteFile {
     }
 
     /**
-     * TODO: If time: fix: If an row is bbb$, it will append b$, an not 2$ to
-     * the previous row
      *
      * @param row
      * @return
      */
     private static StringBuilder compressedRow(StringBuilder row) {
-        //TODO Rewrite Method. Returns wrong
+        //TODO Rewrite Method. for empty rows it return $1$1$ and not 3$
 
         StringBuilder result = new StringBuilder();
         char[] rowArray = row.toString().toCharArray();

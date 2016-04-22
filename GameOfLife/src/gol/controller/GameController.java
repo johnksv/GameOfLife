@@ -11,6 +11,7 @@ import gol.model.Logic.unsupportedRuleException;
 import gol.s305089.controller.PatternEditorController;
 import gol.s305089.model.GifMaker;
 import gol.s305089.controller.GifMakerController;
+import gol.s305089.controller.SoundController;
 import gol.s305089.controller.StatsController;
 import java.io.File;
 import java.io.IOException;
@@ -367,22 +368,27 @@ public class GameController implements Initializable {
     
     @FXML
     private void saveAsGIF() throws IOException {
-        timeline.pause();
-
-        Stage gifMaker = new Stage();
-        FXMLLoader root = new FXMLLoader(getClass().getResource("/gol/s305089/view/GifMaker.fxml"));
-
-        Scene scene = new Scene((Parent) root.load());
-
-        GifMakerController gifcontroller = root.<GifMakerController>getController();
-        gifcontroller.setByteBoard(activeBoard);
-
-        gifMaker.setScene(scene);
-        gifMaker.setTitle("Generate GIF - Game of Life");
-        gifMaker.setWidth(215);
-        gifMaker.setHeight(535);
-
-        gifMaker.show();
+            SoundController sound = new SoundController();
+            sound.initMediaFiles();
+            sound.setBoard(activeBoard);
+            sound.playSound(); 
+        
+//        timeline.pause();
+//
+//        Stage gifMaker = new Stage();
+//        FXMLLoader root = new FXMLLoader(getClass().getResource("/gol/s305089/view/GifMaker.fxml"));
+//
+//        Scene scene = new Scene((Parent) root.load());
+//
+//        GifMakerController gifcontroller = root.<GifMakerController>getController();
+//        gifcontroller.setByteBoard(activeBoard);
+//
+//        gifMaker.setScene(scene);
+//        gifMaker.setTitle("Generate GIF - Game of Life");
+//        gifMaker.setWidth(215);
+//        gifMaker.setHeight(535);
+//
+//        gifMaker.show();
     }
 
     @FXML
