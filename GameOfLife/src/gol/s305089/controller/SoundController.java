@@ -55,7 +55,14 @@ public class SoundController implements Initializable {
         single = new Media(new File("src/gol/s305089/sound/files/sfx_Popup.wav").toURI().toString());
     }
 
-    public void parseBoardBB() {
+    public void playSound() {
+        parseBoardBB();
+        playMediaQueue();
+        mediaPlayerQueue.clear();
+
+    }
+    
+    private void parseBoardBB() {
         byte[][] current = activeBoard.getBoundingBoxBoard();
         int countOnRow = 0;
         for (int i = 0; i < current.length; i++) {
@@ -73,51 +80,23 @@ public class SoundController implements Initializable {
             }
             countOnRow = 0;
         }
-        mediaPlayerQueue.add(new MediaPlayer(newGen));
+        mediaPlayerQueue.add(new MediaPlayer(intens3));
     }
 
-    public void playSound() {
-        parseBoardBB();
-        playMediaQueue();
-        mediaPlayerQueue.clear();
-
-    }
+    
 
     private void playMediaQueue() {
-        mediaPlayerQueue.get(0).play();
         for (int i = 0; i < mediaPlayerQueue.size() - 1; i++) {
+            final MediaPlayer current = mediaPlayerQueue.get(i);
             final MediaPlayer next = mediaPlayerQueue.get(i + 1);
             mediaPlayerQueue.get(i).setOnEndOfMedia(() -> {
                 next.play();
+                current.dispose();
             });
         }
+        mediaPlayerQueue.get(0).play();
     }
 
-    private void parseBoard() {
-        char[] currString = activeBoard.toString().toCharArray();
-        int countSameChar = 0;
-        char lastChar = '0';
-        char currentChar = '0';
-        for (int i = 0; i < currString.length; i++) {
-            if (i > 1) {
-                lastChar = currString[i - 1];
-                currentChar = currString[i];
-            }
-
-            if (lastChar == currentChar && currentChar == '1') {
-                countSameChar++;
-            } else {
-                if (currentChar == '1') {
-                    countSameChar++;
-                }
-                if (countSameChar > 0) {
-                    assignSound(countSameChar);
-                    countSameChar = 0;
-                }
-            }
-        }
-        mediaPlayerQueue.add(new MediaPlayer(newGen));
-    }
 
     private void assignSound(int countSameChar) {
         if (countSameChar == 1) {
