@@ -10,6 +10,7 @@ public class DynamicBoard extends Board {
 
     private final int MAXWIDTH = 2000;
     private final int MAXHEIGHT = 2000;
+    private final int EXPANSION = 50;
 
     private CopyOnWriteArrayList<CopyOnWriteArrayList<Byte>> gameBoard;
 
@@ -20,7 +21,7 @@ public class DynamicBoard extends Board {
 
     public DynamicBoard(int y, int x) {
         this();
-        expandBoard(y, x);
+        expandBoard(-y, -x);
     }
 
     @Override
@@ -76,8 +77,8 @@ public class DynamicBoard extends Board {
     public void insertArray(byte[][] boardToInsert, int y, int x) {
         if (x < 0 || y < 0) {
             expandBoard(y - 1, x - 1);
-            y = (y < 1) ? 1 : y;
-            x = (x < 1) ? 1 : x;
+            y = (y < 1) ? EXPANSION : y;
+            x = (x < 1) ? EXPANSION : x;
         }
         for (int i = 0; i < boardToInsert.length; i++) {
             for (int j = 0; j < boardToInsert[i].length; j++) {
@@ -97,8 +98,8 @@ public class DynamicBoard extends Board {
 
         //All zero or less cordinates will be set to 1.
         //This is a fundamental part of DynamicBoard.
-        y = (y < 1) ? 1 : y;
-        x = (x < 1) ? 1 : x;
+        y = (y < 1) ? EXPANSION : y;
+        x = (x < 1) ? EXPANSION : x;
 
         if (alive) {
             gameBoard.get(y).set(x, (byte) 64);
@@ -211,8 +212,8 @@ public class DynamicBoard extends Board {
 
         //All zero or less cordinates will be set to 1.
         //This is a fundamental part of DynamicBoard.
-        y = (y < 1) ? 1 : y;
-        x = (x < 1) ? 1 : x;
+        y = (y < 1) ? EXPANSION : y;
+        x = (x < 1) ? EXPANSION : x;
 
         byte value = gameBoard.get(y).get(x);
         gameBoard.get(y).set(x, ++value);
@@ -220,7 +221,7 @@ public class DynamicBoard extends Board {
 
     private void expandBoard(int y, int x) {
         if (gameBoard.size() < MAXHEIGHT) {
-            while (y < 1) {
+            while (y < EXPANSION) {
                 gameBoard.add(0, new CopyOnWriteArrayList<>());
                 getMoveGridValues()[1] -= (cellSize + gridSpacing);
                 y++;
@@ -230,11 +231,11 @@ public class DynamicBoard extends Board {
             }
         }
         if (getMaxRowLength() < MAXWIDTH) {
-            while (x < 1) {
+            while (x < EXPANSION) {
                 for (CopyOnWriteArrayList<Byte> row : gameBoard) {
                     row.add(0, (byte) 0);
                 }
-                getMoveGridValues()[0] -= (cellSize+gridSpacing);
+                getMoveGridValues()[0] -= (cellSize + gridSpacing);
                 x++;
             }
 
