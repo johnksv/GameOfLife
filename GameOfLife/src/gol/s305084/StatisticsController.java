@@ -1,57 +1,59 @@
 package gol.s305084;
 
-import gol.model.Board.ArrayBoard;
 import gol.model.Board.Board;
 import gol.model.Board.DynamicBoard;
-import javafx.scene.Scene;
+import java.net.URL;
+import java.util.ResourceBundle;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.chart.LineChart;
-import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
-import javafx.stage.Stage;
 
 /**
- * Calculates and shows Statistics of a board. 
- * Shows living cells after chosen
- * amount of generations.
  *
- * @author S305084
- * 
- * @deprecated 
+ *
+ * @author s305084
  */
-public class Statistics {
+public class StatisticsController implements Initializable {
+
+    @FXML
+    LineChart lineChart;
+
+    Board statBoard = new DynamicBoard();
+
+    XYChart.Series livingCells = new XYChart.Series();
+    XYChart.Series cellChange = new XYChart.Series();
+    XYChart.Series simProcent = new XYChart.Series();
 
     private static double alpha = 0.5;
     private static double beta = 3.0;
     private static double gamma = 0.25;
 
-    //Make dynamic board
-    //FXML for the scene, make it start at -1 not 0
-    public static void showStatistics(Stage stage, Board activeBoard) {
-
-        Board statBoard = new DynamicBoard();
-        //May break :(
-        statBoard.insertArray(activeBoard.getBoundingBoxBoard(), 1, 1);
-        stage.setTitle("Gol: Statistics");
-        final NumberAxis xAxis = new NumberAxis();
-        final NumberAxis yAxis = new NumberAxis();
-        xAxis.setLabel("Number of Generations");
-        //creating the chart
-        final LineChart<Number, Number> lineChart
-                = new LineChart<>(xAxis, yAxis);
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
 
         lineChart.setTitle("Game of life: Statistics");
-        XYChart.Series livingCells = new XYChart.Series();
-        XYChart.Series cellChange = new XYChart.Series();
-        XYChart.Series simProcent = new XYChart.Series();
+
         cellChange.setName("Cell change");
         livingCells.setName("Living cells");
         simProcent.setName("Sim value");
+        
+        
 
+    }
+
+    public void loadeBoard(Board activeBoard) {
+        statBoard.insertArray(activeBoard.getBoundingBoxBoard(), 1, 1);
+        System.out.println("Board Loaded");
+    }
+
+    public void showStats() {
         double firstSimValue = 0;
-        for (int i = 0; i < 50; i++) {
+        for (int i = 0; i < 20; i++) {
             byte[][] pattern = statBoard.getBoundingBoxBoard();
             //Counting
             int living = countLivingCells(statBoard);
+            System.out.println(living);
             livingCells.getData().add(new XYChart.Data(i, living));
 
             //Life Change
@@ -68,17 +70,16 @@ public class Statistics {
                 simProcent.getData().add(new XYChart.Data(i, asasgas));
             }
         }
-        Scene scene = new Scene(lineChart, 900, 600);
+        
         lineChart.getData().addAll(livingCells, cellChange, simProcent);
-
-        stage.setScene(scene);
-        stage.show();
+        
+        System.out.println(livingCells.getData().get(0));
     }
 
     public static int countLivingCells(Board pattern) {
         int count = 0;
         for (int i = 0; i < pattern.getArrayLength(); i++) {
-            for (int j = 0; j < pattern.getArrayLength(0); j++) {
+            for (int j = 0; j < pattern.getArrayLength(i); j++) {
                 if (pattern.getCellState(i, j)) {
                     count++;
                 }
@@ -94,7 +95,7 @@ public class Statistics {
     private static double simValue(byte[][] pattern, int aliveCount, int aliveChange) {
         int geoSum = 0;
         for (int i = 0; i < pattern.length; i++) {
-            for (int j = 0; j < pattern[0].length; j++) {
+            for (int j = 0; j < pattern[i].length; j++) {
                 //Problem with 0,0 cells?
                 if (pattern[i][j] == 64) {
                     geoSum += 2 * (i + 1) + (j + 1);

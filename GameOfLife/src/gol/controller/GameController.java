@@ -337,7 +337,26 @@ public class GameController implements Initializable {
     
     @FXML
     private void handleShowSStats(){
-        gol.s305084.Statistics.showStatistics(new Stage(),activeBoard);
+        try {
+            Stage Statistics = new Stage();
+            Statistics.getIcons().add(new Image(getClass().getResourceAsStream("icon.png")));
+        
+            Statistics.initModality(Modality.WINDOW_MODAL);
+            Statistics.initOwner(canvas.getScene().getWindow());
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/gol/s305084/view/Statistics.fxml"));
+
+            Parent root = loader.load();
+            gol.s305084.StatisticsController statisticsController = loader.getController();
+            statisticsController.loadeBoard(activeBoard);
+            statisticsController.showStats();
+            Scene scene = new Scene(root);
+            Statistics.setScene(scene);
+
+            Statistics.setTitle("Gol: Statistics");
+            Statistics.show();
+        } catch (IOException ex) {
+            Logger.getLogger(GameController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     @FXML
