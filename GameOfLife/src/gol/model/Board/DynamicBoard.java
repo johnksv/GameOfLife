@@ -131,10 +131,10 @@ public class DynamicBoard extends Board {
 
     @Override
     public boolean getCellState(int y, int x) {
-        if (y < 0 || y > gameBoard.size()) {
+        if (y <= 0 || y >= gameBoard.size()) {
             return false;
         }
-        if (x < 0 || x > gameBoard.get(y).size()) {
+        if (x <= 0 || x >= gameBoard.get(y).size()) {
             return false;
         }
         return gameBoard.get(y).get(x) >= 64;
