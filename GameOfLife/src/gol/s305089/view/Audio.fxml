@@ -8,9 +8,9 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="155.0" prefWidth="280.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gol.s305089.controller.SoundController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="186.0" prefWidth="332.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gol.s305089.controller.SoundController">
     <children>
-        <HBox alignment="TOP_CENTER" prefWidth="200.0" spacing="30.0">
+        <HBox prefWidth="200.0" spacing="30.0">
             <children>
                 <RadioButton fx:id="rbAutoSelect" mnemonicParsing="false" selected="true" text="Automatic">
                     <toggleGroup>
@@ -23,32 +23,33 @@
                 <Insets bottom="7.0" />
             </VBox.margin>
         </HBox>
-        <HBox fx:id="hBoxAuto" alignment="TOP_CENTER" prefWidth="200.0" spacing="20.0">
+        <HBox fx:id="hBoxAuto" prefWidth="200.0" spacing="10.0">
             <children>
-                <RadioButton mnemonicParsing="false" selected="true" text="Predefined list">
+                <RadioButton mnemonicParsing="false" selected="true" text="Generated from list">
                     <toggleGroup>
                         <ToggleGroup fx:id="tgAutoMode" />
                     </toggleGroup>
                 </RadioButton>
-                <RadioButton mnemonicParsing="false" text="Wav generated" toggleGroup="$tgAutoMode" />
+                <RadioButton mnemonicParsing="false" text="Generated with custom WAV" toggleGroup="$tgAutoMode" />
             </children>
             <VBox.margin>
-                <Insets />
+                <Insets left="15.0" />
             </VBox.margin>
         </HBox>
-        <VBox fx:id="vBoxUser" spacing="5.0">
+        <VBox fx:id="vBoxUser" spacing="5.0" visible="false">
             <children>
                 <Label text="Playing from:" />
-                <HBox>
+                <HBox spacing="10.0">
                     <children>
                         <Button mnemonicParsing="false" onAction="#handleSelectFile" text="Choose file" />
                         <Button mnemonicParsing="false" onAction="#handleSelectFolder" text="Choose directory" />
                     </children>
                 </HBox>
-                <HBox>
+            <Label fx:id="labelLocation" text="" />
+                <HBox spacing="10.0">
                     <children>
                         <Button fx:id="btnPlayPause" mnemonicParsing="false" onAction="#handlePlayPause" text="Play" />
-                        <Button mnemonicParsing="false" text="Rewind" />
+                        <Button mnemonicParsing="false" onAction="#rewindCurrent" text="Rewind current" />
                     </children>
                 </HBox>
                 <Label fx:id="labelTime" />

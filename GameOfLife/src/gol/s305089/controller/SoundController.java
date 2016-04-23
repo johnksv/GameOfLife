@@ -10,16 +10,11 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.Initializable;
 import java.io.File;
-import java.nio.file.spi.FileTypeDetector;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
-import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.layout.HBox;
@@ -30,7 +25,6 @@ import javafx.scene.media.MediaPlayer.Status;
 import javafx.scene.media.MediaView;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
-import javafx.stage.WindowEvent;
 import javafx.util.Duration;
 
 /**
@@ -49,12 +43,14 @@ public class SoundController implements Initializable {
     @FXML
     private Label labelTime;
     @FXML
+    private Label labelLocation;
+    @FXML
     private RadioButton rbAutoSelect;
 
     private Board activeBoard;
     private final List<MediaPlayer> mediaPlayerQueue = new ArrayList<>();
+    private MediaView mediaview = new MediaView();
     Stats stats = new Stats();
-    private MediaPlayer mpUserSelected;
 
     private Media one;
     private Media five;
@@ -74,8 +70,13 @@ public class SoundController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         initMediaFiles();
         rbAutoSelect.selectedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+            disposeMediaPlayers();
             if (newValue) {
-                mpUserSelected.dispose();
+                hBoxAuto.setVisible(true);
+                vBoxUser.setVisible(false);
+            } else {
+                hBoxAuto.setVisible(false);
+                vBoxUser.setVisible(true);
             }
         });
     }
@@ -96,71 +97,78 @@ public class SoundController implements Initializable {
         if (!playing && rbAutoSelect.isSelected()) {
             playing = true;
             parseBoardBB();
-            playMediaQueue();
-            mediaPlayerQueue.clear();
+            playMediaQueue(false);
         }
 
     }
 
     @FXML
     private void handleSelectFolder() {
+        disposeMediaPlayers();
         DirectoryChooser directoryChooser = new DirectoryChooser();
-        directoryChooser.showDialog(null);
-
+        File result = directoryChooser.showDialog(null);
+        if (result != null && result.isDirectory()) {
+            File[] musicFiles = result.listFiles((File dir, String name) -> {
+                boolean wav = name.toLowerCase().endsWith(".wav");
+                boolean mp3 = name.toLowerCase().endsWith(".mp3");
+                return wav || mp3;
+            });
+            if (musicFiles.length == 0) {
+                labelLocation.setText("No music files found. Pleas choose an directory that contains at least one music file.");
+            } else {
+                labelLocation.setText("Playing from: " + result.getAbsolutePath());
+                for (File musicFile : musicFiles) {
+                    System.out.println(musicFile);
+                    mediaPlayerQueue.add(new MediaPlayer(new Media(musicFile.toURI().toString())));
+                }
+                playMediaQueue(true);
+            }
+        }
     }
 
     @FXML
     private void handleSelectFile() {
+        disposeMediaPlayers();
+
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Music file", "*.mp3", "*.wav"),
                 new FileChooser.ExtensionFilter("All files", "*.*"));
         File result = fileChooser.showOpenDialog(null);
         if (result != null) {
-            mpUserSelected = new MediaPlayer(new Media(result.toURI().toString()));
-            mpUserSelected.setAutoPlay(true);
-
-            mpUserSelected.currentTimeProperty().addListener((ObservableValue<? extends Duration> observable, Duration oldValue, Duration newValue) -> {
-                int secondsElapsed = (int) newValue.toSeconds();
-                int minuts = secondsElapsed / 60;
-                int seconds = secondsElapsed - minuts * 60;
-                String elapsedTime = minuts + ":";
-                if (seconds < 10) {
-                    elapsedTime += "0" + seconds;
-                } else {
-                    elapsedTime += seconds;
-                }
-
-                int totalDur = (int) mpUserSelected.getTotalDuration().toSeconds();
-                int totalMin = totalDur / 60;
-                int totalSec = totalDur - totalMin * 60;
-                String totalTime = totalMin + ":";
-                if (totalSec < 10) {
-                    totalTime += "0" + totalSec;
-                } else {
-                    totalTime += totalSec;
-                }
-
-                labelTime.setText(elapsedTime + "/" + totalTime);
-            });
-            btnPlayPause.setText("Pause");
-            mpUserSelected.setOnError(() -> {
-                System.err.println("Could not play file: " + mpUserSelected.getError());
-            });
+            labelLocation.setText("Playing: " + result.getAbsolutePath());
+            mediaPlayerQueue.add(new MediaPlayer(new Media(result.toURI().toString())));
+            playMediaQueue(true);
         }
 
     }
 
     @FXML
     private void handlePlayPause() {
-        Status currentStatus = mpUserSelected.getStatus();
-        if (currentStatus == Status.PLAYING
-                || currentStatus == Status.STALLED) {
+        Status currentStatus = mediaview.getMediaPlayer().getStatus();
+        if (currentStatus == Status.PLAYING || currentStatus == Status.STALLED) {
             btnPlayPause.setText("Play");
-            mpUserSelected.pause();
+            mediaview.getMediaPlayer().pause();
         }
         if (currentStatus == Status.PAUSED) {
             btnPlayPause.setText("Pause");
-            mpUserSelected.play();
+            mediaview.getMediaPlayer().play();
+        }
+    }
+
+    @FXML
+    private void rewindCurrent() {
+        mediaview.getMediaPlayer().seek(Duration.ZERO);
+    }
+
+    private void assignSound(int countSameChar) {
+        if (countSameChar == 1) {
+            mediaPlayerQueue.add(new MediaPlayer(one));
+        } else if (countSameChar <= 5) {
+            mediaPlayerQueue.add(new MediaPlayer(five));
+        } else if (countSameChar <= 10) {
+            mediaPlayerQueue.add(new MediaPlayer(ten));
+        } else {
+            mediaPlayerQueue.add(new MediaPlayer(twenty));
         }
     }
 
@@ -185,33 +193,79 @@ public class SoundController implements Initializable {
         mediaPlayerQueue.add(new MediaPlayer(intens3));
     }
 
-    private void playMediaQueue() {
+    private void playMediaQueue(boolean updateTimeLabel) {
         for (int i = 0; i < mediaPlayerQueue.size() - 1; i++) {
-            final MediaPlayer current = mediaPlayerQueue.get(i);
-            final MediaPlayer next = mediaPlayerQueue.get(i + 1);
-            mediaPlayerQueue.get(i).setOnEndOfMedia(() -> {
+            MediaPlayer current = mediaPlayerQueue.get(i);
+            MediaPlayer next = mediaPlayerQueue.get(i + 1);
+
+            //When current mediaplayer finish, start the next one.
+            current.setOnEndOfMedia(() -> {
                 next.play();
+                mediaview.setMediaPlayer(next);
+                setTimeLabel(next, updateTimeLabel);
                 current.dispose();
 
             });
+            current.setOnError(() -> {
+                System.err.println("Could not play file: \n" + current.getError());
+            });
+            //For the last mediaplayer, we want to dispose and clear the list.
             if (i == mediaPlayerQueue.size() - 2) {
-                mediaPlayerQueue.get(i).setOnEndOfMedia(() -> {
-                    playing = false;
-                });
+                onEndLastMP(current);
             }
         }
+        //First mediaplayer is not part of loop. Has to start it explicitly.
+        if (mediaPlayerQueue.size() == 1) {
+            onEndLastMP(mediaPlayerQueue.get(0));
+        }
+        mediaview.setMediaPlayer(mediaPlayerQueue.get(0));
+        setTimeLabel(mediaPlayerQueue.get(0), updateTimeLabel);
         mediaPlayerQueue.get(0).play();
+        
+        //Updates the buttons for audio control
+        btnPlayPause.setDisable(false);
+        btnPlayPause.setText("Pause");
+        
     }
 
-    private void assignSound(int countSameChar) {
-        if (countSameChar == 1) {
-            mediaPlayerQueue.add(new MediaPlayer(one));
-        } else if (countSameChar <= 5) {
-            mediaPlayerQueue.add(new MediaPlayer(five));
-        } else if (countSameChar <= 10) {
-            mediaPlayerQueue.add(new MediaPlayer(ten));
-        } else {
-            mediaPlayerQueue.add(new MediaPlayer(twenty));
+    private void onEndLastMP(MediaPlayer current) {
+        current.setOnEndOfMedia(() -> {
+            playing = false;
+            labelTime.setText("");
+            btnPlayPause.setText("Play");
+            btnPlayPause.setDisable(true);
+            current.dispose();
+            mediaPlayerQueue.clear();
+        });
+    }
+
+    private void setTimeLabel(MediaPlayer current, boolean updateTimeLabel) {
+        if (updateTimeLabel) {
+            current.currentTimeProperty().addListener((ObservableValue<? extends Duration> observable, Duration oldValue, Duration newValue) -> {
+                //Current time elapsed
+                int secondsElapsed = (int) newValue.toSeconds();
+                int minuts = secondsElapsed / 60;
+                int seconds = secondsElapsed - minuts * 60;
+                String elapsedTime = minuts + ":";
+                if (seconds < 10) {
+                    elapsedTime += "0" + seconds;
+                } else {
+                    elapsedTime += seconds;
+                }
+
+                //Total time of whole mediafile
+                int totalDur = (int) current.getTotalDuration().toSeconds();
+                int totalMin = totalDur / 60;
+                int totalSec = totalDur - totalMin * 60;
+                String totalTime = totalMin + ":";
+                if (totalSec < 10) {
+                    totalTime += "0" + totalSec;
+                } else {
+                    totalTime += totalSec;
+                }
+
+                labelTime.setText(elapsedTime + "/" + totalTime);
+            });
         }
     }
 
@@ -219,8 +273,12 @@ public class SoundController implements Initializable {
         this.activeBoard = activeBoard;
     }
 
-    public void onClose() {
-        mpUserSelected.dispose();
+    public void disposeMediaPlayers() {
+        playing = false;
+        for (MediaPlayer mediaPlayer : mediaPlayerQueue) {
+            mediaPlayer.dispose();
+        }
+        mediaPlayerQueue.clear();
     }
 
 }
