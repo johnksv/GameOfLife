@@ -170,6 +170,7 @@
                                                                         <Button layoutX="15.0" layoutY="14.0" mnemonicParsing="false" onAction="#openPatternEditor" text="Open Pattern Editor" />
                                                                         <Button layoutX="14.0" layoutY="46.0" mnemonicParsing="false" onAction="#saveAsGIF" text="Save current patter to GIF" />
                                                                         <Button layoutX="14.0" layoutY="78.0" mnemonicParsing="false" onAction="#showStats" text="Show Stats" />
+                                                                        <Button layoutX="14.0" layoutY="110.0" mnemonicParsing="false" onAction="#showAudio" text="Open Audio Control Panel" />
 
                                                                     </children>
                                                                 </AnchorPane>

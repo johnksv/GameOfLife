@@ -10,14 +10,28 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.Initializable;
 import java.io.File;
+import java.nio.file.spi.FileTypeDetector;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.RadioButton;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaPlayer.Status;
+import javafx.scene.media.MediaView;
+import javafx.stage.DirectoryChooser;
+import javafx.stage.FileChooser;
+import javafx.stage.WindowEvent;
+import javafx.util.Duration;
 
 /**
  * FXML Controller class
@@ -31,12 +45,16 @@ public class SoundController implements Initializable {
     @FXML
     private VBox vBoxUser;
     @FXML
-    private CheckBox cbEnableSound;
-    
+    private Button btnPlayPause;
+    @FXML
+    private Label labelTime;
+    @FXML
+    private RadioButton rbAutoSelect;
 
     private Board activeBoard;
     private final List<MediaPlayer> mediaPlayerQueue = new ArrayList<>();
     Stats stats = new Stats();
+    private MediaPlayer mpUserSelected;
 
     private Media one;
     private Media five;
@@ -47,6 +65,7 @@ public class SoundController implements Initializable {
     private Media intens3;
     private Media newGen;
     private Media single;
+    private boolean playing = false;
 
     /**
      * Initializes the controller class.
@@ -54,12 +73,11 @@ public class SoundController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         initMediaFiles();
-
-        stats.setPattern(activeBoard.getBoundingBoxBoard());
-        stats.getCountLiving(50);
-        
-        playSound();
-
+        rbAutoSelect.selectedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+            if (newValue) {
+                mpUserSelected.dispose();
+            }
+        });
     }
 
     public void initMediaFiles() {
@@ -73,13 +91,77 @@ public class SoundController implements Initializable {
         newGen = new Media(new File("src/gol/s305089/sound/files/sfx_CreateCompound.wav").toURI().toString());
         single = new Media(new File("src/gol/s305089/sound/files/sfx_Popup.wav").toURI().toString());
     }
-    
-    @FXML
-    private void playSound() {
-        parseBoardBB();
-        playMediaQueue();
-        mediaPlayerQueue.clear();
 
+    public void playSound() {
+        if (!playing && rbAutoSelect.isSelected()) {
+            playing = true;
+            parseBoardBB();
+            playMediaQueue();
+            mediaPlayerQueue.clear();
+        }
+
+    }
+
+    @FXML
+    private void handleSelectFolder() {
+        DirectoryChooser directoryChooser = new DirectoryChooser();
+        directoryChooser.showDialog(null);
+
+    }
+
+    @FXML
+    private void handleSelectFile() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Music file", "*.mp3", "*.wav"),
+                new FileChooser.ExtensionFilter("All files", "*.*"));
+        File result = fileChooser.showOpenDialog(null);
+        if (result != null) {
+            mpUserSelected = new MediaPlayer(new Media(result.toURI().toString()));
+            mpUserSelected.setAutoPlay(true);
+
+            mpUserSelected.currentTimeProperty().addListener((ObservableValue<? extends Duration> observable, Duration oldValue, Duration newValue) -> {
+                int secondsElapsed = (int) newValue.toSeconds();
+                int minuts = secondsElapsed / 60;
+                int seconds = secondsElapsed - minuts * 60;
+                String elapsedTime = minuts + ":";
+                if (seconds < 10) {
+                    elapsedTime += "0" + seconds;
+                } else {
+                    elapsedTime += seconds;
+                }
+
+                int totalDur = (int) mpUserSelected.getTotalDuration().toSeconds();
+                int totalMin = totalDur / 60;
+                int totalSec = totalDur - totalMin * 60;
+                String totalTime = totalMin + ":";
+                if (totalSec < 10) {
+                    totalTime += "0" + totalSec;
+                } else {
+                    totalTime += totalSec;
+                }
+
+                labelTime.setText(elapsedTime + "/" + totalTime);
+            });
+            btnPlayPause.setText("Pause");
+            mpUserSelected.setOnError(() -> {
+                System.err.println("Could not play file: " + mpUserSelected.getError());
+            });
+        }
+
+    }
+
+    @FXML
+    private void handlePlayPause() {
+        Status currentStatus = mpUserSelected.getStatus();
+        if (currentStatus == Status.PLAYING
+                || currentStatus == Status.STALLED) {
+            btnPlayPause.setText("Play");
+            mpUserSelected.pause();
+        }
+        if (currentStatus == Status.PAUSED) {
+            btnPlayPause.setText("Pause");
+            mpUserSelected.play();
+        }
     }
 
     private void parseBoardBB() {
@@ -110,7 +192,13 @@ public class SoundController implements Initializable {
             mediaPlayerQueue.get(i).setOnEndOfMedia(() -> {
                 next.play();
                 current.dispose();
+
             });
+            if (i == mediaPlayerQueue.size() - 2) {
+                mediaPlayerQueue.get(i).setOnEndOfMedia(() -> {
+                    playing = false;
+                });
+            }
         }
         mediaPlayerQueue.get(0).play();
     }
@@ -129,6 +217,10 @@ public class SoundController implements Initializable {
 
     public void setBoard(Board activeBoard) {
         this.activeBoard = activeBoard;
+    }
+
+    public void onClose() {
+        mpUserSelected.dispose();
     }
 
 }

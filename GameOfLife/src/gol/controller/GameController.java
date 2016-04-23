@@ -23,6 +23,7 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -124,7 +125,6 @@ public class GameController implements Initializable {
         cellSizeSlider.setBlockIncrement(0.75);
 
         //TODO Valg for Array eller dynamisk brett
-
         //activeBoard = new ArrayBoard();
         activeBoard = new DynamicBoard(1800, 1800);
         cellCP.setValue(Color.BLACK);
@@ -305,12 +305,11 @@ public class GameController implements Initializable {
                 for (String line : ReadFile.getMetadata()) {
                     container.getChildren().addAll(new Label(line));
                 }
-                
+
                 if (!container.getChildren().isEmpty()) {
                     alert.getDialogPane().setExpandableContent(container);
                     alert.getDialogPane().setExpanded(true);
                 }
-
 
                 ButtonType btnGhostTiles = new ButtonType("Insert with ghost tiles");
                 ButtonType btnInsert = new ButtonType("Insert at top-left");
@@ -363,9 +362,10 @@ public class GameController implements Initializable {
         editor.show();
         editor.setMinWidth(800);
         editor.setMinHeight(600);
+        editor.initOwner(borderpane.getScene().getWindow());
         editor.setScene(scene);
     }
-    
+
     @FXML
     private void saveAsGIF() throws IOException {
         timeline.pause();
@@ -382,7 +382,7 @@ public class GameController implements Initializable {
         gifMaker.setTitle("Generate GIF - Game of Life");
         gifMaker.setWidth(215);
         gifMaker.setHeight(535);
-
+        gifMaker.initOwner(borderpane.getScene().getWindow());
         gifMaker.show();
     }
 
@@ -400,25 +400,29 @@ public class GameController implements Initializable {
 
         golStats.setScene(scene);
         golStats.setTitle("Stats - Game of Life");
-
+        golStats.initOwner(borderpane.getScene().getWindow());
         golStats.show();
     }
+
     @FXML
-    private void showAudio() throws IOException{
-                timeline.pause();
+    private void showAudio() throws IOException {
+        timeline.pause();
 
-        Stage golStats = new Stage();
+        Stage golAudio = new Stage();
         FXMLLoader root = new FXMLLoader(getClass().getResource("/gol/s305089/view/Audio.fxml"));
-
         Scene scene = new Scene((Parent) root.load());
 
         SoundController soundController = root.<SoundController>getController();
         soundController.setBoard(activeBoard);
+        timeline.getKeyFrames().add(new KeyFrame(Duration.millis(1), (event) -> {
+            soundController.playSound();
+        }));
+        golAudio.setOnCloseRequest(e -> soundController.onClose());
 
-        golStats.setScene(scene);
-        golStats.setTitle("Audio controll panel - Game of Life");
-
-        golStats.show();
+        golAudio.setScene(scene);
+        golAudio.setTitle("Audio controll panel - Game of Life");
+        golAudio.initOwner(borderpane.getScene().getWindow());
+        golAudio.show();
     }
 
     @FXML
