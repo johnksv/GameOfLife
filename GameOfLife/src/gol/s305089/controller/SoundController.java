@@ -1,7 +1,3 @@
-/*
- * Here comes the text of your license
- * Each line should be prefixed with  * 
- */
 package gol.s305089.controller;
 
 import gol.model.Board.Board;
@@ -19,6 +15,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.media.AudioClip;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaPlayer.Status;
@@ -47,20 +44,24 @@ public class SoundController implements Initializable {
     @FXML
     private RadioButton rbAutoSelect;
 
+    //The board that is actually being displayed in main window.
     private Board activeBoard;
+
+    private final List<AudioClip> audioClipQueue = new ArrayList<>();
+    //Use mediaplayer for selected files, beacuse this is more realiable on larger files.
     private final List<MediaPlayer> mediaPlayerQueue = new ArrayList<>();
-    private MediaView mediaview = new MediaView();
+    private final MediaView mediaview = new MediaView();
     Stats stats = new Stats();
 
-    private Media one;
-    private Media five;
-    private Media ten;
-    private Media twenty;
-    private Media intens1;
-    private Media intens2;
-    private Media intens3;
-    private Media newGen;
-    private Media single;
+    private AudioClip one;
+    private AudioClip five;
+    private AudioClip ten;
+    private AudioClip twenty;
+    private AudioClip nextGen;
+    private AudioClip Db3;
+    private AudioClip F3Sharp;
+    private AudioClip E3;
+    private AudioClip E4;
     private boolean playing = false;
 
     /**
@@ -69,6 +70,10 @@ public class SoundController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         initMediaFiles();
+        initFXMLControls();
+    }
+
+    private void initFXMLControls() {
         rbAutoSelect.selectedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
             disposeMediaPlayers();
             if (newValue) {
@@ -82,22 +87,24 @@ public class SoundController implements Initializable {
     }
 
     public void initMediaFiles() {
-        one = new Media(new File("src/gol/s305089/sound/files/1.wav").toURI().toString());
-        five = new Media(new File("src/gol/s305089/sound/files/5.wav").toURI().toString());
-        ten = new Media(new File("src/gol/s305089/sound/files/10.wav").toURI().toString());
-        twenty = new Media(new File("src/gol/s305089/sound/files/20.wav").toURI().toString());
-        intens1 = new Media(new File("src/gol/s305089/sound/files/hexagon.wav").toURI().toString());
-        intens2 = new Media(new File("src/gol/s305089/sound/files/pentagon.wav").toURI().toString());
-        intens3 = new Media(new File("src/gol/s305089/sound/files/awesome.wav").toURI().toString());
-        newGen = new Media(new File("src/gol/s305089/sound/files/sfx_CreateCompound.wav").toURI().toString());
-        single = new Media(new File("src/gol/s305089/sound/files/sfx_Popup.wav").toURI().toString());
+        one = new AudioClip(new File("src/gol/s305089/sound/files/1.wav").toURI().toString());
+        five = new AudioClip(new File("src/gol/s305089/sound/files/5.wav").toURI().toString());
+        ten = new AudioClip(new File("src/gol/s305089/sound/files/10.wav").toURI().toString());
+        twenty = new AudioClip(new File("src/gol/s305089/sound/files/20.wav").toURI().toString());
+        nextGen = new AudioClip(new File("src/gol/s305089/sound/files/nextGen.wav").toURI().toString());
+        Db3 = new AudioClip(new File("src/gol/s305089/sound/files/Db3.wav").toURI().toString());
+        F3Sharp = new AudioClip(new File("src/gol/s305089/sound/files/F3#.wav").toURI().toString());
+        E3 = new AudioClip(new File("src/gol/s305089/sound/files/E3.wav").toURI().toString());
+        E4 = new AudioClip(new File("src/gol/s305089/sound/files/E4.wav").toURI().toString());
     }
 
     public void playSound() {
+        audioClipQueue.clear();
         if (!playing && rbAutoSelect.isSelected()) {
             playing = true;
             parseBoardBB();
-            playMediaQueue(false);
+            playAudioQueue();
+            playing = false;
         }
 
     }
@@ -121,7 +128,7 @@ public class SoundController implements Initializable {
                     System.out.println(musicFile);
                     mediaPlayerQueue.add(new MediaPlayer(new Media(musicFile.toURI().toString())));
                 }
-                playMediaQueue(true);
+                playMediaQueue();
             }
         }
     }
@@ -137,7 +144,7 @@ public class SoundController implements Initializable {
         if (result != null) {
             labelLocation.setText("Playing: " + result.getAbsolutePath());
             mediaPlayerQueue.add(new MediaPlayer(new Media(result.toURI().toString())));
-            playMediaQueue(true);
+            playMediaQueue();
         }
 
     }
@@ -161,19 +168,29 @@ public class SoundController implements Initializable {
     }
 
     private void assignSound(int countSameChar) {
-        if (countSameChar == 1) {
-            mediaPlayerQueue.add(new MediaPlayer(one));
+        //Current generation
+        int gen = audioClipQueue.size() - 1;
+
+        if (countSameChar == -1) {
+            audioClipQueue.add(nextGen);
+        } else if (countSameChar > 0 && countSameChar <= 3) {
+            System.out.println("E4: count: " + countSameChar);
+            audioClipQueue.add(E4);
         } else if (countSameChar <= 5) {
-            mediaPlayerQueue.add(new MediaPlayer(five));
+            System.out.println("E3: count: " + countSameChar);
+            audioClipQueue.add(E3);
         } else if (countSameChar <= 10) {
-            mediaPlayerQueue.add(new MediaPlayer(ten));
+            System.out.println("B3: count: " + countSameChar);
+            audioClipQueue.add(F3Sharp);
         } else {
-            mediaPlayerQueue.add(new MediaPlayer(twenty));
+            System.out.println("Db3: count: " + countSameChar);
+            audioClipQueue.add(Db3);
         }
     }
 
     private void parseBoardBB() {
         byte[][] current = activeBoard.getBoundingBoxBoard();
+
         int countOnRow = 0;
         for (int i = 0; i < current.length; i++) {
             for (int j = 0; j < current[i].length; j++) {
@@ -190,10 +207,18 @@ public class SoundController implements Initializable {
             }
             countOnRow = 0;
         }
-        mediaPlayerQueue.add(new MediaPlayer(intens3));
+
+        //Next gen sound should be played alone
+        assignSound(-1);
     }
 
-    private void playMediaQueue(boolean updateTimeLabel) {
+    private void playAudioQueue() {
+        for (AudioClip audioClip : audioClipQueue) {
+            audioClip.play();
+        }
+    }
+
+    private void playMediaQueue() {
         for (int i = 0; i < mediaPlayerQueue.size() - 1; i++) {
             MediaPlayer current = mediaPlayerQueue.get(i);
             MediaPlayer next = mediaPlayerQueue.get(i + 1);
@@ -202,7 +227,7 @@ public class SoundController implements Initializable {
             current.setOnEndOfMedia(() -> {
                 next.play();
                 mediaview.setMediaPlayer(next);
-                setTimeLabel(next, updateTimeLabel);
+                setTimeLabel(next);
                 current.dispose();
 
             });
@@ -214,59 +239,56 @@ public class SoundController implements Initializable {
                 onEndLastMP(current);
             }
         }
+
         //First mediaplayer is not part of loop. Has to start it explicitly.
+        mediaview.setMediaPlayer(mediaPlayerQueue.get(0));
+        setTimeLabel(mediaPlayerQueue.get(0));
+        mediaPlayerQueue.get(0).play();
         if (mediaPlayerQueue.size() == 1) {
             onEndLastMP(mediaPlayerQueue.get(0));
         }
-        mediaview.setMediaPlayer(mediaPlayerQueue.get(0));
-        setTimeLabel(mediaPlayerQueue.get(0), updateTimeLabel);
-        mediaPlayerQueue.get(0).play();
-        
+
         //Updates the buttons for audio control
         btnPlayPause.setDisable(false);
         btnPlayPause.setText("Pause");
-        
+
     }
 
     private void onEndLastMP(MediaPlayer current) {
         current.setOnEndOfMedia(() -> {
-            playing = false;
             labelTime.setText("");
             btnPlayPause.setText("Play");
             btnPlayPause.setDisable(true);
-            current.dispose();
-            mediaPlayerQueue.clear();
+            disposeMediaPlayers();
         });
     }
 
-    private void setTimeLabel(MediaPlayer current, boolean updateTimeLabel) {
-        if (updateTimeLabel) {
-            current.currentTimeProperty().addListener((ObservableValue<? extends Duration> observable, Duration oldValue, Duration newValue) -> {
-                //Current time elapsed
-                int secondsElapsed = (int) newValue.toSeconds();
-                int minuts = secondsElapsed / 60;
-                int seconds = secondsElapsed - minuts * 60;
-                String elapsedTime = minuts + ":";
-                if (seconds < 10) {
-                    elapsedTime += "0" + seconds;
-                } else {
-                    elapsedTime += seconds;
-                }
+    private void setTimeLabel(MediaPlayer current) {
+        current.currentTimeProperty().addListener((ObservableValue<? extends Duration> observable, Duration oldValue, Duration newValue) -> {
+            //Current time elapsed
+            int secondsElapsed = (int) newValue.toSeconds();
+            int minuts = secondsElapsed / 60;
+            int seconds = secondsElapsed - minuts * 60;
+            String elapsedTime = minuts + ":";
+            if (seconds < 10) {
+                elapsedTime += "0" + seconds;
+            } else {
+                elapsedTime += seconds;
+            }
 
-                //Total time of whole mediafile
-                int totalDur = (int) current.getTotalDuration().toSeconds();
-                int totalMin = totalDur / 60;
-                int totalSec = totalDur - totalMin * 60;
-                String totalTime = totalMin + ":";
-                if (totalSec < 10) {
-                    totalTime += "0" + totalSec;
-                } else {
-                    totalTime += totalSec;
-                }
+            //Total time of whole mediafile
+            int totalDur = (int) current.getTotalDuration().toSeconds();
+            int totalMin = totalDur / 60;
+            int totalSec = totalDur - totalMin * 60;
+            String totalTime = totalMin + ":";
+            if (totalSec < 10) {
+                totalTime += "0" + totalSec;
+            } else {
+                totalTime += totalSec;
+            }
 
-                labelTime.setText(elapsedTime + "/" + totalTime);
-            });
-        }
+            labelTime.setText(elapsedTime + "/" + totalTime);
+        });
     }
 
     public void setBoard(Board activeBoard) {

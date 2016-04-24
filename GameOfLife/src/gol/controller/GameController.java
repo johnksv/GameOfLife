@@ -414,10 +414,16 @@ public class GameController implements Initializable {
 
         SoundController soundController = root.<SoundController>getController();
         soundController.setBoard(activeBoard);
-        timeline.getKeyFrames().add(new KeyFrame(Duration.millis(1), (event) -> {
+
+        KeyFrame soundFrame = new KeyFrame(Duration.millis(1), (event) -> {
             soundController.playSound();
-        }));
-        golAudio.setOnCloseRequest(e -> soundController.disposeMediaPlayers());
+        });
+        timeline.getKeyFrames().add(soundFrame);
+
+        golAudio.setOnCloseRequest(e -> {
+            soundController.disposeMediaPlayers();
+            timeline.getKeyFrames().remove(soundFrame);
+        });
 
         golAudio.setScene(scene);
         golAudio.setTitle("Audio controll panel - Game of Life");

@@ -27,7 +27,7 @@ public class Sound {
         }
     }
 
-    public static double makeTone(Tone tone, long frameCounter, int sampleRate) {
-        return Math.sin(2.0 * Math.PI * tone.getFrequency() * frameCounter / sampleRate);
+    public static double makeTone(double frequency, long frameCounter, int sampleRate) {
+        return Math.sin(2.0 * Math.PI * frequency * frameCounter / sampleRate);
     }
 }

@@ -20,6 +20,7 @@ public class MakeSoundDEMO {
             Logger.getLogger(SoundController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    //http://www.phy.mtu.edu/~suits/notefreqs.html
 
     public static void makeSound(File file, int sampleRate, double duration) {
         try {
@@ -39,8 +40,8 @@ public class MakeSoundDEMO {
                 // Fill the buffer, one tone per channel
                 for (int s = 0; s < toWrite; s++, frameCounter++) {
                     //Math.sin(2.0 * Math.PI * tone.getFrequency() * frameCounter / sampleRate)
-                    buffer[0][s] = Sound.makeTone(Sound.Tone.A2, frameCounter, sampleRate);
-                    buffer[1][s] = Sound.makeTone(Sound.Tone.D5, frameCounter, sampleRate);
+                    buffer[0][s] = Sound.makeTone(138.59, frameCounter, sampleRate);
+                    buffer[1][s] = Sound.makeTone(138.59, frameCounter, sampleRate);
                 }
                 // Write the buffer
                 wavFile.writeFrames(buffer, toWrite);
