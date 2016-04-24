@@ -27,11 +27,11 @@ public class StatisticsController implements Initializable {
     Label txtAlive;
     @FXML
     Label txtChange;
-    
+
     //TODO Improve mouse position
     @FXML
     Line chartLength;
-    
+
     Board statBoard = new DynamicBoard();
 
     private final XYChart.Series<Integer, Integer> LIVINGCELLS = new XYChart.Series();
@@ -48,11 +48,11 @@ public class StatisticsController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         lineChart.setTitle("Game of life: Statistics");
+        lineChart.setAnimated(false);
 
         CELLCHANGE.setName("Cell change");
         LIVINGCELLS.setName("Living cells");
         SIMPERCENT.setName("Sim value");
-
         initMouseListener();
 
     }
@@ -77,8 +77,8 @@ public class StatisticsController implements Initializable {
             CELLCHANGE.getData().add(new XYChart.Data(i, change));
             //Similarity measure
             simValue[i] = simValue(pattern, living, change);
-            SIMPERCENT.getData().add(new XYChart.Data(i, relativeSim(i,0)));
-           
+            SIMPERCENT.getData().add(new XYChart.Data(i, relativeSim(i, 0)));
+
         }
 
         lineChart.getData().addAll(LIVINGCELLS, CELLCHANGE, SIMPERCENT);
@@ -87,8 +87,11 @@ public class StatisticsController implements Initializable {
     }
 
     private double relativeSim(int i, int relativePosition) {
+        if (Math.max(simValue[relativePosition], simValue[i]) == 0) {
+            return 0;
+        }
         return Math.floor((Math.min(simValue[relativePosition], simValue[i])
-                    / Math.max(simValue[relativePosition], simValue[i])) * 100);
+                / Math.max(simValue[relativePosition], simValue[i])) * 100);
     }
 
     public static int countLivingCells(Board pattern) {
@@ -120,12 +123,34 @@ public class StatisticsController implements Initializable {
         return ALPHA * aliveCount + BETA * aliveChange + GAMMA * geoSum;
     }
 
+    private void newRelSimCalc(int relativePosition) {
+        SIMPERCENT.getData().clear();
+
+        for (int i = 0; i <= genIterations; i++) {
+
+            SIMPERCENT.getData().add(new XYChart.Data(i, relativeSim(i, relativePosition)));
+
+        }
+    }
+
     private void initMouseListener() {
         lineChart.addEventHandler(MouseEvent.MOUSE_PRESSED,
                 (MouseEvent e) -> {
-                    System.out.println(e.getX());
-                    System.out.println(chartLength.getLayoutX());
-                    
+                    double tickSize = chartLength.getEndX() / genIterations;
+                    double x = e.getX() - chartLength.getLayoutX() + tickSize / 2;
+                    int newGen = (int) (x / tickSize);
+
+                    if (newGen < 0) {
+                        newGen = 0;
+                    } else if (newGen > genIterations) {
+                        newGen = genIterations;
+                    }
+
+                    newRelSimCalc(newGen);
+
+                    txtAlive.setText("Alive: " + LIVINGCELLS.getData().get(newGen).getYValue());
+                    txtChange.setText("Change: " + CELLCHANGE.getData().get(newGen).getYValue());
+                    txtGen.setText("Generation: " + newGen);
                 });
     }
 }

@@ -1,18 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.chart.LineChart?>
 <?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.shape.Line?>
 
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gol.s305084.StatisticsController">
+<AnchorPane id="AnchorPane" prefHeight="391.0" prefWidth="726.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gol.s305084.StatisticsController">
    <children>
-      <Label fx:id="txtGen" layoutX="136.0" layoutY="369.0" text="Generation: 0" />
-      <Label fx:id="txtAlive" layoutX="378.0" layoutY="369.0" text="Alive: " />
-      <Label fx:id="txtChange" layoutX="551.0" layoutY="369.0" text="Change: " />
+      <Label fx:id="txtGen" layoutX="135.0" layoutY="361.0" text="Generation: 0" />
+      <Label fx:id="txtAlive" layoutX="380.0" layoutY="361.0" text="Alive: " />
+      <Label fx:id="txtChange" layoutX="549.0" layoutY="361.0" text="Change: " />
       <StackPane layoutX="135.0" layoutY="-1.0" prefHeight="358.0" prefWidth="591.0">
          <children>
             <LineChart fx:id="lineChart" prefHeight="343.0" prefWidth="466.0" title="Game of Life">
@@ -22,13 +24,17 @@
               <yAxis>
                 <NumberAxis side="LEFT" />
               </yAxis>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
             </LineChart>
-            <Line fx:id="chartLength" endX="510.0" stroke="TRANSPARENT" StackPane.alignment="BOTTOM_LEFT">
+            <Line fx:id="chartLength" endX="488.0" stroke="TRANSPARENT" StackPane.alignment="BOTTOM_LEFT">
                <StackPane.margin>
                   <Insets left="65.0" />
                </StackPane.margin>
             </Line>
          </children>
       </StackPane>
+      <CheckBox layoutX="25.0" layoutY="147.0" mnemonicParsing="false" text="CheckBox" />
    </children>
 </AnchorPane>
