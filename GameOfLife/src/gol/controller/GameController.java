@@ -9,6 +9,7 @@ import gol.model.Logic.ConwaysRule;
 import gol.model.Logic.CustomRule;
 import gol.model.Logic.unsupportedRuleException;
 import gol.s305054.GIFWriterS305054;
+import gol.s305054.EditorController;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -24,6 +25,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Alert;
@@ -41,9 +43,11 @@ import javafx.scene.control.ToolBar;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
@@ -330,6 +334,7 @@ public class GameController implements Initializable {
 
     @FXML
     private void handleGIFTrygve() {
+        timeline.pause();
         java.awt.Color bgColor = new java.awt.Color((float) backgroundColor.getRed(), (float) backgroundColor.getGreen(), (float) backgroundColor.getBlue());
         java.awt.Color cColor = new java.awt.Color((float) cellColor.getRed(), (float) cellColor.getGreen(), (float) cellColor.getBlue());
         gifTrygve = new GIFWriterS305054();
@@ -346,8 +351,16 @@ public class GameController implements Initializable {
     
     @FXML
     private void openEditorTrygve() {
+        timeline.pause();
         Stage editor = new Stage();
-        FXMLLoader eLoader = new FXMLLoader(getClass().getResource("gol/s305054/view/Editor.fxml"));
+        FXMLLoader eLoader = new FXMLLoader(getClass().getResource("/gol/s305054/view/Editor.fxml"));
+        GridPane root = eLoader.load();
+        
+        Scene scene = new Scene(root, APP_WIDTH, APP_HEIGHT);
+        editor.setTitle("Pattern Editor");
+        editor.initModality(Modality.WINDOW_MODAL);
+        editor.initOwner(<EditorController>.getScene().getWindow());
+        editor.show();
     }
     
     @FXML
