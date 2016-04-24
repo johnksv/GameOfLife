@@ -28,9 +28,6 @@
               <yAxis>
                 <NumberAxis side="LEFT" />
               </yAxis>
-               <cursor>
-                  <Cursor fx:constant="HAND" />
-               </cursor>
             </LineChart>
             <Line fx:id="chartLength" endX="488.0" stroke="TRANSPARENT" StackPane.alignment="BOTTOM_LEFT">
                <StackPane.margin>
@@ -46,7 +43,7 @@
                   <Font size="19.0" />
                </font>
             </Text>
-            <CheckBox mnemonicParsing="false" text="Show most similar">
+            <CheckBox fx:id="cbShowAll" mnemonicParsing="false" text="Show most similar" onAction="#handleShowAll" >
                <VBox.margin>
                   <Insets top="10.0" />
                </VBox.margin>

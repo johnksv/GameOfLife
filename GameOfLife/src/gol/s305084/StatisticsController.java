@@ -6,8 +6,10 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Cursor;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Line;
@@ -27,6 +29,8 @@ public class StatisticsController implements Initializable {
     Label txtAlive;
     @FXML
     Label txtChange;
+    @FXML
+    CheckBox cbShowAll;
 
     //TODO Improve mouse position
     @FXML
@@ -48,8 +52,11 @@ public class StatisticsController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         lineChart.setTitle("Game of life: Statistics");
+        lineChart.getData().addAll(LIVINGCELLS, CELLCHANGE, SIMPERCENT);
         lineChart.setAnimated(false);
-
+        lineChart.setCursor(Cursor.HAND);
+        
+        
         CELLCHANGE.setName("Cell change");
         LIVINGCELLS.setName("Living cells");
         SIMPERCENT.setName("Sim value");
@@ -62,26 +69,31 @@ public class StatisticsController implements Initializable {
     }
 
     public void showStats() {
+        LIVINGCELLS.getData().clear();
+        SIMPERCENT.getData().clear();
+        CELLCHANGE.getData().clear();
+
+        Board copyBoard = new DynamicBoard();
+        copyBoard.insertArray(statBoard.getBoundingBoxBoard(),1,1);
         for (int i = 0; i <= genIterations; i++) {
-            byte[][] pattern = statBoard.getBoundingBoxBoard();
+            byte[][] pattern = copyBoard.getBoundingBoxBoard();
 
             //Counting
-            int living = countLivingCells(statBoard);
+            int living = countLivingCells(copyBoard);
             LIVINGCELLS.getData().add(new XYChart.Data(i, living));
 
             //Next gen
-            statBoard.nextGen();
+            copyBoard.nextGen();
 
             //Life Change
-            int change = calcChangeCells(countLivingCells(statBoard), living);
+            int change = calcChangeCells(countLivingCells(copyBoard), living);
             CELLCHANGE.getData().add(new XYChart.Data(i, change));
             //Similarity measure
             simValue[i] = simValue(pattern, living, change);
             SIMPERCENT.getData().add(new XYChart.Data(i, relativeSim(i, 0)));
 
         }
-
-        lineChart.getData().addAll(LIVINGCELLS, CELLCHANGE, SIMPERCENT);
+        
         txtAlive.setText("Alive: " + LIVINGCELLS.getData().get(0).getYValue());
         txtChange.setText("Change: " + CELLCHANGE.getData().get(0).getYValue());
     }
@@ -133,24 +145,52 @@ public class StatisticsController implements Initializable {
         }
     }
 
+    @FXML
+    public void handleShowAll() {
+        if (cbShowAll.isSelected()) {
+            SIMPERCENT.getData().clear();
+            for (int i = 0; i < genIterations; i++) {
+                double maxSim = 0;
+
+                for (int j = 0; j < genIterations; j++) {
+                    if (j == i) {
+                        continue;
+                    }
+                    if (maxSim < relativeSim(j, i)) {
+                        maxSim = relativeSim(j, i);
+                    }
+                }
+
+                SIMPERCENT.getData().add(new XYChart.Data(i, maxSim));
+
+            }
+        } else {
+            showStats();
+        }
+
+    }
+
     private void initMouseListener() {
         lineChart.addEventHandler(MouseEvent.MOUSE_PRESSED,
                 (MouseEvent e) -> {
-                    double tickSize = chartLength.getEndX() / genIterations;
-                    double x = e.getX() - chartLength.getLayoutX() + tickSize / 2;
-                    int newGen = (int) (x / tickSize);
+                    int newGen = 0;
+                    if (!cbShowAll.isSelected()) {
+                        double tickSize = chartLength.getEndX() / genIterations;
+                        double x = e.getX() - chartLength.getLayoutX() + tickSize / 2;
+                        newGen = (int) (x / tickSize);
 
-                    if (newGen < 0) {
-                        newGen = 0;
-                    } else if (newGen > genIterations) {
-                        newGen = genIterations;
+                        if (newGen < 0) {
+                            newGen = 0;
+                        } else if (newGen > genIterations) {
+                            newGen = genIterations;
+                        }
                     }
-
                     newRelSimCalc(newGen);
 
                     txtAlive.setText("Alive: " + LIVINGCELLS.getData().get(newGen).getYValue());
                     txtChange.setText("Change: " + CELLCHANGE.getData().get(newGen).getYValue());
                     txtGen.setText("Generation: " + newGen);
+
                 });
     }
 }
