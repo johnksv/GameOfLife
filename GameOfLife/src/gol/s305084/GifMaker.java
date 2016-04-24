@@ -62,14 +62,15 @@ public class GifMaker {
      *
      */
     private static void makeFrame(Board frame, int counter) throws IOException {
-        int xoffset = 0;
-        int yoffset = 0;
-        byte[][] boarders = frame.getBoundingBoxBoard();
-
         if (counter <= 0) {
             gifWriter.close();
             return;
         }
+        
+        int xoffset = 0;
+        int yoffset = 0;
+        byte[][] boarders = frame.getBoundingBoxBoard();
+
         gifWriter.createNextImage();
         
         if (height / boarders.length < width / boarders[0].length) {

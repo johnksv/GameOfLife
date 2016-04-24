@@ -2,6 +2,8 @@ package gol.s305084;
 
 import gol.model.Board.Board;
 import gol.model.Board.DynamicBoard;
+import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
@@ -9,10 +11,13 @@ import javafx.fxml.Initializable;
 import javafx.scene.Cursor;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.Alert;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Line;
+import javafx.stage.FileChooser;
+import lieng.GIFWriter;
 
 /**
  *
@@ -30,6 +35,9 @@ public class StatisticsController implements Initializable {
     @FXML
     Label txtChange;
     @FXML
+    Label txtSim;
+
+    @FXML
     CheckBox cbShowAll;
 
     //TODO Improve mouse position
@@ -41,6 +49,10 @@ public class StatisticsController implements Initializable {
     private final XYChart.Series<Integer, Integer> LIVINGCELLS = new XYChart.Series();
     private final XYChart.Series<Integer, Integer> CELLCHANGE = new XYChart.Series();
     private final XYChart.Series<Integer, Integer> SIMPERCENT = new XYChart.Series();
+
+    private final int GIFW = 140;
+    private final int GIFH = 140;
+    private int selectedGen = 0;
 
     private final static double ALPHA = 0.5;
     private final static double BETA = 3.0;
@@ -55,11 +67,11 @@ public class StatisticsController implements Initializable {
         lineChart.getData().addAll(LIVINGCELLS, CELLCHANGE, SIMPERCENT);
         lineChart.setAnimated(false);
         lineChart.setCursor(Cursor.HAND);
-        
-        
+
         CELLCHANGE.setName("Cell change");
         LIVINGCELLS.setName("Living cells");
         SIMPERCENT.setName("Sim value");
+
         initMouseListener();
 
     }
@@ -74,7 +86,7 @@ public class StatisticsController implements Initializable {
         CELLCHANGE.getData().clear();
 
         Board copyBoard = new DynamicBoard();
-        copyBoard.insertArray(statBoard.getBoundingBoxBoard(),1,1);
+        copyBoard.insertArray(statBoard.getBoundingBoxBoard(), 1, 1);
         for (int i = 0; i <= genIterations; i++) {
             byte[][] pattern = copyBoard.getBoundingBoxBoard();
 
@@ -93,7 +105,7 @@ public class StatisticsController implements Initializable {
             SIMPERCENT.getData().add(new XYChart.Data(i, relativeSim(i, 0)));
 
         }
-        
+        txtSim.setText("");
         txtAlive.setText("Alive: " + LIVINGCELLS.getData().get(0).getYValue());
         txtChange.setText("Change: " + CELLCHANGE.getData().get(0).getYValue());
     }
@@ -152,7 +164,7 @@ public class StatisticsController implements Initializable {
             for (int i = 0; i < genIterations; i++) {
                 double maxSim = 0;
 
-                for (int j = 0; j < genIterations; j++) {
+                for (int j = i; j <= genIterations; j++) {
                     if (j == i) {
                         continue;
                     }
@@ -162,34 +174,100 @@ public class StatisticsController implements Initializable {
                 }
 
                 SIMPERCENT.getData().add(new XYChart.Data(i, maxSim));
-
             }
+
+            txtAlive.setText("Alive: " + LIVINGCELLS.getData().get(0).getYValue());
+            txtChange.setText("Change: " + CELLCHANGE.getData().get(0).getYValue());
+            txtSim.setText("Simvalue: " + SIMPERCENT.getData().get(0).getYValue());
         } else {
             showStats();
         }
 
     }
 
+    @FXML
+    public void handleGifBtn() {
+        Board activeBoard = new DynamicBoard();
+        activeBoard.insertArray(statBoard.getBoundingBoxBoard(), 1, 1);
+
+        //Finding best loop
+        //loop array contains generation-Index, value
+        double[] loop = new double[2];
+        for (int i = selectedGen; i < genIterations; i++) {
+            if (i != selectedGen) {
+                System.out.println(i + " SIM: " + relativeSim(i, selectedGen));
+                if (loop[1] < relativeSim(i, selectedGen)) {
+
+                    loop[1] = relativeSim(i, selectedGen);
+                    System.out.println("i: " + i);
+                    loop[0] = i;
+                }
+            }
+        }
+        int frames = (int) loop[0] - selectedGen;
+
+        //Go to selectedBoard
+        for (int i = 0; i < selectedGen; i++) {
+            activeBoard.nextGen();
+        }
+
+        //Aborts if board is empty or if only one frame will be created.
+        if (activeBoard.getBoundingBox()[1] - activeBoard.getBoundingBox()[0] < 0) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("Sorry, but you cant make a gif with no cells alive.");
+            alert.showAndWait();
+        } else if (frames <= 1) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Oops!");
+            alert.setHeaderText("Sorry, but the best frame was the next one.\n"
+                    + "You may have selected the wrong starting frame? ");
+            alert.showAndWait();
+        } else {
+
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.getExtensionFilters().addAll(
+                    new FileChooser.ExtensionFilter("Gif format", "*.gif"),
+                    new FileChooser.ExtensionFilter("All Files", "*.*"));
+            File selected = fileChooser.showSaveDialog(null);
+            if (selected != null) {
+                try {
+                    GifMaker.makeGif(activeBoard.getBoundingBoxBoard(), new GIFWriter(GIFW, GIFH, selected.toString(),
+                            500), GIFW, GIFH, java.awt.Color.WHITE, java.awt.Color.BLACK, frames);
+
+                } catch (IOException ex) {
+                    Alert alert = new Alert(Alert.AlertType.ERROR, ex.getMessage());
+                    alert.setTitle("Error");
+                    alert.setHeaderText("Sorry, something  went wrong during saving");
+                    alert.showAndWait();
+                }
+            }
+        }
+    }
+
     private void initMouseListener() {
         lineChart.addEventHandler(MouseEvent.MOUSE_PRESSED,
                 (MouseEvent e) -> {
-                    int newGen = 0;
-                    if (!cbShowAll.isSelected()) {
-                        double tickSize = chartLength.getEndX() / genIterations;
-                        double x = e.getX() - chartLength.getLayoutX() + tickSize / 2;
-                        newGen = (int) (x / tickSize);
-
-                        if (newGen < 0) {
-                            newGen = 0;
-                        } else if (newGen > genIterations) {
-                            newGen = genIterations;
-                        }
+                    double tickSize = chartLength.getEndX() / genIterations;
+                    double x = e.getX() - chartLength.getLayoutX() + tickSize / 2;
+                    selectedGen = (int) (x / tickSize);
+                    if (selectedGen < 0) {
+                        selectedGen = 0;
+                    } else if (selectedGen > genIterations) {
+                        selectedGen = genIterations;
                     }
-                    newRelSimCalc(newGen);
 
-                    txtAlive.setText("Alive: " + LIVINGCELLS.getData().get(newGen).getYValue());
-                    txtChange.setText("Change: " + CELLCHANGE.getData().get(newGen).getYValue());
-                    txtGen.setText("Generation: " + newGen);
+                    if (!cbShowAll.isSelected()) {
+                        newRelSimCalc(selectedGen);
+                        txtSim.setText("");
+                    } else if (selectedGen == genIterations) {
+                        txtSim.setText("");
+                    } else {
+                        txtSim.setText("Simvalue: " + SIMPERCENT.getData().get(selectedGen).getYValue());
+                    }
+                    txtAlive.setText("Alive: " + LIVINGCELLS.getData().get(selectedGen).getYValue());
+                    txtChange.setText("Change: " + CELLCHANGE.getData().get(selectedGen).getYValue());
+                    txtGen.setText("Generation: " + selectedGen);
 
                 });
     }

@@ -66,7 +66,7 @@ public class PatternEditorController implements Initializable {
             
             FileChooser fileChooser = new FileChooser();
             fileChooser.getExtensionFilters().addAll(
-                    new FileChooser.ExtensionFilter("Game of Life Files", "*.gif"),
+                    new FileChooser.ExtensionFilter("Gif format", "*.gif"),
                     new FileChooser.ExtensionFilter("All Files", "*.*"));
             File selected = fileChooser.showSaveDialog(null);
             if (selected != null) {

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.Cursor?>
 <?import javafx.scene.chart.LineChart?>
 <?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.control.Button?>
@@ -16,9 +15,9 @@
 
 <AnchorPane id="AnchorPane" prefHeight="391.0" prefWidth="726.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gol.s305084.StatisticsController">
    <children>
-      <Label fx:id="txtGen" layoutX="135.0" layoutY="361.0" text="Generation: 0" />
-      <Label fx:id="txtAlive" layoutX="380.0" layoutY="361.0" text="Alive: " />
-      <Label fx:id="txtChange" layoutX="549.0" layoutY="361.0" text="Change: " />
+      <Label fx:id="txtGen" layoutX="23.0" layoutY="361.0" text="Generation: 0" />
+      <Label fx:id="txtAlive" layoutX="176.0" layoutY="361.0" text="Alive: " />
+      <Label fx:id="txtChange" layoutX="384.0" layoutY="361.0" text="Change: " />
       <StackPane layoutX="135.0" layoutY="-1.0" prefHeight="358.0" prefWidth="591.0">
          <children>
             <LineChart fx:id="lineChart" prefHeight="343.0" prefWidth="466.0" title="Game of Life">
@@ -43,12 +42,12 @@
                   <Font size="19.0" />
                </font>
             </Text>
-            <CheckBox fx:id="cbShowAll" mnemonicParsing="false" text="Show most similar" onAction="#handleShowAll" >
+            <CheckBox fx:id="cbShowAll" mnemonicParsing="false" onAction="#handleShowAll" text="Show most similar">
                <VBox.margin>
                   <Insets top="10.0" />
                </VBox.margin>
             </CheckBox>
-            <Button mnemonicParsing="false" text="Make Gif" />
+            <Button mnemonicParsing="false" onAction="#handleGifBtn" text="Make Gif" />
             <Text fill="#000000da" strokeType="OUTSIDE" strokeWidth="0.0" text="&quot;Make gif&quot; will creat a gif between the most similar genertions." wrappingWidth="125.30511474609375">
                <font>
                   <Font size="11.0" />
@@ -56,5 +55,11 @@
             </Text>
          </children>
       </VBox>
+      <Text layoutX="14.0" layoutY="330.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Selcted:" wrappingWidth="72.00001591444016">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Text>
+      <Label fx:id="txtSim" layoutX="554.0" layoutY="361.0" text="" />
    </children>
 </AnchorPane>

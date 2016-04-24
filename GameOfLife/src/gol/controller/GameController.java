@@ -7,7 +7,6 @@ import gol.model.FileIO.PatternFormatException;
 import gol.model.FileIO.ReadFile;
 import gol.model.Logic.ConwaysRule;
 import gol.model.Logic.CustomRule;
-import gol.s305084.HashLife;
 import gol.model.Logic.unsupportedRuleException;
 import java.io.File;
 import java.io.IOException;
@@ -339,6 +338,8 @@ public class GameController implements Initializable {
     private void handleShowSStats(){
         try {
             Stage Statistics = new Stage();
+            Statistics.setResizable(false);
+            //TODO ICON stats
             Statistics.getIcons().add(new Image(getClass().getResourceAsStream("icon.png")));
         
             Statistics.initModality(Modality.WINDOW_MODAL);
