@@ -34,7 +34,8 @@ public class Main extends Application {
         primaryStage.show();
         
         MainController.loadStage(primaryStage);
-   
+        
+        // TODO REMOVE TESTING
 //        test100NextGen();
 //        Platform.exit();
     }

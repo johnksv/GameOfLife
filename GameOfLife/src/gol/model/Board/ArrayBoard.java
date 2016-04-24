@@ -9,6 +9,7 @@ import java.util.Arrays;
  *
  * @author s305054, s305084, s305089
  */
+@Deprecated
 public class ArrayBoard extends Board {
 
     private final int WIDTH, HEIGHT;
@@ -17,6 +18,7 @@ public class ArrayBoard extends Board {
     /**
      * Constructs a new Arrayboard with default width and height
      */
+    @Deprecated
     public ArrayBoard() {
         super();
         WIDTH = 200;
@@ -30,6 +32,7 @@ public class ArrayBoard extends Board {
      * @param width the width of the gameboard
      * @param height the height of the gameboard
      */
+    @Deprecated
     public ArrayBoard(int width, int height) {
         super();
         this.WIDTH = width;
@@ -37,10 +40,11 @@ public class ArrayBoard extends Board {
         gameBoard = new byte[WIDTH][HEIGHT];
 
     }
+
     /*
      * Bruker gameBoard.length i stedet for getArrayLength(i/j) for å ta med ramme.
      */
-
+    @Deprecated
     @Override
     public void clearBoard() {
         for (int i = 0; i < gameBoard.length; i++) {
@@ -50,6 +54,7 @@ public class ArrayBoard extends Board {
         }
     }
 
+    @Deprecated
     @Override
     protected void countNeigh() {
 
@@ -76,6 +81,7 @@ public class ArrayBoard extends Board {
         }
     }
 
+    @Deprecated
     @Override
     protected void checkRules(Rule activeRule) {
         for (int i = 1; i < (gameBoard.length - 1); i++) {
@@ -87,6 +93,7 @@ public class ArrayBoard extends Board {
         }
     }
 
+    @Deprecated
     @Override
     public void insertArray(byte[][] boardToInsert, int y, int x) {
         for (int i = 0; i < boardToInsert.length; i++) {
@@ -100,6 +107,7 @@ public class ArrayBoard extends Board {
         }
     }
 
+    @Deprecated
     @Override
     public void setCellState(int y, int x, boolean alive) {
         byte value = 0;
@@ -118,6 +126,7 @@ public class ArrayBoard extends Board {
         }
     }
 
+    @Deprecated
     @Override
     public void setCellState(double y, double x, boolean alive, double offsetX, double offsetY) {
 
@@ -133,21 +142,24 @@ public class ArrayBoard extends Board {
         setCellState((int) Math.floor(y - offsetY), (int) Math.floor(x - offsetX), alive);
     }
 
+    @Deprecated
     @Override
     public int getArrayLength() {
         return gameBoard.length - 1;
     }
 
+    @Deprecated
     @Override
     public int getArrayLength(int i) {
         return gameBoard[i].length - 1;
     }
 
+    @Deprecated
     @Override
     public byte[][] getBoundingBoxBoard() {
 
         int[] boundingBox = getBoundingBox();
-        if ((boundingBox[1] - boundingBox[0] + 1) > 0  || (boundingBox[3] - boundingBox[2] + 1) > 0) {
+        if ((boundingBox[1] - boundingBox[0] + 1) > 0 || (boundingBox[3] - boundingBox[2] + 1) > 0) {
             byte[][] board = new byte[boundingBox[1] - boundingBox[0] + 1][boundingBox[3] - boundingBox[2] + 1];
 
             for (int y = 0; y < board.length; y++) {
@@ -161,10 +173,11 @@ public class ArrayBoard extends Board {
             }
             return board;
         } else {
-            return new byte[][] {{}};
+            return new byte[][]{{}};
         }
     }
 
+    @Deprecated
     @Override
     public int[] getBoundingBox() {
         int[] boundingBox = new int[4]; // minrow maxrow mincolumn maxcolumn 
@@ -194,6 +207,7 @@ public class ArrayBoard extends Board {
         return boundingBox;
     }
 
+    @Deprecated
     @Override
     public boolean getCellState(int y, int x) {
         if (y < 1 || y >= gameBoard.length) {
@@ -205,6 +219,7 @@ public class ArrayBoard extends Board {
         return gameBoard[y][x] >= 64;
     }
 
+    @Deprecated
     @Override
     public String toString() {
 
@@ -221,6 +236,7 @@ public class ArrayBoard extends Board {
         return result.toString();
     }
 
+    @Deprecated
     @Override
     public int getMaxRowLength() {
         return HEIGHT;
