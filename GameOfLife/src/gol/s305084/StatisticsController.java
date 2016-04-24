@@ -3,12 +3,14 @@ package gol.s305084;
 import gol.model.Board.Board;
 import gol.model.Board.DynamicBoard;
 import java.net.URL;
-import java.util.Arrays;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.Label;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.shape.Line;
 
 /**
  *
@@ -19,27 +21,39 @@ public class StatisticsController implements Initializable {
 
     @FXML
     LineChart lineChart;
-
+    @FXML
+    Label txtGen;
+    @FXML
+    Label txtAlive;
+    @FXML
+    Label txtChange;
+    
+    //TODO Improve mouse position
+    @FXML
+    Line chartLength;
+    
     Board statBoard = new DynamicBoard();
 
-    XYChart.Series livingCells = new XYChart.Series();
-    XYChart.Series cellChange = new XYChart.Series();
-    XYChart.Series simProcent = new XYChart.Series();
+    private final XYChart.Series<Integer, Integer> LIVINGCELLS = new XYChart.Series();
+    private final XYChart.Series<Integer, Integer> CELLCHANGE = new XYChart.Series();
+    private final XYChart.Series<Integer, Integer> SIMPERCENT = new XYChart.Series();
 
-    private static double alpha = 0.5;
-    private static double beta = 3.0;
-    private static double gamma = 0.25;
+    private final static double ALPHA = 0.5;
+    private final static double BETA = 3.0;
+    private final static double GAMMA = 0.25;
+
+    private final int genIterations = 20;
+    private double[] simValue = new double[genIterations + 1];
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-
         lineChart.setTitle("Game of life: Statistics");
 
-        cellChange.setName("Cell change");
-        livingCells.setName("Living cells");
-        simProcent.setName("Sim value");
-        
-        
+        CELLCHANGE.setName("Cell change");
+        LIVINGCELLS.setName("Living cells");
+        SIMPERCENT.setName("Sim value");
+
+        initMouseListener();
 
     }
 
@@ -48,34 +62,33 @@ public class StatisticsController implements Initializable {
     }
 
     public void showStats() {
-        double firstSimValue = 0;
-        for (int i = 0; i < 20; i++) {
+        for (int i = 0; i <= genIterations; i++) {
             byte[][] pattern = statBoard.getBoundingBoxBoard();
-            
+
             //Counting
             int living = countLivingCells(statBoard);
-            livingCells.getData().add(new XYChart.Data(i, living));
+            LIVINGCELLS.getData().add(new XYChart.Data(i, living));
 
             //Next gen
             statBoard.nextGen();
-            
+
             //Life Change
             int change = calcChangeCells(countLivingCells(statBoard), living);
-            cellChange.getData().add(new XYChart.Data(i, change));
-            
+            CELLCHANGE.getData().add(new XYChart.Data(i, change));
             //Similarity measure
-            if (i == 0) {
-                firstSimValue = simValue(pattern, living, change);
-                simProcent.getData().add(new XYChart.Data(0, 100));
-            } else {
-                double simValue = simValue(pattern, living, change);
-                int asasgas = (int) Math.floor((Math.min(firstSimValue, simValue) / Math.max(firstSimValue, simValue)) * 100);
-                simProcent.getData().add(new XYChart.Data(i, asasgas));
-            }
+            simValue[i] = simValue(pattern, living, change);
+            SIMPERCENT.getData().add(new XYChart.Data(i, relativeSim(i,0)));
+           
         }
-            
-        lineChart.getData().addAll(livingCells, cellChange, simProcent);
-        
+
+        lineChart.getData().addAll(LIVINGCELLS, CELLCHANGE, SIMPERCENT);
+        txtAlive.setText("Alive: " + LIVINGCELLS.getData().get(0).getYValue());
+        txtChange.setText("Change: " + CELLCHANGE.getData().get(0).getYValue());
+    }
+
+    private double relativeSim(int i, int relativePosition) {
+        return Math.floor((Math.min(simValue[relativePosition], simValue[i])
+                    / Math.max(simValue[relativePosition], simValue[i])) * 100);
     }
 
     public static int countLivingCells(Board pattern) {
@@ -104,6 +117,15 @@ public class StatisticsController implements Initializable {
                 }
             }
         }
-        return alpha * aliveCount + beta * aliveChange + gamma * geoSum;
+        return ALPHA * aliveCount + BETA * aliveChange + GAMMA * geoSum;
+    }
+
+    private void initMouseListener() {
+        lineChart.addEventHandler(MouseEvent.MOUSE_PRESSED,
+                (MouseEvent e) -> {
+                    System.out.println(e.getX());
+                    System.out.println(chartLength.getLayoutX());
+                    
+                });
     }
 }
