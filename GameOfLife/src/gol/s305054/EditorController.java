@@ -4,6 +4,7 @@
  */
 package gol.s305054;
 
+import gol.model.Board.ArrayBoard;
 import gol.model.Board.Board;
 import gol.model.Board.DynamicBoard;
 import java.net.URL;
@@ -16,6 +17,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.input.ScrollEvent;
 import javafx.scene.paint.Color;
 
 /**
@@ -24,12 +27,12 @@ import javafx.scene.paint.Color;
  * @author Trygve Vang - s305054
  */
 public class EditorController implements Initializable {
-    
+
     @FXML
     private RadioButton addCell;
     @FXML
     private RadioButton removeCell;
-    @FXML 
+    @FXML
     private RadioButton moveGrid;
     @FXML
     private Slider zoomSlider;
@@ -47,7 +50,7 @@ public class EditorController implements Initializable {
     private Button updateStripBtn;
     @FXML
     private Canvas editorCanvas;
-    
+
     private GraphicsContext gc;
     private final Color cellColor = Color.BLACK;
     private final Color backgroundColor = Color.web("#F4F4F4");
@@ -59,13 +62,15 @@ public class EditorController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         gc = editorCanvas.getGraphicsContext2D();
+        
+        mouseInit();
     }
 
     @FXML
     private void handleZoom() {
         //TODO Skal jeg i det hele tatt gidde å tillate zoom på pattern editor?
     }
-    
+
     //kopierte draw metode fra GameController, da det er nøyaktig samme greia som skjer.
     private void draw() {
         gc.setGlobalAlpha(1);
@@ -90,5 +95,69 @@ public class EditorController implements Initializable {
         }
 
     }
+
+    private void mouseInit() {
+
+        //Registers clicks on scene
+        editorCanvas.addEventHandler(MouseEvent.MOUSE_PRESSED,
+                (MouseEvent e) -> {
+                    handleMouseClick(e);
+                });
+        editorCanvas.addEventHandler(MouseEvent.MOUSE_DRAGGED,
+                (MouseEvent e) -> {
+                    handleMouseClick(e);
+
+                });
+        /* Trenger jeg disse?
+        editorCanvas.addEventHandler(MouseEvent.MOUSE_RELEASED,
+                (MouseEvent e) -> {
+                    if (rbMoveGrid.isSelected()) {
+                        moveGridValues[2] = -Double.MAX_VALUE;
+                        moveGridValues[3] = -Double.MAX_VALUE;
+                    }
+                });
+
+        editorCanvas.addEventHandler(MouseEvent.MOUSE_MOVED,
+                (MouseEvent e) -> {
+                    mousePositionX = (int) e.getX();
+                    mousePositionY = (int) e.getY();
+                    if (boardFromFile != null) {
+
+                        draw();
+                        drawGhostTiles();
+                    }
+                }); */
+
+        editorCanvas.setOnScroll((ScrollEvent event) -> {
+            editorCanvas.requestFocus();
+            if (event.getDeltaY() > 0) {
+                zoomSlider.increment();
+            } else {
+                zoomSlider.decrement();
+            }
+        });
+    }
+
+    private void handleMouseClick(MouseEvent e) {
+        double x = e.getX();
+        double y = e.getY();
+
+        if (removeCell.isSelected()) {
+            activeBoard.setCellState(y, x, false, 0, 0);
+        } else if (moveGrid.isSelected()) {
+        } else {
+            activeBoard.setCellState(y, x, true, 0, 0);
+        }
+
+        draw();
+    }
     
+    public void setBoard(Board gameBoard) {
+        //Denne må dobbelsjekkes. Vil jeg virkelig ha et like stort brett som det som spilles? Det er jo tross alt et dynamisk brett.
+        int y = gameBoard.getArrayLength();
+        int x = gameBoard.getArrayLength(0); //Brettet er et rektangel så jeg kan vel bruke første rad for å finne antall kolonner?
+        activeBoard = new ArrayBoard(y,x);
+        activeBoard.setCellSize(gameBoard.getCellSize());
+    }
+
 }

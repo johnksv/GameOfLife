@@ -22,6 +22,7 @@ import javafx.animation.Timeline;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -43,6 +44,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
+import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
 
@@ -340,6 +342,12 @@ public class GameController implements Initializable {
         timeSliderGifTrygve.setMin(0.001);
         timeSliderGifTrygve.setMax(2.0);
         timeLabelGifTrygve.setText("Time Between pictures: " + (float) timeSliderGifTrygve.getValue());
+    }
+    
+    @FXML
+    private void openEditorTrygve() {
+        Stage editor = new Stage();
+        FXMLLoader eLoader = new FXMLLoader(getClass().getResource("gol/s305054/view/Editor.fxml"));
     }
     
     @FXML

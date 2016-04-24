@@ -10,17 +10,17 @@
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="598.0" prefWidth="883.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gol.s305054.EditorController">
    <center>
       <AnchorPane prefHeight="612.0" prefWidth="915.0" BorderPane.alignment="CENTER">
          <children>
-            <VBox layoutX="684.0" prefHeight="420.0" prefWidth="199.0">
+            <VBox layoutX="686.0" layoutY="5.0" prefHeight="400.0" prefWidth="197.0">
                <children>
                   <TabPane prefHeight="411.0" prefWidth="236.0" tabClosingPolicy="UNAVAILABLE">
                     <tabs>
@@ -32,10 +32,14 @@
                                        <content>
                                           <AnchorPane prefHeight="200.0" prefWidth="200.0">
                                              <children>
-                                                <RadioButton fx:id="addCell" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" selected="true" text="Add Cells" />
-                                                <RadioButton fx:id="removeCell" layoutX="14.0" layoutY="41.0" mnemonicParsing="false" text="Remove Cells" />
-                                                <RadioButton fx:id="moveGrid" layoutX="14.0" layoutY="68.0" mnemonicParsing="false" text="Move Grid" />
-                                                <Slider fx:id="zoomSlider" layoutX="14.0" layoutY="118.0" onValueChange="#handleZoom"/>
+                                                <RadioButton fx:id="addCell" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" selected="true" text="Add Cells">
+                                                    <toggleGroup>
+                                                        <ToggleGroup fx:id="mouseActions" />
+                                                    </toggleGroup>
+                                                </RadioButton>
+                                                <RadioButton fx:id="removeCell" layoutX="14.0" layoutY="41.0" mnemonicParsing="false" text="Remove Cells" toggleGroup="$mouseActions" />
+                                                <RadioButton fx:id="moveGrid" layoutX="14.0" layoutY="68.0" mnemonicParsing="false" text="Move Grid" toggleGroup="$mouseActions" />
+                                                <Slider fx:id="zoomSlider" layoutX="14.0" layoutY="118.0" onValueChange="#handleZoom" />
                                                 <Label layoutX="14.0" layoutY="98.0" text="Zoom:" />
                                              </children>
                                           </AnchorPane>
