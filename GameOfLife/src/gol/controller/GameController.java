@@ -25,6 +25,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -348,21 +349,30 @@ public class GameController implements Initializable {
         timeSliderGifTrygve.setMax(2.0);
         timeLabelGifTrygve.setText("Time Between pictures: " + (float) timeSliderGifTrygve.getValue());
     }
-    
+
     @FXML
     private void openEditorTrygve() {
         timeline.pause();
-        Stage editor = new Stage();
-        FXMLLoader eLoader = new FXMLLoader(getClass().getResource("/gol/s305054/view/Editor.fxml"));
-        GridPane root = eLoader.load();
-        
-        Scene scene = new Scene(root, APP_WIDTH, APP_HEIGHT);
-        editor.setTitle("Pattern Editor");
-        editor.initModality(Modality.WINDOW_MODAL);
-        editor.initOwner(<EditorController>.getScene().getWindow());
-        editor.show();
+        try {
+            Stage editor = new Stage();
+            Parent root = FXMLLoader.load(getClass().getResource("/gol/s305054/view/Editor.fxml"));
+            Scene scene = new Scene(root);
+            EditorController edController = new EditorController();
+            
+            editor.setTitle("Pattern Editor");
+            editor.initModality(Modality.WINDOW_MODAL);
+            editor.initOwner(borderpane.getScene().getWindow());
+            editor.show();
+
+        } catch (IOException ie) {
+            Alert error = new Alert(AlertType.ERROR);
+            error.setTitle("Error");
+            error.setHeaderText("Could not open pattern editor. Please try again.");
+            error.show();
+
+        }
     }
-    
+
     @FXML
     private void rotateBoardFromFile() {
         if (boardFromFile != null) {
