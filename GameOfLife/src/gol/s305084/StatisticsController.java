@@ -50,8 +50,8 @@ public class StatisticsController implements Initializable {
     private final XYChart.Series<Integer, Integer> CELLCHANGE = new XYChart.Series();
     private final XYChart.Series<Integer, Integer> SIMPERCENT = new XYChart.Series();
 
-    private final int GIFW = 140;
-    private final int GIFH = 140;
+    private final int GIFW = 200;
+    private final int GIFH = 200;
     private int selectedGen = 0;
 
     private final static double ALPHA = 0.5;
