@@ -150,7 +150,7 @@ public class GameController implements Initializable {
     private void initAnimation() {
         Duration duration = Duration.millis(1000);
         KeyFrame keyframe = new KeyFrame(duration, (ActionEvent e) -> {
-            activeBoard.nextGen();
+            activeBoard.nextGenerationConcurrent();
             gencount++;
             labelGenCount.setText("Generation: " + gencount);
             draw();

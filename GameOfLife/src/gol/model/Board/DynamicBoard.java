@@ -67,7 +67,7 @@ public class DynamicBoard extends Board {
         for (int i = 0; i < gameBoard.size(); i += linesPerThread) {
             int startRow = i;
 
-            threadPool.addWork(() -> {
+     
                 for (int row = startRow; row < linesPerThread; row++) {
                     for (int col = 1; col < gameBoard.get(row).size(); col++) {
 
@@ -93,7 +93,7 @@ public class DynamicBoard extends Board {
                     }
                 }
 
-            });
+     
         }
     }
 
@@ -120,21 +120,19 @@ public class DynamicBoard extends Board {
         for (int i = 0; i < gameBoard.size(); i += linesPerThread) {
             int startRow = i;
 
-            threadPool.addWork(() -> {
-                for (int row = startRow; row < linesPerThread; row++) {
-                    for (int col = 1; col < gameBoard.get(row).size(); col++) {
-                        if (gameBoard.get(row).get(col).intValue() != 0) {
-                            if (activeRule.setLife(gameBoard.get(row).get(col).byteValue()) == 64) {
-                                setCellState(row, col, true);
-                            } else {
-                                setCellState(row, col, false);
-                            }
-
+            for (int row = startRow; row < linesPerThread; row++) {
+                for (int col = 1; col < gameBoard.get(row).size(); col++) {
+                    if (gameBoard.get(row).get(col).intValue() != 0) {
+                        if (activeRule.setLife(gameBoard.get(row).get(col).byteValue()) == 64) {
+                            setCellState(row, col, true);
+                        } else {
+                            setCellState(row, col, false);
                         }
+
                     }
                 }
+            }
 
-            });
         }
 
     }
@@ -293,7 +291,7 @@ public class DynamicBoard extends Board {
         x = (x < 1) ? EXPANSION : x;
         //TODO CHECK
         gameBoard.get(y).get(x).incrementAndGet();
-        
+
     }
 
     private void expandBoard(int y, int x) {

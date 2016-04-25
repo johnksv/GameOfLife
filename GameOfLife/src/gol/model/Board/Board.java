@@ -55,20 +55,10 @@ public abstract class Board {
     }
 
     public void nextGenerationConcurrent() {
-        while (!threadPool.isFinished()) {
-            //Waiting for counting to finish
-        }
-        countNeighConcurrent();
-        threadPool.doWork();
-
-        try {
-            Thread.currentThread().join();
-        } catch (InterruptedException ex) {
-            Logger.getLogger(Board.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        checkRulesConcurrent(activeRule);
-        threadPool.doWork();
+       threadPool.createWorkers(() -> countNeighConcurrent());
+       threadPool.runWorkers();
+       threadPool.runWorkers();
+       threadPool.createWorkers(() -> checkRulesConcurrent(activeRule));
     }
 
     /**
