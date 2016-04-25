@@ -55,6 +55,7 @@ public class EditorController implements Initializable {
     private final Color cellColor = Color.BLACK;
     private final Color backgroundColor = Color.web("#F4F4F4");
     private Board activeBoard;
+    
 
     /**
      * Initializes the controller class.
@@ -153,11 +154,13 @@ public class EditorController implements Initializable {
     }
     
     public void setBoard(Board gameBoard) {
+        
         //Denne må dobbelsjekkes. Vil jeg virkelig ha et like stort brett som det som spilles? Det er jo tross alt et dynamisk brett.
         int y = gameBoard.getArrayLength();
         int x = gameBoard.getArrayLength(0); //Brettet er et rektangel så jeg kan vel bruke første rad for å finne antall kolonner?
         activeBoard = new ArrayBoard(y,x);
         activeBoard.setCellSize(gameBoard.getCellSize());
+        activeBoard.setGridSpacing(gameBoard.getGridSpacing());
     }
 
 }

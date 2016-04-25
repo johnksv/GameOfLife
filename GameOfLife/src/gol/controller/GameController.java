@@ -358,10 +358,13 @@ public class GameController implements Initializable {
             Parent root = FXMLLoader.load(getClass().getResource("/gol/s305054/view/Editor.fxml"));
             Scene scene = new Scene(root);
             EditorController edController = new EditorController();
+            edController.setBoard(activeBoard);
             
             editor.setTitle("Pattern Editor");
             editor.initModality(Modality.WINDOW_MODAL);
             editor.initOwner(borderpane.getScene().getWindow());
+            editor.setScene(scene);
+            
             editor.show();
 
         } catch (IOException ie) {
