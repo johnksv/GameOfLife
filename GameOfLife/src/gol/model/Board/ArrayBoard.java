@@ -226,4 +226,14 @@ public class ArrayBoard extends Board {
     public int getMaxRowLength() {
         return HEIGHT;
     }
+
+    @Override
+    protected void countNeighConcurrent() {
+        throw new UnsupportedOperationException("Threads for ArrayBoard is not supported.");
+    }
+
+    @Override
+    protected void checkRulesConcurrent(Rule activeRule) {
+        throw new UnsupportedOperationException("Threads for ArrayBoard is not supported.");
+    }
 }

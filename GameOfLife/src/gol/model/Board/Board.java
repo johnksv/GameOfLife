@@ -2,6 +2,9 @@ package gol.model.Board;
 
 import gol.model.Logic.ConwaysRule;
 import gol.model.Logic.Rule;
+import gol.model.ThreadPool;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * The abstract class <code>Board</code> is the superclass of
@@ -20,9 +23,11 @@ public abstract class Board {
      */
     protected double cellSize;
 
+    protected final ThreadPool threadPool = new ThreadPool();
+
     //Offset x, offset y, old x, old y
     private final double[] moveGridValues = {0, 0, -Double.MAX_VALUE, -Double.MAX_VALUE};
-    
+
     /**
      * Padding between cells, defined in pixels
      */
@@ -47,6 +52,23 @@ public abstract class Board {
     public void nextGen() {
         countNeigh();
         checkRules(activeRule);
+    }
+
+    public void nextGenerationConcurrent() {
+        while (!threadPool.isFinished()) {
+            //Waiting for counting to finish
+        }
+        countNeighConcurrent();
+        threadPool.doWork();
+
+        try {
+            Thread.currentThread().join();
+        } catch (InterruptedException ex) {
+            Logger.getLogger(Board.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        checkRulesConcurrent(activeRule);
+        threadPool.doWork();
     }
 
     /**
@@ -105,8 +127,16 @@ public abstract class Board {
         return gridSpacing;
     }
 
-    //TODO comments.
+    /**
+     * Offset x, offset y, old x, old y
+     *
+     * @return
+     */
+    public double[] getMoveGridValues() {
+        return moveGridValues;
+    }
 
+    //TODO comments.
     public abstract byte[][] getBoundingBoxBoard();
 
     /**
@@ -131,6 +161,8 @@ public abstract class Board {
      */
     protected abstract void countNeigh();
 
+    protected abstract void countNeighConcurrent();
+
     /**
      * Checks each cell to this rule. The cell is set to alive or dead,
      * depending on the rule.
@@ -138,6 +170,8 @@ public abstract class Board {
      * @param activeRule {@link gol.model.Logic.Rule}
      */
     protected abstract void checkRules(Rule activeRule);
+
+    protected abstract void checkRulesConcurrent(Rule activeRule);
 
     /**
      * Inserts a byte 2D-array into the current gameboard at the given (y, x)
@@ -199,6 +233,7 @@ public abstract class Board {
      * @return elements in row i
      */
     public abstract int getMaxRowLength();
+
     /**
      * Returns the cell state at position (y,x)
      *
@@ -207,13 +242,5 @@ public abstract class Board {
      * @return The cells state at position (y,x). true if alive. false if dead.
      */
     public abstract boolean getCellState(int y, int x);
-
-    /**
-     * Offset x, offset y, old x, old y
-     * @return 
-     */
-    public double[] getMoveGridValues() {
-        return moveGridValues;
-    }
 
 }
