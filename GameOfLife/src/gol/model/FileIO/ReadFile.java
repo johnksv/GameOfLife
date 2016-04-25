@@ -42,8 +42,6 @@ public class ReadFile {
                 return readPlainText(readFile);
             case "rle":
                 return readRLE(readFile);
-            case "life":
-                return null;
             default:
                 throw new PatternFormatException("Pattern format is not supported");
         }

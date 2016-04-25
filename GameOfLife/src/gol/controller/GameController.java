@@ -278,7 +278,7 @@ public class GameController implements Initializable {
             FileChooser fileChooser = new FileChooser();
 
             fileChooser.getExtensionFilters().addAll(
-                    new ExtensionFilter("Game of Life Files", "*.rle", "*.lif", "*.cells"),
+                    new ExtensionFilter("Game of Life Files", "*.rle", "*.cells"),
                     new ExtensionFilter("All Files", "*.*"));
 
             timeline.pause();
