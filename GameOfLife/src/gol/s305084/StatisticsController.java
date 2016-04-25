@@ -195,11 +195,9 @@ public class StatisticsController implements Initializable {
         double[] loop = new double[2];
         for (int i = selectedGen; i < genIterations; i++) {
             if (i != selectedGen) {
-                System.out.println(i + " SIM: " + relativeSim(i, selectedGen));
                 if (loop[1] < relativeSim(i, selectedGen)) {
 
                     loop[1] = relativeSim(i, selectedGen);
-                    System.out.println("i: " + i);
                     loop[0] = i;
                 }
             }
