@@ -175,7 +175,7 @@ public class StatisticsController implements Initializable {
 
                 SIMPERCENT.getData().add(new XYChart.Data(i, maxSim));
             }
-
+            txtGen.setText("Generation: 0");
             txtAlive.setText("Alive: " + LIVINGCELLS.getData().get(0).getYValue());
             txtChange.setText("Change: " + CELLCHANGE.getData().get(0).getYValue());
             txtSim.setText("Simvalue: " + SIMPERCENT.getData().get(0).getYValue());
