@@ -6,7 +6,6 @@ package gol.s305054;
 
 import gol.model.Board.ArrayBoard;
 import gol.model.Board.Board;
-import gol.model.Board.DynamicBoard;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
