@@ -129,8 +129,8 @@ public class DynamicBoard extends Board {
                         if (activeRule.setLife(gameBoard.get(row).get(col).byteValue()) == 64) {
                             //Will not expand top or left sides
                             setCellStateNE(row, col, true);
-                            
-                            //Will expand next gen if near border.
+
+                            //Will force expansion next gen if near border.
                             if (row < 3) {
                                 EXPAND_X.set(true);
                             }
@@ -150,12 +150,13 @@ public class DynamicBoard extends Board {
 
     @Override
     public void insertArray(byte[][] boardToInsert, int y, int x) {
-        //Expand if to close to border. This has to do with NextGen
+        //Expand if close to border. This has to do with NextGen
         if (x < 2 || y < 2) {
             expandBoard(y - 1, x - 1);
             y = (y < 2) ? EXPANSION + 1 : y;
             x = (x < 2) ? EXPANSION + 1 : x;
         }
+        
         for (int i = 0; i < boardToInsert.length; i++) {
             for (int j = 0; j < boardToInsert[i].length; j++) {
                 if (boardToInsert[i][j] == 64) {
@@ -172,7 +173,7 @@ public class DynamicBoard extends Board {
 
         expandBoard(y, x);
 
-        //All zero or less cordinates will be set to 1.
+        //All zero or less cordinates will be set to the corresponding value after expanding.
         //This is a fundamental part of DynamicBoard.
         y = (y < 2) ? EXPANSION : y;
         x = (x < 2) ? EXPANSION : x;
