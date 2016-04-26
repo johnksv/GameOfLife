@@ -517,7 +517,7 @@ public class GameController implements Initializable {
         double x = e.getX();
         double y = e.getY();
 
-        if (rbRemoveCell.isSelected() || e.isSecondaryButtonDown()) {
+        if (rbRemoveCell.isSelected() ^ e.isSecondaryButtonDown()) {
             activeBoard.setCellState(y, x, false, moveGridValues[0], moveGridValues[1]);
         } else if (rbMoveGrid.isSelected() || e.isMiddleButtonDown()) {
         } else {
