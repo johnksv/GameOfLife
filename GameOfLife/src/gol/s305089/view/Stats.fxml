@@ -12,14 +12,13 @@
 <?import javafx.scene.control.Spinner?>
 <?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.control.ToggleGroup?>
-<?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane prefHeight="450.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gol.s305089.controller.StatsController">
+<BorderPane prefHeight="450.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gol.s305089.controller.StatsController">
    <center>
       <StackPane>
          <children>
@@ -53,11 +52,7 @@
                   <Label text="Show on chart:" />
                   <CheckBox fx:id="cbLivingCells" mnemonicParsing="false" selected="true" text="Living cells" />
                   <CheckBox fx:id="cbChangeLiving" mnemonicParsing="false" selected="true" text="Change in living cells" />
-                  <CheckBox fx:id="cbSimilarity" mnemonicParsing="false" selected="true" text="Similarity (?)">
-                     <tooltip>
-                        <Tooltip text="Percent that an similarity pattern will occur in future/prev generations" />
-                     </tooltip>
-                  </CheckBox>
+                  <CheckBox fx:id="cbSimilarity" mnemonicParsing="false" selected="true" text="Similarity" />
                   <VBox prefHeight="200.0" prefWidth="100.0" spacing="7.0">
                      <children>
                         <RadioButton mnemonicParsing="false" selected="true" text="Check only future">
@@ -71,6 +66,7 @@
                         <Insets left="16.0" top="-5.0" />
                      </VBox.margin>
                   </VBox>
+                  <Label text="Hint: Hover over an datapoint" />
                   <Separator prefWidth="200.0" />
                   <Label text="Original:">
                      <VBox.margin>
