@@ -2,7 +2,7 @@
  * Here comes the text of your license
  * Each line should be prefixed with  * 
  */
-package gol.s305054;
+package gol.s305054.controller;
 
 import gol.model.Board.ArrayBoard;
 import gol.model.Board.Board;

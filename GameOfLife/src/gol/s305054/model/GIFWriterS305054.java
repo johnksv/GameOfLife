@@ -1,4 +1,4 @@
-package gol.s305054;
+package gol.s305054.model;
 
 import gol.model.Board.ArrayBoard;
 import gol.model.Board.Board;
