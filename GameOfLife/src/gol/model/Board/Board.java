@@ -13,19 +13,38 @@ import java.util.logging.Logger;
  *
  * The board is represented through row-major arrays. This implies that y
  * represents rows, and x represents columns.
- * <h3>Technical information</h3>
+ * <h3>Technical information</h3><p>
  * All calculations is done on the same underlaying gameboard. This is made
- * possible by taking use of the fact that a byte consists of 7 bits (not 8
- * because of 2-complement).
- * We use that the 7-bit (64) represents alive/dead.
- * The first 4 LSB (least significant bits) represents neighbour count.
+ * possible by taking use of the fact that a byte consists of 8 bits (where the
+ * 8th bit (MSB) is because of 2-complement).
+ * <b>The 7th-bit (64) represents alive</b>
+ * This means that living cell will have a value of 64, while dead cells has the
+ * value 0.
+ * <b>The first 4 LSB (least significant bits) represents neighbour count.</b>
+ * </p>
+ *
+ * <b>Clearification: a cell is one element in the board array.</b>
  * <h4>Counting neigbhours</h4>
- * Counting of neighbours is done by incrementing the current cell/element for
- * each living neighbours. 
- * 
+ * Counting of neighbours is done by incrementing the current cell for each
+ * living neighbours. E.g. Consider the following board, where x is the current
+ * cell:
+ * <pre>
+ * 010
+ * 0x0
+ * 010
+ * </pre> x has 2 neighbours. After counting, x will have incremented its value
+ * by 2. If x was alive while counting, its new value would have been 64+2 = 66.
+ * If x was dead, its value would have been 0+2 = 2.
+ *
  * <h4>Check rules</h4>
- * 
- * 
+ * After the neigbhours have been counted, we check the new value of each cell
+ * with the given rule. For Conways standard rules (spawn at 3, survive at 2 and
+ * 3) this means that the value of a cell must be 3, 66, 67. This method for
+ * counting neigbohurs and checking rules means that we don't need to work with
+ * an second array, and calculations can be done in real-time on the actual game
+ * board.
+ *
+ *
  *
  * @author s305054, s305084, s305089
  */
