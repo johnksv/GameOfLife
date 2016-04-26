@@ -12,23 +12,21 @@ import java.util.logging.Logger;
  */
 public class ThreadPool {
 
-    public static final int THREADS = 2;//Runtime.getRuntime().availableProcessors();
-    List<Thread> workers = new ArrayList<>();
+    public static final int THREADS = Runtime.getRuntime().availableProcessors();
+    
+    private static final Object LOCK = new Object();
+    private List<Thread> workers = new ArrayList<>();
 
     public ThreadPool() {
     }
 
-    public void createWorkers(Runnable task) {
-        for (int i = 0; i < THREADS; i++) {
-            workers.add(new Thread(task));
-        }
-
+    public void addWorker(Runnable task) {
+        workers.add(new Thread(task));
     }
 
     public void runWorkers() {
         for (Thread worker : workers) {
             worker.start();
-            System.out.println(worker.getName());
         }
 
         for (Thread worker : workers) {

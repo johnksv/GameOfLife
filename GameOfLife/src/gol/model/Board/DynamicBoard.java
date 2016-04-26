@@ -34,6 +34,7 @@ public class DynamicBoard extends Board {
 
     @Override
     protected void countNeigh() {
+
         for (int row = 1; row < gameBoard.size(); row++) {
             for (int col = 1; col < gameBoard.get(row).size(); col++) {
 
@@ -61,40 +62,40 @@ public class DynamicBoard extends Board {
     }
 
     @Override
-    protected void countNeighConcurrent() {
+    protected void countNeighConcurrent(int thread) {
+
         int linesPerThread = gameBoard.size() / ThreadPool.THREADS;
+        int rest = gameBoard.size() % ThreadPool.THREADS;
+        int startRow = (linesPerThread * thread) + rest;
+//System.out.println("Size: " + gameBoard.size() + ",  LPT: " + linesPerThread + ",  rest: " + rest);
+        int endRow = linesPerThread * (thread + 1) + rest;
+        System.out.println("Start: " + startRow + ",  end: " + endRow);
+        threadPool.addWorker(() -> {
+            for (int row = startRow; row < endRow; row++) {
+                for (int col = 1; col < gameBoard.get(row).size(); col++) {
 
-        for (int i = 0; i < gameBoard.size(); i += linesPerThread) {
-            int startRow = i;
+                    //If cell is alive
+                    if (gameBoard.get(row).get(col).intValue() >= 64) {
 
-     
-                for (int row = startRow; row < linesPerThread; row++) {
-                    for (int col = 1; col < gameBoard.get(row).size(); col++) {
+                        //Goes through surrounding neighbours
+                        for (int k = -1; k <= 1; k++) {
+                            for (int l = -1; l <= 1; l++) {
 
-                        //If cell is alive
-                        if (gameBoard.get(row).get(col).intValue() >= 64) {
+                                //To not count itself
+                                if (!(k == 0 && l == 0)) {
+                                    incrementCellValue(row + k, col + l);
 
-                            //Goes through surrounding neighbours
-                            for (int k = -1; k <= 1; k++) {
-                                for (int l = -1; l <= 1; l++) {
+                                    row = (row + k < 1) ? row + 1 : row;
+                                    col = (col + l < 1) ? col + 1 : col;
 
-                                    //To not count itself
-                                    if (!(k == 0 && l == 0)) {
-                                        incrementCellValue(row + k, col + l);
-
-                                        row = (row + k < 1) ? row + 1 : row;
-                                        col = (col + l < 1) ? col + 1 : col;
-
-                                    }
                                 }
                             }
                         }
-
                     }
-                }
 
-     
-        }
+                }
+            }
+        });
     }
 
     @Override
@@ -114,13 +115,14 @@ public class DynamicBoard extends Board {
     }
 
     @Override
-    protected void checkRulesConcurrent(Rule activeRule) {
+    protected void checkRulesConcurrent(Rule activeRule, int thread) {
         int linesPerThread = gameBoard.size() / ThreadPool.THREADS;
+        int rest = gameBoard.size() % ThreadPool.THREADS;
+        int startRow = (linesPerThread * thread) + rest;
+        int endRow = linesPerThread * (thread + 1) + rest;
 
-        for (int i = 0; i < gameBoard.size(); i += linesPerThread) {
-            int startRow = i;
-
-            for (int row = startRow; row < linesPerThread; row++) {
+        threadPool.addWorker(() -> {
+            for (int row = startRow; row < endRow; row++) {
                 for (int col = 1; col < gameBoard.get(row).size(); col++) {
                     if (gameBoard.get(row).get(col).intValue() != 0) {
                         if (activeRule.setLife(gameBoard.get(row).get(col).byteValue()) == 64) {
@@ -133,8 +135,7 @@ public class DynamicBoard extends Board {
                 }
             }
 
-        }
-
+        });
     }
 
     @Override

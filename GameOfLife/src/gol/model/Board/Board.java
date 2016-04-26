@@ -54,11 +54,15 @@ public abstract class Board {
         checkRules(activeRule);
     }
 
-    public void nextGenerationConcurrent() {
-       threadPool.createWorkers(() -> countNeighConcurrent());
-       threadPool.runWorkers();
-       threadPool.runWorkers();
-       threadPool.createWorkers(() -> checkRulesConcurrent(activeRule));
+    public synchronized void nextGenerationConcurrent() {
+        for (int i = 0; i < ThreadPool.THREADS; i++) {
+            countNeighConcurrent(i);
+        }
+        threadPool.runWorkers();
+        for (int i = 0; i < ThreadPool.THREADS; i++) {
+            checkRulesConcurrent(activeRule, i);
+        }
+        threadPool.runWorkers();
     }
 
     /**
@@ -151,7 +155,7 @@ public abstract class Board {
      */
     protected abstract void countNeigh();
 
-    protected abstract void countNeighConcurrent();
+    protected abstract void countNeighConcurrent(int threadNr);
 
     /**
      * Checks each cell to this rule. The cell is set to alive or dead,
@@ -161,7 +165,7 @@ public abstract class Board {
      */
     protected abstract void checkRules(Rule activeRule);
 
-    protected abstract void checkRulesConcurrent(Rule activeRule);
+    protected abstract void checkRulesConcurrent(Rule activeRule, int threadNr);
 
     /**
      * Inserts a byte 2D-array into the current gameboard at the given (y, x)

@@ -228,12 +228,12 @@ public class ArrayBoard extends Board {
     }
 
     @Override
-    protected void countNeighConcurrent() {
+    protected void countNeighConcurrent(int threadNr) {
         throw new UnsupportedOperationException("Threads for ArrayBoard is not supported.");
     }
 
     @Override
-    protected void checkRulesConcurrent(Rule activeRule) {
+    protected void checkRulesConcurrent(Rule activeRule, int threadNr) {
         throw new UnsupportedOperationException("Threads for ArrayBoard is not supported.");
     }
 }
