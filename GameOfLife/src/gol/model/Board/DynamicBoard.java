@@ -344,10 +344,10 @@ public class DynamicBoard extends Board {
     }
 
     private void incrementCellValueNE(int y, int x) {
-        if (y < 1) {
+        if (y < 0) {
             return;
         }
-        if (x < 1) {
+        if (x < 0) {
             return;
         }
         while (y >= gameBoard.size() - EXPANSION) {
