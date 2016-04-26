@@ -15,11 +15,10 @@ import java.util.logging.Logger;
 public class Configuration {
 
     private static final Properties properties = new Properties();
-    private static final File fileName = new File("config.properties");
+    private static final File fileName = new File("src\\gol\\other\\config.properties");
 
     public static void loadConfig() {
         try {
-            System.out.println(fileName.toPath().toAbsolutePath().toString());
             FileInputStream input = new FileInputStream(fileName);
             properties.load(input);
         } catch (IOException ex) {

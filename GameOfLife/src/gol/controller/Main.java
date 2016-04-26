@@ -19,6 +19,7 @@ import javafx.stage.Stage;
 
 /**
  * Starting- and endingpoint of application.
+ *
  * @author s305054, s305084, s305089
  */
 public class Main extends Application {
@@ -26,18 +27,17 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         Configuration.loadConfig();
-        System.out.println(Configuration.getProp("name"));
         //Passing the stage to main controller for later use.
         //needs to be done first
         MainController.loadStage(primaryStage);
-        
+
         Parent root = FXMLLoader.load(getClass().getResource("/gol/view/StartScreen.fxml"));
         Scene scene = new Scene(root);
         primaryStage.setScene(scene);
         primaryStage.show();
-        
+
         MainController.loadStage(primaryStage);
-        
+
         // TODO REMOVE TESTING
 //        test100NextGen();
 //        Platform.exit();
@@ -87,8 +87,8 @@ public class Main extends Application {
         }
 
         long estimatedTime = System.nanoTime() - startTime;
-        System.out.println("Tid totalt (i nanosek): "+ estimatedTime);
-        System.out.println("Tid for 1 (i nanosek): " + estimatedTime/antall);
+        System.out.println("Tid totalt (i nanosek): " + estimatedTime);
+        System.out.println("Tid for 1 (i nanosek): " + estimatedTime / antall);
     }
 
 }

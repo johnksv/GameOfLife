@@ -1,6 +1,5 @@
 package gol.controller;
 
-import gol.model.Board.ArrayBoard;
 import gol.model.Board.Board;
 import gol.model.Board.DynamicBoard;
 import gol.model.FileIO.PatternFormatException;
@@ -11,8 +10,6 @@ import gol.model.Logic.unsupportedRuleException;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 import java.util.ResourceBundle;
@@ -38,8 +35,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.ToolBar;
-import javafx.scene.effect.Bloom;
-import javafx.scene.effect.Effect;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.BorderPane;
