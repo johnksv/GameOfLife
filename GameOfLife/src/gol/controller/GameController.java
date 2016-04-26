@@ -359,12 +359,12 @@ public class GameController implements Initializable {
             Scene scene = new Scene(root);
             EditorController edController = new EditorController();
             edController.setBoard(activeBoard);
-            
+
             editor.setTitle("Pattern Editor");
             editor.initModality(Modality.WINDOW_MODAL);
             editor.initOwner(borderpane.getScene().getWindow());
             editor.setScene(scene);
-            
+
             editor.show();
 
         } catch (IOException ie) {

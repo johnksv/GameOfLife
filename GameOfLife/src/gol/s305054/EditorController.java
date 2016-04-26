@@ -53,8 +53,8 @@ public class EditorController implements Initializable {
     private GraphicsContext gc;
     private final Color cellColor = Color.BLACK;
     private final Color backgroundColor = Color.web("#F4F4F4");
-    private Board activeBoard;
-    
+    private Board activeBoard = new ArrayBoard(150,150);
+    byte[][] test = {{0,0,0,0,0},{0,0,64,0,0},{0,0,64,0,0},{0,0,64,0,0},{0,0,0,0,0}};
 
     /**
      * Initializes the controller class.
@@ -62,13 +62,26 @@ public class EditorController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         gc = editorCanvas.getGraphicsContext2D();
-        
+        activeBoard.setCellSize(15);
+        activeBoard.setGridSpacing(0.8);
+
         mouseInit();
     }
 
     @FXML
     private void handleZoom() {
-        //TODO Skal jeg i det hele tatt gidde å tillate zoom på pattern editor?
+        double x = zoomSlider.getValue();
+        double newValue = 0.2 * Math.exp(0.05 * x);
+        if (((newValue) * activeBoard.getArrayLength() > editorCanvas.getHeight()
+                && (newValue) * activeBoard.getArrayLength(0) > editorCanvas.getWidth())) {
+
+            activeBoard.setCellSize(newValue);
+            activeBoard.setGridSpacing(newValue * 0.053333333);
+        } else {
+            zoomSlider.setValue(20 * Math.log(5 * activeBoard.getCellSize()));
+        }
+
+        draw();
     }
 
     //kopierte draw metode fra GameController, da det er nøyaktig samme greia som skjer.
@@ -78,14 +91,8 @@ public class EditorController implements Initializable {
         gc.fillRect(0, 0, editorCanvas.getWidth(), editorCanvas.getHeight());
         gc.setFill(cellColor);
         for (int i = 1; i < activeBoard.getArrayLength(); i++) {
-            if (editorCanvas.getHeight() < i * activeBoard.getCellSize() + i * activeBoard.getGridSpacing()) {
-                //TODO Så den ikke tegner det som er utenfor
-            }
             for (int j = 1; j < activeBoard.getArrayLength(i); j++) {
                 if (activeBoard.getCellState(i, j)) {
-                    if (editorCanvas.getWidth() < j * activeBoard.getCellSize() + j * activeBoard.getGridSpacing()) {
-                        //TODO Så den ikke tegner det som er utenfor
-                    }
                     gc.fillRect(j * activeBoard.getCellSize() + j * activeBoard.getGridSpacing(), //moveGridvalues[0]?
                             i * activeBoard.getCellSize() + i * activeBoard.getGridSpacing(), //moveGridValues[1]?
                             activeBoard.getCellSize(),
@@ -144,20 +151,14 @@ public class EditorController implements Initializable {
 
         if (removeCell.isSelected()) {
             activeBoard.setCellState(y, x, false, 0, 0);
-        } else if (moveGrid.isSelected()) {
-        } else {
+        }  else {
             activeBoard.setCellState(y, x, true, 0, 0);
         }
-
         draw();
     }
-    
+
     public void setBoard(Board gameBoard) {
-        
-        //Denne må dobbelsjekkes. Vil jeg virkelig ha et like stort brett som det som spilles? Det er jo tross alt et dynamisk brett.
-        int y = gameBoard.getArrayLength();
-        int x = gameBoard.getArrayLength(0); //Brettet er et rektangel så jeg kan vel bruke første rad for å finne antall kolonner?
-        activeBoard = new ArrayBoard(y,x);
+
         activeBoard.setCellSize(gameBoard.getCellSize());
         activeBoard.setGridSpacing(gameBoard.getGridSpacing());
     }
