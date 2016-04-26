@@ -1,6 +1,5 @@
 package gol.s305089.controller;
 
-import gol.controller.GameController;
 import gol.s305089.model.GifMaker;
 import gol.model.Board.Board;
 import gol.s305089.model.Stats;
@@ -8,9 +7,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;

@@ -18,6 +18,10 @@ public class Stats {
     private final double alpha = 0.5;
     private final double beta = 3.0;
     private final double gamma = 0.25;
+    private final double alphaCustom = 0.5;
+    private final double betaCustom = 3.0;
+    private final double gammaCustom = 0.25;
+    private boolean shouldUseCustom = false;
     private boolean checkSimilarityPrevGen;
 
     public int[][] getStatistics(int iterations, boolean calcChangeLiving, boolean calcSimilarity) {
@@ -107,7 +111,7 @@ public class Stats {
         setPattern(originalPattern);
 
         for (int time1 = 0; time1 < iterationsToCalcualte; time1++) {
-            double thetaTime1 = getTheta(time1);
+            double thetaTime1 = Math.abs(getTheta(time1));
 
             int max = 0;
             int itClosestMatch = -1;
@@ -118,7 +122,7 @@ public class Stats {
                     time2 = time1;
                 }
                 if (time1 != time2) {
-                    double thetaTime2 = getTheta(time2);
+                    double thetaTime2 = Math.abs(getTheta(time2));
                     double measure = Math.min(thetaTime1, thetaTime2) / Math.max(thetaTime1, thetaTime2);
                     if (Math.floor(measure * 100) > max) {
                         itClosestMatch = time2;
@@ -137,9 +141,16 @@ public class Stats {
     }
 
     private double getTheta(int time) {
-        double theta = alpha * livingCells[time]
+        double theta;
+        if(shouldUseCustom){
+            theta = alphaCustom * livingCells[time]
+                + betaCustom * changeLivingCells[time]
+                + gammaCustom * geometricFactor[time];
+        }else{
+            theta = alpha * livingCells[time]
                 + beta * changeLivingCells[time]
                 + gamma * geometricFactor[time];
+        }
         return theta;
     }
 
@@ -182,5 +193,9 @@ public class Stats {
 
     public void setCheckSimilarityPrevGen(boolean checkSimilarityPrevGen) {
         this.checkSimilarityPrevGen = checkSimilarityPrevGen;
+    }
+
+    public void setShouldUseCustom(boolean shouldUseCustom) {
+        this.shouldUseCustom = shouldUseCustom;
     }
 }
