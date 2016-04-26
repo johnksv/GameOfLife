@@ -14,7 +14,6 @@ public class ThreadPool {
 
     public static final int THREADS = Runtime.getRuntime().availableProcessors();
     
-    private static final Object LOCK = new Object();
     private List<Thread> workers = new ArrayList<>();
 
     public ThreadPool() {

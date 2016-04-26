@@ -3,6 +3,7 @@ package gol.model.Board;
 import gol.model.Logic.ConwaysRule;
 import gol.model.Logic.Rule;
 import gol.model.ThreadPool;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -25,6 +26,8 @@ public abstract class Board {
 
     protected final ThreadPool threadPool = new ThreadPool();
 
+    protected final AtomicBoolean EXPAND_X = new AtomicBoolean();
+    protected final AtomicBoolean EXPAND_Y = new AtomicBoolean();
     //Offset x, offset y, old x, old y
     private final double[] moveGridValues = {0, 0, -Double.MAX_VALUE, -Double.MAX_VALUE};
 
@@ -55,6 +58,9 @@ public abstract class Board {
     }
 
     public synchronized void nextGenerationConcurrent() {
+
+        threadPool.runWorkers();
+
         for (int i = 0; i < ThreadPool.THREADS; i++) {
             countNeighConcurrent(i);
         }
@@ -63,6 +69,19 @@ public abstract class Board {
             checkRulesConcurrent(activeRule, i);
         }
         threadPool.runWorkers();
+
+        if (EXPAND_X.get()) {
+            threadPool.addWorker(() -> {
+                expandBoard(0, -1);
+                EXPAND_X.set(false);
+            });
+        }
+        if (EXPAND_Y.get()) {
+            threadPool.addWorker(() -> {
+                expandBoard(-1, 0);
+                EXPAND_Y.set(false);
+            });
+        }
     }
 
     /**
@@ -129,6 +148,8 @@ public abstract class Board {
     public double[] getMoveGridValues() {
         return moveGridValues;
     }
+
+    protected abstract void expandBoard(int y, int x);
 
     //TODO comments.
     public abstract byte[][] getBoundingBoxBoard();

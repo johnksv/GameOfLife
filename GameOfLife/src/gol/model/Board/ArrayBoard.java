@@ -236,4 +236,9 @@ public class ArrayBoard extends Board {
     protected void checkRulesConcurrent(Rule activeRule, int threadNr) {
         throw new UnsupportedOperationException("Threads for ArrayBoard is not supported.");
     }
+
+    @Override
+    protected void expandBoard(int y, int x) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }
