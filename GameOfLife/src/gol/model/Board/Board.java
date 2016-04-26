@@ -13,6 +13,19 @@ import java.util.logging.Logger;
  *
  * The board is represented through row-major arrays. This implies that y
  * represents rows, and x represents columns.
+ * <h3>Technical information</h3>
+ * All calculations is done on the same underlaying gameboard. This is made
+ * possible by taking use of the fact that a byte consists of 7 bits (not 8
+ * because of 2-complement).
+ * We use that the 7-bit (64) represents alive/dead.
+ * The first 4 LSB (least significant bits) represents neighbour count.
+ * <h4>Counting neigbhours</h4>
+ * Counting of neighbours is done by incrementing the current cell/element for
+ * each living neighbours. 
+ * 
+ * <h4>Check rules</h4>
+ * 
+ * 
  *
  * @author s305054, s305084, s305089
  */
