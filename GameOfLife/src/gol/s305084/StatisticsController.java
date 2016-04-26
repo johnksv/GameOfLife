@@ -100,10 +100,10 @@ public class StatisticsController implements Initializable {
             //Life Change
             int change = calcChangeCells(countLivingCells(copyBoard), living);
             CELLCHANGE.getData().add(new XYChart.Data(i, change));
+
             //Similarity measure
             simValue[i] = simValue(pattern, living, change);
             SIMPERCENT.getData().add(new XYChart.Data(i, relativeSim(i, 0)));
-
         }
         txtSim.setText("");
         txtAlive.setText("Alive: " + LIVINGCELLS.getData().get(0).getYValue());
@@ -246,8 +246,10 @@ public class StatisticsController implements Initializable {
     private void initMouseListener() {
         lineChart.addEventHandler(MouseEvent.MOUSE_PRESSED,
                 (MouseEvent e) -> {
-                    double tickSize = chartLength.getEndX() / genIterations;
+                    double tickSize = LIVINGCELLS.getData().get(1).getNode().getLayoutX() - LIVINGCELLS.getData().get(0).getNode().getLayoutX();
+                    //TODO Find a method to get pixel value of a node relative to the scene.
                     double x = e.getX() - chartLength.getLayoutX() + tickSize / 2;
+
                     selectedGen = (int) (x / tickSize);
                     if (selectedGen < 0) {
                         selectedGen = 0;
@@ -267,6 +269,7 @@ public class StatisticsController implements Initializable {
                     txtChange.setText("Change: " + CELLCHANGE.getData().get(selectedGen).getYValue());
                     txtGen.setText("Generation: " + selectedGen);
 
-                });
+                }
+        );
     }
 }

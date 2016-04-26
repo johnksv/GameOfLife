@@ -28,7 +28,7 @@
                 <NumberAxis side="LEFT" />
               </yAxis>
             </LineChart>
-            <Line fx:id="chartLength" endX="488.0" stroke="TRANSPARENT" StackPane.alignment="BOTTOM_LEFT">
+            <Line fx:id="chartLength" stroke="TRANSPARENT" StackPane.alignment="BOTTOM_LEFT">
                <StackPane.margin>
                   <Insets left="65.0" />
                </StackPane.margin>
@@ -55,7 +55,7 @@
             </Text>
          </children>
       </VBox>
-      <Text layoutX="14.0" layoutY="330.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Selcted:" wrappingWidth="72.00001591444016">
+      <Text layoutX="22.0" layoutY="328.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Selcted:" wrappingWidth="72.00001591444016">
          <font>
             <Font size="18.0" />
          </font>
