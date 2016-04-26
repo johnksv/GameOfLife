@@ -16,17 +16,20 @@ import java.util.logging.Logger;
  * <h3>Technical information</h3><p>
  * All calculations is done on the same underlaying gameboard. This is made
  * possible by taking use of the fact that a byte consists of 8 bits (where the
- * 8th bit (MSB) is because of 2-complement).
+ * 8th bit (MSB) is because of 2-complement).</p>
+ * <p>
  * <b>The 7th-bit (64) represents alive</b>
  * This means that living cell will have a value of 64, while dead cells has the
  * value 0.
  * <b>The first 4 LSB (least significant bits) represents neighbour count.</b>
  * </p>
  *
- * <b>Clearification: a cell is one element in the board array.</b>
- * <h4>Counting neigbhours</h4>
+ * <b>Clarification: a cell is one element in the board array.</b>
+ * <h4>Counting neighbours</h4>
  * Counting of neighbours is done by incrementing the current cell for each
- * living neighbours. E.g. Consider the following board, where x is the current
+ * living neighbours.
+ * <p>
+ * E.g. Consider the following board, where x is the current</p>
  * cell:
  * <pre>
  * 010
@@ -37,10 +40,10 @@ import java.util.logging.Logger;
  * If x was dead, its value would have been 0+2 = 2.
  *
  * <h4>Check rules</h4>
- * After the neigbhours have been counted, we check the new value of each cell
+ * After the neighbours have been counted, we check the new value of each cell
  * with the given rule. For Conways standard rules (spawn at 3, survive at 2 and
  * 3) this means that the value of a cell must be 3, 66, 67. This method for
- * counting neigbohurs and checking rules means that we don't need to work with
+ * counting neighbours and checking rules means that we don't need to work with
  * an second array, and calculations can be done in real-time on the actual game
  * board.
  *
