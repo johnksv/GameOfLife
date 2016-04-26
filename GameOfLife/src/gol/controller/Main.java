@@ -4,6 +4,7 @@ import gol.model.Board.ArrayBoard;
 import gol.model.Board.Board;
 import gol.model.FileIO.PatternFormatException;
 import gol.model.FileIO.ReadFile;
+import gol.other.Configuration;
 import java.io.File;
 import java.io.IOException;
 import javafx.application.Application;
@@ -24,6 +25,8 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+        Configuration.loadConfig();
+        System.out.println(Configuration.getProp("name"));
         //Passing the stage to main controller for later use.
         //needs to be done first
         MainController.loadStage(primaryStage);
