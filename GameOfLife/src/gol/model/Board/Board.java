@@ -77,12 +77,16 @@ public abstract class Board {
     protected final AtomicBoolean EXPAND_Y = new AtomicBoolean();
 
     /**
-     * <table>
-     * <tr><td>Index<td><td>Value</td></tr>
-     * <tr><td>0<td><td>Current offset x</td></tr>
-     * <tr><td>1<td><td>Current offset y</td></tr>
-     * <tr><td>2<td><td>Old mouse position x</td></tr>
-     * <tr><td>3<td><td>Old mouse position y</td></tr>
+     * Offset of each cell in the board.
+     * 
+     * <table summary="Content of offsetValue">
+     * <tr><th>Index</th><th>Value</th></tr>
+     * <tbody>
+     * <tr><td>0</td><td>Current offset x</td></tr>
+     * <tr><td>1</td><td>Current offset y</td></tr>
+     * <tr><td>2</td><td>Old mouse position x</td></tr>
+     * <tr><td>3</td><td>Old mouse position</td></tr>
+     * </tbody>
      * </table>
      */
     public final double[] offsetValues = {0, 0, -Double.MAX_VALUE, -Double.MAX_VALUE};

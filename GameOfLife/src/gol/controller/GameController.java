@@ -1,5 +1,6 @@
 package gol.controller;
 
+import gol.model.Board.ArrayBoard;
 import gol.model.Board.Board;
 import gol.model.Board.DynamicBoard;
 import gol.model.FileIO.PatternFormatException;
@@ -155,7 +156,6 @@ public class GameController implements Initializable {
 
     @FXML
     private void handleAnimation() {
-
         if (timeline.getStatus() == Status.RUNNING) {
             timeline.pause();
             startPauseBtn.setText("Start game");
@@ -215,27 +215,29 @@ public class GameController implements Initializable {
     }
 
     /**
-     * //TODO bug?
-     *
-     * @Bug You can cheat this method if you zoom out max with max spacing, then
-     * remove the spacing, but this is the only issue.
+     * Known issue on array board: If you decrease gridspacing while zoomed out.
      */
     @FXML
     private void handleZoom() {
         double x = cellSizeSlider.getValue();
+        //Formula for smooth zoom. Found with geogebra.
         double newValue = 0.2 * Math.exp(0.05 * x);
+
         if (((newValue) * activeBoard.getArrayLength() > canvas.getHeight()
-                && (newValue) * activeBoard.getArrayLength(0) > canvas.getWidth()) || activeBoard instanceof DynamicBoard) {
+                && (newValue) * activeBoard.getMaxRowLength() > canvas.getWidth())
+                || activeBoard instanceof DynamicBoard) {
             handleGridSpacingSlider();
 
             if (cellSizeSlider.isFocused()) {
-
+                //Zoom on center
                 calcNewOffset(activeBoard.getCellSize(), newValue);
             } else {
+                //Zoom on mouse
                 calcNewOffsetMouse(activeBoard.getCellSize(), newValue);
             }
             activeBoard.setCellSize(newValue);
         } else {
+            //Calculates to max slider value
             cellSizeSlider.setValue(20 * Math.log(5 * activeBoard.getCellSize()));
         }
 
@@ -335,7 +337,7 @@ public class GameController implements Initializable {
         }
     }
 
-    public void constructRule(byte[] cellsToSurvive, byte[] cellsToBeBorn) {
+    private void constructRule(byte[] cellsToSurvive, byte[] cellsToBeBorn) {
         try {
             activeBoard.setGameRule(new CustomRule(cellsToSurvive, cellsToBeBorn));
         } catch (unsupportedRuleException ex) {
@@ -346,12 +348,13 @@ public class GameController implements Initializable {
         }
     }
 
+    /**
+     * Sets current board to this.
+     *
+     * @param activeBoard Board to set.
+     */
     public void setActiveBoard(Board activeBoard) {
         this.activeBoard = activeBoard;
-    }
-
-    public Board getActiveBoard() {
-        return activeBoard;
     }
 
     /**
@@ -478,7 +481,7 @@ public class GameController implements Initializable {
                 //Negative beacuse offset on arrayboard always is negative
                 //max values is for right and bottom sides
                 double maxValueX = -((activeBoard.getCellSize() + activeBoard.getGridSpacing()) * activeBoard.getArrayLength() - canvas.getWidth());
-                double maxValueY = -((activeBoard.getCellSize() + activeBoard.getGridSpacing()) * activeBoard.getArrayLength(0) - canvas.getHeight());
+                double maxValueY = -((activeBoard.getCellSize() + activeBoard.getGridSpacing()) * activeBoard.getMaxRowLength() - canvas.getHeight());
 
                 //If positive, board should not move
                 if (newXoffset < 0) {
@@ -570,7 +573,7 @@ public class GameController implements Initializable {
     private void updateOffsetValues(double newCellSize) {
         if (!(activeBoard instanceof DynamicBoard)) {
             double maxvalueX = -(newCellSize * activeBoard.getArrayLength() - canvas.getWidth());
-            double maxvalueY = -(newCellSize * activeBoard.getArrayLength(0) - canvas.getHeight());
+            double maxvalueY = -(newCellSize * activeBoard.getMaxRowLength() - canvas.getHeight());
 
             activeBoard.offsetValues[0] = (activeBoard.offsetValues[0] > 0) ? 0 : activeBoard.offsetValues[0];
             activeBoard.offsetValues[1] = (activeBoard.offsetValues[1] > 0) ? 0 : activeBoard.offsetValues[1];
