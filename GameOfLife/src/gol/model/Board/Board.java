@@ -92,7 +92,7 @@ public abstract class Board {
         checkRules(activeRule);
     }
 
-    public synchronized void nextGenerationConcurrent() {
+    public void nextGenConcurrent() {
 
         threadPool.runWorkers();
 
