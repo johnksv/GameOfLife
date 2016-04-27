@@ -355,9 +355,10 @@ public class GameController implements Initializable {
         timeline.pause();
         try {
             Stage editor = new Stage();
-            Parent root = FXMLLoader.load(getClass().getResource("/gol/s305054/view/Editor.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/gol/s305054/view/Editor.fxml"));
+            Parent root = loader.load();
             Scene scene = new Scene(root);
-            EditorController edController = new EditorController();
+            EditorController edController = loader.getController();
             edController.setBoard(activeBoard);
 
             editor.setTitle("Pattern Editor");

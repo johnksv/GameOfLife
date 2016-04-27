@@ -54,7 +54,6 @@ public class EditorController implements Initializable {
     private final Color cellColor = Color.BLACK;
     private final Color backgroundColor = Color.web("#F4F4F4");
     private Board activeBoard = new ArrayBoard(150,150);
-    byte[][] test = {{0,0,0,0,0},{0,0,64,0,0},{0,0,64,0,0},{0,0,64,0,0},{0,0,0,0,0}};
 
     /**
      * Initializes the controller class.
@@ -158,7 +157,8 @@ public class EditorController implements Initializable {
     }
 
     public void setBoard(Board gameBoard) {
-
+        byte[][] patternToInsert = gameBoard.getBoundingBoxBoard();
+        activeBoard.insertArray(patternToInsert, 5, 5);
         activeBoard.setCellSize(gameBoard.getCellSize());
         activeBoard.setGridSpacing(gameBoard.getGridSpacing());
     }
