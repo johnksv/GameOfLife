@@ -13,9 +13,9 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane id="AnchorPane" prefHeight="391.0" prefWidth="726.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gol.s305084.StatisticsController">
+<AnchorPane id="AnchorPane" prefHeight="391.0" prefWidth="726.0" style="-fx-background-color: #7c8fa5;" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gol.s305084.StatisticsController">
    <children>
-      <Label fx:id="txtGen" layoutX="23.0" layoutY="361.0" text="Generation: 0" />
+      <Label fx:id="txtGen" layoutX="29.0" layoutY="361.0" text="Generation: 0" />
       <Label fx:id="txtAlive" layoutX="176.0" layoutY="361.0" text="Alive: " />
       <Label fx:id="txtChange" layoutX="384.0" layoutY="361.0" text="Change: " />
       <StackPane layoutX="135.0" layoutY="-1.0" prefHeight="358.0" prefWidth="591.0">
@@ -35,11 +35,11 @@
             </Line>
          </children>
       </StackPane>
-      <VBox layoutX="14.0" layoutY="14.0" prefHeight="200.0" prefWidth="100.0" spacing="10.0">
+      <VBox layoutX="14.0" layoutY="14.0" prefHeight="200.0" prefWidth="100.0" spacing="15.0">
          <children>
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Options:">
                <font>
-                  <Font size="19.0" />
+                  <Font size="25.0" />
                </font>
             </Text>
             <CheckBox fx:id="cbShowAll" mnemonicParsing="false" onAction="#handleShowAll" text="Show most similar">
@@ -55,9 +55,9 @@
             </Text>
          </children>
       </VBox>
-      <Text layoutX="22.0" layoutY="328.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Selcted:" wrappingWidth="72.00001591444016">
+      <Text layoutX="23.0" layoutY="320.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Selcted:" wrappingWidth="88.00001591444016">
          <font>
-            <Font size="18.0" />
+            <Font size="25.0" />
          </font>
       </Text>
       <Label fx:id="txtSim" layoutX="554.0" layoutY="361.0" text="" />

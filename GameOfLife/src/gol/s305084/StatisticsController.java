@@ -20,8 +20,11 @@ import javafx.stage.FileChooser;
 import lieng.GIFWriter;
 
 /**
- *
- *
+ * Shows statistics of a Board through a number of generations.
+ * Notable static functions:
+ * {@link #countLivingCells(gol.model.Board.Board) countLivingCells} static method.
+ * {@link #calcChangeCells(int, int)  countLivingCells} static method.
+ * 
  * @author s305084
  */
 public class StatisticsController implements Initializable {

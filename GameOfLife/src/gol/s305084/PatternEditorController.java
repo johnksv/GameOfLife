@@ -2,6 +2,7 @@ package gol.s305084;
 
 import gol.model.Board.ArrayBoard;
 import gol.model.Board.Board;
+import gol.model.Board.DynamicBoard;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -21,7 +22,11 @@ import lieng.GIFWriter;
 
 //TODO make close button
 /**
- * Controller
+ * Pattern editor, for creating small and complex patterns.
+ * 
+ * Implements much of the same code as in {@link gol.controller.gameController gamController}. 
+ * Important note, this class only change from the main game is {@link #drawStrip() the strip.}
+ * Saving a pattern to GIF or RLE is also possible from the GUI.
  *
  * @author S305084
  */
@@ -63,7 +68,7 @@ public class PatternEditorController implements Initializable {
             alert.setHeaderText("Sorry, but you cant make a gif with no cells alive.");
             alert.showAndWait();
         } else {
-            
+
             FileChooser fileChooser = new FileChooser();
             fileChooser.getExtensionFilters().addAll(
                     new FileChooser.ExtensionFilter("Gif format", "*.gif"),
@@ -120,7 +125,7 @@ public class PatternEditorController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         gc = canvas.getGraphicsContext2D();
         gcStrip = theStrip.getGraphicsContext2D();
-        activeBoard = new ArrayBoard(100, 100);
+        activeBoard = new ArrayBoard(100,100);
 
         activeBoard.setCellSize(15);
         activeBoard.setGridSpacing(0.6);
@@ -186,8 +191,8 @@ public class PatternEditorController implements Initializable {
 
     private void drawStrip() {
         byte[][] trimmedBoard = activeBoard.getBoundingBoxBoard();
-        Board boardStrip = new ArrayBoard(trimmedBoard.length + 40, trimmedBoard[0].length + 40);
-        boardStrip.insertArray(trimmedBoard, 20, 20);
+        Board boardStrip = new DynamicBoard();
+        boardStrip.insertArray(trimmedBoard, 1, 1);
         Affine xform = new Affine();
 
         double tx = 0;
@@ -210,10 +215,10 @@ public class PatternEditorController implements Initializable {
             xform.setTx(tx);
             gcStrip.setTransform(xform);
         }
+        // resets transform
         xform.setTx(0.0);
         gcStrip.setTransform(xform);
 
-        // reset transform
     }
 
     private void drawStripPart(byte[][] pattern) {

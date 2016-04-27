@@ -319,7 +319,6 @@ public class GameController implements Initializable {
                     boardFromFile = null;
                     alert.close();
                 }
-
                 draw();
             }
 
