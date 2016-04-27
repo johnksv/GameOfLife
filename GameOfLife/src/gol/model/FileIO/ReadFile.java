@@ -1,9 +1,16 @@
 package gol.model.FileIO;
 
 import gol.model.Logic.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLConnection;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -16,6 +23,8 @@ public class ReadFile {
 
     private static Rule parsedRule;
 
+    private final static List<String> METADATA = new ArrayList<>(10);
+
     /**
      * Reads a file, makes an array. This static method checks the file format,
      * and calls for the correct method for parsing the file.
@@ -27,23 +36,46 @@ public class ReadFile {
      * the file
      */
     public static byte[][] readFileFromDisk(Path file) throws IOException, PatternFormatException {
+        METADATA.clear();
+
         String path = file.toString();
         String[] token = path.split("\\.");
         String fileExt = token[token.length - 1];
-        List<String> list = Files.readAllLines(file);
-
-        String[] readFile = list.toArray(new String[0]);
+        String[] readFile = Files.readAllLines(file).toArray(new String[0]);
 
         switch (fileExt) {
             case "cells":
                 return readPlainText(readFile);
             case "rle":
                 return readRLE(readFile);
-            case "life":
-                return null;
             default:
                 throw new PatternFormatException("Pattern format is not supported");
         }
+    }
+
+    public static void writeFromURL(String URLToSave) throws PatternFormatException, IOException {
+
+        URL url = new URL(URLToSave);
+        URLConnection connection = url.openConnection();
+
+        String[] token = url.toString().split("\\.");
+        String suffix = token[token.length - 1];
+
+        Path saveLocation = File.createTempFile("golPattern", suffix).toPath();
+
+        BufferedWriter writer;
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
+            writer = Files.newBufferedWriter(saveLocation);
+            String line;
+            while ((line = reader.readLine()) != null) {
+                writer.write(line);
+                writer.newLine();
+            }
+        }
+        writer.close();
+
+        readFileFromDisk(saveLocation);
+
     }
 
     /**
@@ -62,6 +94,10 @@ public class ReadFile {
             return new ConwaysRule();
         }
         return returnRule;
+    }
+
+    public static List<String> getMetadata() {
+        return METADATA;
     }
 
     /**
@@ -83,7 +119,7 @@ public class ReadFile {
                     greatestlength = line.length();
                 }
             } else {
-                //TODO appendMetaData(line);
+                appendMetaData(line.substring(1));
                 commentLines++;
             }
         }
@@ -125,7 +161,13 @@ public class ReadFile {
         for (String line : file) {
             if (line.startsWith("#")) {
                 commentLines++;
-                //TODO appendMetaData(line);
+                if (line.contains("#N")) {
+                    appendMetaData("Name:" + line.substring(3));
+                } else if (line.contains("#O")) {
+                    appendMetaData("Author:" + line.substring(3));
+                } else {
+                    appendMetaData(line.substring(3));
+                }
             }
         }
 
@@ -268,30 +310,40 @@ public class ReadFile {
                 }
 
             } else //expected Rule=3/23  (born/survive)
-            if (i == 0) {
-                if (rule[i].length() >= 1) {
-                    born = new byte[rule[i].length()];
-                    for (int j = 0; j < rule[i].length(); j++) {
-                        born[j] = (byte) Character.digit(rule[i].toCharArray()[j], 10);
+            {
+                if (i == 0) {
+                    if (rule[i].length() >= 1) {
+                        born = new byte[rule[i].length()];
+                        for (int j = 0; j < rule[i].length(); j++) {
+                            born[j] = (byte) Character.digit(rule[i].toCharArray()[j], 10);
+                        }
+                    } else {
+                        born = new byte[]{-1};
                     }
-                } else {
-                    born = new byte[]{-1};
-                }
-            } else if (i == 1) {
-                if (rule[i].length() >= 1) {
-                    survive = new byte[rule[i].length()];
-                    for (int j = 0; j < rule[i].length(); j++) {
-                        survive[j] = (byte) Character.digit(rule[i].toCharArray()[j], 10);
+
+                } else if (i == 1) {
+                    if (rule[i].length() >= 1) {
+                        survive = new byte[rule[i].length()];
+                        for (int j = 0; j < rule[i].length(); j++) {
+                            survive[j] = (byte) Character.digit(rule[i].toCharArray()[j], 10);
+                        }
+                    } else {
+                        survive = new byte[]{-1};
                     }
-                } else {
-                    survive = new byte[]{-1};
                 }
             }
+
+            try {
+                parsedRule = new CustomRule(survive, born);
+            } catch (unsupportedRuleException ex) {
+                parsedRule = new ConwaysRule();
+            }
         }
-        try {
-            parsedRule = new CustomRule(survive, born);
-        } catch (unsupportedRuleException ex) {
-            parsedRule = new ConwaysRule();
-        }
+
+    
+
+    private static void appendMetaData(String line) {
+        METADATA.add(line);
     }
+
 }

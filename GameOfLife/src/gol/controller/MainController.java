@@ -1,5 +1,6 @@
 package gol.controller;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -15,33 +16,33 @@ import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 
 /**
- * FXML Controller, controls the splash screen. 
- * This class is where the stage is stored.
- *  
+ * FXML Controller, controls the splash screen. This class is where the stage is
+ * stored.
+ *
  * @author s305054, s305084, s305089
  */
 public class MainController implements Initializable {
 
     private static Stage primaryStage;
     private static List<String> input = new ArrayList<String>();
-    
+
     /**
      * Sets title and game icon, whenever the program starts.
+     *
      * @see javafx.fxml.Initializable
      * @param location
-     * @param resources 
+     * @param resources
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        //klarte ikke med path :(
-        //primaryStage.getIcons().add(new Image("file:gen1.PNG"));
-        primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("gen1.PNG")));
+        primaryStage.getIcons().add(new Image(new File("src\\mics\\gen1.PNG").toURI().toString()));
         primaryStage.setTitle(" Game of Life");
     }
 
     /**
-     * Loads  Game.fxml witch sets {@link gol.controller.GameController} as its controller.
-     * This method will also call {@link #setKeyEvents(Scene) }. 
+     * Loads Game.fxml witch sets {@link gol.controller.GameController} as its
+     * controller. This method will also call {@link #setKeyEvents(Scene) }.
+     *
      * @throws IOException Reads an FXML file
      */
     @FXML
@@ -55,11 +56,20 @@ public class MainController implements Initializable {
 
     }
 
+    @FXML
+    public void howToPlay() throws IOException {
+        HowToPlayController.loadStage(primaryStage);
+        Parent root = FXMLLoader.load(getClass().getResource("/gol/view/HowToPlay.fxml"));
+        Scene scene = new Scene(root);
+        setKeyEvents(scene);
+        primaryStage.setScene(scene);
+    }
+
     /**
-     * Checks if the  the parameter is stored in the input list.
-     * 
-     * @see #setKeyEvents 
-     * @param keyInput  String representation of a keyboard button 
+     * Checks if the the parameter is stored in the input list.
+     *
+     * @see #setKeyEvents
+     * @param keyInput String representation of a keyboard button
      * @return Boolean
      */
     public static boolean inputContains(String keyInput) {
@@ -67,10 +77,10 @@ public class MainController implements Initializable {
     }
 
     /**
-     * Loads the primaryStage to be stored.
-     * The stage is stored as a static private variable.
-     * Needs to be done first in {@link Main#start  }.
-     * This is because of {@link #initialize}. 
+     * Loads the primaryStage to be stored. The stage is stored as a static
+     * private variable. Needs to be done first in {@link Main#start }. This is
+     * because of {@link #initialize}.
+     *
      * @param stage
      */
     public static void loadStage(Stage stage) {
@@ -78,12 +88,11 @@ public class MainController implements Initializable {
     }
 
     /**
-     *  Listens and stores key events at the chosen scene. 
-     *  This will store key presses as a string representation when pressed.
-     *  It will also delete them when the key is released.
-     *  Stores the Strings in a String list.
-     *  
-     * @see #inputContains(String) 
+     * Listens and stores key events at the chosen scene. This will store key
+     * presses as a string representation when pressed. It will also delete them
+     * when the key is released. Stores the Strings in a String list.
+     *
+     * @see #inputContains(String)
      * @param scene
      */
     public void setKeyEvents(Scene scene) {
