@@ -12,13 +12,13 @@ public final class WriteFile {
 
     private WriteFile() {
     }
-    private static String patternName, author, comment;
+    private static String patternName, author, comment, rule;
 
     /**
      *
      * @param boardToWrite
      * @param saveLocation
-     * @return True if file was sucsessfully written to, otherwise false
+     * @return True if file was sucsessfull written to, otherwise false
      */
     public static boolean writeToRLE(byte[][] boardToWrite, Path saveLocation) {
 
@@ -45,16 +45,20 @@ public final class WriteFile {
                 writer.append("#C: " + comment.replace("\n", " "));
                 writer.newLine();
             }
+            
+            if (rule != null && !rule.equals("")) {
+                //TODO append rules to boardDimensions.
+            }
 
             writer.append(bordDimensions);
-            //TODO append rules
             writer.newLine();
             writer.append(parseGameBoard(boardToWrite));
 
             patternName = null;
             author = null;
             comment = null;
-
+            rule = null;
+            
             return true;
         } catch (IOException e) {
 
@@ -73,6 +77,10 @@ public final class WriteFile {
 
     public static void setComment(String patternComment) {
         comment = patternComment;
+    }
+
+    public static void setRule(String patternRule) {
+        rule = patternRule;
     }
 
     /**
@@ -108,18 +116,16 @@ public final class WriteFile {
                     result.append(lastChar);
                 }
                 result.append(currentChar);
+            } else if (lastChar == currentChar) {
+                countOfSameChar++;
             } else {
-                if (lastChar == currentChar) {
-                    countOfSameChar++;
+                if (countOfSameChar > 1) {
+                    result.append(countOfSameChar);
+                    result.append(lastChar);
                 } else {
-                    if (countOfSameChar > 1) {
-                        result.append(countOfSameChar);
-                        result.append(lastChar);
-                    } else {
-                        result.append(lastChar);
-                    }
-                    countOfSameChar = 1;
+                    result.append(lastChar);
                 }
+                countOfSameChar = 1;
             }
         }
 
@@ -147,15 +153,13 @@ public final class WriteFile {
             String compressedRow = compressedRow(row).toString();
             if (compressedRow.equals("$")) {
                 numberOfEmptyRows++;
+            } else if (numberOfEmptyRows > 0) {
+                patternFile.append(numberOfEmptyRows);
+                patternFile.append('$');
+                patternFile.append(compressedRow);
+                numberOfEmptyRows = 0;
             } else {
-                if (numberOfEmptyRows > 0) {
-                    patternFile.append(numberOfEmptyRows);
-                    patternFile.append('$');
-                    patternFile.append(compressedRow);
-                    numberOfEmptyRows = 0;
-                } else {
-                    patternFile.append(compressedRow);
-                }
+                patternFile.append(compressedRow);
             }
 
             if (i % 8 == 1) {

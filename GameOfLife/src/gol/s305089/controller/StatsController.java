@@ -183,8 +183,10 @@ public class StatsController implements Initializable {
 
     private void setTooltipMouseHandler(XYChart.Data<String, Integer> data, Tooltip tooltip) {
         data.getNode().setOnMouseEntered(event -> {
+            //Get the position of window, and adds spacing
             double anchorX = data.getNode().getScene().getWindow().getX() + 20;
             double anchorY = data.getNode().getScene().getWindow().getY() + 20;
+            
             tooltip.show(data.getNode(), anchorX + event.getSceneX(), anchorY + event.getSceneY());
         });
         data.getNode().setOnMouseExited(event -> tooltip.hide());

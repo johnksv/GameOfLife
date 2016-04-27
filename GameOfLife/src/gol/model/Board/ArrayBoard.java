@@ -9,6 +9,7 @@ import java.util.Arrays;
  *
  * @author s305054, s305084, s305089
  */
+@Deprecated
 public class ArrayBoard extends Board {
 
     private final int WIDTH, HEIGHT;
@@ -37,10 +38,10 @@ public class ArrayBoard extends Board {
         gameBoard = new byte[WIDTH][HEIGHT];
 
     }
+
     /*
      * Bruker gameBoard.length i stedet for getArrayLength(i/j) for å ta med ramme.
      */
-
     @Override
     public void clearBoard() {
         for (int i = 0; i < gameBoard.length; i++) {
@@ -147,7 +148,7 @@ public class ArrayBoard extends Board {
     public byte[][] getBoundingBoxBoard() {
 
         int[] boundingBox = getBoundingBox();
-        if ((boundingBox[1] - boundingBox[0] + 1) > 0  || (boundingBox[3] - boundingBox[2] + 1) > 0) {
+        if ((boundingBox[1] - boundingBox[0] + 1) > 0 || (boundingBox[3] - boundingBox[2] + 1) > 0) {
             byte[][] board = new byte[boundingBox[1] - boundingBox[0] + 1][boundingBox[3] - boundingBox[2] + 1];
 
             for (int y = 0; y < board.length; y++) {
@@ -161,7 +162,7 @@ public class ArrayBoard extends Board {
             }
             return board;
         } else {
-            return new byte[][] {{}};
+            return new byte[][]{{}};
         }
     }
 
@@ -224,5 +225,20 @@ public class ArrayBoard extends Board {
     @Override
     public int getMaxRowLength() {
         return HEIGHT;
+    }
+
+    @Override
+    protected void countNeighConcurrent(int threadNr) {
+        throw new UnsupportedOperationException("Threads for ArrayBoard is not supported.");
+    }
+
+    @Override
+    protected void checkRulesConcurrent(Rule activeRule, int threadNr) {
+        throw new UnsupportedOperationException("Threads for ArrayBoard is not supported.");
+    }
+
+    @Override
+    protected void expandBoard(int y, int x) {
+        throw new UnsupportedOperationException("Threads for ArrayBoard is not supported.");
     }
 }

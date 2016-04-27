@@ -12,9 +12,9 @@ import static org.junit.Assert.*;
  *
  * @author John Kasper
  */
-public class usefullMethodsTest {
+public class UsefullMethodsTest {
 
-    public usefullMethodsTest() {
+    public UsefullMethodsTest() {
     }
 
     @Before

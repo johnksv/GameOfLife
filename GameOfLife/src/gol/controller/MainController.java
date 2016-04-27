@@ -1,5 +1,6 @@
 package gol.controller;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -34,9 +35,7 @@ public class MainController implements Initializable {
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        //klarte ikke med path :(
-        //primaryStage.getIcons().add(new Image("file:gen1.PNG"));
-        primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("gen1.PNG")));
+        primaryStage.getIcons().add(new Image(new File("src\\mics\\gen1.PNG").toURI().toString()));
         primaryStage.setTitle(" Game of Life");
     }
 
@@ -56,12 +55,12 @@ public class MainController implements Initializable {
         primaryStage.setMinHeight(650);
 
     }
+
     @FXML
     public void howToPlay() throws IOException {
         HowToPlayController.loadStage(primaryStage);
         Parent root = FXMLLoader.load(getClass().getResource("/gol/view/HowToPlay.fxml"));
         Scene scene = new Scene(root);
-        setKeyEvents(scene);
         primaryStage.setScene(scene);
     }
 
