@@ -406,23 +406,38 @@ public class GameController implements Initializable {
     }
 
     private void draw() {
+        double cellSize = activeBoard.getCellSize();
+        double gridSpacing = activeBoard.getGridSpacing();
+        int startRow;
+        int startCol;
+
+        if (activeBoard.offsetValues[1] > cellSize) {
+            startRow = 1;
+        } else {
+            startRow = -(int) (activeBoard.offsetValues[1] / (cellSize + gridSpacing));
+        }
+
+        if (activeBoard.offsetValues[0] > cellSize) {
+            startCol = 1;
+        } else {
+            startCol = -(int) (activeBoard.offsetValues[0] / (cellSize + gridSpacing));
+        }
+
+        int endRow = (int) Math.ceil(canvas.getHeight() / (cellSize + gridSpacing)) + startRow;
+        int endCol = (int) Math.ceil(canvas.getWidth() / (cellSize + gridSpacing)) + startCol;
+        endRow = (endRow < activeBoard.getArrayLength()) ? endRow : activeBoard.getArrayLength();
+
         gc.setGlobalAlpha(1);
         gc.setFill(backgroundColor);
         gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
         gc.setFill(cellColor);
-        for (int i = 1; i < activeBoard.getArrayLength(); i++) {
-            if (canvas.getHeight() < i * activeBoard.getCellSize() + i * activeBoard.getGridSpacing()) {
-                //TODO Så den ikke tegner det som er utenfor
-            }
-            for (int j = 1; j < activeBoard.getArrayLength(i); j++) {
+
+        for (int i = startRow; i < endRow; i++) {
+            for (int j = startCol; j < endCol && j < activeBoard.getArrayLength(i); j++) {
                 if (activeBoard.getCellState(i, j)) {
-                    if (canvas.getWidth() < j * activeBoard.getCellSize() + j * activeBoard.getGridSpacing()) {
-                        //TODO Så den ikke tegner det som er utenfor
-                    }
-                    gc.fillRect(j * activeBoard.getCellSize() + j * activeBoard.getGridSpacing() + activeBoard.offsetValues[0],
-                            i * activeBoard.getCellSize() + i * activeBoard.getGridSpacing() + activeBoard.offsetValues[1],
-                            activeBoard.getCellSize(),
-                            activeBoard.getCellSize());
+                    gc.fillRect(j * cellSize + j * gridSpacing + activeBoard.offsetValues[0],
+                            i * cellSize + i * gridSpacing + activeBoard.offsetValues[1],
+                            cellSize, cellSize);
                 }
             }
         }
