@@ -313,7 +313,7 @@ public class DynamicBoard extends Board {
         if (y < 2) {
             while (y < EXPANSION) {
                 gameBoard.add(0, new ArrayList<>());
-                getMoveGridValues()[1] -= (cellSize + gridSpacing);
+                offsetValues[1] -= (cellSize + gridSpacing);
                 y++;
             }
         }
@@ -325,7 +325,7 @@ public class DynamicBoard extends Board {
                 for (ArrayList<AtomicInteger> row : gameBoard) {
                     row.add(0, new AtomicInteger(0));
                 }
-                getMoveGridValues()[0] -= (cellSize + gridSpacing);
+                offsetValues[0] -= (cellSize + gridSpacing);
                 x++;
             }
         }

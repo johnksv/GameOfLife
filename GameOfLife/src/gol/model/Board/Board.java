@@ -77,9 +77,15 @@ public abstract class Board {
     protected final AtomicBoolean EXPAND_Y = new AtomicBoolean();
 
     /**
-     * Contains: offset x, offset y, old x, old y
+     * <table>
+     * <tr><td>Index<td><td>Value</td></tr>
+     * <tr><td>0<td><td>Current offset x</td></tr>
+     * <tr><td>1<td><td>Current offset y</td></tr>
+     * <tr><td>2<td><td>Old mouse position x</td></tr>
+     * <tr><td>3<td><td>Old mouse position y</td></tr>
+     * </table>
      */
-    private final double[] moveGridValues = {0, 0, -Double.MAX_VALUE, -Double.MAX_VALUE};
+    public final double[] offsetValues = {0, 0, -Double.MAX_VALUE, -Double.MAX_VALUE};
 
     /**
      * Padding between cells, defined in pixels
@@ -108,7 +114,11 @@ public abstract class Board {
     }
 
     /**
-     * Call the required methods to create next generation with support for multiple threads
+     * Call the required methods to create next generation with support for
+     * multiple threads.
+     *
+     * @see #countNeighConcurrent(int)
+     * @see #checkRulesConcurrent(gol.model.Logic.Rule, int)
      */
     public void nextGenConcurrent() {
 
@@ -191,15 +201,6 @@ public abstract class Board {
      */
     public double getGridSpacing() {
         return gridSpacing;
-    }
-
-    /**
-     * Offset x, offset y, old x, old y
-     *
-     * @return
-     */
-    public double[] getMoveGridValues() {
-        return moveGridValues;
     }
 
     protected abstract void expandBoard(int y, int x);
