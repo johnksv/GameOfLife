@@ -63,13 +63,13 @@ public class DynamicBoard extends Board {
     @Override
     protected void countNeighConcurrent(int thread) {
 
-        int linesPerThread = gameBoard.size() / ThreadPool.THREADS;
-        int rest = gameBoard.size() % ThreadPool.THREADS;
+        int linesPerThread = gameBoard.size() / ThreadPool.THREAD_NR;
+        int rest = gameBoard.size() % ThreadPool.THREAD_NR;
         int startRow = (linesPerThread * thread) + rest;
 
         int endRow = linesPerThread * (thread + 1) + rest;
 
-        threadPool.addWorker(() -> {
+        threadPool.addWork(() -> {
             for (int row = startRow; row < endRow; row++) {
                 for (int col = 1; col < gameBoard.get(row).size(); col++) {
 
@@ -117,12 +117,12 @@ public class DynamicBoard extends Board {
 
     @Override
     protected void checkRulesConcurrent(Rule activeRule, int thread) {
-        int linesPerThread = gameBoard.size() / ThreadPool.THREADS;
-        int rest = gameBoard.size() % ThreadPool.THREADS;
+        int linesPerThread = gameBoard.size() / ThreadPool.THREAD_NR;
+        int rest = gameBoard.size() % ThreadPool.THREAD_NR;
         int startRow = (linesPerThread * thread) + rest;
         int endRow = linesPerThread * (thread + 1) + rest;
 
-        threadPool.addWorker(() -> {
+        threadPool.addWork(() -> {
             for (int row = startRow; row < endRow; row++) {
                 for (int col = 1; col < gameBoard.get(row).size(); col++) {
                     if (gameBoard.get(row).get(col).intValue() != 0) {

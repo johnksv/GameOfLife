@@ -2,40 +2,36 @@ package gol.model;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * @author s305054, s305089, s305084
  */
 public class ThreadPool {
 
-    public static final int THREADS = Runtime.getRuntime().availableProcessors();
-    
-    private List<Thread> workers = new ArrayList<>();
+    public static final int THREAD_NR = Runtime.getRuntime().availableProcessors();
+
+    private final List<Thread> threads = new ArrayList<>();
 
     public ThreadPool() {
     }
 
-    public void addWorker(Runnable task) {
-        workers.add(new Thread(task));
+    public void addWork(Runnable task) {
+        threads.add(new Thread(task));
     }
 
     public void runWorkers() {
-        for (Thread worker : workers) {
-            worker.start();
+        for (Thread thread : threads) {
+            thread.start();
         }
 
-        for (Thread worker : workers) {
+        for (Thread thread : threads) {
             try {
-                worker.join();
+                thread.join();
             } catch (InterruptedException ex) {
-                Logger.getLogger(ThreadPool.class.getName()).log(Level.SEVERE, null, ex);
+                System.err.println("Could not join threads.. \n" + ex);
             }
         }
-        workers.clear();
+        threads.clear();
     }
 
 }
