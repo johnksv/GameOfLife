@@ -4,6 +4,7 @@ import gol.controller.UsefullMethods;
 import gol.model.Board.Board;
 import gol.model.Board.DynamicBoard;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Random;
 import javafx.scene.paint.Color;
 import lieng.GIFWriter;
@@ -22,7 +23,7 @@ import lieng.GIFWriter;
  */
 public final class GifMaker {
 
-    private Board activeBoard;
+    private DynamicBoard activeBoard;
     private byte[][] originalPattern;
 
     private GIFWriter gifWriter;
@@ -85,11 +86,11 @@ public final class GifMaker {
                             Random random = new Random();
                             cellColor = new java.awt.Color(random.nextInt(255), random.nextInt(255), random.nextInt(255));
                         }
-                        
+
                         int x1 = (int) (x * cellSize);
                         int x2 = (int) (x * cellSize + cellSize);
                         int y1 = (int) (y * cellSize);
-                        int y2 = (int) (y * cellSize + cellSize);
+                        int y2 = (int) (y * cellSize + cellSize);s
                         if (!followTopLeft) {
                             //Need moveGridValues so the GIF dosn't follow top left when expanding.
                             x1 += (int) moveGridValues[0];
@@ -172,7 +173,9 @@ public final class GifMaker {
      */
     public void setPattern(byte[][] patternToSet) {
         activeBoard = new DynamicBoard(10, 10);
-        moveGridValues = activeBoard.getMoveGridValues();
+        moveGridValues = activeBoard.offsetValues;
+        moveGridValues[0] = 0;
+        moveGridValues[1] = 0;
         this.originalPattern = patternToSet;
         placePattern(patternToSet);
         activeBoard.setCellSize(cellSize);

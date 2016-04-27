@@ -15,12 +15,11 @@ import gol.s305089.controller.StatsController;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 import java.util.ResourceBundle;
 import javafx.animation.Animation;
+import javafx.animation.Animation.Status;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.beans.value.ObservableValue;
@@ -44,8 +43,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.ToolBar;
-import javafx.scene.effect.Bloom;
-import javafx.scene.effect.Effect;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.BorderPane;
@@ -109,7 +106,6 @@ public class GameController implements Initializable {
     private byte[][] boardFromFile;
     private int mousePositionX;
     private int mousePositionY;
-    private double[] moveGridValues;
     private long gencount = 0;
 
     @Override
@@ -124,10 +120,9 @@ public class GameController implements Initializable {
 
         //TODO Valg for Array eller dynamisk brett
         //activeBoard = new ArrayBoard();
-        activeBoard = new DynamicBoard(1800, 1800);
+        activeBoard = new DynamicBoard();
         cellCP.setValue(Color.BLACK);
         backgroundCP.setValue(Color.web("#F4F4F4"));
-        moveGridValues = activeBoard.getMoveGridValues();
 
         mouseInit();
         handleZoom();
@@ -159,7 +154,7 @@ public class GameController implements Initializable {
     private void initAnimation() {
         Duration duration = Duration.millis(1000);
         KeyFrame keyframe = new KeyFrame(duration, (ActionEvent e) -> {
-            activeBoard.nextGen();
+            activeBoard.nextGenConcurrent();
             gencount++;
             labelGenCount.setText("Generation: " + gencount);
             draw();
@@ -172,7 +167,7 @@ public class GameController implements Initializable {
     @FXML
     private void handleAnimation() {
 
-        if (timeline.getStatus() == Animation.Status.RUNNING) {
+        if (timeline.getStatus() == Status.RUNNING) {
             timeline.pause();
             startPauseBtn.setText("Start game");
         } else {
@@ -231,27 +226,29 @@ public class GameController implements Initializable {
     }
 
     /**
-     * //TODO bug?
-     *
-     * @Bug You can cheat this method if you zoom out max with max spacing, then
-     * remove the spacing, but this is the only issue.
+     * Known issue on array board: If you decrease gridspacing while zoomed out.
      */
     @FXML
     private void handleZoom() {
         double x = cellSizeSlider.getValue();
+        //Formula for smooth zoom. Found with geogebra.
         double newValue = 0.2 * Math.exp(0.05 * x);
+
         if (((newValue) * activeBoard.getArrayLength() > canvas.getHeight()
-                && (newValue) * activeBoard.getArrayLength(0) > canvas.getWidth()) || activeBoard instanceof DynamicBoard) {
+                && (newValue) * activeBoard.getMaxRowLength() > canvas.getWidth())
+                || activeBoard instanceof DynamicBoard) {
             handleGridSpacingSlider();
 
             if (cellSizeSlider.isFocused()) {
-
+                //Zoom on center
                 calcNewOffset(activeBoard.getCellSize(), newValue);
             } else {
+                //Zoom on mouse
                 calcNewOffsetMouse(activeBoard.getCellSize(), newValue);
             }
             activeBoard.setCellSize(newValue);
         } else {
+            //Calculates to max slider value
             cellSizeSlider.setValue(20 * Math.log(5 * activeBoard.getCellSize()));
         }
 
@@ -287,8 +284,8 @@ public class GameController implements Initializable {
             FileChooser fileChooser = new FileChooser();
 
             fileChooser.getExtensionFilters().addAll(
-                    new FileChooser.ExtensionFilter("Game of Life Files", "*.rle", "*.lif", "*.cells"),
-                    new FileChooser.ExtensionFilter("All Files", "*.*"));
+                    new ExtensionFilter("Game of Life Files", "*.rle", "*.cells"),
+                    new ExtensionFilter("All Files", "*.*"));
 
             timeline.pause();
             File selected = fileChooser.showOpenDialog(null);
@@ -303,12 +300,11 @@ public class GameController implements Initializable {
                 for (String line : ReadFile.getMetadata()) {
                     container.getChildren().addAll(new Label(line));
                 }
-                
+
                 if (!container.getChildren().isEmpty()) {
                     alert.getDialogPane().setExpandableContent(container);
                     alert.getDialogPane().setExpanded(true);
                 }
-
 
                 ButtonType btnGhostTiles = new ButtonType("Insert with ghost tiles");
                 ButtonType btnInsert = new ButtonType("Insert at top-left");
@@ -409,7 +405,7 @@ public class GameController implements Initializable {
         }
     }
 
-    public void constructRule(byte[] cellsToSurvive, byte[] cellsToBeBorn) {
+    private void constructRule(byte[] cellsToSurvive, byte[] cellsToBeBorn) {
         try {
             activeBoard.setGameRule(new CustomRule(cellsToSurvive, cellsToBeBorn));
         } catch (unsupportedRuleException ex) {
@@ -420,12 +416,13 @@ public class GameController implements Initializable {
         }
     }
 
+    /**
+     * Sets current board to this.
+     *
+     * @param activeBoard Board to set.
+     */
     public void setActiveBoard(Board activeBoard) {
         this.activeBoard = activeBoard;
-    }
-
-    public Board getActiveBoard() {
-        return activeBoard;
     }
 
     /**
@@ -438,8 +435,8 @@ public class GameController implements Initializable {
                 (MouseEvent e) -> {
                     if (boardFromFile != null) {
                         startPauseBtn.setDisable(false);
-                        activeBoard.insertArray(boardFromFile, (int) ((mousePositionY - moveGridValues[1]) / (activeBoard.getGridSpacing() + activeBoard.getCellSize())),
-                                (int) ((mousePositionX - moveGridValues[0]) / (activeBoard.getGridSpacing() + activeBoard.getCellSize())));
+                        activeBoard.insertArray(boardFromFile, (int) ((mousePositionY - activeBoard.offsetValues[1]) / (activeBoard.getGridSpacing() + activeBoard.getCellSize())),
+                                (int) ((mousePositionX - activeBoard.offsetValues[0]) / (activeBoard.getGridSpacing() + activeBoard.getCellSize())));
                         boardFromFile = null;
 
                         draw();
@@ -449,18 +446,13 @@ public class GameController implements Initializable {
                 });
         canvas.addEventHandler(MouseEvent.MOUSE_DRAGGED,
                 (MouseEvent e) -> {
-                    if (rbMoveGrid.isSelected()) {
-                        moveGrid(e);
-                    } else {
-                        handleMouseClick(e);
-                    }
+                    handleMouseClick(e);
                 });
         canvas.addEventHandler(MouseEvent.MOUSE_RELEASED,
                 (MouseEvent e) -> {
-                    if (rbMoveGrid.isSelected()) {
-                        moveGridValues[2] = -Double.MAX_VALUE;
-                        moveGridValues[3] = -Double.MAX_VALUE;
-                    }
+                    //Indicates that mouse has been released
+                    activeBoard.offsetValues[2] = -Double.MAX_VALUE;
+                    activeBoard.offsetValues[3] = -Double.MAX_VALUE;
                 });
 
         canvas.addEventHandler(MouseEvent.MOUSE_MOVED,
@@ -485,23 +477,38 @@ public class GameController implements Initializable {
     }
 
     private void draw() {
+        double cellSize = activeBoard.getCellSize();
+        double gridSpacing = activeBoard.getGridSpacing();
+        int startRow;
+        int startCol;
+
+        if (activeBoard.offsetValues[1] > cellSize) {
+            startRow = 1;
+        } else {
+            startRow = -(int) (activeBoard.offsetValues[1] / (cellSize + gridSpacing));
+        }
+
+        if (activeBoard.offsetValues[0] > cellSize) {
+            startCol = 1;
+        } else {
+            startCol = -(int) (activeBoard.offsetValues[0] / (cellSize + gridSpacing));
+        }
+
+        int endRow = (int) Math.ceil(canvas.getHeight() / (cellSize + gridSpacing)) + startRow;
+        int endCol = (int) Math.ceil(canvas.getWidth() / (cellSize + gridSpacing)) + startCol;
+        endRow = (endRow < activeBoard.getArrayLength()) ? endRow : activeBoard.getArrayLength();
+
         gc.setGlobalAlpha(1);
         gc.setFill(backgroundColor);
         gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
         gc.setFill(cellColor);
-        for (int i = 1; i < activeBoard.getArrayLength(); i++) {
-            if (canvas.getHeight() < i * activeBoard.getCellSize() + i * activeBoard.getGridSpacing()) {
-                //TODO Så den ikke tegner det som er utenfor
-            }
-            for (int j = 1; j < activeBoard.getArrayLength(i); j++) {
+
+        for (int i = startRow; i < endRow; i++) {
+            for (int j = startCol; j < endCol && j < activeBoard.getArrayLength(i); j++) {
                 if (activeBoard.getCellState(i, j)) {
-                    if (canvas.getWidth() < j * activeBoard.getCellSize() + j * activeBoard.getGridSpacing()) {
-                        //TODO Så den ikke tegner det som er utenfor
-                    }
-                    gc.fillRect(j * activeBoard.getCellSize() + j * activeBoard.getGridSpacing() + moveGridValues[0],
-                            i * activeBoard.getCellSize() + i * activeBoard.getGridSpacing() + moveGridValues[1],
-                            activeBoard.getCellSize(),
-                            activeBoard.getCellSize());
+                    gc.fillRect(j * cellSize + j * gridSpacing + activeBoard.offsetValues[0],
+                            i * cellSize + i * gridSpacing + activeBoard.offsetValues[1],
+                            cellSize, cellSize);
                 }
             }
         }
@@ -535,112 +542,127 @@ public class GameController implements Initializable {
 
     }
 
-    //Over complicated for the sake of smoothness, this code may have huge potensial for improvement. 
+    /**
+     * Calculates new offset based on mouse movement, than draws the board
+     * again.
+     */
     private void moveGrid(MouseEvent e) {
-        if (moveGridValues[2] == -Double.MAX_VALUE && moveGridValues[3] == -Double.MAX_VALUE) {
-            moveGridValues[2] = e.getX();
-            moveGridValues[3] = e.getY();
+        if (activeBoard.offsetValues[2] == -Double.MAX_VALUE && activeBoard.offsetValues[3] == -Double.MAX_VALUE) {
+            //If mouse was just pressed, set old values to current X and Y.
+            activeBoard.offsetValues[2] = e.getX();
+            activeBoard.offsetValues[3] = e.getY();
         } else {
 
-            double newXoffset = moveGridValues[0] + e.getX() - moveGridValues[2];
-            double newYoffset = moveGridValues[1] + e.getY() - moveGridValues[3];
+            double newXoffset = activeBoard.offsetValues[0] + e.getX() - activeBoard.offsetValues[2];
+            double newYoffset = activeBoard.offsetValues[1] + e.getY() - activeBoard.offsetValues[3];
+
+            //If dynamic, it should not restrict movement outside of board.
             if (activeBoard instanceof DynamicBoard) {
-                moveGridValues[0] = newXoffset;
-                moveGridValues[1] = newYoffset;
-
+                activeBoard.offsetValues[0] = newXoffset;
+                activeBoard.offsetValues[1] = newYoffset;
             } else {
+                //Negative beacuse offset on arrayboard always is negative
+                //max values is for right and bottom sides
                 double maxValueX = -((activeBoard.getCellSize() + activeBoard.getGridSpacing()) * activeBoard.getArrayLength() - canvas.getWidth());
-                double maxValueY = -((activeBoard.getCellSize() + activeBoard.getGridSpacing()) * activeBoard.getArrayLength(0) - canvas.getHeight());
+                double maxValueY = -((activeBoard.getCellSize() + activeBoard.getGridSpacing()) * activeBoard.getMaxRowLength() - canvas.getHeight());
 
+                //If positive, board should not move
                 if (newXoffset < 0) {
                     if (newXoffset > maxValueX) {
-                        moveGridValues[0] = newXoffset;
+                        activeBoard.offsetValues[0] = newXoffset;
                     } else {
-                        moveGridValues[0] = maxValueX;
+                        activeBoard.offsetValues[0] = maxValueX;
                     }
 
                 } else {
-                    moveGridValues[0] = 0;
+                    activeBoard.offsetValues[0] = 0;
                 }
                 if (newYoffset < 0) {
                     if (newYoffset > maxValueY) {
-                        moveGridValues[1] = newYoffset;
+                        activeBoard.offsetValues[1] = newYoffset;
                     } else {
-                        moveGridValues[1] = maxValueY;
+                        activeBoard.offsetValues[1] = maxValueY;
                     }
 
                 } else {
-                    moveGridValues[1] = 0;
+                    activeBoard.offsetValues[1] = 0;
                 }
             }
 
-            moveGridValues[2] = e.getX();
-            moveGridValues[3] = e.getY();
+            activeBoard.offsetValues[2] = e.getX();
+            activeBoard.offsetValues[3] = e.getY();
         }
         draw();
     }
 
     /**
-     *
-     * @param e
+     * Updates the screen accordingly to event and radio button selected.
      */
     private void handleMouseClick(MouseEvent e) {
         double x = e.getX();
         double y = e.getY();
 
-        if (rbRemoveCell.isSelected()) {
-            activeBoard.setCellState(y, x, false, moveGridValues[0], moveGridValues[1]);
-        } else if (rbMoveGrid.isSelected()) {
+        if (rbMoveGrid.isSelected() || e.isMiddleButtonDown()) {
+            moveGrid(e);
+        } else if (rbRemoveCell.isSelected() ^ e.isSecondaryButtonDown()) {
+            activeBoard.setCellState(y, x, false, activeBoard.offsetValues[0], activeBoard.offsetValues[1]);
         } else {
-            activeBoard.setCellState(y, x, true, moveGridValues[0], moveGridValues[1]);
+            activeBoard.setCellState(y, x, true, activeBoard.offsetValues[0], activeBoard.offsetValues[1]);
         }
 
         draw();
     }
 
-    //Does not calc gridspacing yet.
+    /**
+     * When cellsize is changed, this methods is called. It then calculates
+     * offset with the new cellsize. The offset is based on the center of
+     * canvas.
+     *
+     * NB: Does not support gridspacing yet.
+     */
     private void calcNewOffset(double cellSize, double newCellSize) {
         if (cellSize != 0) {
 
-            double oldx = (canvas.getWidth() / 2 - moveGridValues[0]) / (cellSize);
-            double oldy = (canvas.getHeight() / 2 - moveGridValues[1]) / (cellSize);
+            double oldx = (canvas.getWidth() / 2 - activeBoard.offsetValues[0]) / (cellSize);
+            double oldy = (canvas.getHeight() / 2 - activeBoard.offsetValues[1]) / (cellSize);
 
-            moveGridValues[0] = -(oldx * (newCellSize) - canvas.getWidth() / 2);
-            moveGridValues[1] = -(oldy * (newCellSize) - canvas.getHeight() / 2);
+            activeBoard.offsetValues[0] = -(oldx * (newCellSize) - canvas.getWidth() / 2);
+            activeBoard.offsetValues[1] = -(oldy * (newCellSize) - canvas.getHeight() / 2);
 
-            if (!(activeBoard instanceof DynamicBoard)) {
-                double maxvalueX = -(newCellSize * activeBoard.getArrayLength() - canvas.getWidth());
-                double maxvalueY = -(newCellSize * activeBoard.getArrayLength(0) - canvas.getHeight());
-
-                moveGridValues[0] = (moveGridValues[0] > 0) ? 0 : moveGridValues[0];
-                moveGridValues[1] = (moveGridValues[1] > 0) ? 0 : moveGridValues[1];
-
-                moveGridValues[0] = (moveGridValues[0] < maxvalueX) ? maxvalueX : moveGridValues[0];
-                moveGridValues[1] = (moveGridValues[1] < maxvalueY) ? maxvalueY : moveGridValues[1];
-            }
+            updateOffsetValues(newCellSize);
         }
-
     }
 
+    /**
+     *
+     * Only differs from {@link #calcNewOffset(double, double) } where center is
+     * defined by mouse position. -> Calculates the center as mouse position.
+     */
     private void calcNewOffsetMouse(double cellSize, double newCellSize) {
         if (cellSize != 0) {
-            double oldx = (mousePositionX - moveGridValues[0]) / (cellSize);
-            double oldy = (mousePositionY - moveGridValues[1]) / (cellSize);
+            double oldx = (mousePositionX - activeBoard.offsetValues[0]) / (cellSize);
+            double oldy = (mousePositionY - activeBoard.offsetValues[1]) / (cellSize);
 
-            moveGridValues[0] = -(oldx * (newCellSize) - mousePositionX);
-            moveGridValues[1] = -(oldy * (newCellSize) - mousePositionY);
+            activeBoard.offsetValues[0] = -(oldx * (newCellSize) - mousePositionX);
+            activeBoard.offsetValues[1] = -(oldy * (newCellSize) - mousePositionY);
 
-            if (!(activeBoard instanceof DynamicBoard)) {
-                double maxvalueX = -(newCellSize * activeBoard.getArrayLength() - canvas.getWidth());
-                double maxvalueY = -(newCellSize * activeBoard.getArrayLength(0) - canvas.getHeight());
-
-                moveGridValues[0] = (moveGridValues[0] > 0) ? 0 : moveGridValues[0];
-                moveGridValues[1] = (moveGridValues[1] > 0) ? 0 : moveGridValues[1];
-
-                moveGridValues[0] = (moveGridValues[0] < maxvalueX) ? maxvalueX : moveGridValues[0];
-                moveGridValues[1] = (moveGridValues[1] < maxvalueY) ? maxvalueY : moveGridValues[1];
-            }
+            updateOffsetValues(newCellSize);
         }
+    }
 
+    /**
+     * Should only be called from calcNewOffset or calcNewOffsetMouse.
+     */
+    private void updateOffsetValues(double newCellSize) {
+        if (!(activeBoard instanceof DynamicBoard)) {
+            double maxvalueX = -(newCellSize * activeBoard.getArrayLength() - canvas.getWidth());
+            double maxvalueY = -(newCellSize * activeBoard.getMaxRowLength() - canvas.getHeight());
+
+            activeBoard.offsetValues[0] = (activeBoard.offsetValues[0] > 0) ? 0 : activeBoard.offsetValues[0];
+            activeBoard.offsetValues[1] = (activeBoard.offsetValues[1] > 0) ? 0 : activeBoard.offsetValues[1];
+
+            activeBoard.offsetValues[0] = (activeBoard.offsetValues[0] < maxvalueX) ? maxvalueX : activeBoard.offsetValues[0];
+            activeBoard.offsetValues[1] = (activeBoard.offsetValues[1] < maxvalueY) ? maxvalueY : activeBoard.offsetValues[1];
+        }
     }
 }
