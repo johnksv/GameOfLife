@@ -145,7 +145,7 @@ public class GameController implements Initializable {
     private void initAnimation() {
         Duration duration = Duration.millis(1000);
         KeyFrame keyframe = new KeyFrame(duration, (ActionEvent e) -> {
-            activeBoard.nextGen();
+            activeBoard.nextGenerationConcurrent();
             gencount++;
             labelGenCount.setText("Generation: " + gencount);
             draw();
@@ -289,12 +289,11 @@ public class GameController implements Initializable {
                 for (String line : ReadFile.getMetadata()) {
                     container.getChildren().addAll(new Label(line));
                 }
-                
+
                 if (!container.getChildren().isEmpty()) {
                     alert.getDialogPane().setExpandableContent(container);
                     alert.getDialogPane().setExpanded(true);
                 }
-
 
                 ButtonType btnGhostTiles = new ButtonType("Insert with ghost tiles");
                 ButtonType btnInsert = new ButtonType("Insert at top-left");
@@ -418,6 +417,15 @@ public class GameController implements Initializable {
         gc.setFill(backgroundColor);
         gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
         gc.setFill(cellColor);
+        try {
+            gc.fillRect(moveGridValues[0], moveGridValues[1], activeBoard.getCellSize() * activeBoard.getMaxRowLength(), activeBoard.getCellSize());
+            gc.fillRect(moveGridValues[0], moveGridValues[1], activeBoard.getCellSize(), activeBoard.getCellSize() * activeBoard.getArrayLength());
+
+            gc.fillRect(moveGridValues[0], moveGridValues[1] + activeBoard.getCellSize() * activeBoard.getArrayLength(), activeBoard.getCellSize() * activeBoard.getMaxRowLength(), activeBoard.getCellSize());
+            gc.fillRect(moveGridValues[0] + activeBoard.getCellSize() * activeBoard.getMaxRowLength(), moveGridValues[1], activeBoard.getCellSize(), activeBoard.getCellSize() * activeBoard.getArrayLength());
+
+        } catch (Exception e) {
+        }
         for (int i = 1; i < activeBoard.getArrayLength(); i++) {
             if (canvas.getHeight() < i * activeBoard.getCellSize() + i * activeBoard.getGridSpacing()) {
                 //TODO Så den ikke tegner det som er utenfor

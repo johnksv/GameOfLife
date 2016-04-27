@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * @author s305054, s305089, s305084
@@ -11,27 +13,29 @@ import java.util.concurrent.Executors;
 public class ThreadPool {
 
     public static final int THREADS = Runtime.getRuntime().availableProcessors();
-
-    private final ExecutorService EXECUTOR = Executors.newFixedThreadPool(THREADS);
-    private final List<Runnable> TASKS = new ArrayList<>();
+    
+    private List<Thread> workers = new ArrayList<>();
 
     public ThreadPool() {
     }
 
-    public void addWork(Runnable task) {
-        TASKS.add(task);
+    public void addWorker(Runnable task) {
+        workers.add(new Thread(task));
     }
 
-    public void doWork() {
-        TASKS.stream().forEach((task) -> {
-            EXECUTOR.submit(task);
-        });
+    public void runWorkers() {
+        for (Thread worker : workers) {
+            worker.start();
+        }
 
-        EXECUTOR.shutdown();
-    }
-
-    public boolean isFinished() {
-        return EXECUTOR.isTerminated();
+        for (Thread worker : workers) {
+            try {
+                worker.join();
+            } catch (InterruptedException ex) {
+                Logger.getLogger(ThreadPool.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        workers.clear();
     }
 
 }
