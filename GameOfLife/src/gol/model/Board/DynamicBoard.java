@@ -3,7 +3,6 @@ package gol.model.Board;
 import gol.model.Logic.Rule;
 import gol.model.ThreadPool;
 import java.util.ArrayList;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -34,6 +33,7 @@ public class DynamicBoard extends Board {
 
     @Override
     protected void countNeigh() {
+
         for (int row = 1; row < gameBoard.size(); row++) {
             for (int col = 1; col < gameBoard.get(row).size(); col++) {
 
@@ -61,40 +61,42 @@ public class DynamicBoard extends Board {
     }
 
     @Override
-    protected void countNeighConcurrent() {
-        int linesPerThread = gameBoard.size() / ThreadPool.THREADS;
+    protected void countNeighConcurrent(int thread) {
 
-        for (int i = 0; i < gameBoard.size(); i += linesPerThread) {
-            int startRow = i;
+        int linesPerThread = gameBoard.size() / ThreadPool.THREAD_NR;
+        int rest = gameBoard.size() % ThreadPool.THREAD_NR;
+        int startRow = (linesPerThread * thread) + rest;
 
-            threadPool.addWork(() -> {
-                for (int row = startRow; row < linesPerThread; row++) {
-                    for (int col = 1; col < gameBoard.get(row).size(); col++) {
+        int endRow = linesPerThread * (thread + 1) + rest;
 
-                        //If cell is alive
-                        if (gameBoard.get(row).get(col).intValue() >= 64) {
+        threadPool.addWork(() -> {
+            for (int row = startRow; row < endRow; row++) {
+                for (int col = 1; col < gameBoard.get(row).size(); col++) {
 
-                            //Goes through surrounding neighbours
-                            for (int k = -1; k <= 1; k++) {
-                                for (int l = -1; l <= 1; l++) {
+                    //If cell is alive
+                    if (gameBoard.get(row).get(col).intValue() >= 64) {
 
-                                    //To not count itself
-                                    if (!(k == 0 && l == 0)) {
-                                        incrementCellValue(row + k, col + l);
+                        //Goes through surrounding neighbours
+                        for (int k = -1; k <= 1; k++) {
+                            for (int l = -1; l <= 1; l++) {
 
-                                        row = (row + k < 1) ? row + 1 : row;
-                                        col = (col + l < 1) ? col + 1 : col;
+                                //To not count itself
+                                if (!(k == 0 && l == 0)) {
+                                    //Will not expand top or left
+                                    //Important: will expand bottom and rigth
+                                    incrementCellValueNE(row + k, col + l);
 
-                                    }
+                                    row = (row + k < 1) ? row + 1 : row;
+                                    col = (col + l < 1) ? col + 1 : col;
+
                                 }
                             }
                         }
-
                     }
-                }
 
-            });
-        }
+                }
+            }
+        });
     }
 
     @Override
@@ -114,38 +116,47 @@ public class DynamicBoard extends Board {
     }
 
     @Override
-    protected void checkRulesConcurrent(Rule activeRule) {
-        int linesPerThread = gameBoard.size() / ThreadPool.THREADS;
+    protected void checkRulesConcurrent(Rule activeRule, int thread) {
+        int linesPerThread = gameBoard.size() / ThreadPool.THREAD_NR;
+        int rest = gameBoard.size() % ThreadPool.THREAD_NR;
+        int startRow = (linesPerThread * thread) + rest;
+        int endRow = linesPerThread * (thread + 1) + rest;
 
-        for (int i = 0; i < gameBoard.size(); i += linesPerThread) {
-            int startRow = i;
+        threadPool.addWork(() -> {
+            for (int row = startRow; row < endRow; row++) {
+                for (int col = 1; col < gameBoard.get(row).size(); col++) {
+                    if (gameBoard.get(row).get(col).intValue() != 0) {
+                        if (activeRule.setLife(gameBoard.get(row).get(col).byteValue()) == 64) {
+                            //Will not expand top or left sides
+                            setCellStateNE(row, col, true);
 
-            threadPool.addWork(() -> {
-                for (int row = startRow; row < linesPerThread; row++) {
-                    for (int col = 1; col < gameBoard.get(row).size(); col++) {
-                        if (gameBoard.get(row).get(col).intValue() != 0) {
-                            if (activeRule.setLife(gameBoard.get(row).get(col).byteValue()) == 64) {
-                                setCellState(row, col, true);
-                            } else {
-                                setCellState(row, col, false);
+                            //Will force expansion next gen if near border.
+                            if (row < 3) {
+                                EXPAND_X.set(true);
                             }
-
+                            if (col < 3) {
+                                EXPAND_Y.set(true);
+                            }
+                        } else {
+                            setCellStateNE(row, col, false);
                         }
+
                     }
                 }
+            }
 
-            });
-        }
-
+        });
     }
 
     @Override
     public void insertArray(byte[][] boardToInsert, int y, int x) {
-        if (x < 0 || y < 0) {
+        //Expand if close to border. This has to do with NextGen
+        if (x < 2 || y < 2) {
             expandBoard(y - 1, x - 1);
-            y = (y < 1) ? EXPANSION : y;
-            x = (x < 1) ? EXPANSION : x;
+            y = (y < 2) ? EXPANSION + 1 : y;
+            x = (x < 2) ? EXPANSION + 1 : x;
         }
+        
         for (int i = 0; i < boardToInsert.length; i++) {
             for (int j = 0; j < boardToInsert[i].length; j++) {
                 if (boardToInsert[i][j] == 64) {
@@ -162,10 +173,10 @@ public class DynamicBoard extends Board {
 
         expandBoard(y, x);
 
-        //All zero or less cordinates will be set to 1.
+        //All zero or less cordinates will be set to the corresponding value after expanding.
         //This is a fundamental part of DynamicBoard.
-        y = (y < 1) ? EXPANSION : y;
-        x = (x < 1) ? EXPANSION : x;
+        y = (y < 2) ? EXPANSION : y;
+        x = (x < 2) ? EXPANSION : x;
 
         if (alive) {
             gameBoard.get(y).set(x, new AtomicInteger(64));
@@ -291,16 +302,17 @@ public class DynamicBoard extends Board {
 
         //All zero or less cordinates will be set to 1.
         //This is a fundamental part of DynamicBoard.
-        y = (y < 1) ? EXPANSION : y;
-        x = (x < 1) ? EXPANSION : x;
+        y = (y < 2) ? EXPANSION : y;
+        x = (x < 2) ? EXPANSION : x;
         //TODO CHECK
         gameBoard.get(y).get(x).incrementAndGet();
-        
+
     }
 
-    private void expandBoard(int y, int x) {
+    @Override
+    protected void expandBoard(int y, int x) {
 
-        if (y < 1) {
+        if (y < 2) {
             while (y < EXPANSION) {
                 gameBoard.add(0, new ArrayList<>());
                 getMoveGridValues()[1] -= (cellSize + gridSpacing);
@@ -310,7 +322,7 @@ public class DynamicBoard extends Board {
         while (y >= gameBoard.size() - EXPANSION) {
             gameBoard.add(new ArrayList<>());
         }
-        if (x < 1) {
+        if (x < 2) {
             while (x < EXPANSION) {
                 for (ArrayList<AtomicInteger> row : gameBoard) {
                     row.add(0, new AtomicInteger(0));
@@ -326,17 +338,28 @@ public class DynamicBoard extends Board {
 
     }
 
-    //TODO To use, or not to use?
-    private class count implements Runnable {
-
-        @Override
-        public void run() {
-
+    private void setCellStateNE(int row, int col, boolean alive) {
+        if (alive) {
+            gameBoard.get(row).set(col, new AtomicInteger(64));
+        } else {
+            gameBoard.get(row).set(col, new AtomicInteger(0));
         }
+    }
 
-        count(int i) {
-
+    private void incrementCellValueNE(int y, int x) {
+        if (y < 0) {
+            return;
         }
+        if (x < 0) {
+            return;
+        }
+        while (y >= gameBoard.size() - EXPANSION) {
+            gameBoard.add(new ArrayList<>());
+        }
+        while (x >= gameBoard.get(y).size() - EXPANSION) {
+            gameBoard.get(y).add(new AtomicInteger(0));
+        }
+        gameBoard.get(y).get(x).incrementAndGet();
 
     }
 }

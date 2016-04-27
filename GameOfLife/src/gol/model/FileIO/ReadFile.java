@@ -1,7 +1,13 @@
 package gol.model.FileIO;
 
 import gol.model.Logic.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLConnection;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -45,6 +51,31 @@ public class ReadFile {
             default:
                 throw new PatternFormatException("Pattern format is not supported");
         }
+    }
+
+    public static void writeFromURL(String URLToSave) throws PatternFormatException, IOException {
+
+        URL url = new URL(URLToSave);
+        URLConnection connection = url.openConnection();
+
+        String[] token = url.toString().split("\\.");
+        String suffix = token[token.length - 1];
+
+        Path saveLocation = File.createTempFile("golPattern", suffix).toPath();
+
+        BufferedWriter writer;
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
+            writer = Files.newBufferedWriter(saveLocation);
+            String line;
+            while ((line = reader.readLine()) != null) {
+                writer.write(line);
+                writer.newLine();
+            }
+        }
+        writer.close();
+
+        readFileFromDisk(saveLocation);
+
     }
 
     /**

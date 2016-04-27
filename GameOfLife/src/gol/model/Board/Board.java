@@ -3,13 +3,13 @@ package gol.model.Board;
 import gol.model.Logic.ConwaysRule;
 import gol.model.Logic.Rule;
 import gol.model.ThreadPool;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * The abstract class <code>Board</code> is the superclass of
  * <code>ArrayBoard</code> and <code>DynamicBoard</code>. The main objective of
- * this class is to store and compute next generation of activeBoard.
+ * this class is to ensure functionality to subclasses, and compute next
+ * generation of activeBoard.
  *
  * The board is represented through row-major arrays. This implies that y
  * represents rows, and x represents columns.
@@ -18,19 +18,19 @@ import java.util.logging.Logger;
  * possible by taking use of the fact that a byte consists of 8 bits (where the
  * 8th bit (MSB) is because of 2-complement).</p>
  * <p>
- * <b>The 7th-bit (64) represents alive</b>
+ * <b>The 7th-bit (64) represents alive.</b>
  * This means that living cell will have a value of 64, while dead cells has the
  * value 0.
  * <b>The first 4 LSB (least significant bits) represents neighbour count.</b>
  * </p>
  *
- * <b>Clarification: a cell is one element in the board array.</b>
  * <h4>Counting neighbours</h4>
  * Counting of neighbours is done by incrementing the current cell for each
  * living neighbours.
  * <p>
- * E.g. Consider the following board, where x is the current</p>
- * cell:
+ * E.g. Consider the following board, where x is the current cell, 1 is alive,
+ * and 0 is dead:</p>
+ *
  * <pre>
  * 010
  * 0x0
@@ -42,11 +42,13 @@ import java.util.logging.Logger;
  * <h4>Check rules</h4>
  * After the neighbours have been counted, we check the new value of each cell
  * with the given rule. For Conways standard rules (spawn at 3, survive at 2 and
- * 3) this means that the value of a cell must be 3, 66, 67. This method for
- * counting neighbours and checking rules means that we don't need to work with
- * an second array, and calculations can be done in real-time on the actual game
- * board.
+ * 3) this means that the value of a cell must be 3, 66, or 67 to be alive next
+ * generation.
  *
+ * <p>
+ * This method for counting neighbours and checking rules means that we don't
+ * need to work with a second array, and calculations can be done in real-time
+ * on the actual game board. </p>
  *
  *
  * @author s305054, s305084, s305089
@@ -58,9 +60,25 @@ public abstract class Board {
      */
     protected double cellSize;
 
+    /**
+     * Gives access for use of Threadpool
+     *
+     * @see ThreadPool
+     */
     protected final ThreadPool threadPool = new ThreadPool();
 
-    //Offset x, offset y, old x, old y
+    /**
+     * * If the board should expand in left (x) direction next generation.
+     */
+    protected final AtomicBoolean EXPAND_X = new AtomicBoolean();
+    /**
+     * If the board should expand in top (y) direction next generation.
+     */
+    protected final AtomicBoolean EXPAND_Y = new AtomicBoolean();
+
+    /**
+     * Contains: offset x, offset y, old x, old y
+     */
     private final double[] moveGridValues = {0, 0, -Double.MAX_VALUE, -Double.MAX_VALUE};
 
     /**
@@ -89,21 +107,34 @@ public abstract class Board {
         checkRules(activeRule);
     }
 
-    public void nextGenerationConcurrent() {
-        while (!threadPool.isFinished()) {
-            //Waiting for counting to finish
-        }
-        countNeighConcurrent();
-        threadPool.doWork();
+    /**
+     * Call the required methods to create next generation with support for multiple threads
+     */
+    public void nextGenConcurrent() {
 
-        try {
-            Thread.currentThread().join();
-        } catch (InterruptedException ex) {
-            Logger.getLogger(Board.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        threadPool.runWorkers();
 
-        checkRulesConcurrent(activeRule);
-        threadPool.doWork();
+        for (int i = 0; i < ThreadPool.THREAD_NR; i++) {
+            countNeighConcurrent(i);
+        }
+        threadPool.runWorkers();
+        for (int i = 0; i < ThreadPool.THREAD_NR; i++) {
+            checkRulesConcurrent(activeRule, i);
+        }
+        threadPool.runWorkers();
+
+        if (EXPAND_X.get()) {
+            threadPool.addWork(() -> {
+                expandBoard(0, -1);
+                EXPAND_X.set(false);
+            });
+        }
+        if (EXPAND_Y.get()) {
+            threadPool.addWork(() -> {
+                expandBoard(-1, 0);
+                EXPAND_Y.set(false);
+            });
+        }
     }
 
     /**
@@ -171,6 +202,8 @@ public abstract class Board {
         return moveGridValues;
     }
 
+    protected abstract void expandBoard(int y, int x);
+
     //TODO comments.
     public abstract byte[][] getBoundingBoxBoard();
 
@@ -196,7 +229,7 @@ public abstract class Board {
      */
     protected abstract void countNeigh();
 
-    protected abstract void countNeighConcurrent();
+    protected abstract void countNeighConcurrent(int threadNr);
 
     /**
      * Checks each cell to this rule. The cell is set to alive or dead,
@@ -206,7 +239,7 @@ public abstract class Board {
      */
     protected abstract void checkRules(Rule activeRule);
 
-    protected abstract void checkRulesConcurrent(Rule activeRule);
+    protected abstract void checkRulesConcurrent(Rule activeRule, int threadNr);
 
     /**
      * Inserts a byte 2D-array into the current gameboard at the given (y, x)

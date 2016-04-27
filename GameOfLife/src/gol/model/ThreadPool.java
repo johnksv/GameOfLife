@@ -2,36 +2,36 @@ package gol.model;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /**
  * @author s305054, s305089, s305084
  */
 public class ThreadPool {
 
-    public static final int THREADS = Runtime.getRuntime().availableProcessors();
+    public static final int THREAD_NR = Runtime.getRuntime().availableProcessors();
 
-    private final ExecutorService EXECUTOR = Executors.newFixedThreadPool(THREADS);
-    private final List<Runnable> TASKS = new ArrayList<>();
+    private final List<Thread> threads = new ArrayList<>();
 
     public ThreadPool() {
     }
 
     public void addWork(Runnable task) {
-        TASKS.add(task);
+        threads.add(new Thread(task));
     }
 
-    public void doWork() {
-        TASKS.stream().forEach((task) -> {
-            EXECUTOR.submit(task);
-        });
+    public void runWorkers() {
+        for (Thread thread : threads) {
+            thread.start();
+        }
 
-        EXECUTOR.shutdown();
-    }
-
-    public boolean isFinished() {
-        return EXECUTOR.isTerminated();
+        for (Thread thread : threads) {
+            try {
+                thread.join();
+            } catch (InterruptedException ex) {
+                System.err.println("Could not join threads.. \n" + ex);
+            }
+        }
+        threads.clear();
     }
 
 }
