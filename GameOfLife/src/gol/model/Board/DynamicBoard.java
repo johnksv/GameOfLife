@@ -283,15 +283,17 @@ public class DynamicBoard extends Board {
     @Override
     public String toString() {
         StringBuilder result = new StringBuilder();
-        gameBoard.stream().forEach((row) -> {
-            row.stream().forEach((cell) -> {
-                if (cell.intValue() >= 64) {
+        byte[][] board = getBoundingBoxBoard();
+        for (byte[] row : board) {
+            for (byte cell : row) {
+                if (cell >= 64) {
                     result.append(1);
                 } else {
                     result.append(0);
                 }
-            });
-        });
+            }
+        }
+   
         return result.toString();
     }
 

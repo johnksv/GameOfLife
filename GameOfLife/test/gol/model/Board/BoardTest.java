@@ -36,7 +36,7 @@ public class BoardTest {
         arrayInstance = new ArrayBoard(5, 5);
         dynamicInstance = new DynamicBoard(5, 5);
         patternGlider = new byte[][]{
-            {0, 64},
+            {0, 64, 0},
             {0, 0, 64},
             {64, 64, 64}};
     }
@@ -63,8 +63,7 @@ public class BoardTest {
         gol.nextGen();
         String expResult = "0000011001100000";
         assertEquals(gol.toString(), expResult);
-        
-        
+
         dynamicInstance.insertArray(gameBoard, 1, 1);
         dynamicInstance.nextGen();
         expResult = "0000011001100000";
@@ -79,21 +78,30 @@ public class BoardTest {
         arrayInstance.setCellState(1, 2, true);
         arrayInstance.setCellState(2, 1, true);
         String result1 = arrayInstance.toString();
-        
-        dynamicInstance.setCellState(-1, -1, true);
-        assertEquals(true, dynamicInstance.getCellState(1, 1));
-        dynamicInstance.setCellState(-1, -2, true);
-        assertEquals(true, dynamicInstance.getCellState(1, 1));
-        
+
         String expResult1 = "0000001100010000000000000";
-               
+
         assertEquals(result1, expResult1);
-        assertEquals(true, arrayInstance.getCellState(1, 1));
-        assertEquals(false, arrayInstance.getCellState(2, 2));
+
+        dynamicInstance.clearBoard();
+        dynamicInstance.setCellState(-1, -1, true);
+        assertEquals(true, dynamicInstance.getCellState(50, 50));
+
+        dynamicInstance.clearBoard();
+        dynamicInstance.setCellState(-1, -2, true);
+        assertEquals(true, dynamicInstance.getCellState(50, 50));
+
+        dynamicInstance.clearBoard();
+        dynamicInstance.setCellState(1, 1, true);
+        assertEquals(true, dynamicInstance.getCellState(1, 1));
+
+        dynamicInstance.clearBoard();
+        dynamicInstance.setCellState(0, 0, true);
+        assertEquals(true, dynamicInstance.getCellState(50, 50));
+
         assertEquals(false, dynamicInstance.getCellState(-5, -5));
         assertEquals(false, dynamicInstance.getCellState(-1, -3));
-    }     
-    
+    }
 
     /**
      * Test of clearBoard method, of class Board.
@@ -107,9 +115,12 @@ public class BoardTest {
 
         String expResult = "0000000000000000000000000";
         assertEquals(expResult, result);
+        
+        dynamicInstance.insertArray(patternGlider, 0, 0);
+        dynamicInstance.clearBoard();
+        assertEquals(expResult, result);
 
     }
-
 
     @Test
     public void testGetBoundingBoxBoard() {
@@ -140,19 +151,19 @@ public class BoardTest {
     @Test
     public void testGetBoundingBox() {
         System.out.println("getBoundingBox");
-        arrayInstance =new ArrayBoard(100, 100);
+        arrayInstance = new ArrayBoard(100, 100);
         arrayInstance.clearBoard();
         arrayInstance.setCellState(7, 5, true);
         arrayInstance.setCellState(6, 4, true);
         arrayInstance.setCellState(5, 11, true);
         arrayInstance.setCellState(3, 8, true);
-        
+
         int[] expResult = new int[4];
-        expResult[0]=3;
-        expResult[1]=7;
-        expResult[2]=4;
-        expResult[3]=11;
-        
+        expResult[0] = 3;
+        expResult[1] = 7;
+        expResult[2] = 4;
+        expResult[3] = 11;
+
         int[] result = arrayInstance.getBoundingBox();
         System.out.println("");
         System.out.println(Arrays.toString(result));
@@ -179,18 +190,17 @@ public class BoardTest {
 
         //see test for setCellState, for DynamicBoard
         dynamicInstance.insertArray(patternGlider, 1, 1);
-        assertEquals("00100010111000000", dynamicInstance.toString());
+        assertEquals("010001111", dynamicInstance.toString());
 
         dynamicInstance.insertArray(patternGlider, -2, -2);
-       // assertEquals("00100010111000000000000000000000", dynamicInstance.toString());
+        // assertEquals("00100010111000000000000000000000", dynamicInstance.toString());
 
     }
 
-    
     @Test
     public void testSetCellState_5args() {
-            //This is a method witch calculates a mouse click to a point on the board
-            //Testing this is much easier with a visual test.
+        //This is a method witch calculates a mouse click to a point on the board
+        //Testing this is much easier with a visual test.
         assertEquals(1, 1);
     }
 }
