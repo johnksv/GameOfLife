@@ -377,11 +377,7 @@ public class GameController implements Initializable {
                 });
         canvas.addEventHandler(MouseEvent.MOUSE_DRAGGED,
                 (MouseEvent e) -> {
-                    if (rbMoveGrid.isSelected()) {
-                        moveGrid(e);
-                    } else {
-                        handleMouseClick(e);
-                    }
+                    handleMouseClick(e);
                 });
         canvas.addEventHandler(MouseEvent.MOUSE_RELEASED,
                 (MouseEvent e) -> {
@@ -525,9 +521,10 @@ public class GameController implements Initializable {
         double x = e.getX();
         double y = e.getY();
 
-        if (rbRemoveCell.isSelected() ^ e.isSecondaryButtonDown()) {
+        if (rbMoveGrid.isSelected() || e.isMiddleButtonDown()) {
+            moveGrid(e);
+        } else if (rbRemoveCell.isSelected() ^ e.isSecondaryButtonDown()) {
             activeBoard.setCellState(y, x, false, moveGridValues[0], moveGridValues[1]);
-        } else if (rbMoveGrid.isSelected() || e.isMiddleButtonDown()) {
         } else {
             activeBoard.setCellState(y, x, true, moveGridValues[0], moveGridValues[1]);
         }
