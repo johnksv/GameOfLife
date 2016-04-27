@@ -34,7 +34,6 @@ public final class GifMaker {
     private double[] moveGridValues;
     private double cellSize = 10;
     private boolean centerPattern = false;
-    private boolean followTopLeft = false;
     private boolean autoCellSize = false;
     private boolean randomColor = false;
     private java.awt.Color cellColor = java.awt.Color.BLACK;
@@ -90,14 +89,14 @@ public final class GifMaker {
                         int x1 = (int) (x * cellSize);
                         int x2 = (int) (x * cellSize + cellSize);
                         int y1 = (int) (y * cellSize);
-                        int y2 = (int) (y * cellSize + cellSize);s
-                        if (!followTopLeft) {
+                        int y2 = (int) (y * cellSize + cellSize);
+
                             //Need moveGridValues so the GIF dosn't follow top left when expanding.
                             x1 += (int) moveGridValues[0];
                             x2 += (int) moveGridValues[0];
                             y1 += (int) moveGridValues[1];
                             y2 += (int) moveGridValues[1];
-                        }
+                        
 
                         if (x1 >= 0 && x2 >= 0 && y1 >= 0 && y2 >= 0) {
                             if (x1 < gifWidth && x2 < gifWidth && y1 < gifHeight && y2 < gifHeight) {
@@ -237,7 +236,4 @@ public final class GifMaker {
         this.randomColor = randomColor;
     }
 
-    public void setFollowTopLeft(boolean followTopLeft) {
-        this.followTopLeft = followTopLeft;
-    }
 }
