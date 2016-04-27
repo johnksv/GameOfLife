@@ -61,7 +61,6 @@ public class MainController implements Initializable {
         HowToPlayController.loadStage(primaryStage);
         Parent root = FXMLLoader.load(getClass().getResource("/gol/view/HowToPlay.fxml"));
         Scene scene = new Scene(root);
-        setKeyEvents(scene);
         primaryStage.setScene(scene);
     }
 
