@@ -339,11 +339,11 @@ public class ReadFile {
                 parsedRule = new ConwaysRule();
             }
         }
-
+    }
     
 
     private static void appendMetaData(String line) {
         METADATA.add(line);
     }
-
+    
 }

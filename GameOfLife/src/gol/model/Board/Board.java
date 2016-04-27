@@ -256,9 +256,7 @@ public abstract class Board {
      * @param boardToInsert bytearray to insert into the current gameboard.
      * @param y coordinate for where the first row is placed
      * @param x coordinate for where the first column is placed
-     */
-
-    
+     */    
     public abstract void insertArray(byte[][] boardToInsert, int y, int x);
 
     /**
@@ -313,6 +311,5 @@ public abstract class Board {
      * @return The cells state at position (y,x). true if alive. false if dead.
      */
     public abstract boolean getCellState(int y, int x);
-
 
 }

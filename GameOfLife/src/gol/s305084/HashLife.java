@@ -67,7 +67,7 @@ public final class HashLife {
         //evolve(0, 0, k);
         //activeBoard.insertArray(nextBoard, 0, 0);
         dynamicEvolve(0, 0, k);
-        activeBoard.insertList(nextlist);
+        //activeBoard.insertList(nextlist);
 
     }
 

@@ -343,17 +343,17 @@ public class GameController implements Initializable {
             boardFromFile = UsefullMethods.rotateArray90Deg(boardFromFile);
         }
     }
-    
+
     @FXML
-    private void handleShowSStats(){
+    private void handleShowSStats() {
         try {
-            Stage Statistics = new Stage();
-            Statistics.setResizable(false);
+            Stage statistics = new Stage();
+            statistics.setResizable(false);
             //TODO ICON stats
-            Statistics.getIcons().add(new Image(getClass().getResourceAsStream("icon.png")));
-        
-            Statistics.initModality(Modality.WINDOW_MODAL);
-            Statistics.initOwner(canvas.getScene().getWindow());
+            statistics.getIcons().add(new Image(new File("src\\mics\\icon.png").toURI().toString()));
+
+            statistics.initModality(Modality.WINDOW_MODAL);
+            statistics.initOwner(canvas.getScene().getWindow());
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/gol/s305084/view/Statistics.fxml"));
 
             Parent root = loader.load();
@@ -361,22 +361,22 @@ public class GameController implements Initializable {
             statisticsController.loadeBoard(activeBoard);
             statisticsController.showStats();
             Scene scene = new Scene(root);
-            Statistics.setScene(scene);
+            statistics.setScene(scene);
 
-            Statistics.setTitle("Gol: Statistics");
-            Statistics.show();
+            statistics.setTitle("Gol: Statistics");
+            statistics.show();
         } catch (IOException ex) {
             Logger.getLogger(GameController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     @FXML
     private void handleSEditor() {
         try {
             Stage editor = new Stage();
             editor.setResizable(false);
-            editor.getIcons().add(new Image(getClass().getResourceAsStream("icon.png")));
-        
+            editor.getIcons().add(new Image(new File("src\\mics\\icon.png").toURI().toString()));
+
             editor.initModality(Modality.WINDOW_MODAL);
             editor.initOwner(canvas.getScene().getWindow());
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/gol/s305084/view/Editor.fxml"));
@@ -385,7 +385,7 @@ public class GameController implements Initializable {
             gol.s305084.PatternEditorController editorController = loader.getController();
             editorController.setBGColor(backgroundColor);
             editorController.setCellColor(cellColor);
-            
+
             Scene scene = new Scene(root);
             editor.setScene(scene);
 

@@ -102,21 +102,6 @@ public class ArrayBoard extends Board {
         }
     }
 
-    @Override
-    public void insertList(ArrayList<ArrayList<Number>> board) {
-        int x = 0;
-        int y = 0;
-        for (ArrayList<Number> list : board) {
-            for (Number nr : list) {
-                if (x < WIDTH && y < HEIGHT) {
-                    gameBoard[y][x++] = nr.byteValue();
-                }
-            }
-            y++;
-            x = 0;
-        }
-
-    }
 
     @Override
     public void setCellState(int y, int x, boolean alive) {

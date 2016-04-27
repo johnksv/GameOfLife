@@ -362,5 +362,4 @@ public class DynamicBoard extends Board {
         gameBoard.get(y).get(x).incrementAndGet();
 
     }
-
 }
