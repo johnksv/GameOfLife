@@ -1,8 +1,40 @@
 /* 
     Created on : 26.apr.2016, 16:26:40
     Author     : s305054, s305084, s305089
+
+    All colors where found on a palette from this github project (retrieved april 27th 2016):
+    https://github.com/chriskempson/base16
 */
+.tab {
+    -fx-background-radius: 0;
+    -fx-background-color: linear-gradient(#7c8fa5, #3e4853);
+    -fx-border-radius: 0;
+    -fx-border-color: #272e36;
+    
+}
+.color-picker, .button {
+    -fx-background-color: linear-gradient(#56657b, #2c343e);
+    -fx-text-fill: #ebedf3;
+}
 .button{
-    -fx-border-color: green;
+    -fx-border-color: #000000;
     -fx-bar-gap: 10;
+}
+.button:hover {
+    -fx-background-color: linear-gradient(#56657b 75%, #2c343e);
+}
+
+.tool-bar *.label {
+    -fx-text-fill: #ebedf3;
+}
+.pane-standard, .tool-bar {
+    -fx-background-color: #7c8fa5;
+}
+.tab-label {
+    -fx-text-fill: #ebedf3;
+}
+
+.radio-button, .radio-button:selected, .label {
+    -fx-text-fill: #ebedf3;
+    -fx-font-weight: bold;
 }

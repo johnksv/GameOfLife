@@ -38,27 +38,27 @@
                 </HBox>
                 <VBox fillWidth="false" prefWidth="250.0" AnchorPane.rightAnchor="0.0">
                     <children>
-                        <TitledPane  prefWidth="250.0" text="Menu (press to hide/show)">
+                        <TitledPane prefWidth="250.0" text="Menu (press to hide/show)">
                             <content>
                                 <TabPane prefHeight="500.0" prefWidth="250.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
                                     <tabs>
                                         <Tab text="General">
                                             <content>
-                                                <VBox prefWidth="248.0">
+                                                <VBox prefWidth="248.0" styleClass="pane-standard">
                                                     <children>
                                                         <TitledPane collapsible="false" prefWidth="248.0">
                                                             <content>
-                                                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="176.0" prefWidth="246.0">
+                                                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="207.0" prefWidth="246.0" styleClass="pane-standard">
                                                                     <children>
-                                                                        <Label layoutX="8.0" layoutY="14.0" text="Speed/Itterations per second:" />
+                                                                        <Label layoutX="8.0" layoutY="14.0" text="Iterations per second:" />
                                                                         <Label fx:id="animationSpeedLabel" layoutX="168.0" layoutY="32.0" text="1,00" />
                                                                         <Slider fx:id="animationSpeedSlider" layoutX="14.0" layoutY="33.0" min="1" onValueChange="#handleAnimationSpeedSlider" value="2.0" />
                                                                         <Label layoutX="11.0" layoutY="54.0" text="Zoom:" />
                                                                         <Slider fx:id="cellSizeSlider" layoutX="18.0" layoutY="71.0" max="95" min="0" onValueChange="#handleZoom" value="95" />
                                                                         <Label layoutX="12.0" layoutY="98.0" text="Gridspacing" />
                                                                         <Slider fx:id="gridSpacingSlider" layoutX="17.0" layoutY="118.0" max="20" min="0" onValueChange="#handleGridSpacingSlider" value="3" />
-                                                                        <Button fx:id="startPauseBtn" layoutX="6.0" layoutY="145.0" mnemonicParsing="false" onAction="#handleAnimation" text="Start game" />
-                                                                        <Button layoutX="146.0" layoutY="145.0" mnemonicParsing="false" onAction="#handleClearBtn" text="Clear board" />
+                                                                        <Button fx:id="startPauseBtn" layoutX="10.0" layoutY="152.0" mnemonicParsing="false" onAction="#handleAnimation" text="Start game" />
+                                                                        <Button layoutX="139.0" layoutY="152.0" mnemonicParsing="false" onAction="#handleClearBtn" text="Clear board" />
                                                                     </children>
                                                    <padding>
                                                       <Insets bottom="13.0" />
@@ -71,7 +71,7 @@
                                                         </TitledPane>
                                                         <TitledPane animated="false" collapsible="false">
                                                             <content>
-                                                                <AnchorPane prefWidth="200.0">
+                                                                <AnchorPane prefWidth="200.0" styleClass="pane-standard">
                                                                     <children>
                                                                         <RadioButton fx:id="rbAddCell" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" selected="true" text="Add cells">
                                                                             <toggleGroup>
@@ -94,7 +94,7 @@
                                                     <children>
                                                         <TitledPane animated="false" collapsible="false" text="Import Pattern">
                                                             <content>
-                                                                <AnchorPane minHeight="0.0" minWidth="0.0" prefWidth="200.0">
+                                                                <AnchorPane minHeight="0.0" minWidth="0.0" prefWidth="200.0" styleClass="pane-standard">
                                                                     <children>
                                                                         <Button layoutX="16.0" layoutY="11.0" mnemonicParsing="false" onAction="#handleImportFileBtn" text="Import pattern from file" />
                                                                         <Button layoutX="16.0" layoutY="47.0" mnemonicParsing="false" text="Import/search pattern from internet" />
@@ -105,7 +105,7 @@
                                                         </TitledPane>
                                                         <TitledPane collapsible="false" text="Color">
                                                             <content>
-                                                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="150.0" prefWidth="200.0">
+                                                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="150.0" prefWidth="200.0" styleClass="pane-standard">
                                                                     <children>
                                                                         <ColorPicker fx:id="cellCP" layoutX="12.0" layoutY="28.0" onValueChange="#handleColor" prefWidth="176.0" />
                                                                         <Label layoutX="12.0" layoutY="9.0" text="Living cells" />
@@ -118,7 +118,7 @@
                                                         </TitledPane>
                                                         <TitledPane collapsible="false" prefHeight="225.0" prefWidth="250.0" text="Game rules">
                                                             <content>
-                                                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="300.0" prefWidth="250.0">
+                                                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="300.0" prefWidth="250.0" styleClass="pane-standard">
                                                                     <children>
                                                                         <Label layoutX="7.0" layoutY="53.0" text="S: survive at:" />
                                                                         <Label layoutX="7.0" layoutY="84.0" text="B: born at:" />
@@ -141,11 +141,11 @@
                                         </Tab>
                                         <Tab text="Extra">
                                             <content>
-                                                <VBox prefHeight="200.0" prefWidth="100.0">
+                                                <VBox prefHeight="200.0" prefWidth="100.0" styleClass="pane-standard">
                                                     <children>
                                                         <TitledPane animated="false" collapsible="false" text="Stian">
                                                             <content>
-                                                                <AnchorPane minHeight="0.0" minWidth="0.0" prefWidth="200.0">
+                                                                <AnchorPane minHeight="0.0" minWidth="0.0" prefWidth="200.0" styleClass="pane-standard">
                                                                     <children>
 
                                                                     </children>
@@ -154,7 +154,7 @@
                                                         </TitledPane>
                                                         <TitledPane animated="false" collapsible="false" text="Trygve">
                                                             <content>
-                                                                <AnchorPane minHeight="0.0" minWidth="0.0" prefWidth="200.0">
+                                                                <AnchorPane minHeight="0.0" minWidth="0.0" prefWidth="200.0" styleClass="pane-standard">
                                                                     <children>
                                                 
                                                                     </children>
@@ -163,7 +163,7 @@
                                                         </TitledPane>
                                                         <TitledPane animated="false" collapsible="false" text="John Kasper">
                                                             <content>
-                                                                <AnchorPane minHeight="0.0" minWidth="0.0" prefWidth="200.0">
+                                                                <AnchorPane minHeight="0.0" minWidth="0.0" prefWidth="200.0" styleClass="pane-standard">
                                                                     <children>
                                               
                                                                     </children>
