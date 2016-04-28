@@ -38,6 +38,8 @@ public class SoundController implements Initializable {
     @FXML
     private Button btnPlayPause;
     @FXML
+    private Button btnRewind;
+    @FXML
     private Label labelTime;
     @FXML
     private Label labelLocation;
@@ -168,22 +170,21 @@ public class SoundController implements Initializable {
     }
 
     private void assignSound(int countSameChar) {
-        //Current generation
-        int gen = audioClipQueue.size() - 1;
-
         if (countSameChar == -1) {
             audioClipQueue.add(nextGen);
         } else if (countSameChar > 0 && countSameChar <= 3) {
-            System.out.println("E4: count: " + countSameChar);
-            audioClipQueue.add(E4);
+            if (!audioClipQueue.contains(E4)) {
+                audioClipQueue.add(E4);
+            }
         } else if (countSameChar <= 5) {
-            System.out.println("E3: count: " + countSameChar);
-            audioClipQueue.add(E3);
+            if (!audioClipQueue.contains(E4)) {
+                audioClipQueue.add(E3);
+            }
         } else if (countSameChar <= 10) {
-            System.out.println("B3: count: " + countSameChar);
-            audioClipQueue.add(F3Sharp);
-        } else {
-            System.out.println("Db3: count: " + countSameChar);
+            if (!audioClipQueue.contains(E4)) {
+                audioClipQueue.add(F3Sharp);
+            }
+        } else if (!audioClipQueue.contains(E4)) {
             audioClipQueue.add(Db3);
         }
     }
@@ -249,6 +250,7 @@ public class SoundController implements Initializable {
         }
 
         //Updates the buttons for audio control
+        btnRewind.setDisable(false);
         btnPlayPause.setDisable(false);
         btnPlayPause.setText("Pause");
 
@@ -259,6 +261,7 @@ public class SoundController implements Initializable {
             labelTime.setText("");
             btnPlayPause.setText("Play");
             btnPlayPause.setDisable(true);
+            btnRewind.setDisable(true);
             disposeMediaPlayers();
         });
     }
