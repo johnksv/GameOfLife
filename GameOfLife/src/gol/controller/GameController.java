@@ -592,17 +592,21 @@ public class GameController implements Initializable {
             case "f":
                 if (boardFromFile != null) {
                     boardFromFile = UsefullMethods.transposeMatrix(boardFromFile);
-                    System.out.println("Flip");
                 }
                 break;
+            
             case "r":
                 if (boardFromFile != null) {
                     boardFromFile = UsefullMethods.rotateArray90Deg(boardFromFile);
-                    System.out.println("Rotate");
                 }
                 break;
+            
             case "c":
                 handleClearBtn();
+                break;
+                
+            case "k":
+                handleAnimation();
                 break;
         }
         draw();
