@@ -122,7 +122,7 @@ public class GameController implements Initializable {
         //activeBoard = new ArrayBoard();
         activeBoard = new DynamicBoard();
         cellCP.setValue(Color.web("#E0E0E0"));
-        backgroundCP.setValue(Color.web("#9CBb5D3"));
+        backgroundCP.setValue(Color.web("#9CB5D3"));
 
         mouseInit();
         handleZoom();
