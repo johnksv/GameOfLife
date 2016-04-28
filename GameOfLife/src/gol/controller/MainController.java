@@ -41,7 +41,7 @@ public class MainController implements Initializable {
 
     /**
      * Loads Game.fxml witch sets {@link gol.controller.GameController} as its
-     * controller. This method will also call {@link #setKeyEvents(Scene) }.
+     * controller. This method will also call {@link GameController#handleKeyEvents(javafx.scene.input.KeyEvent) setKeyEvents}.
      *
      * @throws IOException Reads a FXML file
      */
