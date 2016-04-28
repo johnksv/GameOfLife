@@ -49,11 +49,14 @@ public class EditorController implements Initializable {
     private Button updateStripBtn;
     @FXML
     private Canvas editorCanvas;
+    @FXML
+    private Canvas stripCanvas;
 
     private GraphicsContext gc;
     private final Color cellColor = Color.BLACK;
     private final Color backgroundColor = Color.web("#F4F4F4");
     private Board activeBoard = new ArrayBoard(150,150);
+    byte[][] patternToInsert;
 
     /**
      * Initializes the controller class.
@@ -157,10 +160,15 @@ public class EditorController implements Initializable {
     }
 
     public void setBoard(Board gameBoard) {
-        byte[][] patternToInsert = gameBoard.getBoundingBoxBoard();
+        patternToInsert = gameBoard.getBoundingBoxBoard();
         activeBoard.insertArray(patternToInsert, 5, 5);
         activeBoard.setCellSize(gameBoard.getCellSize());
         activeBoard.setGridSpacing(gameBoard.getGridSpacing());
+        draw();
+    }
+    
+    public void theStrip() {
+        
     }
 
 }
