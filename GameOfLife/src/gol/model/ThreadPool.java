@@ -15,6 +15,10 @@ public class ThreadPool {
     public ThreadPool() {
     }
 
+    /**
+     * Add this task to the threadpool.
+     * @param task 
+     */
     public void addWork(Runnable task) {
         threads.add(new Thread(task));
     }

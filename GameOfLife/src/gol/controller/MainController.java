@@ -43,7 +43,7 @@ public class MainController implements Initializable {
      * Loads Game.fxml witch sets {@link gol.controller.GameController} as its
      * controller. This method will also call {@link #setKeyEvents(Scene) }.
      *
-     * @throws IOException Reads an FXML file
+     * @throws IOException Reads a FXML file
      */
     @FXML
     public void startGame() throws IOException {
@@ -56,6 +56,12 @@ public class MainController implements Initializable {
 
     }
 
+    /**
+     * Loads HowToPlay.fxml witch sets {@link gol.controller.HowToPlayController} 
+     * as its controller.
+     * 
+     * @throws IOException Reads a FXML file
+     */
     @FXML
     public void howToPlay() throws IOException {
         HowToPlayController.loadStage(primaryStage);
