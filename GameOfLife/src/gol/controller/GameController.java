@@ -412,14 +412,16 @@ public class GameController implements Initializable {
         SoundController soundController = root.<SoundController>getController();
         soundController.setBoard(activeBoard);
 
-        KeyFrame soundFrame = new KeyFrame(Duration.millis(1), (event) -> {
+        KeyFrame soundFrame = new KeyFrame(Duration.millis(1000), (event) -> {
             soundController.playSound();
         });
-        timeline.getKeyFrames().add(soundFrame);
+        //TODO OWN TIMELINE
+        Timeline sound = new Timeline(soundFrame);
+        sound.setCycleCount(Animation.INDEFINITE);
 
         golAudio.setOnCloseRequest(e -> {
             soundController.disposeMediaPlayers();
-            timeline.getKeyFrames().remove(soundFrame);
+            sound.stop();
         });
 
         golAudio.setScene(scene);
