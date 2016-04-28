@@ -17,7 +17,7 @@ public final class UsefullMethods {
                 returnMatrix[j][i] = matrix[i][j];
             }
         }
-        return matrix;
+        return returnMatrix;
     }
 
     public static byte[][] rotateArray90Deg(byte[][] arrayToRotate) {

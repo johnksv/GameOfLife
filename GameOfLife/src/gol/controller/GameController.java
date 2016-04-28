@@ -24,6 +24,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Alert;
@@ -38,6 +39,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.ToolBar;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.BorderPane;
@@ -70,7 +72,7 @@ public class GameController implements Initializable {
     @FXML
     private Label labelGenCount;
     @FXML
-    private Button startPauseBtn;
+    private Button btnStartPause;
     @FXML
     private ColorPicker cellCP;
     @FXML
@@ -160,10 +162,10 @@ public class GameController implements Initializable {
     private void handleAnimation() {
         if (timeline.getStatus() == Status.RUNNING) {
             timeline.pause();
-            startPauseBtn.setText("Start game");
+            btnStartPause.setText("Start game");
         } else {
             timeline.play();
-            startPauseBtn.setText("Pause game");
+            btnStartPause.setText("Pause game");
         }
     }
 
@@ -265,7 +267,7 @@ public class GameController implements Initializable {
         gencount = 0;
         activeBoard.clearBoard();
         timeline.pause();
-        startPauseBtn.setText("Start game");
+        btnStartPause.setText("Start game");
         draw();
     }
 
@@ -354,7 +356,7 @@ public class GameController implements Initializable {
             activeBoard.insertArray(boardFromFile, 1, 1);
             boardFromFile = null;
         } else if (result.get() == btnGhostTiles) {
-            startPauseBtn.setDisable(true);
+            btnStartPause.setDisable(true);
             activeBoard.setGameRule(ReadFile.getParsedRule());
         } else {
             boardFromFile = null;
@@ -399,7 +401,7 @@ public class GameController implements Initializable {
         canvas.addEventHandler(MouseEvent.MOUSE_PRESSED,
                 (MouseEvent e) -> {
                     if (boardFromFile != null) {
-                        startPauseBtn.setDisable(false);
+                        btnStartPause.setDisable(false);
                         activeBoard.insertArray(boardFromFile, (int) ((mousePositionY - activeBoard.offsetValues[1]) / (activeBoard.getGridSpacing() + activeBoard.getCellSize())),
                                 (int) ((mousePositionX - activeBoard.offsetValues[0]) / (activeBoard.getGridSpacing() + activeBoard.getCellSize())));
                         boardFromFile = null;
@@ -576,6 +578,30 @@ public class GameController implements Initializable {
         }
 
         draw();
+    }
+
+    public void handleKeyEvents(KeyEvent e) {
+        btnStartPause.requestFocus();
+        String key = e.getText();
+        switch (key) {
+            case "f":
+                if (boardFromFile != null) {
+                    boardFromFile = UsefullMethods.transposeMatrix(boardFromFile);
+                    System.out.println("Flip");
+                }
+                break;
+            case "r":
+                if (boardFromFile != null) {
+                    boardFromFile = UsefullMethods.rotateArray90Deg(boardFromFile);
+                    System.out.println("Rotate");
+                }
+                break;
+            case "c":
+                handleClearBtn();
+                break;
+        }
+        draw();
+        drawGhostTiles();
     }
 
     /**
