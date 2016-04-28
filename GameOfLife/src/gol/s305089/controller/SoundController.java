@@ -1,12 +1,12 @@
 package gol.s305089.controller;
 
 import gol.model.Board.Board;
-import gol.s305089.model.Stats;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.Initializable;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
@@ -32,8 +32,6 @@ import javafx.util.Duration;
 public class SoundController implements Initializable {
 
     @FXML
-    private HBox hBoxAuto;
-    @FXML
     private VBox vBoxUser;
     @FXML
     private Button btnPlayPause;
@@ -46,58 +44,27 @@ public class SoundController implements Initializable {
     @FXML
     private RadioButton rbAutoSelect;
 
-    //The board that is actually being displayed in main window.
+    //The board that is actually being used in main window.
     private Board activeBoard;
 
     private final List<AudioClip> audioClipQueue = new ArrayList<>();
     //Use mediaplayer for selected files, beacuse this is more realiable on larger files.
     private final List<MediaPlayer> mediaPlayerQueue = new ArrayList<>();
     private final MediaView mediaview = new MediaView();
-    Stats stats = new Stats();
 
-    private AudioClip one;
-    private AudioClip five;
-    private AudioClip ten;
-    private AudioClip twenty;
-    private AudioClip nextGen;
+    private AudioClip drumBass;
+    private AudioClip drumSnare;
     private AudioClip Db3;
     private AudioClip F3Sharp;
     private AudioClip E3;
     private AudioClip E4;
+    private AudioClip nextGen;
     private boolean playing = false;
 
-    /**
-     * Initializes the controller class.
-     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         initMediaFiles();
         initFXMLControls();
-    }
-
-    private void initFXMLControls() {
-        rbAutoSelect.selectedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
-            disposeMediaPlayers();
-            if (newValue) {
-                hBoxAuto.setVisible(true);
-                vBoxUser.setVisible(false);
-            } else {
-                hBoxAuto.setVisible(false);
-                vBoxUser.setVisible(true);
-            }
-        });
-    }
-
-    public void initMediaFiles() {
-        one = new AudioClip(new File("src/gol/s305089/sound/files/1.wav").toURI().toString());
-        five = new AudioClip(new File("src/gol/s305089/sound/files/5.wav").toURI().toString());
-        ten = new AudioClip(new File("src/gol/s305089/sound/files/10.wav").toURI().toString());
-        twenty = new AudioClip(new File("src/gol/s305089/sound/files/20.wav").toURI().toString());
-        nextGen = new AudioClip(new File("src/gol/s305089/sound/files/nextGen.wav").toURI().toString());
-        Db3 = new AudioClip(new File("src/gol/s305089/sound/files/Db3.wav").toURI().toString());
-        F3Sharp = new AudioClip(new File("src/gol/s305089/sound/files/F3#.wav").toURI().toString());
-        E3 = new AudioClip(new File("src/gol/s305089/sound/files/E3.wav").toURI().toString());
-        E4 = new AudioClip(new File("src/gol/s305089/sound/files/E4.wav").toURI().toString());
     }
 
     public void playSound() {
@@ -105,10 +72,44 @@ public class SoundController implements Initializable {
         if (!playing && rbAutoSelect.isSelected()) {
             playing = true;
             parseBoardBB();
+            System.out.println(Arrays.toString(audioClipQueue.stream().toArray()));
             playAudioQueue();
             playing = false;
         }
 
+    }
+
+    public void setBoard(Board activeBoard) {
+        this.activeBoard = activeBoard;
+    }
+
+    public void disposeMediaPlayers() {
+        playing = false;
+        for (MediaPlayer mediaPlayer : mediaPlayerQueue) {
+            mediaPlayer.dispose();
+        }
+        mediaPlayerQueue.clear();
+    }
+
+    private void initFXMLControls() {
+        rbAutoSelect.selectedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+            disposeMediaPlayers();
+            if (newValue) {
+                vBoxUser.setDisable(true);
+            } else {
+                vBoxUser.setDisable(false);
+            }
+        });
+    }
+
+    private void initMediaFiles() {
+        drumBass = new AudioClip(new File("src/gol/s305089/sound/files/drumBass.wav").toURI().toString());
+        drumSnare = new AudioClip(new File("src/gol/s305089/sound/files/drumSnare.wav").toURI().toString());
+        nextGen = new AudioClip(new File("src/gol/s305089/sound/files/nextGen.wav").toURI().toString());
+        Db3 = new AudioClip(new File("src/gol/s305089/sound/files/Db3.wav").toURI().toString());
+        F3Sharp = new AudioClip(new File("src/gol/s305089/sound/files/F3#.wav").toURI().toString());
+        E3 = new AudioClip(new File("src/gol/s305089/sound/files/E3.wav").toURI().toString());
+        E4 = new AudioClip(new File("src/gol/s305089/sound/files/E4.wav").toURI().toString());
     }
 
     @FXML
@@ -123,7 +124,7 @@ public class SoundController implements Initializable {
                 return wav || mp3;
             });
             if (musicFiles.length == 0) {
-                labelLocation.setText("No music files found. Pleas choose an directory that contains at least one music file.");
+                labelLocation.setText("No music files found. Please choose an directory that contains at least one music file.");
             } else {
                 labelLocation.setText("Playing from: " + result.getAbsolutePath());
                 for (File musicFile : musicFiles) {
@@ -172,19 +173,27 @@ public class SoundController implements Initializable {
     private void assignSound(int countSameChar) {
         if (countSameChar == -1) {
             audioClipQueue.add(nextGen);
-        } else if (countSameChar > 0 && countSameChar <= 3) {
-            if (!audioClipQueue.contains(E4)) {
-                audioClipQueue.add(E4);
+        } else if (countSameChar == 1) {
+            if (!audioClipQueue.contains(drumSnare)) {
+                audioClipQueue.add(drumSnare);
+            }
+        } else if (countSameChar == 2) {
+            if (!audioClipQueue.contains(E3)) {
+                audioClipQueue.add(E3);
+            }
+        } else if (countSameChar == 3) {
+            if (!audioClipQueue.contains(drumBass)) {
+                audioClipQueue.add(drumBass);
             }
         } else if (countSameChar <= 5) {
             if (!audioClipQueue.contains(E4)) {
-                audioClipQueue.add(E3);
+                audioClipQueue.add(E4);
             }
         } else if (countSameChar <= 10) {
-            if (!audioClipQueue.contains(E4)) {
+            if (!audioClipQueue.contains(F3Sharp)) {
                 audioClipQueue.add(F3Sharp);
             }
-        } else if (!audioClipQueue.contains(E4)) {
+        } else if (!audioClipQueue.contains(Db3)) {
             audioClipQueue.add(Db3);
         }
     }
@@ -293,17 +302,4 @@ public class SoundController implements Initializable {
             labelTime.setText(elapsedTime + "/" + totalTime);
         });
     }
-
-    public void setBoard(Board activeBoard) {
-        this.activeBoard = activeBoard;
-    }
-
-    public void disposeMediaPlayers() {
-        playing = false;
-        for (MediaPlayer mediaPlayer : mediaPlayerQueue) {
-            mediaPlayer.dispose();
-        }
-        mediaPlayerQueue.clear();
-    }
-
 }

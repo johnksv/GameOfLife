@@ -23,29 +23,16 @@
                 <Insets bottom="7.0" />
             </VBox.margin>
         </HBox>
-        <HBox fx:id="hBoxAuto" prefWidth="200.0" spacing="10.0">
+        <VBox fx:id="vBoxUser" disable="true" spacing="5.0">
             <children>
-                <RadioButton mnemonicParsing="false" selected="true" text="Generated from list">
-                    <toggleGroup>
-                        <ToggleGroup fx:id="tgAutoMode" />
-                    </toggleGroup>
-                </RadioButton>
-                <RadioButton mnemonicParsing="false" text="Generated with custom WAV" toggleGroup="$tgAutoMode" />
-            </children>
-            <VBox.margin>
-                <Insets left="15.0" />
-            </VBox.margin>
-        </HBox>
-        <VBox fx:id="vBoxUser" spacing="5.0" visible="false">
-            <children>
-                <Label text="Playing from:" />
+                <Label text="Playing from:" wrapText="true" />
                 <HBox spacing="10.0">
                     <children>
                         <Button mnemonicParsing="false" onAction="#handleSelectFile" text="Choose file" />
                         <Button mnemonicParsing="false" onAction="#handleSelectFolder" text="Choose directory" />
                     </children>
                 </HBox>
-            <Label fx:id="labelLocation" text="" />
+            <Label fx:id="labelLocation" text="" wrapText="true" />
                 <HBox spacing="10.0">
                     <children>
                         <Button fx:id="btnPlayPause" mnemonicParsing="false" onAction="#handlePlayPause" text="Play" />
@@ -60,6 +47,6 @@
         </VBox>
     </children>
     <padding>
-        <Insets top="10.0" />
+        <Insets left="10.0" top="10.0" />
     </padding>
 </VBox>
