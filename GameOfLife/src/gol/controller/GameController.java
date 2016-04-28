@@ -121,7 +121,7 @@ public class GameController implements Initializable {
         //TODO Valg for Array eller dynamisk brett
         //activeBoard = new ArrayBoard();
         activeBoard = new DynamicBoard();
-        cellCP.setValue(Color.web("#E0E0E0"));
+        cellCP.setValue(Color.web("#000000"));
         backgroundCP.setValue(Color.web("#9CB5D3"));
 
         mouseInit();
@@ -191,7 +191,7 @@ public class GameController implements Initializable {
     private void handleRuleBtn() {
         byte[] toBeBorn;
         byte[] toSurvive;
-        System.out.println(tfCellsToSurvive.getText());
+        
         if (tfCellsToSurvive.getText().replaceAll("\\D", "").equals("")) {
             tfCellsToSurvive.setText("");
             toSurvive = new byte[]{-1};
