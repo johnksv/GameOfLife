@@ -24,7 +24,7 @@ import lieng.GIFWriter;
 /**
  * Pattern editor, for creating small and complex patterns.
  * 
- * Implements much of the same code as in {@link gol.controller.gameController gamController}. 
+ * Implements much of the same code as in {@link gol.controller.GameController gamController}. 
  * Important note, this class only change from the main game is {@link #drawStrip() the strip.}
  * Saving a pattern to GIF or RLE is also possible from the GUI.
  *
