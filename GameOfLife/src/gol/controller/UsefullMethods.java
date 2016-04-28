@@ -9,7 +9,12 @@ public final class UsefullMethods {
 
     private UsefullMethods() {
     }
-
+    
+    /**
+     * Transposes this given pattern.
+     * @param matrix pattern that will be transposed
+     * @return a transposed matrix
+     */
     public static byte[][] transposeMatrix(byte[][] matrix) {
         byte[][] returnMatrix = new byte[matrix[0].length][matrix.length];
         for (int i = 0; i < matrix.length; i++) {
@@ -20,6 +25,11 @@ public final class UsefullMethods {
         return matrix;
     }
 
+    /**
+     * Rotates this pattern 90 degrees clockwise.
+     * @param arrayToRotate patter that will be rotated
+     * @return a rotated matrix
+     */
     public static byte[][] rotateArray90Deg(byte[][] arrayToRotate) {
         int longestRow = 0;
         for (byte[] row : arrayToRotate) {
@@ -41,6 +51,12 @@ public final class UsefullMethods {
         return rotatedArray;
     }
 
+    /**
+     * Show this error dialogue box.
+     * 
+     * @param headerText specifies what the header text will commute
+     * @param contentText specifies what the content text will commute
+     */
     public static void showErrorAlert(String headerText, String contentText) {
         Alert alert = new Alert(Alert.AlertType.ERROR, contentText);
         alert.setTitle("Error");
