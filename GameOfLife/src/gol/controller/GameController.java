@@ -34,7 +34,9 @@ import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Slider;
+import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TitledPane;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.ToolBar;
@@ -57,6 +59,8 @@ public class GameController implements Initializable {
     private Canvas canvas;
     @FXML
     private BorderPane borderpane;
+    @FXML
+    private TabPane tabPane;
     @FXML
     private ToolBar toolBarQuickStats;
     @FXML
@@ -94,8 +98,8 @@ public class GameController implements Initializable {
     private final Timeline timeline = new Timeline();
     private GraphicsContext gc;
 
-    private Color cellColor = Color.BLACK;
-    private Color backgroundColor = Color.web("#F4F4F4");
+    private Color cellColor;
+    private Color backgroundColor;
     private byte[][] boardFromFile;
     private int mousePositionX;
     private int mousePositionY;
@@ -107,6 +111,7 @@ public class GameController implements Initializable {
 
         canvas.widthProperty().bind(borderpane.widthProperty());
         canvas.heightProperty().bind(borderpane.heightProperty().subtract(toolBarQuickStats.heightProperty()));
+        tabPane.prefHeightProperty().bind(borderpane.heightProperty());
         toolBarQuickStats.prefWidthProperty().bind(borderpane.widthProperty());
 
         cellSizeSlider.setBlockIncrement(0.75);
@@ -114,8 +119,8 @@ public class GameController implements Initializable {
         //TODO Valg for Array eller dynamisk brett
         //activeBoard = new ArrayBoard();
         activeBoard = new DynamicBoard();
-        cellCP.setValue(Color.BLACK);
-        backgroundCP.setValue(Color.web("#F4F4F4"));
+        cellCP.setValue(Color.web("#E0E0E0"));
+        backgroundCP.setValue(Color.web("#9CBb5D3"));
 
         mouseInit();
         handleZoom();

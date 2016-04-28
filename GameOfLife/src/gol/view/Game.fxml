@@ -40,7 +40,7 @@
                     <children>
                         <TitledPane prefWidth="250.0" text="Menu (press to hide/show)">
                             <content>
-                                <TabPane prefHeight="500.0" prefWidth="250.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
+                                <TabPane fx:id="tabPane" prefHeight="570.0" prefWidth="250.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
                                     <tabs>
                                         <Tab text="General">
                                             <content>
@@ -60,14 +60,14 @@
                                                                         <Button fx:id="startPauseBtn" layoutX="10.0" layoutY="152.0" mnemonicParsing="false" onAction="#handleAnimation" text="Start game" />
                                                                         <Button layoutX="139.0" layoutY="152.0" mnemonicParsing="false" onAction="#handleClearBtn" text="Clear board" />
                                                                     </children>
-                                                   <padding>
-                                                      <Insets bottom="13.0" />
-                                                   </padding>
+                                                                    <padding>
+                                                                        <Insets bottom="13.0" />
+                                                                    </padding>
                                                                 </AnchorPane>
                                                             </content>
-                                             <VBox.margin>
-                                                <Insets />
-                                             </VBox.margin>
+                                                            <VBox.margin>
+                                                                <Insets />
+                                                            </VBox.margin>
                                                         </TitledPane>
                                                         <TitledPane animated="false" collapsible="false">
                                                             <content>
@@ -90,7 +90,7 @@
                                         </Tab>
                                         <Tab text="Advanced">
                                             <content>
-                                                <VBox>
+                                                <VBox styleClass="pane-standard">
                                                     <children>
                                                         <TitledPane animated="false" collapsible="false" text="Import Pattern">
                                                             <content>
