@@ -53,13 +53,13 @@ public class ReadFile {
         }
     }
 
-    public static void writeFromURL(String URLToSave) throws PatternFormatException, IOException {
+    public static byte[][] readFromURL(String URLToSave) throws PatternFormatException, IOException {
 
         URL url = new URL(URLToSave);
         URLConnection connection = url.openConnection();
 
         String[] token = url.toString().split("\\.");
-        String suffix = token[token.length - 1];
+        String suffix = "." + token[token.length - 1];
 
         Path saveLocation = File.createTempFile("golPattern", suffix).toPath();
 
@@ -74,8 +74,7 @@ public class ReadFile {
         }
         writer.close();
 
-        readFileFromDisk(saveLocation);
-
+        return readFileFromDisk(saveLocation);
     }
 
     /**

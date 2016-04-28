@@ -14,6 +14,8 @@ import java.net.URL;
 import java.util.Optional;
 
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.animation.Animation;
 import javafx.animation.Animation.Status;
 import javafx.animation.KeyFrame;
@@ -280,54 +282,85 @@ public class GameController implements Initializable {
             File selected = fileChooser.showOpenDialog(null);
             if (selected != null) {
                 boardFromFile = ReadFile.readFileFromDisk(selected.toPath());
-                Alert alert = new Alert(AlertType.NONE);
-                alert.setTitle("Place pattern");
-                alert.initStyle(StageStyle.UTILITY);
-                alert.setContentText("How do you want to insert the pattern?");
-
-                VBox container = new VBox();
-                for (String line : ReadFile.getMetadata()) {
-                    container.getChildren().addAll(new Label(line));
-                }
-
-                if (!container.getChildren().isEmpty()) {
-                    alert.getDialogPane().setExpandableContent(container);
-                    alert.getDialogPane().setExpanded(true);
-                }
-
-                ButtonType btnGhostTiles = new ButtonType("Insert with ghost tiles");
-                ButtonType btnInsert = new ButtonType("Insert at top-left");
-                ButtonType btnCancel = new ButtonType("Cancel");
-
-                alert.getButtonTypes().addAll(btnGhostTiles, btnInsert, btnCancel);
-
-                Optional<ButtonType> result = alert.showAndWait();
-
-                if (result.get() == btnInsert) {
-                    activeBoard.insertArray(boardFromFile, 1, 1);
-                    boardFromFile = null;
-                } else if (result.get() == btnGhostTiles) {
-                    startPauseBtn.setDisable(true);
-                    activeBoard.setGameRule(ReadFile.getParsedRule());
-                } else {
-                    boardFromFile = null;
-                    alert.close();
-                }
-                draw();
+                showInsertDialog();
             }
 
         } catch (IOException ex) {
-            Alert alert = new Alert(Alert.AlertType.ERROR, "There was an error reading the file");
-            alert.setTitle("Error");
-            alert.setHeaderText("Reading File Error");
-            alert.showAndWait();
+            UsefullMethods.showErrorAlert("Reading File Error", "There was an error reading the file");
         } catch (PatternFormatException ex) {
-            Alert alert = new Alert(Alert.AlertType.ERROR, ex.getMessage());
-            alert.setTitle("Error");
-            alert.setHeaderText("Pattern Error");
-            alert.showAndWait();
-
+            UsefullMethods.showErrorAlert("Pattern Error", ex.getMessage());
         }
+    }
+
+    @FXML
+    private void handleImportInternet() {
+        Alert mainDialog = new Alert(AlertType.NONE);
+        mainDialog.setTitle("Import from internet");
+        mainDialog.initStyle(StageStyle.UTILITY);
+        mainDialog.setContentText("Type the url of the pattern you want to import");
+
+        VBox container = new VBox();
+        TextField input = new TextField("http://");
+        container.getChildren().add(input);
+
+        mainDialog.getDialogPane().setExpandableContent(container);
+        mainDialog.getDialogPane().setExpanded(true);
+
+        ButtonType btnInsert = new ButtonType("Insert");
+        ButtonType btnCancel = new ButtonType("Cancel");
+        mainDialog.getButtonTypes().addAll(btnInsert, btnCancel);
+
+        Optional<ButtonType> result = mainDialog.showAndWait();
+
+        if (result.get() == btnInsert) {
+            try {
+                boardFromFile = ReadFile.readFromURL(input.getText());
+                showInsertDialog();
+            } catch (IOException ex) {
+                UsefullMethods.showErrorAlert("Reading File Error", "There was an error reading the file");
+            } catch (PatternFormatException ex) {
+                UsefullMethods.showErrorAlert("Pattern Error", ex.getMessage());
+            }
+        }
+
+    }
+
+    private void showInsertDialog() throws PatternFormatException, IOException {
+
+        Alert alert = new Alert(AlertType.NONE);
+        alert.setTitle("Place pattern");
+        alert.initStyle(StageStyle.UTILITY);
+        alert.setContentText("How do you want to insert the pattern?");
+
+        VBox container = new VBox();
+        for (String line : ReadFile.getMetadata()) {
+            container.getChildren().addAll(new Label(line));
+        }
+
+        if (!container.getChildren().isEmpty()) {
+            alert.getDialogPane().setExpandableContent(container);
+            alert.getDialogPane().setExpanded(true);
+        }
+
+        ButtonType btnGhostTiles = new ButtonType("Insert with ghost tiles");
+        ButtonType btnInsert = new ButtonType("Insert at top-left");
+        ButtonType btnCancel = new ButtonType("Cancel");
+
+        alert.getButtonTypes().addAll(btnGhostTiles, btnInsert, btnCancel);
+
+        Optional<ButtonType> result = alert.showAndWait();
+
+        if (result.get() == btnInsert) {
+            activeBoard.insertArray(boardFromFile, 1, 1);
+            boardFromFile = null;
+        } else if (result.get() == btnGhostTiles) {
+            startPauseBtn.setDisable(true);
+            activeBoard.setGameRule(ReadFile.getParsedRule());
+        } else {
+            boardFromFile = null;
+            alert.close();
+        }
+        draw();
     }
 
     @FXML
