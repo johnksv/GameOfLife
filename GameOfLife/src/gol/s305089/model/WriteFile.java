@@ -18,7 +18,7 @@ public final class WriteFile {
      *
      * @param boardToWrite
      * @param saveLocation
-     * @return True if file was sucsessfull written to, otherwise false
+     * @return true if file was successful written to, otherwise false
      */
     public static boolean writeToRLE(byte[][] boardToWrite, Path saveLocation) {
 

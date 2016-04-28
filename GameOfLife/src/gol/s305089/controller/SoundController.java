@@ -1,13 +1,20 @@
 package gol.s305089.controller;
 
 import gol.model.Board.Board;
+import gol.s305089.sound.WavFile;
+import gol.s305089.sound.WavFileException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.Initializable;
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -302,4 +309,56 @@ public class SoundController implements Initializable {
             labelTime.setText(elapsedTime + "/" + totalTime);
         });
     }
+
+    @FXML
+    private void saveAsWav() throws IOException, WavFileException {
+
+        List<WavFile> wavClips = new ArrayList<>();
+        List<int[][]> buffers = new ArrayList<>();
+        //Assums its 2 so long.
+        int channels = 2;
+        parseBoardBB();
+        //Read each audiofile
+        for (int nr = 0; nr < audioClipQueue.size(); nr++) {
+            Path source = Paths.get("c:\\nextGen.wav");
+            System.out.println(source.toFile());
+            wavClips.add(WavFile.openWavFile(source.toFile()));
+            buffers.add(new int[2][100]);
+        }
+
+        //1.5 seconds at 44.1 kHz
+        long numFrames = (long) (1.5 * 44100);
+        WavFile newWav = WavFile.newWavFile(File.createTempFile("golWavGen", ".wav"), channels, numFrames, 16, 44100);
+        int[][] bufferNew = new int[channels][100];
+
+        int frameCounter = 0;
+
+        while (frameCounter < numFrames) {
+            //For all audioclips, read buffer
+            for (int i = 0; i < wavClips.size(); i++) {
+                int[][] bufferRead = buffers.get(i);
+                wavClips.get(i).readFrames(bufferRead, 100);
+            }
+            long remaining = newWav.getFramesRemaining();
+            int toWrite = (remaining > 100) ? 100 : (int) remaining;
+
+            //Fill up new buffer with combined tone
+            for (int i = 0; i < buffers.size(); i++) {
+                for (int j = 0; j < buffers.get(i)[0].length; j++) {
+                    if (i == 0) {
+                        frameCounter++;
+                    }
+                    bufferNew[0][j] += buffers.get(i)[0][j];
+                    bufferNew[1][j] += buffers.get(i)[1][j];
+                }
+            }
+            newWav.writeFrames(bufferNew, toWrite);
+        }
+
+        newWav.close();
+        for (WavFile audioClip : wavClips) {
+            audioClip.close();
+        }
+    }
+
 }

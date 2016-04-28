@@ -18,6 +18,7 @@
                     </toggleGroup>
                 </RadioButton>
                 <RadioButton mnemonicParsing="false" text="User selected" toggleGroup="$tgMode" />
+                <Button mnemonicParsing="false" onAction="#saveAsWav" text="SaveWAV" />
             </children>
             <VBox.margin>
                 <Insets bottom="7.0" />
@@ -32,7 +33,7 @@
                         <Button mnemonicParsing="false" onAction="#handleSelectFolder" text="Choose directory" />
                     </children>
                 </HBox>
-            <Label fx:id="labelLocation" text="" wrapText="true" />
+                <Label fx:id="labelLocation" text="" wrapText="true" />
                 <HBox spacing="10.0">
                     <children>
                         <Button fx:id="btnPlayPause" mnemonicParsing="false" onAction="#handlePlayPause" text="Play" />
