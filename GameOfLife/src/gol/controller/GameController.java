@@ -280,6 +280,9 @@ public class GameController implements Initializable {
     private void handleClearBtn() {
         gencount = 0;
         activeBoard.clearBoard();
+        activeBoard.offsetValues[0] = 0;
+        activeBoard.offsetValues[1] = 0;
+        
         timeline.pause();
         btnStartPause.setText("Start game");
         draw();
@@ -380,9 +383,10 @@ public class GameController implements Initializable {
         }
         draw();
     }
+
     /**
-     * Do not call if a new pattern has not been parsed.
-     * If no rule was parsed Conway's rule will be set as new rule.
+     * Do not call if a new pattern has not been parsed. If no rule was parsed
+     * Conway's rule will be set as new rule.
      */
     private void updateRules() {
         Rule newRule = ReadFile.getParsedRule();
