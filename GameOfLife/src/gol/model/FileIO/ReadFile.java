@@ -73,7 +73,7 @@ public class ReadFile {
             }
         }
         writer.close();
-
+        saveLocation.toFile().deleteOnExit();
         return readFileFromDisk(saveLocation);
     }
 
