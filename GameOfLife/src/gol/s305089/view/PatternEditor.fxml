@@ -5,12 +5,10 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.TitledPane?>
-<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
@@ -33,20 +31,20 @@
                             <content>
                                 <VBox prefWidth="200.0" spacing="10.0">
                                     <children>
-                                        <RadioButton mnemonicParsing="false" selected="true" text="Add cells">
-                                            <toggleGroup>
-                                                <ToggleGroup fx:id="mouseActions" />
-                                            </toggleGroup>
-                                        </RadioButton>
-                                        <RadioButton fx:id="rbRemoveCell" mnemonicParsing="false" text="Remove cells" toggleGroup="$mouseActions" />
-                                        <Button mnemonicParsing="false" onAction="#handleClearBtn" text="Clear board" />
-                                        <Separator prefWidth="200.0" />
-                              <HBox spacing="15.0">
+                              <HBox spacing="10.0">
                                  <children>
-                                              <Button mnemonicParsing="false" onAction="#saveAsGIF" text="Save pattern to GIF" />
-                                    <Button mnemonicParsing="false" text="Send to main" />
+                                    <Label text="Left click: add cell" />
+                                    <Label text="Right click: remove cell" />
                                  </children>
                               </HBox>
+                              <HBox spacing="25.0">
+                                 <children>
+                                              <Button mnemonicParsing="false" onAction="#handleClearBtn" text="Clear board" />
+                                              <Button mnemonicParsing="false" onAction="#saveAsGIF" text="Save pattern to GIF" />
+                                 </children>
+                              </HBox>
+                                        <Separator prefWidth="200.0" />
+                              <Button mnemonicParsing="false" onAction="#sendCurrentBoard" text="Send current board to main" />
                                     </children>
                                 </VBox>
                             </content>
@@ -126,7 +124,7 @@
                         </ToolBar>
                         <ScrollPane prefHeight="127.0" prefWidth="778.0" BorderPane.alignment="CENTER">
                             <content>
-                                <HBox fx:id="theStripCanvasContainer" prefHeight="150.0">
+                                <HBox fx:id="theStripCanvasContainer" prefHeight="125.0">
 
                                 </HBox>
                             </content>

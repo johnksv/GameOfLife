@@ -351,15 +351,17 @@ public class GameController implements Initializable {
         Scene scene = new Scene((Parent) root.load());
         PatternEditorController editorController = root.<PatternEditorController>getController();
         editorController.setActiveBoard(activeBoard);
+        editorController.setGameController(this);
 
         editor.setTitle("Pattern Editor");
         editor.initModality(Modality.WINDOW_MODAL);
-        editor.show();
         editor.setMinWidth(800);
         editor.setMinHeight(600);
         editor.setScene(scene);
+        editor.showAndWait();
+        draw();
     }
-    
+
     @FXML
     private void saveAsGIF() throws IOException {
         timeline.pause();

@@ -1,7 +1,9 @@
 package gol.s305089.controller;
 
+import gol.controller.GameController;
 import gol.model.Board.ArrayBoard;
 import gol.model.Board.Board;
+import gol.model.Board.DynamicBoard;
 import gol.s305089.Util;
 import gol.s305089.model.WriteFile;
 import java.io.File;
@@ -32,7 +34,7 @@ import javafx.stage.Stage;
 
 /**
  * FXML Controller class for pattern editor.
- * 
+ *
  * @author s305089
  */
 public class PatternEditorController implements Initializable {
@@ -45,8 +47,6 @@ public class PatternEditorController implements Initializable {
     private CheckBox chboxAutoUpdateStrip;
     @FXML
     private HBox theStripCanvasContainer;
-    @FXML
-    private RadioButton rbRemoveCell;
     @FXML
     private Label labelWriteFileFdBck;
     @FXML
@@ -61,7 +61,8 @@ public class PatternEditorController implements Initializable {
     private Board activeBoard;
     private Board theStripBoard;
     private GraphicsContext gc;
-    private byte[][] byteBoard;
+    private byte[][] ghostByteBoard;
+    private GameController gameController;
 
     private final Color cellColor = Color.BLACK;
     private final Color backgroundColor;
@@ -73,9 +74,6 @@ public class PatternEditorController implements Initializable {
         this.backgroundColor = Color.web("#F4F4F4");
     }
 
-    /**
-     * Initializes the controller class.
-     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         canvas.widthProperty().bind(rootBorderPane.widthProperty());
@@ -95,6 +93,7 @@ public class PatternEditorController implements Initializable {
             theStripCanvasContainer.getChildren().add(striptCanvas);
             theStripGC.add(striptCanvas.getGraphicsContext2D());
 
+            //The canvas/board you click, should become the active on screen.
             striptCanvas.setOnMousePressed((MouseEvent e) -> {
                 Canvas picked = (Canvas) e.getPickResult().getIntersectedNode();
                 if (theStripGC.contains(picked.getGraphicsContext2D())) {
@@ -111,13 +110,14 @@ public class PatternEditorController implements Initializable {
         }
     }
 
+    //Copied from GameController, with modifications, for autoupdate of the strip
     private void mouseInit() {
         canvas.addEventHandler(MouseEvent.MOUSE_PRESSED,
                 (MouseEvent e) -> {
-                    if (byteBoard != null) {
-                        activeBoard.insertArray(byteBoard, (int) (mousePositionY / (activeBoard.getGridSpacing() + activeBoard.getCellSize())),
+                    if (ghostByteBoard != null) {
+                        activeBoard.insertArray(ghostByteBoard, (int) (mousePositionY / (activeBoard.getGridSpacing() + activeBoard.getCellSize())),
                                 (int) (mousePositionX / (activeBoard.getGridSpacing() + activeBoard.getCellSize())));
-                        byteBoard = null;
+                        ghostByteBoard = null;
                         draw();
                     } else {
                         handleMouseClick(e);
@@ -140,7 +140,7 @@ public class PatternEditorController implements Initializable {
 
         canvas.addEventHandler(MouseEvent.MOUSE_MOVED,
                 (MouseEvent e) -> {
-                    if (byteBoard != null) {
+                    if (ghostByteBoard != null) {
                         mousePositionX = (int) e.getX();
                         mousePositionY = (int) e.getY();
                         draw();
@@ -181,7 +181,6 @@ public class PatternEditorController implements Initializable {
         byte[][] patternToDraw = activeBoard.getBoundingBoxBoard();
 
         //TODO for strip to be dynamic after size
-        //int[] largestDimension = Util.calculateBiggestDimension(patternToDraw, 20);
         theStripBoard = new ArrayBoard(100, 100);
         theStripBoard.insertArray(patternToDraw, 10, 10);
         initTheStrip();
@@ -214,7 +213,7 @@ public class PatternEditorController implements Initializable {
     }
 
     public void setActiveBoard(Board gameBoardToCopy) {
-        byteBoard = gameBoardToCopy.getBoundingBoxBoard();
+        ghostByteBoard = gameBoardToCopy.getBoundingBoxBoard();
 
         int rows = (int) (Util.getScreenSize()[1]
                 / gameBoardToCopy.getCellSize());
@@ -226,48 +225,22 @@ public class PatternEditorController implements Initializable {
 
     }
 
-    private void draw() {
-        gc.setGlobalAlpha(1);
-        gc.setFill(backgroundColor);
-        gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-        gc.setFill(cellColor);
-        for (int i = 1; i < activeBoard.getArrayLength(); i++) {
-            for (int j = 1; j < activeBoard.getArrayLength(i); j++) {
-                if (activeBoard.getCellState(i, j)) {
-                    gc.fillRect(j * activeBoard.getCellSize() + j * activeBoard.getGridSpacing(),
-                            i * activeBoard.getCellSize() + i * activeBoard.getGridSpacing(),
-                            activeBoard.getCellSize(),
-                            activeBoard.getCellSize());
-                }
-            }
+    public void setGameController(GameController gameController) {
+        this.gameController = gameController;
+    }
+
+    @FXML
+    private void sendCurrentBoard() {
+        if (gameController != null) {
+            Board board = new DynamicBoard();
+            board.insertArray(activeBoard.getBoundingBoxBoard(), 3, 3);
+            gameController.setActiveBoard(board);
         }
     }
 
-    private void drawGhostTiles() {
-        if (byteBoard != null) {
-            gc.setFill(cellColor);
-            for (int j = 0; j < byteBoard.length; j++) {
-                for (int i = 0; i < byteBoard[j].length; i++) {
-                    if (byteBoard[j][i] == 64) {
-                        gc.setGlobalAlpha(1);
-                        gc.setFill(backgroundColor);
-                        gc.fillRect(mousePositionX + i * activeBoard.getCellSize() + i * activeBoard.getGridSpacing(),
-                                mousePositionY + j * activeBoard.getCellSize() + j * activeBoard.getGridSpacing(),
-                                activeBoard.getCellSize(),
-                                activeBoard.getCellSize());
-                        gc.setFill(cellColor);
-
-                        gc.setGlobalAlpha(0.5);
-                        gc.fillRect(mousePositionX + i * activeBoard.getCellSize() + i * activeBoard.getGridSpacing(),
-                                mousePositionY + j * activeBoard.getCellSize() + j * activeBoard.getGridSpacing(),
-                                activeBoard.getCellSize(),
-                                activeBoard.getCellSize());
-                    }
-                }
-            }
-        }
-    }
-
+    /**
+     * Draws one generation of the strip on the given GC
+     */
     private void drawTheStrip(GraphicsContext stripGC) {
         stripGC.setGlobalAlpha(1);
         stripGC.setFill(backgroundColor);
@@ -287,15 +260,59 @@ public class PatternEditorController implements Initializable {
         }
     }
 
+    //Copy from gameController
+    private void draw() {
+        gc.setGlobalAlpha(1);
+        gc.setFill(backgroundColor);
+        gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+        gc.setFill(cellColor);
+        for (int i = 1; i < activeBoard.getArrayLength(); i++) {
+            for (int j = 1; j < activeBoard.getArrayLength(i); j++) {
+                if (activeBoard.getCellState(i, j)) {
+                    gc.fillRect(j * activeBoard.getCellSize() + j * activeBoard.getGridSpacing(),
+                            i * activeBoard.getCellSize() + i * activeBoard.getGridSpacing(),
+                            activeBoard.getCellSize(),
+                            activeBoard.getCellSize());
+                }
+            }
+        }
+    }
+
+    //Copy from gameController
+    private void drawGhostTiles() {
+        if (ghostByteBoard != null) {
+            gc.setFill(cellColor);
+            for (int j = 0; j < ghostByteBoard.length; j++) {
+                for (int i = 0; i < ghostByteBoard[j].length; i++) {
+                    if (ghostByteBoard[j][i] == 64) {
+                        gc.setGlobalAlpha(1);
+                        gc.setFill(backgroundColor);
+                        gc.fillRect(mousePositionX + i * activeBoard.getCellSize() + i * activeBoard.getGridSpacing(),
+                                mousePositionY + j * activeBoard.getCellSize() + j * activeBoard.getGridSpacing(),
+                                activeBoard.getCellSize(),
+                                activeBoard.getCellSize());
+                        gc.setFill(cellColor);
+
+                        gc.setGlobalAlpha(0.5);
+                        gc.fillRect(mousePositionX + i * activeBoard.getCellSize() + i * activeBoard.getGridSpacing(),
+                                mousePositionY + j * activeBoard.getCellSize() + j * activeBoard.getGridSpacing(),
+                                activeBoard.getCellSize(),
+                                activeBoard.getCellSize());
+                    }
+                }
+            }
+        }
+    }
+
+    //Copied from gamecontroller, with modifications.
     private void handleMouseClick(MouseEvent e) {
         double x = e.getX();
         double y = e.getY();
 
-        if (rbRemoveCell.isSelected()) {
+        if (e.isSecondaryButtonDown()) {
             activeBoard.setCellState(y, x, false, 0, 0);
         } else {
             activeBoard.setCellState(y, x, true, 0, 0);
-
         }
         draw();
     }
