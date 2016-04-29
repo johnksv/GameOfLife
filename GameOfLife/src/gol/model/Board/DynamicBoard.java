@@ -2,6 +2,7 @@ package gol.model.Board;
 
 import gol.model.Logic.Rule;
 import gol.model.ThreadPool;
+import gol.other.Configuration;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -10,9 +11,9 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class DynamicBoard extends Board {
 
-    private final int MAXWIDTH = 2000;
-    private final int MAXHEIGHT = 2000;
-    private final int EXPANSION = 50;
+    private final int MAXWIDTH = Integer.parseInt(Configuration.getProp("maxWidth"));
+    private final int MAXHEIGHT = Integer.parseInt(Configuration.getProp("maxHeight"));
+    private final int EXPANSION = Integer.parseInt(Configuration.getProp("expansion"));
 
     private ArrayList<ArrayList<AtomicInteger>> gameBoard;
 

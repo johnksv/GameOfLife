@@ -8,6 +8,7 @@ import gol.model.FileIO.ReadFile;
 import gol.model.Logic.ConwaysRule;
 import gol.model.Logic.CustomRule;
 import gol.model.Logic.unsupportedRuleException;
+import gol.other.Configuration;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -119,8 +120,11 @@ public class GameController implements Initializable {
         cellSizeSlider.setBlockIncrement(0.75);
 
         //TODO Valg for Array eller dynamisk brett
-        //activeBoard = new ArrayBoard();
-        activeBoard = new DynamicBoard();
+        if (Configuration.getProp("board").equals("arrayboard")) {
+            activeBoard = new ArrayBoard();
+        } else {
+            activeBoard = new DynamicBoard();
+        }
         cellCP.setValue(Color.web("#000000"));
         backgroundCP.setValue(Color.web("#9CB5D3"));
 
@@ -153,7 +157,11 @@ public class GameController implements Initializable {
     private void initAnimation() {
         Duration duration = Duration.millis(1000);
         KeyFrame keyframe = new KeyFrame(duration, (ActionEvent e) -> {
-            activeBoard.nextGenConcurrent();
+            if (Configuration.getProp("useThreads").equals("true") && activeBoard instanceof DynamicBoard) {
+                activeBoard.nextGenConcurrent();
+            } else {
+                activeBoard.nextGen();
+            }
             gencount++;
             labelGenCount.setText("Generation: " + gencount);
             draw();
@@ -191,7 +199,7 @@ public class GameController implements Initializable {
     private void handleRuleBtn() {
         byte[] toBeBorn;
         byte[] toSurvive;
-        
+
         if (tfCellsToSurvive.getText().replaceAll("\\D", "").equals("")) {
             tfCellsToSurvive.setText("");
             toSurvive = new byte[]{-1};
@@ -594,17 +602,17 @@ public class GameController implements Initializable {
                     boardFromFile = UsefullMethods.transposeMatrix(boardFromFile);
                 }
                 break;
-            
+
             case "r":
                 if (boardFromFile != null) {
                     boardFromFile = UsefullMethods.rotateArray90Deg(boardFromFile);
                 }
                 break;
-            
+
             case "c":
                 handleClearBtn();
                 break;
-                
+
             case "k":
                 handleAnimation();
                 break;
