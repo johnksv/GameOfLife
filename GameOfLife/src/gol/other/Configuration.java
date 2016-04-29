@@ -8,20 +8,26 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
+ * Class for reading from properties file.
  *
  * @author s305054, s305089, s305084
  */
 public class Configuration {
 
     private static final Properties properties = new Properties();
-    private static final File configFile = new File("src\\gol\\other\\config.properties");
+    private static File configFile = new File("src\\gol\\other\\config.properties");
 
+    /**
+     * Initialize the properties file into the program.
+     */
     public static void loadConfig() {
         try {
             FileInputStream input = new FileInputStream(configFile);
             properties.load(input);
         } catch (IOException ex) {
-            Logger.getLogger(Configuration.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("There was an error reading the properties file."
+                    + " It was sat to default values.");
+            makePropFile();
         }
     }
 
@@ -29,4 +35,11 @@ public class Configuration {
         return properties.getProperty(property, "-1").toLowerCase();
     }
 
+    private static void makePropFile() {
+        properties.setProperty("board", "dynamicBoard");
+        properties.setProperty("maxWidth", "200");
+        properties.setProperty("maxHeight", "200");
+        properties.setProperty("expansion", "50");
+        properties.setProperty("useThreads", "true");
+    }
 }
