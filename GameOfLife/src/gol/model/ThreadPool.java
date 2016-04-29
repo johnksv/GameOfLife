@@ -6,16 +6,15 @@ import java.util.List;
 /**
  * Allows the user to add work that will run simultaneously with different
  * threads. Each thread have the same priority. After the threads have completed
- * their task, they are deleted. Example usage:  <code>
- * for (int i = 0; i < ThreadPool.THREAD_NR; i++) {
- * countNeighConcurrent(i);
- * }
+ * their task, they are deleted. Example usage:
+ * <pre>
+ * {@code
+ * threadPool.addWork(() -> fooMethod() );
+ * threadPool.addWork(() -> barMethod() );
+ *
  * threadPool.runWorkers();
- * for (int i = 0; i < ThreadPool.THREAD_NR; i++) {
- * checkRulesConcurrent(activeRule, i);
  * }
- * threadPool.runWorkers();
- * </code>
+ * </pre>
  *
  * @author s305054, s305089, s305084
  */
