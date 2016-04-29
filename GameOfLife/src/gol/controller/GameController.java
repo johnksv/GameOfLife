@@ -380,12 +380,15 @@ public class GameController implements Initializable {
         }
         draw();
     }
-
+    /**
+     * Do not call if a new pattern has not been parsed.
+     * If no rule was parsed Conway's rule will be set as new rule.
+     */
     private void updateRules() {
         Rule newRule = ReadFile.getParsedRule();
-
         activeBoard.setGameRule(newRule);
         rbCustomGameRules.fire();
+
         String born = "";
         String surv = "";
 
