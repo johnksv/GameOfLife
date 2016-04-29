@@ -125,7 +125,7 @@ public abstract class Board {
      * @see #checkRulesConcurrent(gol.model.Logic.Rule, int)
      */
     public void nextGenConcurrent() {
-
+        //May be work for expanding board.
         threadPool.runWorkers();
 
         for (int i = 0; i < ThreadPool.THREAD_NR; i++) {
