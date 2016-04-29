@@ -190,11 +190,6 @@ public class GameController implements Initializable {
         animationSpeedLabel.setText(String.format("%.2f %s", animationSpeed, " "));
     }
 
-    @FXML
-    public void handleRuleText() {
-        //TODO
-
-    }
 
     @FXML
     private void handleRuleBtn() {

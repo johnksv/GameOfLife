@@ -305,7 +305,6 @@ public class DynamicBoard extends Board {
         //This is a fundamental part of DynamicBoard.
         y = (y < 2) ? EXPANSION : y;
         x = (x < 2) ? EXPANSION : x;
-        //TODO CHECK
         gameBoard.get(y).get(x).incrementAndGet();
 
     }
