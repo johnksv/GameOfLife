@@ -332,7 +332,7 @@ public class GameController implements Initializable {
                 boardFromFile = ReadFile.readFromURL(input.getText());
                 showInsertDialog();
             } catch (IOException ex) {
-                UsefullMethods.showErrorAlert("Reading File Error", "There was an error reading the file");
+                UsefullMethods.showErrorAlert("Reading File Error", "There was an error reading your file, please check your internet connection.");
             } catch (PatternFormatException ex) {
                 UsefullMethods.showErrorAlert("Pattern Error", ex.getMessage());
             }
