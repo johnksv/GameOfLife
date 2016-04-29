@@ -308,26 +308,25 @@ public class ReadFile {
                     born = new byte[]{-1};
                 }
 
-            } else //expected Rule=3/23  (born/survive)
-             if (i == 0) {
-                    if (rule[i].length() >= 1) {
-                        born = new byte[rule[i].length()];
-                        for (int j = 0; j < rule[i].length(); j++) {
-                            born[j] = (byte) Character.digit(rule[i].toCharArray()[j], 10);
-                        }
-                    } else {
-                        born = new byte[]{-1};
+            } else if (i == 0) {
+                if (rule[i].length() >= 1) {
+                    born = new byte[rule[i].length()];
+                    for (int j = 0; j < rule[i].length(); j++) {
+                        born[j] = (byte) Character.digit(rule[i].toCharArray()[j], 10);
                     }
-                } else if (i == 1) {
-                    if (rule[i].length() >= 1) {
-                        survive = new byte[rule[i].length()];
-                        for (int j = 0; j < rule[i].length(); j++) {
-                            survive[j] = (byte) Character.digit(rule[i].toCharArray()[j], 10);
-                        }
-                    } else {
-                        survive = new byte[]{-1};
-                    }
+                } else {
+                    born = new byte[]{-1};
                 }
+            } else if (i == 1) {
+                if (rule[i].length() >= 1) {
+                    survive = new byte[rule[i].length()];
+                    for (int j = 0; j < rule[i].length(); j++) {
+                        survive[j] = (byte) Character.digit(rule[i].toCharArray()[j], 10);
+                    }
+                } else {
+                    survive = new byte[]{-1};
+                }
+            }
         }
         try {
             parsedRule = new CustomRule(survive, born);
