@@ -244,9 +244,10 @@ public class ReadFile {
             //Checks if there are empty lines.
             if ((numbers.length > letters.length)
                     || (numbers.length == letters.length && letters[0].equals(""))) {
-
-                for (int k = 1; k < Integer.parseInt(numbers[numbers.length - 1]); k++) {
-                    offset++;
+                if (!numbers[numbers.length - 1].equals("")) {
+                    for (int k = 1; k < Integer.parseInt(numbers[numbers.length - 1]); k++) {
+                        offset++;
+                    }
                 }
 
             }
@@ -285,7 +286,9 @@ public class ReadFile {
         byte[] survive = null;
 
         String[] rule = ruleLine.split("=");
-
+        if (rule.length == 1) {
+            return;
+        }
         rule = rule[1].split("/");
         for (int i = 0; i < rule.length; i++) {
             if (rule[i].matches("[Ss]\\d*")) {
