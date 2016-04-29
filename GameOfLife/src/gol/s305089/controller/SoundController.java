@@ -79,7 +79,6 @@ public class SoundController implements Initializable {
         if (!playing && rbAutoSelect.isSelected()) {
             playing = true;
             parseBoardBB();
-            System.out.println(Arrays.toString(audioClipQueue.stream().toArray()));
             playAudioQueue();
             playing = false;
         }
