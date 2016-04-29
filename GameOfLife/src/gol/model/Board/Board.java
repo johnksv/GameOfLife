@@ -21,7 +21,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * <b>The 7th-bit (64) represents alive.</b>
  * This means that living cell will have a value of 64, while dead cells has the
  * value 0.
- * <b>The first 4 LSB (least significant bits) represents neighbour count.</b>
+ * <b>The first 4 least significant bits represents neighbour count.</b>
  * </p>
  *
  * <h4>Counting neighbours</h4>
