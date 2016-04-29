@@ -7,6 +7,7 @@ import gol.model.FileIO.PatternFormatException;
 import gol.model.FileIO.ReadFile;
 import gol.model.Logic.ConwaysRule;
 import gol.model.Logic.CustomRule;
+import gol.model.Logic.Rule;
 import gol.model.Logic.unsupportedRuleException;
 import gol.other.Configuration;
 import java.io.File;
@@ -279,6 +280,9 @@ public class GameController implements Initializable {
     private void handleClearBtn() {
         gencount = 0;
         activeBoard.clearBoard();
+        activeBoard.offsetValues[0] = 0;
+        activeBoard.offsetValues[1] = 0;
+        
         timeline.pause();
         btnStartPause.setText("Start game");
         draw();
@@ -298,6 +302,7 @@ public class GameController implements Initializable {
             if (selected != null) {
                 boardFromFile = ReadFile.readFileFromDisk(selected.toPath());
                 showInsertDialog();
+
             }
 
         } catch (IOException ex) {
@@ -368,14 +373,38 @@ public class GameController implements Initializable {
         if (result.get() == btnInsert) {
             activeBoard.insertArray(boardFromFile, 1, 1);
             boardFromFile = null;
+            updateRules();
         } else if (result.get() == btnGhostTiles) {
             btnStartPause.setDisable(true);
-            activeBoard.setGameRule(ReadFile.getParsedRule());
+            updateRules();
         } else {
             boardFromFile = null;
             alert.close();
         }
         draw();
+    }
+
+    /**
+     * Do not call if a new pattern has not been parsed. If no rule was parsed
+     * Conway's rule will be set as new rule.
+     */
+    private void updateRules() {
+        Rule newRule = ReadFile.getParsedRule();
+        activeBoard.setGameRule(newRule);
+        rbCustomGameRules.fire();
+
+        String born = "";
+        String surv = "";
+
+        for (byte b : newRule.getToBorn()) {
+            born += b + " ";
+        }
+
+        for (byte s : newRule.getSurvive()) {
+            surv += s + " ";
+        }
+        tfCellsToBeBorn.setText(born);
+        tfCellsToSurvive.setText(surv);
     }
 
     @FXML
