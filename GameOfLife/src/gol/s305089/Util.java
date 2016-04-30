@@ -3,6 +3,10 @@ package gol.s305089;
 import gol.model.Board.ArrayBoard;
 import gol.model.Board.Board;
 import gol.model.Board.DynamicBoard;
+import javafx.scene.Node;
+import javafx.scene.control.Tooltip;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.text.Font;
 import javafx.stage.Screen;
 
 /**
@@ -13,20 +17,11 @@ public class Util {
     private Util() {
     }
 
-    public static int[] calculateBiggestDimension(byte[][] patternToCalculate, int iterations) {
-        int[] result = new int[2];
-        Board board = new ArrayBoard(1800, 1800);
-        board.insertArray(patternToCalculate, 1, 1);
-
-        for (int it = 0; it < iterations; it++) {
-            byte[][] boundedBoard = board.getBoundingBoxBoard();
-            result[0] = boundedBoard.length > result[0] ? boundedBoard.length : result[0];
-            for (byte[] row : boundedBoard) {
-                result[1] = row.length > result[1] ? row.length : result[1];
-            }
-            board.nextGen();
-        }
-        return result;
+    public static void showTooltip(MouseEvent e, Node ownerNode, Tooltip tip) {
+        double anchorX = ownerNode.getScene().getWindow().getX() + 20;
+        double anchorY = ownerNode.getScene().getWindow().getY() + 20;
+        tip.setFont(new Font(12));
+        tip.show(ownerNode, anchorX + e.getSceneX(), anchorY + e.getSceneY());
     }
 
     /**

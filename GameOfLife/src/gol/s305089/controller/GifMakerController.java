@@ -2,6 +2,7 @@ package gol.s305089.controller;
 
 import gol.s305089.model.GifMaker;
 import gol.model.Board.Board;
+import gol.s305089.Util;
 import gol.s305089.model.Stats;
 import java.io.File;
 import java.io.IOException;
@@ -116,14 +117,10 @@ public class GifMakerController implements Initializable {
         spinnThreshold.setEditable(true);
 
         cbInfinityLoop.setOnMouseEntered((event) -> {
-            double anchorX = cbInfinityLoop.getScene().getWindow().getX() + 20;
-            double anchorY = cbInfinityLoop.getScene().getWindow().getY() + 20;
-            tipInfinity.show(cbInfinityLoop, anchorX + event.getSceneX(), anchorY + event.getSceneY());
+            Util.showTooltip(event, cbInfinityLoop, tipInfinity);
         });
         cbCheckPrevGen.setOnMouseEntered((event) -> {
-            double anchorX = cbCheckPrevGen.getScene().getWindow().getX() + 20;
-            double anchorY = cbCheckPrevGen.getScene().getWindow().getY() + 20;
-            tipCheckPrev.show(cbCheckPrevGen, anchorX + event.getSceneX(), anchorY + event.getSceneY());
+            Util.showTooltip(event, cbCheckPrevGen, tipCheckPrev);
         });
 
         cbInfinityLoop.setOnMouseExited(event -> tipInfinity.hide());

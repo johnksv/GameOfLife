@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="186.0" prefWidth="332.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gol.s305089.controller.SoundController">
+    <children>
+      <Label text="Audio control center" />
+      <Label text="Mode:" />
+        <HBox prefWidth="200.0" spacing="30.0">
+            <children>
+                <RadioButton fx:id="rbAutoSelect" mnemonicParsing="false" selected="true" text="Automatic">
+                    <toggleGroup>
+                        <ToggleGroup fx:id="tgMode" />
+                    </toggleGroup>
+                </RadioButton>
+                <RadioButton mnemonicParsing="false" text="User selected" toggleGroup="$tgMode" />
+            </children>
+            <VBox.margin>
+                <Insets bottom="7.0" />
+            </VBox.margin>
+        </HBox>
+        <VBox fx:id="vBoxUser" disable="true" spacing="5.0">
+            <children>
+                <Label text="Playing from:" wrapText="true" />
+                <HBox spacing="10.0">
+                    <children>
+                        <Button mnemonicParsing="false" onAction="#handleSelectFile" text="Choose file" />
+                        <Button mnemonicParsing="false" onAction="#handleSelectFolder" text="Choose directory" />
+                    </children>
+                </HBox>
+            <Label fx:id="labelLocation" text="" wrapText="true" />
+                <HBox spacing="10.0">
+                    <children>
+                        <Button fx:id="btnPlayPause" mnemonicParsing="false" onAction="#handlePlayPause" text="Play" />
+                        <Button fx:id="btnRewind" mnemonicParsing="false" onAction="#rewindCurrent" text="Rewind current" />
+                    </children>
+                </HBox>
+                <Label fx:id="labelTime" />
+            </children>
+            <VBox.margin>
+                <Insets left="10.0" />
+            </VBox.margin>
+        </VBox>
+    </children>
+    <padding>
+        <Insets left="10.0" top="10.0" />
+    </padding>
+</VBox>

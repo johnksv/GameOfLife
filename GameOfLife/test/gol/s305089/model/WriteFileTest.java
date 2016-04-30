@@ -4,6 +4,8 @@
  */
 package gol.s305089.model;
 
+import java.io.File;
+import java.io.IOException;
 import java.nio.file.Path;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,18 +24,32 @@ public class WriteFileTest {
     public void setUp() {
     }
 
-    // @Test
-    public void testWriteToRLE() {
+    /**
+     * Difficult to check if the file actually is correct. This is done
+     * manually.
+     *
+     * @throws IOException
+     */
+    @Test
+    public void testWriteToRLE() throws IOException {
         System.out.println("writeToRLE");
         byte[][] boardToWrite = {{}};
-        Path saveLocation = null;
+        Path saveLocation = File.createTempFile("patternTestGol", ".rle").toPath();
         boolean expResult = false;
         boolean result = WriteFile.writeToRLE(boardToWrite, saveLocation);
         assertEquals(expResult, result);
-        fail("The test case is a prototype.");
+        saveLocation.toFile().delete();
+
+        boardToWrite = new byte[][]{{0, 0, 0, 64, 64, 64}};
+        expResult = true;
+        result = WriteFile.writeToRLE(boardToWrite, saveLocation);
+        assertEquals(expResult, result);
+        saveLocation = File.createTempFile("patternTestGol", ".rle").toPath();
+        saveLocation.toFile().delete();
     }
-    
-/* Change method compressedRow to public for these tests to work
+
+    /* Testes used during development, before methods was sat to private.
+    Change method compressedRow to public for these tests to work
     @Test
     public void testCompressedRow() {
         System.out.println("compressedRow");
@@ -105,5 +121,5 @@ public class WriteFileTest {
         assertEquals(expResult, result.toString());
     }
     
-    */
+     */
 }

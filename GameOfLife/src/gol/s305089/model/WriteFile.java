@@ -1,5 +1,6 @@
 package gol.s305089.model;
 
+import gol.model.FileIO.PatternFormatException;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -15,16 +16,23 @@ public final class WriteFile {
     private static String patternName, author, comment, rule;
 
     /**
+     * Writes this byte board to RLE-format, and saves at this path.<b>The given
+     * byte board should be quadratic.</b>If the byte board is empty (length is
+     * zero), the method will return false,as it does not make sense to write an
+     * empty board to a file.
      *
-     * @param boardToWrite
-     * @param saveLocation
-     * @return True if file was sucsessfull written to, otherwise false
+     * @param boardToWrite Byte board that should be written to RLE
+     * @param saveLocation Where the RLE file should be stored
+     * @return True if file was successfully written to. Otherwise false.
      */
     public static boolean writeToRLE(byte[][] boardToWrite, Path saveLocation) {
+        //Check if the board is empty. We know its quadratic, so its ok to check index 0.
+        if (boardToWrite[0].length == 0) {
+            return false;
+        }
 
         int xRows = 0;
-        int yCols = 0;
-        yCols = boardToWrite.length;
+        int yCols = boardToWrite.length;
         for (byte[] gameRow : boardToWrite) {
             if (gameRow.length > xRows) {
                 xRows = gameRow.length;
@@ -45,7 +53,7 @@ public final class WriteFile {
                 writer.append("#C: " + comment.replace("\n", " "));
                 writer.newLine();
             }
-            
+
             if (rule != null && !rule.equals("")) {
                 //TODO append rules to boardDimensions.
             }
@@ -58,7 +66,7 @@ public final class WriteFile {
             author = null;
             comment = null;
             rule = null;
-            
+
             return true;
         } catch (IOException e) {
 
@@ -84,14 +92,12 @@ public final class WriteFile {
     }
 
     /**
-     * TODO: If time: fix: If an row is bbb$, it will append b$, an not 2$ to
-     * the previous row
      *
      * @param row
      * @return
      */
     private static StringBuilder compressedRow(StringBuilder row) {
-        //TODO Rewrite Method. Returns wrong
+        //TODO Rewrite Method. for empty rows it return $1$1$ and not 3$
 
         StringBuilder result = new StringBuilder();
         char[] rowArray = row.toString().toCharArray();

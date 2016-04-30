@@ -2,6 +2,7 @@ package gol.s305089.controller;
 
 import gol.model.Board.Board;
 import gol.model.Board.DynamicBoard;
+import gol.s305089.Util;
 import gol.s305089.model.GifMaker;
 import gol.s305089.model.Stats;
 import java.io.File;
@@ -183,11 +184,7 @@ public class StatsController implements Initializable {
 
     private void setTooltipMouseHandler(XYChart.Data<String, Integer> data, Tooltip tooltip) {
         data.getNode().setOnMouseEntered(event -> {
-            //Get the position of window, and adds spacing
-            double anchorX = data.getNode().getScene().getWindow().getX() + 20;
-            double anchorY = data.getNode().getScene().getWindow().getY() + 20;
-            
-            tooltip.show(data.getNode(), anchorX + event.getSceneX(), anchorY + event.getSceneY());
+            Util.showTooltip(event, data.getNode(), tooltip);
         });
         data.getNode().setOnMouseExited(event -> tooltip.hide());
     }

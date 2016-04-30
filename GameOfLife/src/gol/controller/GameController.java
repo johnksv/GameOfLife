@@ -11,6 +11,7 @@ import gol.model.Logic.unsupportedRuleException;
 import gol.s305089.controller.PatternEditorController;
 import gol.s305089.model.GifMaker;
 import gol.s305089.controller.GifMakerController;
+import gol.s305089.controller.SoundController;
 import gol.s305089.controller.StatsController;
 import java.io.File;
 import java.io.IOException;
@@ -21,6 +22,7 @@ import java.util.ResourceBundle;
 import javafx.animation.Animation;
 import javafx.animation.Animation.Status;
 import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -357,6 +359,7 @@ public class GameController implements Initializable {
         editor.initModality(Modality.WINDOW_MODAL);
         editor.setMinWidth(800);
         editor.setMinHeight(600);
+        editor.initOwner(borderpane.getScene().getWindow());
         editor.setScene(scene);
         editor.showAndWait();
         draw();
@@ -378,7 +381,7 @@ public class GameController implements Initializable {
         gifMaker.setTitle("Generate GIF - Game of Life");
         gifMaker.setWidth(215);
         gifMaker.setHeight(535);
-
+        gifMaker.initOwner(borderpane.getScene().getWindow());
         gifMaker.show();
     }
 
@@ -396,8 +399,35 @@ public class GameController implements Initializable {
 
         golStats.setScene(scene);
         golStats.setTitle("Stats - Game of Life");
-
+        golStats.initOwner(borderpane.getScene().getWindow());
         golStats.show();
+    }
+
+    @FXML
+    private void showAudio() throws IOException {
+        timeline.pause();
+
+        Stage golAudio = new Stage();
+        FXMLLoader root = new FXMLLoader(getClass().getResource("/gol/s305089/view/Audio.fxml"));
+        Scene scene = new Scene((Parent) root.load());
+
+        SoundController soundController = root.<SoundController>getController();
+        soundController.setBoard(activeBoard);
+
+        KeyFrame soundFrame = new KeyFrame(Duration.millis(1000), (event) -> {
+            soundController.playSound();
+        });
+        timeline.getKeyFrames().add(soundFrame);
+        golAudio.setOnCloseRequest(e -> {
+            timeline.stop();
+            timeline.getKeyFrames().remove(soundFrame);
+            soundController.disposeMediaPlayers();
+        });
+
+        golAudio.setScene(scene);
+        golAudio.setTitle("Audio controll panel - Game of Life");
+        golAudio.initOwner(borderpane.getScene().getWindow());
+        golAudio.show();
     }
 
     @FXML
