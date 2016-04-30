@@ -19,7 +19,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane fx:id="borderpane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: #9CB5D3;" stylesheets="@MainStylesheet.css" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gol.controller.GameController">
+<BorderPane fx:id="borderpane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" stylesheets="@MainStylesheet.css" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gol.controller.GameController">
     <bottom>
         <ToolBar fx:id="toolBarQuickStats" prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
             <items>
@@ -46,7 +46,7 @@
                                             <content>
                                                 <VBox prefWidth="248.0" styleClass="pane-standard">
                                                     <children>
-                                                        <TitledPane collapsible="false" prefWidth="248.0">
+                                                        <TitledPane collapsible="false" prefWidth="248.0" text="General">
                                                             <content>
                                                                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="207.0" prefWidth="246.0" styleClass="pane-standard">
                                                                     <children>
@@ -69,7 +69,7 @@
                                                                 <Insets />
                                                             </VBox.margin>
                                                         </TitledPane>
-                                                        <TitledPane animated="false" collapsible="false">
+                                                        <TitledPane animated="false" collapsible="false" text="Controls">
                                                             <content>
                                                                 <AnchorPane prefWidth="200.0" styleClass="pane-standard">
                                                                     <children>
