@@ -390,6 +390,35 @@ public class GameController implements Initializable {
 
             editor.setTitle("Gol: Pattern Editor");
             editor.showAndWait();
+            //TODO ask about this code(not 100% my own).
+            
+            boardFromFile = editorController.getPattern();
+
+            Alert alert = new Alert(AlertType.NONE);
+            alert.setTitle("Place pattern");
+            alert.initStyle(StageStyle.UTILITY);
+            alert.setContentText("How do you want to insert the pattern?");
+
+            ButtonType btnGhostTiles = new ButtonType("Insert with ghost tiles");
+            ButtonType btnInsert = new ButtonType("Insert at top-left");
+            ButtonType btnCancel = new ButtonType("Cancel");
+
+            alert.getButtonTypes().addAll(btnGhostTiles, btnInsert, btnCancel);
+
+            Optional<ButtonType> result = alert.showAndWait();
+
+            if (result.get() == btnInsert) {
+                activeBoard.insertArray(boardFromFile, 3, 3);
+                boardFromFile = null;
+            } else if (result.get() == btnGhostTiles) {
+                startPauseBtn.setDisable(true);
+                activeBoard.setGameRule(ReadFile.getParsedRule());
+            } else {
+                boardFromFile = null;
+                alert.close();
+            }
+            draw();
+
         } catch (IOException ex) {
             Logger.getLogger(GameController.class.getName()).log(Level.SEVERE, null, ex);
         }

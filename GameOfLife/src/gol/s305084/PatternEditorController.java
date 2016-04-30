@@ -24,7 +24,7 @@ import lieng.GIFWriter;
 /**
  * Pattern editor, for creating small and complex patterns.
  * 
- * Implements much of the same code as in {@link gol.controller.GameController gamController}. 
+ * Implements much of the same code as {@link gol.controller.GameController gamController}. 
  * Important note, this class only change from the main game is {@link #drawStrip() the strip.}
  * Saving a pattern to GIF or RLE is also possible from the GUI.
  *
@@ -49,8 +49,8 @@ public class PatternEditorController implements Initializable {
     private Board activeBoard;
     private GraphicsContext gc;
     private GraphicsContext gcStrip;
-    private Color bgColor;
-    private Color cellColor;
+    private Color bgColor = Color.GRAY;
+    private Color cellColor = Color.BLACK;
 
     @FXML
     private void handleClear() {
@@ -146,7 +146,11 @@ public class PatternEditorController implements Initializable {
 
                 });
     }
-
+    /**
+     * Sets a new bgColor value.
+     * Default color gray.
+     * @param bgColor Background Color.
+     */
     public void setBGColor(Color bgColor) {
         this.bgColor = bgColor;
 
@@ -154,7 +158,12 @@ public class PatternEditorController implements Initializable {
         draw();
         drawStrip();
     }
-
+    
+    /**
+     * Sets a new cellColor value.
+     * Default color black.
+     * @param cellColor Cell Color.
+     */
     public void setCellColor(Color cellColor) {
         this.cellColor = cellColor;
     }
@@ -219,6 +228,14 @@ public class PatternEditorController implements Initializable {
         xform.setTx(0.0);
         gcStrip.setTransform(xform);
 
+    }
+    
+    /**
+     * Returns the edited pattern.
+     * @return byte pattern.
+     */
+    public byte[][] getPattern(){
+        return activeBoard.getBoundingBoxBoard();
     }
 
     private void drawStripPart(byte[][] pattern) {

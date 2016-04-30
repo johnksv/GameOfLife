@@ -7,11 +7,11 @@ import java.util.Arrays;
 import lieng.GIFWriter;
 
 /**
- * Draws a board to GIF format.
- *
+ * Draws a board to GIF format for a x number of generations.
+ * Will not finish if the board becomes empty or if the board is a 100% match to the original.
  * @author s305084
  */
-public class GifMaker {
+public final class GifMaker {
 
     private static GIFWriter gifWriter;
 
@@ -22,23 +22,34 @@ public class GifMaker {
     private static int height;
 
     private final static int maxCellSize = 20;
+    
+    /**
+     * Final abstract not allowed, but is now effectively abstract.
+     * The only method is static, no reason to make an object of type GifMaker.
+     */
+    private GifMaker() {
+    }
 
     /**
-     * Draws a boards next generations on a GIF. Stops drawing if the next
-     * generation is the same as the first. Stops drawing if the next generation
-     * is empty.
-     *
-     * @param board
-     * @param gw
-     * @param newWidth
-     * @param newHeight
-     * @param bgCl
-     * @param cellCl
-     * @param counter
+     * Draws a boards next generations to a GIF formate. Stops drawing if the next
+     * generation is the same as the first. Stops drawing if the next generation is empty.
+     * 
+     * This method "follows" the cells, it will always try to centre the pattern given to the middle of the gif.
+     * It will also automatically resize the cellSize to fit the gif width and height.
+     * 
+     * Important note: Color is ava.awt.Color not javafx.scene.paint.Color
+     * 
+     * @param board given pattern
+     * @param gw gif writer
+     * @param newWidth gif width
+     * @param newHeight gif height
+     * @param bgCl background color
+     * @param cellCl Cell color
+     * @param genCount number of remaining frames
      * @throws IOException
      */
     public static void makeGif(byte[][] board, GIFWriter gw,
-            int newWidth, int newHeight, Color bgCl, Color cellCl, int counter) throws IOException {
+            int newWidth, int newHeight, Color bgCl, Color cellCl, int genCount) throws IOException {
 
         cellColor = cellCl;
         gifWriter = gw;
@@ -46,19 +57,23 @@ public class GifMaker {
         width = newWidth;
 
         gifWriter.setBackgroundColor(bgCl);
-        
-        //Makes an array that can handle every possibility of how the pattern evolves 
-        //After chosen number of generations.
-        // More info see https://en.wikipedia.org/wiki/Speed_of_light_(cellular_automaton)
-        Board activeboard = new ArrayBoard(board.length + counter * 2, board[0].length + counter * 2);
-        activeboard.insertArray(board, counter, counter);
+
+        Board activeboard = new DynamicBoard();
+        activeboard.insertArray(board, 0, 0);
 
         orginalPattern = activeboard.getBoundingBoxBoard();
-        makeFrame(activeboard, counter);
+        makeFrame(activeboard, genCount);
     }
 
     /**
-     * Java does not support tail recursion
+     * Tail recursion makes it possible to never get stackoverflow.
+     * If your method is tail-recursive then the compiler will not store the values from each  method call.
+     * You can make your method tail-recursive if you do your calculations when you return your values for each call.
+     * 
+     * This method is recursive, and since I chose to return if the board is empty or equals the first board, 
+     * and because of this I feel that a recursive method is less clunky then a for/while loop.
+     * 
+     * Java does not support tail recursion.
      *
      */
     private static void makeFrame(Board frame, int counter) throws IOException {
@@ -66,13 +81,14 @@ public class GifMaker {
             gifWriter.close();
             return;
         }
-        
+
         int xoffset = 0;
         int yoffset = 0;
         byte[][] boarders = frame.getBoundingBoxBoard();
 
         gifWriter.createNextImage();
-        
+
+        //Sets the cellSize to fit the gif.
         if (height / boarders.length < width / boarders[0].length) {
             cellSize = height / boarders.length;
             xoffset = width / 2 - (boarders[0].length * cellSize) / 2;
@@ -86,28 +102,27 @@ public class GifMaker {
                 yoffset = 0;
             }
         }
-        //Sets the cell size to a maximum value if the new cell size is bigger then the maximum
+        
+        //Sets the cellSize to a maximum value if the new cellSize is bigger then the maximum
         if (cellSize > maxCellSize) {
             cellSize = maxCellSize;
             yoffset = height / 2 - (boarders.length * cellSize) / 2;
             xoffset = width / 2 - (boarders[0].length * cellSize) / 2;
         }
 
+        //Draws the next frame.
         for (int i = 0; i < boarders.length; i++) {
             for (int j = 0; j < boarders[i].length; j++) {
 
                 if (i * cellSize + cellSize > height && j * cellSize + cellSize > width) {
                     break;
-                } else {
+                } else if (boarders[i][j] == 64) {
+                    if (cellSize < 3) {
+                        gifWriter.setPixelValue(j, i, cellColor);
+                    } else {
+                        gifWriter.fillRect(j * cellSize + 1 + xoffset, xoffset + j * cellSize + cellSize - 1,
+                                yoffset + i * cellSize + 1, yoffset + i * cellSize + cellSize - 1, cellColor);
 
-                    if (boarders[i][j] == 64) {
-                        if (cellSize < 3) {
-                            gifWriter.setPixelValue(j, i, cellColor);
-                        } else {
-                            gifWriter.fillRect(j * cellSize + 1 + xoffset, xoffset + j * cellSize + cellSize - 1,
-                                    yoffset + i * cellSize + 1, yoffset + i * cellSize + cellSize - 1, cellColor);
-
-                        }
                     }
                 }
             }
@@ -123,6 +138,7 @@ public class GifMaker {
             gifWriter.close();
             return;
         }
+        
         makeFrame(frame, --counter);
     }
 }
