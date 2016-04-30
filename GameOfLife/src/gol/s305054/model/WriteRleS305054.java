@@ -31,6 +31,20 @@ public class WriteRleS305054 {
         
         StringBuilder pattern = new StringBuilder();
         pattern.append("#N " + title.getText() + "\n#O " + author.getText() + "\n#C " + description.getText() + "\nx = " + x + ", y = " + y);
+        
+        //Have to find better solution than using both array and board.
+        for (int i = 0; i < boundingBox.length; i++) {
+            for (int j = 0; j < boardToParse.getArrayLength(i); j++) {
+                //Need to fix so that multiple cells next to each other (dead or alive) has number of that type of cell (example: 27o)
+                if(boundingBox[i][j] == 0) {
+                    pattern.append("b");
+                } else if(boundingBox[i][j] == 64) {
+                    pattern.append("o");
+                }
+                //Fix last element in row, and last element in array.
+            }
+            
+        }
         /*
          * A finished .rle file is looking like this:
         
