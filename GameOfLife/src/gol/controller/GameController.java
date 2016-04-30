@@ -20,6 +20,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.animation.Animation;
 import javafx.animation.Animation.Status;
+import javafx.animation.AnimationTimer;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.beans.value.ObservableValue;
@@ -108,6 +109,7 @@ public class GameController implements Initializable {
     private int mousePositionX;
     private int mousePositionY;
     private long gencount = 0;
+    private AnimationTimer animationTimer;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -165,10 +167,16 @@ public class GameController implements Initializable {
             }
             gencount++;
             labelGenCount.setText("Generation: " + gencount);
-            draw();
         });
         timeline.setCycleCount(Animation.INDEFINITE);
         timeline.getKeyFrames().add(keyframe);
+
+        animationTimer = new AnimationTimer() {
+            @Override
+            public void handle(long now) {
+                draw();
+            }
+        };
 
     }
 
@@ -176,9 +184,11 @@ public class GameController implements Initializable {
     private void handleAnimation() {
         if (timeline.getStatus() == Status.RUNNING) {
             timeline.pause();
+            animationTimer.stop();
             btnStartPause.setText("Start game");
         } else {
             timeline.play();
+            animationTimer.start();
             btnStartPause.setText("Pause game");
         }
     }
@@ -189,7 +199,6 @@ public class GameController implements Initializable {
         timeline.setRate(animationSpeed);
         animationSpeedLabel.setText(String.format("%.2f %s", animationSpeed, " "));
     }
-
 
     @FXML
     private void handleRuleBtn() {
@@ -277,7 +286,7 @@ public class GameController implements Initializable {
         activeBoard.clearBoard();
         activeBoard.offsetValues[0] = 0;
         activeBoard.offsetValues[1] = 0;
-        
+
         timeline.pause();
         btnStartPause.setText("Start game");
         draw();
