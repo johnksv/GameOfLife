@@ -71,6 +71,7 @@
                                                 </Spinner>
                                                 <Separator prefWidth="200.0" />
                                                 <CheckBox fx:id="cbCenterPattern" mnemonicParsing="false" text="Center pattern" />
+                                    <CheckBox fx:id="cbCalcCellSize" mnemonicParsing="false" text="Auto calculate cell size" />
                                                 <CheckBox fx:id="cbAutoPreview" mnemonicParsing="false" text="Automatically preview" />
                                             </children>
                                             <padding>

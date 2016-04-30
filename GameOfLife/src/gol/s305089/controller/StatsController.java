@@ -192,9 +192,8 @@ public class StatsController implements Initializable {
     private void generateTolltipGIF(GifMaker gifmaker, ImageView imgViewcurrentPattern) throws IOException {
         gifmaker.setPattern(activeBoard.getBoundingBoxBoard());
         File tempFileToolTip = File.createTempFile("golStats", ".gif");
-
-        gifmaker.setSaveLocation(tempFileToolTip.getAbsolutePath());
-        gifmaker.writePatternToGIF(1);
+        
+        gifmaker.writePatternToGIF(1, tempFileToolTip.getAbsolutePath());
 
         Image current = new Image(tempFileToolTip.toURI().toString());
         imgViewcurrentPattern.setImage(current);

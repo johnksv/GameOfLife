@@ -35,15 +35,4 @@ public class Util {
         result[1] = Screen.getPrimary().getVisualBounds().getHeight();
         return result;
     }
-
-    public static int longestRow(byte[][] arrayToSearch) {
-        int longestRow = 0;
-        for (byte[] row : arrayToSearch) {
-            if (row.length > longestRow) {
-                longestRow = row.length;
-            }
-        }
-        return longestRow;
-    }
-
 }

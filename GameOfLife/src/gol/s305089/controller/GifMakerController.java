@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -71,6 +72,8 @@ public class GifMakerController implements Initializable {
     @FXML
     private CheckBox cbInfinityLoop;
     @FXML
+    private CheckBox cbCalcCellSize;
+    @FXML
     private CheckBox cbCheckPrevGen;
     @FXML
     private Tooltip tooltipSaveLoc;
@@ -96,7 +99,7 @@ public class GifMakerController implements Initializable {
         cpCellColor.setValue(Color.BLACK);
         initSpinners();
         initListners();
-        setGIFSaveLocation();
+        updateSaveLabels();
         setGIFValues();
     }
 
@@ -145,6 +148,12 @@ public class GifMakerController implements Initializable {
             vBoxThreashold.setVisible(newValue);
             autoUpdatedPreview(observable, oldValue, newValue);
         });
+        cbCalcCellSize.selectedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+            gifmaker.setAutoCellSize(newValue);
+            sliderCellSize.setDisable(newValue);
+            autoUpdatedPreview(observable, oldValue, newValue);
+        });
+
     }
 
     @FXML
@@ -179,12 +188,11 @@ public class GifMakerController implements Initializable {
         } else {
             saveLocation = System.getProperty("user.home") + "\\golGif.gif";
         }
-        setGIFSaveLocation();
+        updateSaveLabels();
     }
 
     @FXML
     private void generateGIF() {
-        setGIFSaveLocation();
         setGIFValues();
         calculateInfinity();
 
@@ -192,7 +200,7 @@ public class GifMakerController implements Initializable {
         alertGenerating.getButtonTypes().add(new ButtonType("Please wait..."));
         alertGenerating.show();
         try {
-            gifmaker.writePatternToGIF(iterations);
+            gifmaker.writePatternToGIF(iterations, saveLocation);
             labelGenerateFeedback.setText("GIF was successfully created");
         } catch (IOException ex) {
             Alert alert = new Alert(Alert.AlertType.ERROR, "Det oppsto en feil...:\n" + ex.getMessage());
@@ -210,12 +218,11 @@ public class GifMakerController implements Initializable {
 
         try {
             File previewFile = File.createTempFile("golPreview", ".gif");
-            gifmaker.setSaveLocation(previewFile.getAbsolutePath());
 
             setGIFValues();
             calculateInfinity();
 
-            gifmaker.writePatternToGIF(iterations);
+            gifmaker.writePatternToGIF(iterations, previewFile.getAbsolutePath());
             Image previewGif = new Image(previewFile.toURI().toString());
             imgViewPreview.setImage(previewGif);
 
@@ -231,9 +238,8 @@ public class GifMakerController implements Initializable {
         gifmaker.setPattern(activeBoard.getBoundingBoxBoard());
     }
 
-    private void setGIFSaveLocation() {
+    private void updateSaveLabels() {
         labelCurrentDest.setText("Current: " + saveLocation);
-        gifmaker.setSaveLocation(saveLocation);
         tooltipSaveLoc.setText(saveLocation);
     }
 

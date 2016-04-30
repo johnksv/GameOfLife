@@ -11,11 +11,42 @@ import lieng.GIFWriter;
  * The GifMaker class delivers functionality to write GIFs with the GIFLib
  * library by Henrik Lieng. It acts as an helper class between the Controller
  * {@link gol.s305089.controller.GifMakerController} and the GIF library.
+ * Savelocation must
  * <p>
- * For answers regarding recursion (from assignment paper) see
- * {@link  #writePatternToGIF(int)}.
- * <p>
- * Created: 18.03.2016 Last edited: 17.04.2016
+ * If no variabels are set, the default one will be used.
+ * <table>
+ * <tr><td>Variable</td><td>Default value</td></tr>
+ * <tr><td>Gif width</td><td>200 px</td></tr>
+ * <tr><td>Gif height</td><td>200 px</td></tr>
+ * <tr><td>Duration each frame</td><td>500 ms</td></tr>
+ * <tr><td>Cell size</td><td>10 px</td></tr>
+ * <tr><td>Auto cell size</td><td>false</td></tr>
+ * <tr><td>Center pattern</td><td>false</td></tr>
+ * <tr><td>Random cell color</td><td>false</td></tr>
+ * <tr><td>Cell color</td><td>Black</td></tr>
+ * <tr><td>Background color</td><td>White</td></tr>
+ * </table>
+ * </p>
+ * <h3>Answers regarding tail recursion</h3>
+ * Answer to questions from assignment paper. The questions relates to the
+ * private method {@link #writeGIF(int)}.
+ *
+ * <h4>Hva er halerekursjon, og hva er fordelen</h4>
+ *
+ * <h4>Er metoden halerekursiv</h4>
+ *
+ * <h4>Fordeler og ulemper med halrekursjon</h4>
+ *
+ *
+ * <h4>Støtter Java/JVM halerekursjon</h4>
+ * //TODO Svar på spørmål om halerekursjon Forstå hva halerekursjon (eng: tail
+ * recursion) er og fordelen er med slik rekursjon. Test om metoden dere har
+ * implementert over utfører slik halerekursjon. Ut ifra denne testen, diskuter
+ * nå fordeler/ulemper med rekursjon for dette problemet. Til slutt, bruk
+ * Internett til å finne ut om Java/JVM støtter halerekursjon og eventuelt
+ * hvordan.
+ *
+ * Created: 18.03.2016 Last edited: 30.04.2016
  *
  * @author s305089
  */
@@ -27,13 +58,12 @@ public final class GifMaker {
     private GIFWriter gifWriter;
     private int gifWidth = 200;
     private int gifHeight = 200;
-    private String saveLocation;
     private int durationBetweenFrames = 500;
     private double[] moveGridValues;
     private double cellSize = 10;
     private boolean centerPattern = false;
     private boolean autoCellSize = false;
-    private boolean randomColor = false;
+    private boolean randomCellColor = false;
     private java.awt.Color cellColor = java.awt.Color.BLACK;
     private java.awt.Color backgroundColor = java.awt.Color.WHITE;
 
@@ -44,22 +74,18 @@ public final class GifMaker {
     }
 
     /**
-     * //TODO Svar på spørmål om halerekursjon Forstå hva halerekursjon (eng:
-     * tail recursion) er og fordelen er med slik rekursjon. Test om metoden
-     * dere har implementert over utfører slik halerekursjon. Ut ifra denne
-     * testen, diskuter nå fordeler/ulemper med rekursjon for dette problemet.
-     * Til slutt, bruk Internett til å finne ut om Java/JVM støtter
-     * halerekursjon og eventuelt hvordan.
+     *
      *
      * @param iterations Number of iterations to draw in GIF.
+     * @param saveLocation
      * @throws java.io.IOException
      */
-    public void writePatternToGIF(int iterations) throws IOException {
+    public void writePatternToGIF(int iterations, String saveLocation) throws IOException {
 
         gifWriter = new GIFWriter(gifWidth, gifHeight, saveLocation, durationBetweenFrames);
         if (activeBoard != null || originalPattern != null) {
             //If not called, manipulations is done on the current gen of this activeBoard.
-            //Makes an new board with the "start" originalPattern.
+            //Makes an new board with the originalPattern.
             setPattern(originalPattern);
             gifWriter.setBackgroundColor(backgroundColor);
             writeGIF(iterations);
@@ -79,7 +105,7 @@ public final class GifMaker {
             for (int y = 1; y < activeBoard.getArrayLength(); y++) {
                 for (int x = 1; x < activeBoard.getArrayLength(y); x++) {
                     if (activeBoard.getCellState(y, x)) {
-                        if (randomColor) {
+                        if (randomCellColor) {
                             Random random = new Random();
                             cellColor = new java.awt.Color(random.nextInt(255), random.nextInt(255), random.nextInt(255));
                         }
@@ -89,12 +115,11 @@ public final class GifMaker {
                         int y1 = (int) (y * cellSize);
                         int y2 = (int) (y * cellSize + cellSize);
 
-                            //Need moveGridValues so the GIF dosn't follow top left when expanding.
-                            x1 += (int) moveGridValues[0];
-                            x2 += (int) moveGridValues[0];
-                            y1 += (int) moveGridValues[1];
-                            y2 += (int) moveGridValues[1];
-                        
+                        //Need moveGridValues so the GIF dosn't follow top left when expanding.
+                        x1 += (int) moveGridValues[0];
+                        x2 += (int) moveGridValues[0];
+                        y1 += (int) moveGridValues[1];
+                        y2 += (int) moveGridValues[1];
 
                         if (x1 >= 0 && x2 >= 0 && y1 >= 0 && y2 >= 0) {
                             if (x1 < gifWidth && x2 < gifWidth && y1 < gifHeight && y2 < gifHeight) {
@@ -114,11 +139,14 @@ public final class GifMaker {
 
     private void calculateCellSize() {
         double spacing = 5;
-        int longestRow = Util.longestRow(activeBoard.getBoundingBoxBoard());
+        byte[][] currentGenBoard = activeBoard.getBoundingBoxBoard();
+        int rowLength = currentGenBoard[0].length;
         cellSize = Math.floor(gifHeight / (activeBoard.getBoundingBoxBoard().length + spacing));
-        if (cellSize > gifWidth / (longestRow + spacing)) {
-            cellSize = Math.floor(gifWidth / (longestRow + spacing));
+        if (cellSize > gifWidth / (rowLength + spacing)) {
+            cellSize = Math.floor(gifWidth / (rowLength + spacing));
         }
+        activeBoard.clearBoard();
+        placePattern(currentGenBoard);
     }
 
     /**
@@ -155,14 +183,6 @@ public final class GifMaker {
     }
 
     /**
-     * @param SaveLocation set the save location to be used when generating a
-     * GIF.
-     */
-    public void setSaveLocation(String SaveLocation) {
-        this.saveLocation = SaveLocation;
-    }
-
-    /**
      * Constructs an new Board instance, and inserts this board
      *
      * @see gol.model.Board.Board#insertArray(byte[][], int, int)
@@ -171,14 +191,14 @@ public final class GifMaker {
     public void setPattern(byte[][] patternToSet) {
         activeBoard = new DynamicBoard(10, 10);
         moveGridValues = activeBoard.offsetValues;
-        moveGridValues[0] = 0;
-        moveGridValues[1] = 0;
         this.originalPattern = patternToSet;
         placePattern(patternToSet);
         activeBoard.setCellSize(cellSize);
     }
 
     private void placePattern(byte[][] patternToSet) {
+        moveGridValues[0] = 0;
+        moveGridValues[1] = 0;
         if (centerPattern) {
             int y = (int) ((gifHeight / cellSize) / 2 - patternToSet.length / 2);
             int x = (int) ((gifWidth / cellSize) / 2 - patternToSet[0].length / 2);
@@ -230,8 +250,8 @@ public final class GifMaker {
         this.backgroundColor = newColor;
     }
 
-    public void setRandomColor(boolean randomColor) {
-        this.randomColor = randomColor;
+    public void setRandomColor(boolean randomCellColor) {
+        this.randomCellColor = randomCellColor;
     }
 
 }
