@@ -119,6 +119,8 @@ public class GameController implements Initializable {
         canvas.heightProperty().bind(borderpane.heightProperty().subtract(toolBarQuickStats.heightProperty()));
         tabPane.prefHeightProperty().bind(borderpane.heightProperty());
         toolBarQuickStats.prefWidthProperty().bind(borderpane.widthProperty());
+        borderpane.widthProperty().addListener(e -> draw());
+        borderpane.heightProperty().addListener(e -> draw());
 
         cellSizeSlider.setBlockIncrement(0.75);
 
