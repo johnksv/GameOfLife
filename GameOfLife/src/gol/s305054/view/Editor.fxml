@@ -63,9 +63,10 @@
                         <content>
                           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                  <children>
-                                    <TextField fx:id="authorField" layoutX="14.0" layoutY="14.0" promptText="Author" />
-                                    <TextField fx:id="descriptionField" layoutX="14.0" layoutY="52.0" promptText="Description" />
-                                    <TextField fx:id="ruleField" layoutX="14.0" layoutY="91.0" promptText="Rules" />
+                                    <TextField fx:id="authorField" layoutX="14.0" layoutY="46.0" promptText="Author" />
+                                    <TextField fx:id="descriptionField" layoutX="14.0" layoutY="83.0" promptText="Description" />
+                                    <TextField fx:id="ruleField" layoutX="14.0" layoutY="120.0" promptText="Rules" />
+                                    <TextField fx:id="titleField" layoutX="14.0" layoutY="10.0" promptText="Title" />
                                  </children>
                               </AnchorPane>
                         </content>

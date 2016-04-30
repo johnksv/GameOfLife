@@ -40,6 +40,8 @@ public class EditorController implements Initializable {
     @FXML
     private Button closeBtn;
     @FXML
+    private TextField titleField;
+    @FXML
     private TextField authorField;
     @FXML
     private TextField descriptionField;
@@ -53,10 +55,13 @@ public class EditorController implements Initializable {
     private Canvas stripCanvas;
 
     private GraphicsContext gc;
+    private GraphicsContext stripGc;
     private final Color cellColor = Color.BLACK;
     private final Color backgroundColor = Color.web("#F4F4F4");
     private Board activeBoard = new ArrayBoard(150,150);
+    private Board stripBoard;
     byte[][] patternToInsert;
+    byte[][] patternStrip;
 
     /**
      * Initializes the controller class.
@@ -64,10 +69,12 @@ public class EditorController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         gc = editorCanvas.getGraphicsContext2D();
+        stripGc = stripCanvas.getGraphicsContext2D();
         activeBoard.setCellSize(15);
         activeBoard.setGridSpacing(0.8);
 
         mouseInit();
+        stripParts();
     }
 
     @FXML
@@ -95,14 +102,37 @@ public class EditorController implements Initializable {
         for (int i = 1; i < activeBoard.getArrayLength(); i++) {
             for (int j = 1; j < activeBoard.getArrayLength(i); j++) {
                 if (activeBoard.getCellState(i, j)) {
-                    gc.fillRect(j * activeBoard.getCellSize() + j * activeBoard.getGridSpacing(), //moveGridvalues[0]?
-                            i * activeBoard.getCellSize() + i * activeBoard.getGridSpacing(), //moveGridValues[1]?
+                    gc.fillRect(j * activeBoard.getCellSize() + j * activeBoard.getGridSpacing(),
+                            i * activeBoard.getCellSize() + i * activeBoard.getGridSpacing(),
                             activeBoard.getCellSize(),
                             activeBoard.getCellSize());
                 }
             }
         }
 
+    }
+    
+    private void drawStrip() {
+        stripGc.setGlobalAlpha(1);
+        stripGc.setFill(backgroundColor);
+        stripGc.fillRect(0, 0, stripCanvas.getWidth(), stripCanvas.getHeight());
+        stripGc.setFill(cellColor);
+        for (int i = 1; i < stripBoard.getArrayLength(); i++) {
+            for (int j = 1; j < stripBoard.getArrayLength(i); j++) {
+                if (stripBoard.getCellState(i, j)) {
+                    stripGc.fillRect(j * stripBoard.getCellSize() + j * stripBoard.getGridSpacing(),
+                            i * stripBoard.getCellSize() + i * stripBoard.getGridSpacing(),
+                            stripBoard.getCellSize(),
+                            stripBoard.getCellSize());
+                }
+            }
+        }
+
+    }
+    
+    private void stripParts() {
+        //TODO height, width, sånn shit. Vil ha 20 patterns på en canvas. Affain klasse som er nøkkelordet
+        stripBoard = new ArrayBoard();
     }
 
     private void mouseInit() {
