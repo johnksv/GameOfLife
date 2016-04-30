@@ -2,6 +2,7 @@ package gol.model.Board;
 
 import gol.model.Logic.Rule;
 import gol.model.ThreadPool;
+import gol.other.Configuration;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -10,12 +11,9 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class DynamicBoard extends Board {
 
-    private final int MAXWIDTH = 2000;
-    private final int MAXHEIGHT = 2000;
-    /**
-     * The amount of cells the board will expand during expansion.
-     */
-    public final int EXPANSION = 50;
+    private final int MAXWIDTH = Integer.parseInt(Configuration.getProp("maxWidth"));
+    private final int MAXHEIGHT = Integer.parseInt(Configuration.getProp("maxHeight"));
+    private final int EXPANSION = Integer.parseInt(Configuration.getProp("expansion"));
 
     private ArrayList<ArrayList<AtomicInteger>> gameBoard;
 
@@ -159,7 +157,7 @@ public class DynamicBoard extends Board {
             y = (y < 2) ? EXPANSION + 1 : y;
             x = (x < 2) ? EXPANSION + 1 : x;
         }
-        
+
         for (int i = 0; i < boardToInsert.length; i++) {
             for (int j = 0; j < boardToInsert[i].length; j++) {
                 if (boardToInsert[i][j] == 64) {
@@ -296,7 +294,7 @@ public class DynamicBoard extends Board {
                 }
             }
         }
-   
+
         return result.toString();
     }
 
@@ -307,7 +305,6 @@ public class DynamicBoard extends Board {
         //This is a fundamental part of DynamicBoard.
         y = (y < 2) ? EXPANSION : y;
         x = (x < 2) ? EXPANSION : x;
-        //TODO CHECK
         gameBoard.get(y).get(x).incrementAndGet();
 
     }

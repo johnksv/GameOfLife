@@ -1,10 +1,8 @@
 package gol.s305089.model;
 
-import gol.controller.UsefullMethods;
-import gol.model.Board.Board;
 import gol.model.Board.DynamicBoard;
+import gol.s305089.Util;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Random;
 import javafx.scene.paint.Color;
 import lieng.GIFWriter;
@@ -116,7 +114,7 @@ public final class GifMaker {
 
     private void calculateCellSize() {
         double spacing = 5;
-        int longestRow = UsefullMethods.longestRow(activeBoard.getBoundingBoxBoard());
+        int longestRow = Util.longestRow(activeBoard.getBoundingBoxBoard());
         cellSize = Math.floor(gifHeight / (activeBoard.getBoundingBoxBoard().length + spacing));
         if (cellSize > gifWidth / (longestRow + spacing)) {
             cellSize = Math.floor(gifWidth / (longestRow + spacing));

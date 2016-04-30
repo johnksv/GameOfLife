@@ -13,6 +13,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
@@ -24,6 +26,13 @@ import javafx.stage.Stage;
  */
 public class HowToPlayController implements Initializable {
 
+    @FXML
+    private TableView shortcutTableView;
+    @FXML
+    private TableColumn wTableColumn;
+    @FXML
+    private TableColumn kTableColumn;
+    
     private static Stage stage;
 
     /**
@@ -47,6 +56,10 @@ public class HowToPlayController implements Initializable {
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.setTitle(" Game of Life");
+    }
+    
+    private void setTableValues() {
+        //TODO
     }
 
     /**

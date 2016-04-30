@@ -21,7 +21,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * <b>The 7th-bit (64) represents alive.</b>
  * This means that living cell will have a value of 64, while dead cells has the
  * value 0.
- * <b>The first 4 LSB (least significant bits) represents neighbour count.</b>
+ * <b>The first 4 least significant bits represents neighbour count.</b>
  * </p>
  *
  * <h4>Counting neighbours</h4>
@@ -125,7 +125,7 @@ public abstract class Board {
      * @see #checkRulesConcurrent(gol.model.Logic.Rule, int)
      */
     public void nextGenConcurrent() {
-
+        //May be work for expanding board.
         threadPool.runWorkers();
 
         for (int i = 0; i < ThreadPool.THREAD_NR; i++) {
@@ -206,10 +206,24 @@ public abstract class Board {
     public double getGridSpacing() {
         return gridSpacing;
     }
-
+    
+    /**
+     * Expands the board to fit the coordinates given.
+     * Expands with the number of cells, defined as "expansion" in the config file.
+     * Will not be implemented in {@link ArrayBoard arraybors.}
+     * 
+     * @param y pixel coordinate.
+     * @param x pixel coordinate.
+     */
     protected abstract void expandBoard(int y, int x);
 
-    //TODO comments.
+    /**
+     * Calculates the smallest possible array of living cells, and returns that array.
+     * <p>
+     * Author: Henrik Lieng (Vedlegg 1 ark 5)
+     *
+     * @return Array of minrow, maxrow, mincolumn, maxcolumn
+     */
     public abstract byte[][] getBoundingBoxBoard();
 
     /**
@@ -233,7 +247,14 @@ public abstract class Board {
      *
      */
     protected abstract void countNeigh();
-
+     
+    /**
+     * Creates a runnable that counts the number of living neighbors. This is done by going through each
+     * living cell, and incrementing its neighbors.
+     * Adds the runnable to the current {@link #threadPool threadPool.}
+     * 
+     * @see #nextGenConcurrent() 
+     */
     protected abstract void countNeighConcurrent(int threadNr);
 
     /**
@@ -244,6 +265,13 @@ public abstract class Board {
      */
     protected abstract void checkRules(Rule activeRule);
 
+    /**
+     * Creates a runnable that checks each cell to this rule. The cell is set to alive or dead,
+     * depending on the rule.
+     * Adds the runnable to the current {@link #threadPool threadPool.}
+     * 
+     * @param activeRule {@link gol.model.Logic.Rule}
+     */
     protected abstract void checkRulesConcurrent(Rule activeRule, int threadNr);
 
     /**

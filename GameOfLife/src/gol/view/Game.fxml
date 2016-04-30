@@ -19,8 +19,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-
-<BorderPane fx:id="borderpane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" stylesheets="@MainStylesheet.css" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gol.controller.GameController">
+<BorderPane fx:id="borderpane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: #9CB5D3;" stylesheets="@MainStylesheet.css" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gol.controller.GameController">
     <bottom>
         <ToolBar fx:id="toolBarQuickStats" prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
             <items>
@@ -41,7 +40,7 @@
                     <children>
                         <TitledPane prefWidth="250.0" text="Menu (press to hide/show)">
                             <content>
-                                <TabPane prefHeight="500.0" prefWidth="250.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
+                                <TabPane fx:id="tabPane" prefHeight="570.0" prefWidth="250.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
                                     <tabs>
                                         <Tab text="General">
                                             <content>
@@ -58,7 +57,7 @@
                                                                         <Slider fx:id="cellSizeSlider" layoutX="18.0" layoutY="71.0" max="95" min="0" onValueChange="#handleZoom" value="95" />
                                                                         <Label layoutX="12.0" layoutY="98.0" text="Gridspacing" />
                                                                         <Slider fx:id="gridSpacingSlider" layoutX="17.0" layoutY="118.0" max="20" min="0" onValueChange="#handleGridSpacingSlider" value="3" />
-                                                                        <Button fx:id="startPauseBtn" layoutX="10.0" layoutY="152.0" mnemonicParsing="false" onAction="#handleAnimation" text="Start game" />
+                                                                        <Button fx:id="btnStartPause" layoutX="10.0" layoutY="152.0" mnemonicParsing="false" onAction="#handleAnimation" text="Start game" />
                                                                         <Button layoutX="139.0" layoutY="152.0" mnemonicParsing="false" onAction="#handleClearBtn" text="Clear board" />
                                                                     </children>
                                                                     <padding>
@@ -91,14 +90,14 @@
                                         </Tab>
                                         <Tab text="Advanced">
                                             <content>
-                                                <VBox>
+                                                <VBox styleClass="pane-standard">
                                                     <children>
                                                         <TitledPane animated="false" collapsible="false" text="Import Pattern">
                                                             <content>
                                                                 <AnchorPane minHeight="0.0" minWidth="0.0" prefWidth="200.0" styleClass="pane-standard">
                                                                     <children>
                                                                         <Button layoutX="16.0" layoutY="11.0" mnemonicParsing="false" onAction="#handleImportFileBtn" text="Import pattern from file" />
-                                                                        <Button layoutX="16.0" layoutY="47.0" mnemonicParsing="false" text="Import/search pattern from internet" />
+                                                                        <Button layoutX="16.0" layoutY="47.0" mnemonicParsing="false" onAction="#handleImportInternet" text="Import/search pattern from internet" />
                                                                         <Button layoutX="170.0" layoutY="11.0" mnemonicParsing="false" onAction="#rotateBoardFromFile" text="Rotate" />
                                                                     </children>
                                                                 </AnchorPane>
@@ -130,7 +129,7 @@
                                                                         </RadioButton>
                                                                         <RadioButton fx:id="rbCustomGameRules" layoutX="123.0" layoutY="17.0" mnemonicParsing="false" text="Custom rules" toggleGroup="$tgGameRules" />
                                                                         <TextField fx:id="tfCellsToSurvive" disable="true" layoutX="123.0" layoutY="49.0" prefHeight="25.0" prefWidth="92.0" text="2,3" />
-                                                                        <TextField fx:id="tfCellsToBeBorn" disable="true" layoutX="123.0" layoutY="80.0" onKeyTyped="#handleRuleText" prefHeight="25.0" prefWidth="92.0" text="3" />
+                                                                        <TextField fx:id="tfCellsToBeBorn" disable="true" layoutX="123.0" layoutY="80.0" prefHeight="25.0" prefWidth="92.0" text="3" />
                                                                         <Button fx:id="btnUseRule" disable="true" layoutX="68.0" layoutY="120.0" mnemonicParsing="false" onAction="#handleRuleBtn" text="Use Rules" />
                                                                     </children>
                                                                 </AnchorPane>

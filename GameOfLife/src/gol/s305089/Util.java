@@ -36,4 +36,14 @@ public class Util {
         return result;
     }
 
+    public static int longestRow(byte[][] arrayToSearch) {
+        int longestRow = 0;
+        for (byte[] row : arrayToSearch) {
+            if (row.length > longestRow) {
+                longestRow = row.length;
+            }
+        }
+        return longestRow;
+    }
+
 }

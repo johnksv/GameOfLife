@@ -2,8 +2,11 @@
     Created on : 26.apr.2016, 16:26:40
     Author     : s305054, s305084, s305089
 
-    All colors where found on a palette from this github project (retrieved april 27th 2016):
+    Most colors where found on a palette from this github project (retrieved april 27th 2016):
     https://github.com/chriskempson/base16
+    
+    And code examples is retrieved from this web-page (retrieved april 27th 2016):
+    http://fxexperience.com/2011/12/styling-fx-buttons-with-css/
 */
 .tab {
     -fx-background-radius: 0;
