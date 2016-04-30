@@ -356,11 +356,11 @@ public class GameController implements Initializable {
 
         editor.setTitle("Pattern Editor");
         editor.initModality(Modality.WINDOW_MODAL);
-        editor.show();
         editor.setMinWidth(800);
         editor.setMinHeight(600);
         editor.initOwner(borderpane.getScene().getWindow());
         editor.setScene(scene);
+        editor.show();
     }
 
     @FXML

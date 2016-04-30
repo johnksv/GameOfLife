@@ -1,6 +1,7 @@
 package gol.s305089.controller;
 
 import gol.model.Board.Board;
+import static gol.s305089.Util.showTooltip;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.Initializable;
@@ -13,7 +14,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
-import javafx.scene.layout.HBox;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.VBox;
 import javafx.scene.media.AudioClip;
 import javafx.scene.media.Media;
@@ -100,6 +101,13 @@ public class SoundController implements Initializable {
                 vBoxUser.setDisable(false);
             }
         });
+        Tooltip automaticTip = new Tooltip("Start game in main window for audio representation of the board.\nRecommended speed is 1 or 2 iteration per second.");
+        rbAutoSelect.setOnMouseEntered(e -> {
+            showTooltip(e, rbAutoSelect, automaticTip);
+        });
+        rbAutoSelect.setOnMouseExited(e -> {
+        });
+
     }
 
     private void initMediaFiles() {
