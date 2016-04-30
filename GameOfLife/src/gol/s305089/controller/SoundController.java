@@ -106,6 +106,7 @@ public class SoundController implements Initializable {
             showTooltip(e, rbAutoSelect, automaticTip);
         });
         rbAutoSelect.setOnMouseExited(e -> {
+            automaticTip.hide();
         });
 
     }

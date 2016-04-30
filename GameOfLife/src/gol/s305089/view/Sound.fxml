@@ -8,10 +8,18 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="186.0" prefWidth="332.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gol.s305089.controller.SoundController">
+<VBox stylesheets="@../../view/MainStylesheet.css, @s305089Custom.css" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="217.0" prefWidth="282.0" styleClass="pane-standard" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gol.s305089.controller.SoundController">
     <children>
-      <Label text="Audio control center" />
-      <Label text="Mode:" />
+        <Label styleClass="h1" text="Audio control center">
+            <VBox.margin>
+                <Insets bottom="5.0" />
+            </VBox.margin>
+        </Label>
+        <Label styleClass="underlined" text="Mode:">
+            <VBox.margin>
+                <Insets bottom="5.0" />
+            </VBox.margin>
+        </Label>
         <HBox prefWidth="200.0" spacing="30.0">
             <children>
                 <RadioButton fx:id="rbAutoSelect" mnemonicParsing="false" selected="true" text="Automatic">
@@ -34,7 +42,7 @@
                         <Button mnemonicParsing="false" onAction="#handleSelectFolder" text="Choose directory" />
                     </children>
                 </HBox>
-            <Label fx:id="labelLocation" text="" wrapText="true" />
+                <Label fx:id="labelLocation" text="" wrapText="true" />
                 <HBox spacing="10.0">
                     <children>
                         <Button fx:id="btnPlayPause" mnemonicParsing="false" onAction="#handlePlayPause" text="Play" />

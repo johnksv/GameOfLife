@@ -18,17 +18,14 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane fx:id="borderpane" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="530.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gol.s305089.controller.GifMakerController">
-    <left>
-     
-    </left>
+<BorderPane fx:id="borderpane" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="530.0" styleClass="pane-standard" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gol.s305089.controller.GifMakerController">
     <center>
         <ImageView fx:id="imgViewPreview" fitHeight="465.0" fitWidth="320.0" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER_LEFT" />
     </center>
     <left>
         <TitledPane collapsible="false" prefHeight="500.0" prefWidth="210.0" text="Generate GIF" BorderPane.alignment="TOP_LEFT">
             <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefWidth="200.0">
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefWidth="200.0" styleClass="pane-standard">
                     <children>
                         <TabPane layoutY="-8.0" prefWidth="200.0" rotateGraphic="true" tabClosingPolicy="UNAVAILABLE" AnchorPane.topAnchor="0.0">
                             <tabs>
@@ -36,13 +33,16 @@
                                     <content>
                                         <VBox prefWidth="198.0" spacing="10.0">
                                             <children>
-                                                <Button mnemonicParsing="false" onAction="#chooseSaveDest" text="Choose save destination" />
-                                                <Label fx:id="labelCurrentDest" text="Current:">
+                                                <Button mnemonicParsing="false" onAction="#chooseSaveDest" text="Choose save destination">
+                                       <VBox.margin>
+                                          <Insets top="-5.0" />
+                                       </VBox.margin></Button>
+                                                <Label fx:id="labelCurrentDest" text="Current:" wrapText="true">
                                                     <tooltip>
                                                         <Tooltip fx:id="tooltipSaveLoc" wrapText="true" />
                                                     </tooltip>
                                                     <VBox.margin>
-                                                        <Insets top="-7.0" />
+                                                        <Insets />
                                                     </VBox.margin>
                                                 </Label>
                                                 <Separator prefWidth="200.0" />
@@ -152,7 +152,7 @@
                                 <Insets bottom="60.0" />
                             </padding>
                         </TabPane>
-                        <VBox layoutY="393" AnchorPane.bottomAnchor="0.0">
+                        <VBox layoutY="393" AnchorPane.bottomAnchor="10.0">
                             <children>
                                 <Separator prefWidth="200.0">
                                     <padding>
