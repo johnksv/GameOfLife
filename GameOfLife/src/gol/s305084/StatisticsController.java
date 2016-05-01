@@ -109,7 +109,7 @@ public class StatisticsController implements Initializable {
             copyBoard.nextGen();
 
             //Life Change
-            int change = calcChangeCells(countLivingCells(copyBoard), living);
+            int change = calcChangeCells( living, countLivingCells(copyBoard));
             CELLCHANGE.getData().add(new XYChart.Data(i, change));
 
             //Similarity measure
@@ -133,7 +133,7 @@ public class StatisticsController implements Initializable {
      * Returns number of living cells for given pattern.
      * 
      * @param pattern
-     * @return
+     * @return Living cells
      */
     public static int countLivingCells(Board pattern) {
         int count = 0;
@@ -146,8 +146,14 @@ public class StatisticsController implements Initializable {
         }
         return count;
     }
-
-    private static int calcChangeCells(int cellsNextgen, int cells) {
+    /**
+     * Returns difference of number of living cells between a pattern its next generation.
+     * 
+     * @param cells alive
+     * @param cellsNextgen alive Next generation
+     * @return change
+     */
+    public static int calcChangeCells(int cells, int cellsNextgen) {
         return cellsNextgen - cells;
     }
 
