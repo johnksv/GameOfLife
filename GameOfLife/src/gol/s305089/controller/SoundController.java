@@ -7,7 +7,6 @@ import java.util.ResourceBundle;
 import javafx.fxml.Initializable;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
@@ -15,6 +14,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Tooltip;
+
 import javafx.scene.layout.VBox;
 import javafx.scene.media.AudioClip;
 import javafx.scene.media.Media;
@@ -73,7 +73,6 @@ public class SoundController implements Initializable {
         if (!playing && rbAutoSelect.isSelected()) {
             playing = true;
             parseBoardBB();
-            System.out.println(Arrays.toString(audioClipQueue.stream().toArray()));
             playAudioQueue();
             playing = false;
         }
@@ -210,13 +209,13 @@ public class SoundController implements Initializable {
         byte[][] current = activeBoard.getBoundingBoxBoard();
 
         int countOnRow = 0;
-        for (int i = 0; i < current.length; i++) {
-            for (int j = 0; j < current[i].length; j++) {
-                if (current[i][j] == 64 && j == current[i].length - 1) {
-                    //Last row
+        for (byte[] row : current) {
+            for (int j = 0; j < row.length; j++) {
+                //If last element on row is alive.
+                if (row[j] == 64 && j == row.length - 1) {
                     countOnRow++;
                     assignSound(countOnRow);
-                } else if (current[i][j] == 64) {
+                } else if (row[j] == 64) {
                     countOnRow++;
                 } else if (countOnRow > 0) {
                     assignSound(countOnRow);
@@ -226,7 +225,7 @@ public class SoundController implements Initializable {
             countOnRow = 0;
         }
 
-        //Next gen sound should be played alone
+        //Next gen
         assignSound(-1);
     }
 
@@ -310,4 +309,10 @@ public class SoundController implements Initializable {
             labelTime.setText(elapsedTime + "/" + totalTime);
         });
     }
+
+    @FXML
+    private void saveAsWav() {
+
+    }
+
 }
