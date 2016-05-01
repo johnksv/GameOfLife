@@ -14,7 +14,7 @@ import java.util.Arrays;
 public class ArrayBoard extends Board {
 
     private final int WIDTH, HEIGHT;
-    private byte[][] gameBoard;
+    protected byte[][] gameBoard;
 
     /**
      * Constructs a new Arrayboard with default width and height

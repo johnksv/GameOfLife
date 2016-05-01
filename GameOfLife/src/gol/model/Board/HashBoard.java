@@ -4,15 +4,15 @@ import gol.model.Logic.Rule;
 import java.util.HashMap;
 
 /**
- * HashBoard is a working next generation with hashLife, but all storing of cells is not.
- * HashBoard 
- * 
+ * HashBoard is a working next generation with hashLife, but all storing of
+ * cells is not. HashBoard
+ *
  * @author s305084
  */
-public class HashBoard extends Board {
+public class HashBoard extends ArrayBoard {
 
-    private final int WIDTH, HEIGHT;
-    private byte[][] gameBoard;
+    private final int WIDTH;
+    private final int HEIGHT;
     private final int maxK = 8;
 
     private byte[][] nextBoard;
@@ -21,10 +21,10 @@ public class HashBoard extends Board {
     private int macroCell;
 
     public HashBoard() {
-        super();
-        WIDTH = (int) Math.pow(2, maxK);
-        HEIGHT = (int) Math.pow(2, maxK);
-        gameBoard = new byte[WIDTH][HEIGHT];
+        super((int) Math.pow(2, 8), (int) Math.pow(2, 8));
+        this.WIDTH = (int) Math.pow(2, maxK);
+        this.HEIGHT = (int) Math.pow(2, maxK);
+
     }
 
     @Override
@@ -33,76 +33,12 @@ public class HashBoard extends Board {
         evolve(0, 0, maxK);
         gameBoard = nextBoard;
     }
+
     @Override
     public void nextGenConcurrent() {
         nextBoard = new byte[HEIGHT][WIDTH];
         evolve(0, 0, maxK);
         gameBoard = nextBoard;
-    }
-
-    @Override
-    protected void expandBoard(int y, int x) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public byte[][] getBoundingBoxBoard() {
-
-        int[] boundingBox = getBoundingBox();
-        if ((boundingBox[1] - boundingBox[0] + 1) > 0 || (boundingBox[3] - boundingBox[2] + 1) > 0) {
-            byte[][] board = new byte[boundingBox[1] - boundingBox[0] + 1][boundingBox[3] - boundingBox[2] + 1];
-
-            for (int y = 0; y < board.length; y++) {
-                for (int x = 0; x < board[y].length; x++) {
-                    if (gameBoard[boundingBox[0] + y][x + boundingBox[2]] == 64) {
-                        board[y][x] = 64;
-                    } else {
-                        board[y][x] = 0;
-                    }
-                }
-            }
-            return board;
-        } else {
-            return new byte[][]{{}};
-        }
-    }
-
-    @Override
-    public int[] getBoundingBox() {
-        int[] boundingBox = new int[4]; // minrow maxrow mincolumn maxcolumn 
-        boundingBox[0] = gameBoard.length;
-        boundingBox[1] = 0;
-        boundingBox[2] = gameBoard[0].length;
-        boundingBox[3] = 0;
-        for (int i = 0; i < gameBoard.length; i++) {
-            for (int j = 0; j < gameBoard[i].length; j++) {
-                if (gameBoard[i][j] != 64) {
-                    continue;
-                }
-                if (i < boundingBox[0]) {
-                    boundingBox[0] = i;
-                }
-                if (i > boundingBox[1]) {
-                    boundingBox[1] = i;
-                }
-                if (j < boundingBox[2]) {
-                    boundingBox[2] = j;
-                }
-                if (j > boundingBox[3]) {
-                    boundingBox[3] = j;
-                }
-            }
-        }
-        return boundingBox;
-    }
-
-    @Override
-    public void clearBoard() {
-        for (int i = 0; i < gameBoard.length; i++) {
-            for (int j = 0; j < gameBoard[i].length; j++) {
-                gameBoard[i][j] = 0;
-            }
-        }
     }
 
     @Override
@@ -123,81 +59,6 @@ public class HashBoard extends Board {
     @Override
     protected void checkRulesConcurrent(Rule activeRule, int threadNr) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void insertArray(byte[][] boardToInsert, int y, int x) {
-        for (int i = 0; i < boardToInsert.length; i++) {
-            for (int j = 0; j < boardToInsert[i].length; j++) {
-                if (i + y < gameBoard.length && j + x < gameBoard[y + i].length) {
-                    if (i + y >= 1 && j + x >= 1) {
-                        gameBoard[i + y][j + x] = boardToInsert[i][j];
-                    }
-                }
-            }
-        }
-    }
-
-    @Override
-    public void setCellState(int y, int x, boolean alive) {
-        byte value = 0;
-        if (alive) {
-            value = 64;
-        }
-        if (y < 1 || x < 1) {
-            return;
-        }
-
-        if (y < gameBoard.length && y >= 0) {
-            if (x < gameBoard[y].length && x >= 0) {
-                gameBoard[y][x] = value;
-            } else {
-                System.err.println("x or y was not in gameboard.");
-            }
-
-        } else {
-            System.err.println("x or y was not in gameboard.");
-        }
-    }
-
-    @Override
-    public void setCellState(double y, double x, boolean alive, double offsetX, double offsetY) {
-        /*
-         * y is position of the first index of the matrix (column)
-         * x is position of the second index of the matrix (row)
-         */
-        y = y / (cellSize + gridSpacing);
-        x = x / (cellSize + gridSpacing);
-        offsetY = offsetY / (cellSize + gridSpacing);
-        offsetX = offsetX / (cellSize + gridSpacing);
-
-        setCellState((int) Math.floor(y - offsetY), (int) Math.floor(x - offsetX), alive);
-    }
-
-    @Override
-    public int getArrayLength() {
-        return gameBoard.length;
-    }
-
-    @Override
-    public int getArrayLength(int i) {
-        return gameBoard[i].length;
-    }
-
-    @Override
-    public int getMaxRowLength() {
-        return WIDTH;
-    }
-
-    @Override
-    public boolean getCellState(int y, int x) {
-        if (y < 1 || y >= gameBoard.length) {
-            return false;
-        }
-        if (x < 1 || x >= gameBoard[y].length) {
-            return false;
-        }
-        return gameBoard[y][x] >= 64;
     }
 
     private byte[] nextGenMacro(int y, int x) {
@@ -257,7 +118,7 @@ public class HashBoard extends Board {
 
                 for (int i = 0; i < 4; i++) {
                     nextBoard[y + (int) (i / 2)][x + i % 2] = nextgen[i];
-                    
+
                 }
             }
             return;
