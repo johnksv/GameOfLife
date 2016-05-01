@@ -5,7 +5,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 /**
- * @author s305089
+ * //TODO: JAVADOC
+ * Created: 1.05.2016
+ * @author s305089 - John Kasper Svergja
  */
 public class Sound {
 

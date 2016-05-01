@@ -8,6 +8,9 @@ import javafx.fxml.Initializable;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javafx.animation.Timeline;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -28,12 +31,14 @@ import javafx.util.Duration;
 /**
  * FXML Controller class
  *
- * @author s305089
+ * @author s305089 - John Kasper Svergja
  */
 public class SoundController implements Initializable {
 
     @FXML
-    private VBox vBoxUser;
+    private VBox vboxUser;
+    @FXML
+    private VBox vboxGenerated;
     @FXML
     private Button btnPlayPause;
     @FXML
@@ -43,7 +48,7 @@ public class SoundController implements Initializable {
     @FXML
     private Label labelLocation;
     @FXML
-    private RadioButton rbAutoSelect;
+    private RadioButton rbGenerated;
 
     //The board that is actually being used in main window.
     private Board activeBoard;
@@ -68,13 +73,28 @@ public class SoundController implements Initializable {
         initFXMLControls();
     }
 
+    /**
+     * 
+     */
     public void playSound() {
         audioClipQueue.clear();
-        if (!playing && rbAutoSelect.isSelected()) {
+        if (!playing && rbGenerated.isSelected()) {
             playing = true;
             parseBoardBB();
             playAudioQueue();
-            playing = false;
+
+            //Nasty, but probably best way.Use of timeline would be overkill. 
+            Thread th = new Thread(() -> {
+                try {
+                    //The duration of the Audioclips are ca 0.8 sec.
+                    Thread.sleep(800);
+                } catch (InterruptedException ex) {
+                    System.out.println("Not able to sleep..\n " + ex);
+                }
+                playing = false;
+            });
+
+            th.start();
         }
 
     }
@@ -92,21 +112,16 @@ public class SoundController implements Initializable {
     }
 
     private void initFXMLControls() {
-        rbAutoSelect.selectedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+        rbGenerated.selectedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
             disposeMediaPlayers();
             if (newValue) {
-                vBoxUser.setDisable(true);
+                vboxGenerated.setVisible(true);
+                vboxUser.setVisible(false);
             } else {
-                vBoxUser.setDisable(false);
+                vboxGenerated.setVisible(false);
+                vboxUser.setVisible(true);
             }
         });
-        Tooltip automaticTip = new Tooltip("Start game in main window for audio representation of the board.\nRecommended speed is 1 or 2 iteration per second.");
-        rbAutoSelect.setOnMouseEntered(e -> {
-            showTooltip(e, rbAutoSelect, automaticTip);
-        });
-        rbAutoSelect.setOnMouseExited(e -> {
-        });
-
     }
 
     private void initMediaFiles() {
@@ -135,7 +150,6 @@ public class SoundController implements Initializable {
             } else {
                 labelLocation.setText("Playing from: " + result.getAbsolutePath());
                 for (File musicFile : musicFiles) {
-                    System.out.println(musicFile);
                     mediaPlayerQueue.add(new MediaPlayer(new Media(musicFile.toURI().toString())));
                 }
                 playMediaQueue();

@@ -1,5 +1,11 @@
 package gol.s305089.sound;
 
+/**
+ * Exception class for reading an writing wav files.
+ * A.Greensted.
+ * (These javadoc comments were added by s305089)
+ * @author A.Greensted
+ */
 public class WavFileException extends Exception
 {
 	public WavFileException()

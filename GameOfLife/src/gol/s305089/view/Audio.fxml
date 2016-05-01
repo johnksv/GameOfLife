@@ -2,52 +2,96 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.Spinner?>
 <?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="186.0" prefWidth="332.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gol.s305089.controller.SoundController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="390.0" prefWidth="399.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gol.s305089.controller.SoundController">
     <children>
-      <Label text="Audio control center" />
-      <Label text="Mode:" />
+        <Label text="Audio control center" />
+        <Label text="Mode:" />
         <HBox prefWidth="200.0" spacing="30.0">
             <children>
-                <RadioButton fx:id="rbAutoSelect" mnemonicParsing="false" selected="true" text="Automatic">
+                <RadioButton fx:id="rbGenerated" mnemonicParsing="false" selected="true" text="Generated">
                     <toggleGroup>
                         <ToggleGroup fx:id="tgMode" />
                     </toggleGroup>
                 </RadioButton>
                 <RadioButton mnemonicParsing="false" text="User selected" toggleGroup="$tgMode" />
-                <Button mnemonicParsing="false" onAction="#saveAsWav" text="SaveWAV" />
             </children>
             <VBox.margin>
                 <Insets bottom="7.0" />
             </VBox.margin>
         </HBox>
-        <VBox fx:id="vBoxUser" disable="true" spacing="5.0">
+        <StackPane prefHeight="311.0" prefWidth="389.0">
             <children>
-                <Label text="Playing from:" wrapText="true" />
-                <HBox spacing="10.0">
+                <VBox fx:id="vboxGenerated" prefHeight="296.0" prefWidth="345.0">
                     <children>
-                        <Button mnemonicParsing="false" onAction="#handleSelectFile" text="Choose file" />
-                        <Button mnemonicParsing="false" onAction="#handleSelectFolder" text="Choose directory" />
+                        <HBox prefWidth="200.0" spacing="7.0">
+                            <children>
+                                <RadioButton mnemonicParsing="false" selected="true" text="Playback audio">
+                                    <toggleGroup>
+                                        <ToggleGroup fx:id="tgGeneratedMode" />
+                                    </toggleGroup>
+                                </RadioButton>
+                                <RadioButton mnemonicParsing="false" text="Save audio" toggleGroup="$tgGeneratedMode" />
+                            </children>
+                        </HBox>
+                        <Label text="Difference:" />
+                        <Label text="&quot;Playback audio&quot; will play pre generated audio files as the game run. The speed is decided by iterations per second in the main window. Be aware that generations WILL NOT play if a generation is already playing. Recommended speed: 1 it per sec." wrapText="true" />
+                        <Label text="&quot;Save audio&quot; allows you to generate a self-made wav file, with a chosen root tone and duration between each iteration." wrapText="true" />
+                        <VBox spacing="5.0">
+                            <children>
+                                <Label text="Generate WAV" />
+                                <Label text="Duration of each iteration (in seconds)" />
+                                <Spinner />
+                                <Label text="Base/root tone" />
+                                <ComboBox prefWidth="150.0" />
+                                <HBox spacing="20.0">
+                                    <children>
+                                        <Button mnemonicParsing="false" text="Preview" />
+                                        <Button mnemonicParsing="false" text="Save as Wav" />
+                                    </children>
+                           <VBox.margin>
+                              <Insets top="10.0" />
+                           </VBox.margin>
+                                </HBox>
+                            </children>
+                            <VBox.margin>
+                                <Insets top="5.0" />
+                            </VBox.margin>
+                        </VBox>
                     </children>
-                </HBox>
-                <Label fx:id="labelLocation" text="" wrapText="true" />
-                <HBox spacing="10.0">
+                </VBox>
+                <VBox fx:id="vboxUser" spacing="5.0" visible="false">
                     <children>
-                        <Button fx:id="btnPlayPause" mnemonicParsing="false" onAction="#handlePlayPause" text="Play" />
-                        <Button fx:id="btnRewind" mnemonicParsing="false" onAction="#rewindCurrent" text="Rewind current" />
+                        <Label text="Playing from:" wrapText="true" />
+                        <HBox spacing="10.0">
+                            <children>
+                                <Button mnemonicParsing="false" onAction="#handleSelectFile" text="Choose file" />
+                                <Button mnemonicParsing="false" onAction="#handleSelectFolder" text="Choose directory" />
+                            </children>
+                        </HBox>
+                        <Label fx:id="labelLocation" text="" wrapText="true" />
+                        <HBox spacing="10.0">
+                            <children>
+                                <Button fx:id="btnPlayPause" mnemonicParsing="false" onAction="#handlePlayPause" text="Play" />
+                                <Button fx:id="btnRewind" mnemonicParsing="false" onAction="#rewindCurrent" text="Rewind current" />
+                            </children>
+                        </HBox>
+                        <Label fx:id="labelTime" />
                     </children>
-                </HBox>
-                <Label fx:id="labelTime" />
+                </VBox>
             </children>
-            <VBox.margin>
-                <Insets left="10.0" />
-            </VBox.margin>
-        </VBox>
+         <VBox.margin>
+            <Insets top="10.0" />
+         </VBox.margin>
+        </StackPane>
     </children>
     <padding>
         <Insets left="10.0" top="10.0" />
