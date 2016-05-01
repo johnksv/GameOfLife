@@ -5,7 +5,10 @@ import java.util.HashMap;
 
 /**
  * HashBoard is a working next generation with hashLife, but all storing of
- * cells is not. HashBoard
+ * cells is not. HashBoard extends ArrayBoard, since the storing method yet to be made.
+ * 
+ * To do: implement a quadtree to store all cells, this will make the board dynamic and much much faster.
+ * If a quadtree is implemented a new getCellState and setCellState must be implemented.
  *
  * @author s305084
  */
