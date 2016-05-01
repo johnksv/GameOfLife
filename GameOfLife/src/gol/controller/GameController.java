@@ -2,6 +2,7 @@ package gol.controller;
 
 import gol.model.Board.Board;
 import gol.model.Board.DynamicBoard;
+import gol.model.Board.HashBoard;
 import gol.model.FileIO.PatternFormatException;
 import gol.model.FileIO.ReadFile;
 import gol.model.Logic.ConwaysRule;
@@ -118,7 +119,8 @@ public class GameController implements Initializable {
 
         //TODO Valg for Array eller dynamisk brett
         //activeBoard = new ArrayBoard();
-        activeBoard = new DynamicBoard();
+        //activeBoard = new DynamicBoard();
+        activeBoard = new HashBoard();
         cellCP.setValue(Color.BLACK);
         backgroundCP.setValue(Color.web("#F4F4F4"));
 
