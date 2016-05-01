@@ -24,6 +24,7 @@ public class WavMakerController implements Initializable {
     @FXML
     private Spinner spinnIte;
     private byte[][] originalPattern;
+    private Board activeSoundBoard;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -59,12 +60,14 @@ public class WavMakerController implements Initializable {
         int iterations = (int) spinnIte.getValue();
         for (int i = 0; i < iterations; i++) {
             
+            
+            activeSoundBoard.nextGenConcurrent();
         }
     }
 
     public void setBoard(Board activeBoard) {
         originalPattern = activeBoard.getBoundingBoxBoard();
-        Board activeSoundBoard = new DynamicBoard();
+        activeSoundBoard = new DynamicBoard();
         activeSoundBoard.insertArray(originalPattern, 3, 3);
     }
 }

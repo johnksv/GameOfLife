@@ -82,7 +82,7 @@ public class SoundController implements Initializable {
         if (!playing && rbGenerated.isSelected() && rbnGenPlayback.isSelected()) {
             audioClipQueue.clear();
             playing = true;
-            parseBoardBB();
+            parseBoard1D();
             playAudioQueue();
 
             //Nasty, but probably best way.Use of timeline would be overkill. 
@@ -221,7 +221,10 @@ public class SoundController implements Initializable {
         }
     }
 
-    private void parseBoardBB() {
+    /**
+     * Parses the board in 1d. Row by row. Could have (and should) used toString.
+     */
+    private void parseBoard1D() {
         byte[][] current = activeBoard.getBoundingBoxBoard();
 
         int countOnRow = 0;
