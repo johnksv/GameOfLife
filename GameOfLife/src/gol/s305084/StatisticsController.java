@@ -20,11 +20,11 @@ import javafx.stage.FileChooser;
 import lieng.GIFWriter;
 
 /**
- * Shows statistics of a Board through a number of generations.
- * Notable static functions:
- * {@link #countLivingCells(gol.model.Board.Board) countLivingCells} static method.
- * {@link #calcChangeCells(int, int)  countLivingCells} static method.
- * 
+ * Shows statistics of a Board through a number of generations. Notable static
+ * functions:  {@link #countLivingCells(gol.model.Board.Board) countLivingCells.}
+ * {@link #calcChangeCells(int, int) countLivingCells.}
+ * {@link #simValue(byte[][], int, int) calculate similarity value.}
+ *
  * @author s305084
  */
 public class StatisticsController implements Initializable {
@@ -39,11 +39,8 @@ public class StatisticsController implements Initializable {
     Label txtChange;
     @FXML
     Label txtSim;
-
     @FXML
     CheckBox cbShowAll;
-
-    //TODO Improve mouse position
     @FXML
     Line chartLength;
 
@@ -79,10 +76,21 @@ public class StatisticsController implements Initializable {
 
     }
 
+    /**
+     * Inserts the board witch statistics is wished to be shown.
+     * @param activeBoard
+     */
     public void loadeBoard(Board activeBoard) {
         statBoard.insertArray(activeBoard.getBoundingBoxBoard(), 1, 1);
     }
 
+    /**
+     * Calculates and visualise statistics.
+     * Types of data: Living cells, change in cells, and similarity value.  
+     * Similarity value is by default defined as how similar each generation is to generation 0.
+     * 
+     * Note: Mouse-click on the lineChart will change witch generation the similarity value will compare to.
+     */
     public void showStats() {
         LIVINGCELLS.getData().clear();
         SIMPERCENT.getData().clear();
@@ -121,6 +129,12 @@ public class StatisticsController implements Initializable {
                 / Math.max(simValue[relativePosition], simValue[i])) * 100);
     }
 
+    /**
+     * Returns number of living cells for given pattern.
+     * 
+     * @param pattern
+     * @return
+     */
     public static int countLivingCells(Board pattern) {
         int count = 0;
         for (int i = 0; i < pattern.getArrayLength(); i++) {
@@ -137,13 +151,23 @@ public class StatisticsController implements Initializable {
         return cellsNextgen - cells;
     }
 
-    private static double simValue(byte[][] pattern, int aliveCount, int aliveChange) {
+    /**
+     * Returns similarity value for given pattern.
+     * Does not return a similarity to another pattern, but a value defined as:
+     * <p><b>ALPHA * aliveCount + BETA * aliveChange + GAMMA * geoSum</b></p>
+     * ALPHA
+     * @param pattern
+     * @param aliveCount
+     * @param aliveChange
+     * @return 
+     */
+    public static double simValue(byte[][] pattern, int aliveCount, int aliveChange) {
         int geoSum = 0;
         for (int i = 0; i < pattern.length; i++) {
             for (int j = 0; j < pattern[i].length; j++) {
-                //Problem with 0,0 cells?
+                //Algorithm change to prevent 0,0 position to be negligible.
                 if (pattern[i][j] == 64) {
-                    geoSum += 2 * (i + 1) + (j + 1);
+                    geoSum += (i + 1) + (j + 1);
                 }
             }
         }
@@ -159,11 +183,15 @@ public class StatisticsController implements Initializable {
 
         }
     }
-
+    /**
+     * If clicked, all generations similarity values will show there best future match.
+     * This is to create a easy view for finding the best generation to loop in the future.    
+     */
     @FXML
-    public void handleShowAll() {
+    private void handleShowAll() {
         if (cbShowAll.isSelected()) {
             SIMPERCENT.getData().clear();
+            //Last gen always 0, therefore not included.
             for (int i = 0; i < genIterations; i++) {
                 double maxSim = 0;
 
@@ -189,7 +217,7 @@ public class StatisticsController implements Initializable {
     }
 
     @FXML
-    public void handleGifBtn() {
+    private void handleGifBtn() {
         Board activeBoard = new DynamicBoard();
         activeBoard.insertArray(statBoard.getBoundingBoxBoard(), 1, 1);
 
