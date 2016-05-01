@@ -1,5 +1,6 @@
 package gol.s305084;
 
+import gol.controller.UsefullMethods;
 import gol.model.Board.ArrayBoard;
 import gol.model.Board.Board;
 import gol.model.Board.DynamicBoard;
@@ -63,10 +64,7 @@ public class PatternEditorController implements Initializable {
     private void handleGIF() {
         //neagtiv value means that there are no alive cells on the board
         if (activeBoard.getBoundingBox()[1] - activeBoard.getBoundingBox()[0] < 0) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Error");
-            alert.setHeaderText("Sorry, but you cant make a gif with no cells alive.");
-            alert.showAndWait();
+            UsefullMethods.showErrorAlert("Board is empty.", "Sorry, but you cant make a gif with no living cells.");
         } else {
 
             FileChooser fileChooser = new FileChooser();
@@ -83,10 +81,7 @@ public class PatternEditorController implements Initializable {
                             500), 140, 140, awtBgColor, awtCellColor, 20);
 
                 } catch (IOException ex) {
-                    Alert alert = new Alert(Alert.AlertType.ERROR, ex.getMessage());
-                    alert.setTitle("Error");
-                    alert.setHeaderText("Sorry, something  went wrong during saving");
-                    alert.showAndWait();
+                    UsefullMethods.showErrorAlert("Oops!", "Something  went wrong during saving");
                 }
             }
         }
@@ -96,10 +91,7 @@ public class PatternEditorController implements Initializable {
     private void handlebtnRLE() {
         //neagtiv value means that there are no alive cells on the board
         if (activeBoard.getBoundingBox()[1] - activeBoard.getBoundingBox()[0] < 0) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Error");
-            alert.setHeaderText("Sorry, but you cant make a file with no cells alive.");
-            alert.showAndWait();
+                 UsefullMethods.showErrorAlert("Board is empty.", "Sorry, but you cant make a gif with no living cells.");
         } else {
             try {
                 FileChooser fileChooser = new FileChooser();
@@ -113,10 +105,8 @@ public class PatternEditorController implements Initializable {
                     WriteRLE.toRLE(selected.toPath(), activeBoard, txtName.getText(), txtAuthor.getText(), txtComment.getText());
                 }
             } catch (IOException ex) {
-                Alert alert = new Alert(Alert.AlertType.ERROR, ex.getMessage());
-                alert.setTitle("Error");
-                alert.setHeaderText("Sorry, something  went wrong during saving \n please try again.");
-                alert.showAndWait();
+                UsefullMethods.showErrorAlert("Sorry!", "Something went wrong during saving \n please try again.");
+        
             }
         }
     }
@@ -231,10 +221,13 @@ public class PatternEditorController implements Initializable {
     }
     
     /**
-     * Returns the edited pattern.
+     * Returns the edited pattern, null if board is empty.
      * @return byte pattern.
      */
     public byte[][] getPattern(){
+        if(activeBoard.getBoundingBox()[1] - activeBoard.getBoundingBox()[0] < 0){
+            return null;
+        }
         return activeBoard.getBoundingBoxBoard();
     }
 

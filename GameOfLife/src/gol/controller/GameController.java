@@ -455,6 +455,9 @@ public class GameController implements Initializable {
     @FXML
     private void handleSEditor() {
         try {
+            if(timeline.getStatus() == Status.RUNNING){
+                handleAnimation();
+            }
             Stage editor = new Stage();
             editor.setResizable(false);
             editor.getIcons().add(new Image(new File("src\\mics\\icon.png").toURI().toString()));
@@ -474,31 +477,32 @@ public class GameController implements Initializable {
             editor.setTitle("Gol: Pattern Editor");
             editor.showAndWait();
             //TODO ask about this code(not 100% my own).
-            
+
             boardFromFile = editorController.getPattern();
+            if (boardFromFile != null) {
+                Alert alert = new Alert(AlertType.NONE);
+                alert.setTitle("Place pattern");
+                alert.initStyle(StageStyle.UTILITY);
+                alert.setContentText("How do you want to insert the pattern?");
 
-            Alert alert = new Alert(AlertType.NONE);
-            alert.setTitle("Place pattern");
-            alert.initStyle(StageStyle.UTILITY);
-            alert.setContentText("How do you want to insert the pattern?");
+                ButtonType btnGhostTiles = new ButtonType("Insert with ghost tiles");
+                ButtonType btnInsert = new ButtonType("Insert at top-left");
+                ButtonType btnCancel = new ButtonType("Cancel");
 
-            ButtonType btnGhostTiles = new ButtonType("Insert with ghost tiles");
-            ButtonType btnInsert = new ButtonType("Insert at top-left");
-            ButtonType btnCancel = new ButtonType("Cancel");
+                alert.getButtonTypes().addAll(btnGhostTiles, btnInsert, btnCancel);
 
-            alert.getButtonTypes().addAll(btnGhostTiles, btnInsert, btnCancel);
+                Optional<ButtonType> result = alert.showAndWait();
 
-            Optional<ButtonType> result = alert.showAndWait();
-
-            if (result.get() == btnInsert) {
-                activeBoard.insertArray(boardFromFile, 3, 3);
-                boardFromFile = null;
-            } else if (result.get() == btnGhostTiles) {
-                btnStartPause.setDisable(true);
-                activeBoard.setGameRule(ReadFile.getParsedRule());
-            } else {
-                boardFromFile = null;
-                alert.close();
+                if (result.get() == btnInsert) {
+                    activeBoard.insertArray(boardFromFile, 3, 3);
+                    boardFromFile = null;
+                } else if (result.get() == btnGhostTiles) {
+                    btnStartPause.setDisable(true);
+                    activeBoard.setGameRule(ReadFile.getParsedRule());
+                } else {
+                    boardFromFile = null;
+                    alert.close();
+                }
             }
             draw();
 

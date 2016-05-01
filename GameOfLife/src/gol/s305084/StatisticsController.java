@@ -1,5 +1,6 @@
 package gol.s305084;
 
+import gol.controller.UsefullMethods;
 import gol.model.Board.Board;
 import gol.model.Board.DynamicBoard;
 import java.io.File;
@@ -11,7 +12,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.Cursor;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
-import javafx.scene.control.Alert;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
@@ -20,8 +20,9 @@ import javafx.stage.FileChooser;
 import lieng.GIFWriter;
 
 /**
- * Shows statistics of a Board through a number of generations. Notable static
- * functions:  {@link #countLivingCells(gol.model.Board.Board) countLivingCells.}
+ * Shows statistics of a Board through a number of generations.
+ *
+ * Notable static functions:  {@link #countLivingCells(gol.model.Board.Board) countLivingCells.}
  * {@link #calcChangeCells(int, int) countLivingCells.}
  * {@link #simValue(byte[][], int, int) calculate similarity value.}
  *
@@ -78,6 +79,7 @@ public class StatisticsController implements Initializable {
 
     /**
      * Inserts the board witch statistics is wished to be shown.
+     *
      * @param activeBoard
      */
     public void loadeBoard(Board activeBoard) {
@@ -85,11 +87,12 @@ public class StatisticsController implements Initializable {
     }
 
     /**
-     * Calculates and visualise statistics.
-     * Types of data: Living cells, change in cells, and similarity value.  
-     * Similarity value is by default defined as how similar each generation is to generation 0.
-     * 
-     * Note: Mouse-click on the lineChart will change witch generation the similarity value will compare to.
+     * Calculates and visualise statistics. Types of data: Living cells, change
+     * in cells, and similarity value. Similarity value is by default defined by
+     * how similar each generation is to generation 0.
+     *
+     * Note: Mouse-click on the lineChart will change witch generation the
+     * similarity value will compare to.
      */
     public void showStats() {
         LIVINGCELLS.getData().clear();
@@ -109,7 +112,7 @@ public class StatisticsController implements Initializable {
             copyBoard.nextGen();
 
             //Life Change
-            int change = calcChangeCells( living, countLivingCells(copyBoard));
+            int change = calcChangeCells(living, countLivingCells(copyBoard));
             CELLCHANGE.getData().add(new XYChart.Data(i, change));
 
             //Similarity measure
@@ -131,7 +134,7 @@ public class StatisticsController implements Initializable {
 
     /**
      * Returns number of living cells for given pattern.
-     * 
+     *
      * @param pattern
      * @return Living cells
      */
@@ -146,9 +149,11 @@ public class StatisticsController implements Initializable {
         }
         return count;
     }
+
     /**
-     * Returns difference of number of living cells between a pattern its next generation.
-     * 
+     * Returns difference of number of living cells between a pattern its next
+     * generation.
+     *
      * @param cells alive
      * @param cellsNextgen alive Next generation
      * @return change
@@ -158,14 +163,17 @@ public class StatisticsController implements Initializable {
     }
 
     /**
-     * Returns similarity value for given pattern.
+     * Returns similarity value for given pattern. 
      * Does not return a similarity to another pattern, but a value defined as:
-     * <p><b>ALPHA * aliveCount + BETA * aliveChange + GAMMA * geoSum</b></p>
+     * <p>
+     * <b>ALPHA * aliveCount + BETA * aliveChange + GAMMA * geoSum</b>
+     * </p>
      * ALPHA
+     *
      * @param pattern
      * @param aliveCount
      * @param aliveChange
-     * @return 
+     * @return
      */
     public static double simValue(byte[][] pattern, int aliveCount, int aliveChange) {
         int geoSum = 0;
@@ -189,9 +197,11 @@ public class StatisticsController implements Initializable {
 
         }
     }
+
     /**
-     * If clicked, all generations similarity values will show there best future match.
-     * This is to create a easy view for finding the best generation to loop in the future.    
+     * If clicked, all generations similarity values will show there best future
+     * match. This is to create a easy view for finding the best generation to
+     * loop in the future.
      */
     @FXML
     private void handleShowAll() {
@@ -228,19 +238,18 @@ public class StatisticsController implements Initializable {
         activeBoard.insertArray(statBoard.getBoundingBoxBoard(), 1, 1);
 
         //Finding best loop
-        //loop array contains generation-Index, value
+        //loop array contains {generationIndex}, {value}
         double[] loop = new double[2];
-        for (int i = selectedGen; i < genIterations; i++) {
-            if (i != selectedGen) {
-                if (loop[1] < relativeSim(i, selectedGen)) {
+        for (int i = selectedGen + 1; i <= genIterations; i++) {
+            if (loop[1] < relativeSim(i, selectedGen)) {
 
-                    loop[1] = relativeSim(i, selectedGen);
-                    loop[0] = i;
-                }
+                loop[1] = relativeSim(i, selectedGen);
+                loop[0] = i;
             }
         }
         int frames = (int) loop[0] - selectedGen;
 
+        System.out.println(loop[0]);
         //Go to selectedBoard
         for (int i = 0; i < selectedGen; i++) {
             activeBoard.nextGen();
@@ -248,36 +257,46 @@ public class StatisticsController implements Initializable {
 
         //Aborts if board is empty or if only one frame will be created.
         if (activeBoard.getBoundingBox()[1] - activeBoard.getBoundingBox()[0] < 0) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Error");
-            alert.setHeaderText("Sorry, but you cant make a gif with no cells alive.");
-            alert.showAndWait();
+            UsefullMethods.showErrorAlert("Board is empty.", "Sorry, but you cant make a gif with no living cells.");
+            return;
+
         } else if (frames <= 1) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Oops!");
-            alert.setHeaderText("Sorry, but the best frame was the next one.\n"
-                    + "You may have selected the wrong starting frame? ");
-            alert.showAndWait();
-        } else {
+            if (selectedGen > genIterations - 2) {
+                UsefullMethods.showErrorAlert("Warning.", "Sorry, but you canot make a gif from this generation.");
+                return;
+            } else {
+                UsefullMethods.showErrorAlert("Warning.", "Sorry, but the best frame was the next one.\n"
+                        + "The gif will now loop beetween the second best. ");
+                loop[1] = 0;
+                for (int i = selectedGen + 2; i <= genIterations; i++) {
+                    if (loop[1] < relativeSim(i, selectedGen)) {
 
-            FileChooser fileChooser = new FileChooser();
-            fileChooser.getExtensionFilters().addAll(
-                    new FileChooser.ExtensionFilter("Gif format", "*.gif"),
-                    new FileChooser.ExtensionFilter("All Files", "*.*"));
-            File selected = fileChooser.showSaveDialog(null);
-            if (selected != null) {
-                try {
-                    GifMaker.makeGif(activeBoard.getBoundingBoxBoard(), new GIFWriter(GIFW, GIFH, selected.toString(),
-                            500), GIFW, GIFH, java.awt.Color.WHITE, java.awt.Color.BLACK, frames);
+                        loop[1] = relativeSim(i, selectedGen);
+                        loop[0] = i;
+                    }
 
-                } catch (IOException ex) {
-                    Alert alert = new Alert(Alert.AlertType.ERROR, ex.getMessage());
-                    alert.setTitle("Error");
-                    alert.setHeaderText("Sorry, something  went wrong during saving");
-                    alert.showAndWait();
                 }
+                System.out.println(loop[0]);
+                frames = (int) loop[0] - selectedGen;
+
             }
         }
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("Gif format", "*.gif"),
+                new FileChooser.ExtensionFilter("All Files", "*.*"));
+        File selected = fileChooser.showSaveDialog(null);
+        if (selected != null) {
+            try {
+                GifMaker.makeGif(activeBoard.getBoundingBoxBoard(), new GIFWriter(GIFW, GIFH, selected.toString(),
+                        500), GIFW, GIFH, java.awt.Color.WHITE, java.awt.Color.BLACK, frames);
+
+            } catch (IOException ex) {
+                UsefullMethods.showErrorAlert("Sorry!", "Something went wrong during saving \n please try again.");
+            }
+        }
+
     }
 
     private void initMouseListener() {
