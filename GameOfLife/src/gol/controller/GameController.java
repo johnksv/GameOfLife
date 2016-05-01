@@ -1,5 +1,6 @@
 package gol.controller;
 
+import gol.model.Board.ArrayBoard;
 import gol.model.Board.Board;
 import gol.model.Board.DynamicBoard;
 import gol.model.Board.HashBoard;
@@ -7,7 +8,9 @@ import gol.model.FileIO.PatternFormatException;
 import gol.model.FileIO.ReadFile;
 import gol.model.Logic.ConwaysRule;
 import gol.model.Logic.CustomRule;
+import gol.model.Logic.Rule;
 import gol.model.Logic.unsupportedRuleException;
+import gol.other.Configuration;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -18,6 +21,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.animation.Animation;
 import javafx.animation.Animation.Status;
+import javafx.animation.AnimationTimer;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.beans.value.ObservableValue;
@@ -37,11 +41,14 @@ import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Slider;
+import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TitledPane;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
 import javafx.scene.control.ToolBar;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.BorderPane;
@@ -64,6 +71,8 @@ public class GameController implements Initializable {
     @FXML
     private BorderPane borderpane;
     @FXML
+    private TabPane tabPane;
+    @FXML
     private ToolBar toolBarQuickStats;
     @FXML
     private Slider cellSizeSlider;
@@ -76,7 +85,7 @@ public class GameController implements Initializable {
     @FXML
     private Label labelGenCount;
     @FXML
-    private Button startPauseBtn;
+    private Button btnStartPause;
     @FXML
     private ColorPicker cellCP;
     @FXML
@@ -100,12 +109,13 @@ public class GameController implements Initializable {
     private final Timeline timeline = new Timeline();
     private GraphicsContext gc;
 
-    private Color cellColor = Color.BLACK;
-    private Color backgroundColor = Color.web("#F4F4F4");
+    private Color cellColor;
+    private Color backgroundColor;
     private byte[][] boardFromFile;
     private int mousePositionX;
     private int mousePositionY;
     private long gencount = 0;
+    private AnimationTimer animationTimer;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -113,16 +123,21 @@ public class GameController implements Initializable {
 
         canvas.widthProperty().bind(borderpane.widthProperty());
         canvas.heightProperty().bind(borderpane.heightProperty().subtract(toolBarQuickStats.heightProperty()));
+        tabPane.prefHeightProperty().bind(borderpane.heightProperty());
         toolBarQuickStats.prefWidthProperty().bind(borderpane.widthProperty());
+        borderpane.widthProperty().addListener(e -> draw());
+        borderpane.heightProperty().addListener(e -> draw());
 
         cellSizeSlider.setBlockIncrement(0.75);
 
         //TODO Valg for Array eller dynamisk brett
-        //activeBoard = new ArrayBoard();
-        //activeBoard = new DynamicBoard();
-        activeBoard = new HashBoard();
-        cellCP.setValue(Color.BLACK);
-        backgroundCP.setValue(Color.web("#F4F4F4"));
+        if (Configuration.getProp("board").equals("arrayboard")) {
+            activeBoard = new ArrayBoard();
+        } else {
+            activeBoard = new DynamicBoard();
+        }
+        cellCP.setValue(Color.web("#000000"));
+        backgroundCP.setValue(Color.web("#9CB5D3"));
 
         mouseInit();
         handleZoom();
@@ -153,25 +168,36 @@ public class GameController implements Initializable {
     private void initAnimation() {
         Duration duration = Duration.millis(1000);
         KeyFrame keyframe = new KeyFrame(duration, (ActionEvent e) -> {
-            activeBoard.nextGenConcurrent();
+            if (Configuration.getProp("useThreads").equals("true") && activeBoard instanceof DynamicBoard) {
+                activeBoard.nextGenConcurrent();
+            } else {
+                activeBoard.nextGen();
+            }
             gencount++;
             labelGenCount.setText("Generation: " + gencount);
-            draw();
         });
         timeline.setCycleCount(Animation.INDEFINITE);
         timeline.getKeyFrames().add(keyframe);
+
+        animationTimer = new AnimationTimer() {
+            @Override
+            public void handle(long now) {
+                draw();
+            }
+        };
 
     }
 
     @FXML
     private void handleAnimation() {
-
         if (timeline.getStatus() == Status.RUNNING) {
             timeline.pause();
-            startPauseBtn.setText("Start game");
+            animationTimer.stop();
+            btnStartPause.setText("Start game");
         } else {
             timeline.play();
-            startPauseBtn.setText("Pause game");
+            animationTimer.start();
+            btnStartPause.setText("Pause game");
         }
     }
 
@@ -180,12 +206,6 @@ public class GameController implements Initializable {
         double animationSpeed = animationSpeedSlider.getValue();
         timeline.setRate(animationSpeed);
         animationSpeedLabel.setText(String.format("%.2f %s", animationSpeed, " "));
-    }
-
-    @FXML
-    public void handleRuleText() {
-        //TODO
-
     }
 
     @FXML
@@ -224,27 +244,29 @@ public class GameController implements Initializable {
     }
 
     /**
-     * //TODO bug?
-     *
-     * Bug You can cheat this method if you zoom out max with max spacing, then
-     * remove the spacing, but this is the only issue.
+     * Known issue on array board: If you decrease gridspacing while zoomed out.
      */
     @FXML
     private void handleZoom() {
         double x = cellSizeSlider.getValue();
+        //Formula for smooth zoom. Found with geogebra.
         double newValue = 0.2 * Math.exp(0.05 * x);
+
         if (((newValue) * activeBoard.getArrayLength() > canvas.getHeight()
-                && (newValue) * activeBoard.getArrayLength(0) > canvas.getWidth()) || activeBoard instanceof DynamicBoard) {
+                && (newValue) * activeBoard.getMaxRowLength() > canvas.getWidth())
+                || activeBoard instanceof DynamicBoard) {
             handleGridSpacingSlider();
 
             if (cellSizeSlider.isFocused()) {
-
+                //Zoom on center
                 calcNewOffset(activeBoard.getCellSize(), newValue);
             } else {
+                //Zoom on mouse
                 calcNewOffsetMouse(activeBoard.getCellSize(), newValue);
             }
             activeBoard.setCellSize(newValue);
         } else {
+            //Calculates to max slider value
             cellSizeSlider.setValue(20 * Math.log(5 * activeBoard.getCellSize()));
         }
 
@@ -269,8 +291,11 @@ public class GameController implements Initializable {
     private void handleClearBtn() {
         gencount = 0;
         activeBoard.clearBoard();
+        activeBoard.offsetValues[0] = 0;
+        activeBoard.offsetValues[1] = 0;
+
         timeline.pause();
-        startPauseBtn.setText("Start game");
+        btnStartPause.setText("Start game");
         draw();
     }
 
@@ -288,54 +313,110 @@ public class GameController implements Initializable {
             if (selected != null) {
                 boardFromFile = ReadFile.readFileFromDisk(selected.toPath());
 
-                Alert alert = new Alert(AlertType.NONE);
-                alert.setTitle("Place pattern");
-                alert.initStyle(StageStyle.UTILITY);
-                alert.setContentText("How do you want to insert the pattern?");
+                showInsertDialog();
 
-                VBox container = new VBox();
-                for (String line : ReadFile.getMetadata()) {
-                    container.getChildren().addAll(new Label(line));
-                }
-
-                if (!container.getChildren().isEmpty()) {
-                    alert.getDialogPane().setExpandableContent(container);
-                    alert.getDialogPane().setExpanded(true);
-                }
-
-                ButtonType btnGhostTiles = new ButtonType("Insert with ghost tiles");
-                ButtonType btnInsert = new ButtonType("Insert at top-left");
-                ButtonType btnCancel = new ButtonType("Cancel");
-
-                alert.getButtonTypes().addAll(btnGhostTiles, btnInsert, btnCancel);
-
-                Optional<ButtonType> result = alert.showAndWait();
-
-                if (result.get() == btnInsert) {
-                    activeBoard.insertArray(boardFromFile, 1, 1);
-                    boardFromFile = null;
-                } else if (result.get() == btnGhostTiles) {
-                    startPauseBtn.setDisable(true);
-                    activeBoard.setGameRule(ReadFile.getParsedRule());
-                } else {
-                    boardFromFile = null;
-                    alert.close();
-                }
-                draw();
             }
 
         } catch (IOException ex) {
-            Alert alert = new Alert(Alert.AlertType.ERROR, "There was an error reading the file");
-            alert.setTitle("Error");
-            alert.setHeaderText("Reading File Error");
-            alert.showAndWait();
+            UsefullMethods.showErrorAlert("Reading File Error", "There was an error reading the file");
         } catch (PatternFormatException ex) {
-            Alert alert = new Alert(Alert.AlertType.ERROR, ex.getMessage());
-            alert.setTitle("Error");
-            alert.setHeaderText("Pattern Error");
-            alert.showAndWait();
-
+            UsefullMethods.showErrorAlert("Pattern Error", ex.getMessage());
         }
+    }
+
+    @FXML
+    private void handleImportInternet() {
+        Alert mainDialog = new Alert(AlertType.NONE);
+        mainDialog.setTitle("Import from internet");
+        mainDialog.initStyle(StageStyle.UTILITY);
+        mainDialog.setContentText("Type the url of the pattern you want to import");
+
+        VBox container = new VBox();
+        TextField input = new TextField("http://");
+        container.getChildren().add(input);
+
+        mainDialog.getDialogPane().setExpandableContent(container);
+        mainDialog.getDialogPane().setExpanded(true);
+
+        ButtonType btnInsert = new ButtonType("Insert");
+        ButtonType btnCancel = new ButtonType("Cancel");
+        mainDialog.getButtonTypes().addAll(btnInsert, btnCancel);
+
+        Optional<ButtonType> result = mainDialog.showAndWait();
+
+        if (result.get() == btnInsert) {
+            try {
+                boardFromFile = ReadFile.readFromURL(input.getText());
+                showInsertDialog();
+            } catch (IOException ex) {
+                UsefullMethods.showErrorAlert("Reading File Error", "There was an error reading your file, please check your internet connection.");
+            } catch (PatternFormatException ex) {
+                UsefullMethods.showErrorAlert("Pattern Error", ex.getMessage());
+            }
+        }
+
+    }
+
+    private void showInsertDialog() throws PatternFormatException, IOException {
+
+        Alert alert = new Alert(AlertType.NONE);
+        alert.setTitle("Place pattern");
+        alert.initStyle(StageStyle.UTILITY);
+        alert.setContentText("How do you want to insert the pattern?");
+
+        VBox container = new VBox();
+        for (String line : ReadFile.getMetadata()) {
+            container.getChildren().addAll(new Label(line));
+        }
+
+        if (!container.getChildren().isEmpty()) {
+            alert.getDialogPane().setExpandableContent(container);
+            alert.getDialogPane().setExpanded(true);
+        }
+
+        ButtonType btnGhostTiles = new ButtonType("Insert with ghost tiles");
+        ButtonType btnInsert = new ButtonType("Insert at top-left");
+        ButtonType btnCancel = new ButtonType("Cancel");
+
+        alert.getButtonTypes().addAll(btnGhostTiles, btnInsert, btnCancel);
+
+        Optional<ButtonType> result = alert.showAndWait();
+
+        if (result.get() == btnInsert) {
+            activeBoard.insertArray(boardFromFile, 1, 1);
+            boardFromFile = null;
+            updateRules();
+        } else if (result.get() == btnGhostTiles) {
+            btnStartPause.setDisable(true);
+            updateRules();
+        } else {
+            boardFromFile = null;
+            alert.close();
+        }
+        draw();
+    }
+
+    /**
+     * Do not call if a new pattern has not been parsed. If no rule was parsed
+     * Conway's rule will be set as new rule.
+     */
+    private void updateRules() {
+        Rule newRule = ReadFile.getParsedRule();
+        activeBoard.setGameRule(newRule);
+        rbCustomGameRules.fire();
+
+        String born = "";
+        String surv = "";
+
+        for (byte b : newRule.getToBorn()) {
+            born += b + " ";
+        }
+
+        for (byte s : newRule.getSurvive()) {
+            surv += s + " ";
+        }
+        tfCellsToBeBorn.setText(born);
+        tfCellsToSurvive.setText(surv);
     }
 
     @FXML
@@ -413,7 +494,7 @@ public class GameController implements Initializable {
                 activeBoard.insertArray(boardFromFile, 3, 3);
                 boardFromFile = null;
             } else if (result.get() == btnGhostTiles) {
-                startPauseBtn.setDisable(true);
+                btnStartPause.setDisable(true);
                 activeBoard.setGameRule(ReadFile.getParsedRule());
             } else {
                 boardFromFile = null;
@@ -437,12 +518,13 @@ public class GameController implements Initializable {
         }
     }
 
+    /**
+     * Sets current board to this.
+     *
+     * @param activeBoard Board to set.
+     */
     public void setActiveBoard(Board activeBoard) {
         this.activeBoard = activeBoard;
-    }
-
-    public Board getActiveBoard() {
-        return activeBoard;
     }
 
     /**
@@ -454,7 +536,7 @@ public class GameController implements Initializable {
         canvas.addEventHandler(MouseEvent.MOUSE_PRESSED,
                 (MouseEvent e) -> {
                     if (boardFromFile != null) {
-                        startPauseBtn.setDisable(false);
+                        btnStartPause.setDisable(false);
                         activeBoard.insertArray(boardFromFile, (int) ((mousePositionY - activeBoard.offsetValues[1]) / (activeBoard.getGridSpacing() + activeBoard.getCellSize())),
                                 (int) ((mousePositionX - activeBoard.offsetValues[0]) / (activeBoard.getGridSpacing() + activeBoard.getCellSize())));
                         boardFromFile = null;
@@ -584,7 +666,7 @@ public class GameController implements Initializable {
                 //Negative beacuse offset on arrayboard always is negative
                 //max values is for right and bottom sides
                 double maxValueX = -((activeBoard.getCellSize() + activeBoard.getGridSpacing()) * activeBoard.getArrayLength() - canvas.getWidth());
-                double maxValueY = -((activeBoard.getCellSize() + activeBoard.getGridSpacing()) * activeBoard.getArrayLength(0) - canvas.getHeight());
+                double maxValueY = -((activeBoard.getCellSize() + activeBoard.getGridSpacing()) * activeBoard.getMaxRowLength() - canvas.getHeight());
 
                 //If positive, board should not move
                 if (newXoffset < 0) {
@@ -633,6 +715,34 @@ public class GameController implements Initializable {
         draw();
     }
 
+    public void handleKeyEvents(KeyEvent e) {
+        btnStartPause.requestFocus();
+        String key = e.getText();
+        switch (key) {
+            case "f":
+                if (boardFromFile != null) {
+                    boardFromFile = UsefullMethods.transposeMatrix(boardFromFile);
+                }
+                break;
+
+            case "r":
+                if (boardFromFile != null) {
+                    boardFromFile = UsefullMethods.rotateArray90Deg(boardFromFile);
+                }
+                break;
+
+            case "c":
+                handleClearBtn();
+                break;
+
+            case "k":
+                handleAnimation();
+                break;
+        }
+        draw();
+        drawGhostTiles();
+    }
+
     /**
      * When cellsize is changed, this methods is called. It then calculates
      * offset with the new cellsize. The offset is based on the center of
@@ -676,7 +786,7 @@ public class GameController implements Initializable {
     private void updateOffsetValues(double newCellSize) {
         if (!(activeBoard instanceof DynamicBoard)) {
             double maxvalueX = -(newCellSize * activeBoard.getArrayLength() - canvas.getWidth());
-            double maxvalueY = -(newCellSize * activeBoard.getArrayLength(0) - canvas.getHeight());
+            double maxvalueY = -(newCellSize * activeBoard.getMaxRowLength() - canvas.getHeight());
 
             activeBoard.offsetValues[0] = (activeBoard.offsetValues[0] > 0) ? 0 : activeBoard.offsetValues[0];
             activeBoard.offsetValues[1] = (activeBoard.offsetValues[1] > 0) ? 0 : activeBoard.offsetValues[1];

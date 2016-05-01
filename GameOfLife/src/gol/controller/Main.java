@@ -38,9 +38,6 @@ public class Main extends Application {
 
         MainController.loadStage(primaryStage);
 
-        // TODO REMOVE TESTING
-//        test100NextGen();
-//        Platform.exit();
     }
 
     public static void main(String[] args) {

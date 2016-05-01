@@ -53,13 +53,13 @@ public class ReadFile {
         }
     }
 
-    public static void writeFromURL(String URLToSave) throws PatternFormatException, IOException {
+    public static byte[][] readFromURL(String URLToSave) throws PatternFormatException, IOException {
 
         URL url = new URL(URLToSave);
         URLConnection connection = url.openConnection();
 
         String[] token = url.toString().split("\\.");
-        String suffix = token[token.length - 1];
+        String suffix = "." + token[token.length - 1];
 
         Path saveLocation = File.createTempFile("golPattern", suffix).toPath();
 
@@ -73,9 +73,8 @@ public class ReadFile {
             }
         }
         writer.close();
-
-        readFileFromDisk(saveLocation);
-
+        saveLocation.toFile().deleteOnExit();
+        return readFileFromDisk(saveLocation);
     }
 
     /**
@@ -245,9 +244,10 @@ public class ReadFile {
             //Checks if there are empty lines.
             if ((numbers.length > letters.length)
                     || (numbers.length == letters.length && letters[0].equals(""))) {
-
-                for (int k = 1; k < Integer.parseInt(numbers[numbers.length - 1]); k++) {
-                    offset++;
+                if (!numbers[numbers.length - 1].equals("")) {
+                    for (int k = 1; k < Integer.parseInt(numbers[numbers.length - 1]); k++) {
+                        offset++;
+                    }
                 }
 
             }
@@ -286,7 +286,9 @@ public class ReadFile {
         byte[] survive = null;
 
         String[] rule = ruleLine.split("=");
-
+        if (rule.length == 1) {
+            return;
+        }
         rule = rule[1].split("/");
         for (int i = 0; i < rule.length; i++) {
             if (rule[i].matches("[Ss]\\d*")) {
@@ -309,41 +311,35 @@ public class ReadFile {
                     born = new byte[]{-1};
                 }
 
-            } else //expected Rule=3/23  (born/survive)
-            {
-                if (i == 0) {
-                    if (rule[i].length() >= 1) {
-                        born = new byte[rule[i].length()];
-                        for (int j = 0; j < rule[i].length(); j++) {
-                            born[j] = (byte) Character.digit(rule[i].toCharArray()[j], 10);
-                        }
-                    } else {
-                        born = new byte[]{-1};
+            } else if (i == 0) {
+                if (rule[i].length() >= 1) {
+                    born = new byte[rule[i].length()];
+                    for (int j = 0; j < rule[i].length(); j++) {
+                        born[j] = (byte) Character.digit(rule[i].toCharArray()[j], 10);
                     }
-
-                } else if (i == 1) {
-                    if (rule[i].length() >= 1) {
-                        survive = new byte[rule[i].length()];
-                        for (int j = 0; j < rule[i].length(); j++) {
-                            survive[j] = (byte) Character.digit(rule[i].toCharArray()[j], 10);
-                        }
-                    } else {
-                        survive = new byte[]{-1};
+                } else {
+                    born = new byte[]{-1};
+                }
+            } else if (i == 1) {
+                if (rule[i].length() >= 1) {
+                    survive = new byte[rule[i].length()];
+                    for (int j = 0; j < rule[i].length(); j++) {
+                        survive[j] = (byte) Character.digit(rule[i].toCharArray()[j], 10);
                     }
+                } else {
+                    survive = new byte[]{-1};
                 }
             }
-
-            try {
-                parsedRule = new CustomRule(survive, born);
-            } catch (unsupportedRuleException ex) {
-                parsedRule = new ConwaysRule();
-            }
+        }
+        try {
+            parsedRule = new CustomRule(survive, born);
+        } catch (unsupportedRuleException ex) {
+            parsedRule = new ConwaysRule();
         }
     }
-    
 
     private static void appendMetaData(String line) {
         METADATA.add(line);
     }
-    
+
 }

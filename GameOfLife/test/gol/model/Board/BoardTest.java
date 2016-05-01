@@ -6,6 +6,7 @@
 package gol.model.Board;
 
 import gol.model.Logic.Rule;
+import gol.other.Configuration;
 import java.util.Arrays;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -33,6 +34,7 @@ public class BoardTest {
 
     @Before
     public void setUp() {
+        Configuration.loadConfig();
         arrayInstance = new ArrayBoard(5, 5);
         dynamicInstance = new DynamicBoard(5, 5);
         patternGlider = new byte[][]{
@@ -93,8 +95,12 @@ public class BoardTest {
 
         dynamicInstance.clearBoard();
         dynamicInstance.setCellState(1, 1, true);
-        assertEquals(true, dynamicInstance.getCellState(1, 1));
-
+        assertEquals(true, dynamicInstance.getCellState(50, 50));
+        
+        dynamicInstance.clearBoard();
+        dynamicInstance.setCellState(2, 2, true);
+        assertEquals(true, dynamicInstance.getCellState(2, 2));
+        
         dynamicInstance.clearBoard();
         dynamicInstance.setCellState(0, 0, true);
         assertEquals(true, dynamicInstance.getCellState(50, 50));
@@ -115,7 +121,7 @@ public class BoardTest {
 
         String expResult = "0000000000000000000000000";
         assertEquals(expResult, result);
-        
+
         dynamicInstance.insertArray(patternGlider, 0, 0);
         dynamicInstance.clearBoard();
         assertEquals(expResult, result);

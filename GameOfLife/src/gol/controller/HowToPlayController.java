@@ -4,6 +4,7 @@
  */
 package gol.controller;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -12,33 +13,42 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 /**
- * FXML Controller, controls the how to play screen. 
- * 
- *  
+ * FXML Controller, controls the how to play screen.
+ *
+ *
  * @author s305054, s305084, s305089
  */
 public class HowToPlayController implements Initializable {
 
+    @FXML
+    private TableView shortcutTableView;
+    @FXML
+    private TableColumn wTableColumn;
+    @FXML
+    private TableColumn kTableColumn;
     
     private static Stage stage;
-    
+
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        stage.getIcons().add(new Image(getClass().getResourceAsStream("gen1.PNG")));
+        stage.getIcons().add(new Image(new File("src\\mics\\gen1.PNG").toURI().toString()));
         stage.setTitle(" How to play");
     }
-    
+
     /**
-     * Loads StartScreen.fxml and set {@link gol.controller.MainController} as its controller.
-     * @throws IOException 
+     * Loads StartScreen.fxml and set {@link gol.controller.MainController} as
+     * its controller.
+     *
+     * @throws IOException
      */
     @FXML
     private void handleMainMenuBtn() throws IOException {
@@ -48,15 +58,19 @@ public class HowToPlayController implements Initializable {
         stage.setTitle(" Game of Life");
     }
     
+    private void setTableValues() {
+        //TODO
+    }
+
     /**
-     * Loads the primaryStage to be stored.
-     * The stage is stored as a static private variable.
-     * Needs to be done first in {@link Main#start  }.
-     * This is because of {@link #initialize}. 
+     * Loads the primaryStage to be stored. The stage is stored as a static
+     * private variable. Needs to be done first in {@link Main#start }. This is
+     * because of {@link #initialize}.
+     *
      * @param stage
      */
     public static void loadStage(Stage stage) {
         HowToPlayController.stage = stage;
     }
-    
+
 }

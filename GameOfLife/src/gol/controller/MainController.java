@@ -41,39 +41,39 @@ public class MainController implements Initializable {
 
     /**
      * Loads Game.fxml witch sets {@link gol.controller.GameController} as its
-     * controller. This method will also call {@link #setKeyEvents(Scene) }.
+     * controller. This method will also call {@link GameController#handleKeyEvents(javafx.scene.input.KeyEvent) setKeyEvents}.
      *
-     * @throws IOException Reads an FXML file
+     * @throws IOException Reads a FXML file
      */
     @FXML
     public void startGame() throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("/gol/view/Game.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/gol/view/Game.fxml"));
+        Parent root = loader.load();
+        
+        GameController gameController = loader.getController();
         Scene scene = new Scene(root);
-        setKeyEvents(scene);
+        scene.setOnKeyPressed((KeyEvent e) -> {
+            gameController.handleKeyEvents(e);
+        });
+        
         primaryStage.setScene(scene);
         primaryStage.setMinWidth(850);
         primaryStage.setMinHeight(650);
 
     }
 
+    /**
+     * Loads HowToPlay.fxml witch sets {@link gol.controller.HowToPlayController} 
+     * as its controller.
+     * 
+     * @throws IOException Reads a FXML file
+     */
     @FXML
     public void howToPlay() throws IOException {
         HowToPlayController.loadStage(primaryStage);
         Parent root = FXMLLoader.load(getClass().getResource("/gol/view/HowToPlay.fxml"));
         Scene scene = new Scene(root);
-        setKeyEvents(scene);
         primaryStage.setScene(scene);
-    }
-
-    /**
-     * Checks if the the parameter is stored in the input list.
-     *
-     * @see #setKeyEvents
-     * @param keyInput String representation of a keyboard button
-     * @return Boolean
-     */
-    public static boolean inputContains(String keyInput) {
-        return input.contains(keyInput);
     }
 
     /**
@@ -85,26 +85,6 @@ public class MainController implements Initializable {
      */
     public static void loadStage(Stage stage) {
         primaryStage = stage;
-    }
-
-    /**
-     * Listens and stores key events at the chosen scene. This will store key
-     * presses as a string representation when pressed. It will also delete them
-     * when the key is released. Stores the Strings in a String list.
-     *
-     * @see #inputContains(String)
-     * @param scene
-     */
-    public void setKeyEvents(Scene scene) {
-        scene.setOnKeyPressed((KeyEvent e) -> {
-            if (!input.contains(e.getText())) {
-                input.add(e.getText());
-            }
-        });
-
-        scene.setOnKeyReleased((KeyEvent e) -> {
-            input.remove(e.getText());
-        });
     }
 
 }
