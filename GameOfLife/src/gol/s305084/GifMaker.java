@@ -20,7 +20,8 @@ public final class GifMaker {
     private static Color cellColor;
     private static int width;
     private static int height;
-
+    
+    //TODO width and hight from config!
     private final static int maxCellSize = 20;
     
     /**

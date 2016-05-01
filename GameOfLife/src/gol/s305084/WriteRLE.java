@@ -42,9 +42,8 @@ public final class WriteRLE {
         if (!comment.equals("")) {
             lines.add("#C " + comment);
         }
-        //Pattern dimensions
+        //Pattern dimensions. No other rule then conway's are supported.
         lines.add("x = " + g[0].length + ", y = " + g.length + ", Rule = B3/23S");
-        //TODO Inport rule
         int counter = 0;
 
         StringBuilder line = new StringBuilder();
@@ -56,17 +55,15 @@ public final class WriteRLE {
                     if (last == 64) {
                         //TODO make own helping method?
                         if (counter == 1) {
-                            line.append("o");
+                            line.append('o');
                         } else {
-                            line.append(counter + "o");
+                            line.append(counter).append('o');
                         }
 
+                    } else if (counter == 1) {
+                        line.append('b');
                     } else {
-                        if (counter == 1) {
-                            line.append("b");
-                        } else {
-                            line.append(counter + "b");
-                        }
+                        line.append(counter).append('b');
                     }
                     if (line.length() > 70) {
                         lines.add(line.toString());
@@ -82,9 +79,9 @@ public final class WriteRLE {
             }
             if (last == 64) {
                 if (counter == 1) {
-                    line.append("o");
+                    line.append('o');
                 } else {
-                    line.append(counter + "o");
+                    line.append(counter).append('o');
                 }
             }
             counter = 0;
@@ -97,8 +94,16 @@ public final class WriteRLE {
 
     }
 
+    /**
+     *  Sets all end of line signs, and handles end of file sign.
+     *  If several rows are blank, this is the method sets how many before the exclamation mark. 
+     *  
+     *  appendBlank makes sure the file do not end with:"$!" 
+     *  f.eks: bob$!
+     * 
+     */
     private static int appendBlank(StringBuilder line, byte[][] pattern, int i) {
-        //To make sure that the last line has ! and not $
+        // last line must end with ! and not $
         if (i + 1 >= pattern.length) {
             return i;
         }
@@ -116,10 +121,10 @@ public final class WriteRLE {
         }
 
         if (blankCount == 1) {
-            line.append("$");
+            line.append('$');
             return i;
         } else {
-            line.append(blankCount + "$");
+            line.append(blankCount).append('$');
             return i + blankCount - 1;
         }
     }
