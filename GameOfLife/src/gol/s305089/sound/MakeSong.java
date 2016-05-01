@@ -15,7 +15,7 @@ public class MakeSong {
     /**
      * Adds a frequency with amplitude to this iteration. For use with
      * {@link #makeSound(java.io.File, int)}. Frequency of tones can be found at
-     * http://www.phy.mtu.edu/~suits/notefreqs.html.
+     * http://www.phy.mtu.edu/~suits/notefreqs.html .
      *
      * @param iteration The iteration the frequency and amplitude should be
      * assigned to
@@ -52,15 +52,16 @@ public class MakeSong {
     }
 
     public static void makeSound(File saveLoc, int durIte) {
+        int channels = 1;
         try {
             int iterations = song.size();
             // Calculate the number of frames required for specified duration
             long numFrames = (long) (durIte * iterations * SAMPLE_RATE);
             long framesEachIt = (long) (durIte * SAMPLE_RATE);
             // Create a wav file with the name specified as the first argument
-            WavFile wavFile = WavFile.newWavFile(saveLoc, 2, numFrames, 8, SAMPLE_RATE);
+            WavFile wavFile = WavFile.newWavFile(saveLoc, channels, numFrames, 8, SAMPLE_RATE);
             // Create a buffer of 100 frames
-            double[][] buffer = new double[2][100];
+            double[][] buffer = new double[channels][100];
 
             for (int i = 0; i < iterations; i++) {
                 // Initialise a local frame counter
@@ -74,16 +75,21 @@ public class MakeSong {
                     // Fill the buffer, one tone per channel
                     //TODO: Last iterations will probably cut down?
                     for (int s = 0; s < toWrite; s++, frameCounter++) {
+                        if(frameCounter==150){
+                            System.out.println("STOP!");
+                        }
                         for (double[] current : song.get(i)) {
-                            //Something wierd happens with +0....
-                            buffer[0][s] = current[0] * Math.sin(2.0 * Math.PI * current[1] * frameCounter / SAMPLE_RATE);
-                            buffer[1][s] = current[0] * Math.sin(2.0 * Math.PI * current[1] * frameCounter / SAMPLE_RATE);
+                            buffer[0][s] += current[0] * Math.sin(2.0 * Math.PI * current[1] * frameCounter / SAMPLE_RATE);
+                            //buffer[1][s] = current[0] * Math.sin(2.0 * Math.PI * current[1] * frameCounter / SAMPLE_RATE);
                         }
                     }
                     // Write the buffer
                     wavFile.writeFrames(buffer, toWrite);
+                    //Clean the buffer 
+                    buffer = new double[channels][100];
                 }
             }
+            wavFile.close();
         } catch (IOException | WavFileException ex) {
             System.err.println("Error making file:\n" + ex);
         }

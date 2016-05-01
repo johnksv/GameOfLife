@@ -28,16 +28,14 @@ public class MakeSongTest {
     public void testMakeSound() throws IOException {
         System.out.println("makeSound");
         MakeSong.addToSong(0, 261.63, 0.9);
-        MakeSong.addToSong(1, 293.66, 0.9);
-        MakeSong.addToSong(2, 329.63, 0.5);
-        MakeSong.addToSong(3, 349.23, 0.2);
-
+        MakeSong.addToSong(0, 329.63, 0.5);
+        MakeSong.addToSong(0, 392.00, 0.3);
 
         File saveLoc = Files.createTempFile("golSoundTest", ".wav").toFile();
         int durIte = 1;
         MakeSong.makeSound(saveLoc, durIte);
         System.out.println(saveLoc.getAbsoluteFile());
-        fail("The test case is a prototype.");
+
     }
 
 }
