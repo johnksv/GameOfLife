@@ -6,6 +6,8 @@ package gol.s305054.controller;
 
 import gol.model.Board.ArrayBoard;
 import gol.model.Board.Board;
+import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
@@ -19,6 +21,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.paint.Color;
+import javafx.stage.FileChooser;
 
 /**
  * FXML Controller class
@@ -197,8 +200,16 @@ public class EditorController implements Initializable {
         draw();
     }
     
-    public void theStrip() {
+    @FXML
+    private void handleSave() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save Pattern");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("RLE", ".rle"));
         
+        File file = fileChooser.showSaveDialog(null); //Stage?
+        if(file != null) {
+            //WriteRleObject.writeRle
+        }
     }
 
 }

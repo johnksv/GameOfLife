@@ -49,7 +49,7 @@
                                        <content>
                                           <AnchorPane prefHeight="200.0" prefWidth="200.0">
                                              <children>
-                                                <Button fx:id="savePatternBtn" layoutX="13.0" layoutY="14.0" mnemonicParsing="false" text="Save Pattern" />
+                                                <Button fx:id="savePatternBtn" layoutX="13.0" layoutY="14.0" mnemonicParsing="false" onAction="#handleSave" text="Save Pattern" />
                                                 <Button fx:id="closeBtn" layoutX="14.0" layoutY="49.0" mnemonicParsing="false" text="Close" />
                                              </children>
                                           </AnchorPane>
