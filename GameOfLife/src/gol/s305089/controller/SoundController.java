@@ -49,6 +49,8 @@ public class SoundController implements Initializable {
     private Label labelLocation;
     @FXML
     private RadioButton rbGenerated;
+    @FXML
+    private RadioButton rbnGenPlayback;
 
     //The board that is actually being used in main window.
     private Board activeBoard;
@@ -74,11 +76,11 @@ public class SoundController implements Initializable {
     }
 
     /**
-     * 
+     *
      */
     public void playSound() {
-        audioClipQueue.clear();
-        if (!playing && rbGenerated.isSelected()) {
+        if (!playing && rbGenerated.isSelected() && rbnGenPlayback.isSelected()) {
+            audioClipQueue.clear();
             playing = true;
             parseBoardBB();
             playAudioQueue();
@@ -323,10 +325,4 @@ public class SoundController implements Initializable {
             labelTime.setText(elapsedTime + "/" + totalTime);
         });
     }
-
-    @FXML
-    private void saveAsWav() {
-
-    }
-
 }
