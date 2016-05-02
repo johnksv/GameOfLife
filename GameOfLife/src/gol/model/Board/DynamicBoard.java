@@ -67,38 +67,51 @@ public class DynamicBoard extends Board {
 
         int linesPerThread = gameBoard.size() / ThreadPool.THREAD_NR;
         int rest = gameBoard.size() % ThreadPool.THREAD_NR;
-        int startRow = (linesPerThread * thread) + rest;
+        int startRow = (linesPerThread * thread);
+        int endRow = linesPerThread * (thread + 1);
 
-        int endRow = linesPerThread * (thread + 1) + rest;
-
-        threadPool.addWork(() -> {
-            for (int row = startRow; row < endRow; row++) {
-                for (int col = 1; col < gameBoard.get(row).size(); col++) {
-
-                    //If cell is alive
-                    if (gameBoard.get(row).get(col).intValue() >= 64) {
-
-                        //Goes through surrounding neighbours
-                        for (int k = -1; k <= 1; k++) {
-                            for (int l = -1; l <= 1; l++) {
-
-                                //To not count itself
-                                if (!(k == 0 && l == 0)) {
-                                    //Will not expand top or left
-                                    //Important: will expand bottom and rigth
-                                    incrementCellValueNE(row + k, col + l);
-
-                                    row = (row + k < 1) ? row + 1 : row;
-                                    col = (col + l < 1) ? col + 1 : col;
-
-                                }
-                            }
-                        }
+        //Since lambda expression needs effectively final fields
+        if (thread == ThreadPool.THREAD_NR - 1) {
+            int lastEndRow = gameBoard.size();
+            threadPool.addWork(() -> {
+                for (int row = startRow; row < lastEndRow; row++) {
+                    for (int col = 1; col < gameBoard.get(row).size(); col++) {
+                        doCountNeigConCu(row, col);
                     }
+                }
+            });
+        } else {
+            threadPool.addWork(() -> {
+                for (int row = startRow; row < endRow; row++) {
+                    for (int col = 1; col < gameBoard.get(row).size(); col++) {
+                        doCountNeigConCu(row, col);
+                    }
+                }
+            });
+        }
+    }
 
+    private void doCountNeigConCu(int row, int col) {
+        //If cell is alive
+        if (gameBoard.get(row).get(col).intValue() >= 64) {
+
+            //Goes through surrounding neighbours
+            for (int k = -1; k <= 1; k++) {
+                for (int l = -1; l <= 1; l++) {
+
+                    //To not count itself
+                    if (!(k == 0 && l == 0)) {
+                        //Will not expand top or left
+                        //Important: will expand bottom and rigth
+                        incrementCellValueNE(row + k, col + l);
+
+                        row = (row + k < 1) ? row + 1 : row;
+                        col = (col + l < 1) ? col + 1 : col;
+
+                    }
                 }
             }
-        });
+        }
     }
 
     @Override
@@ -121,33 +134,46 @@ public class DynamicBoard extends Board {
     protected void checkRulesConcurrent(Rule activeRule, int thread) {
         int linesPerThread = gameBoard.size() / ThreadPool.THREAD_NR;
         int rest = gameBoard.size() % ThreadPool.THREAD_NR;
-        int startRow = (linesPerThread * thread) + rest;
-        int endRow = linesPerThread * (thread + 1) + rest;
-
-        threadPool.addWork(() -> {
-            for (int row = startRow; row < endRow; row++) {
-                for (int col = 1; col < gameBoard.get(row).size(); col++) {
-                    if (gameBoard.get(row).get(col).intValue() != 0) {
-                        if (activeRule.setLife(gameBoard.get(row).get(col).byteValue()) == 64) {
-                            //Will not expand top or left sides
-                            setCellStateNE(row, col, true);
-
-                            //Will force expansion next gen if near border.
-                            if (row < 4) {
-                                EXPAND_Y.set(true);
-                            }
-                            if (col < 4) {
-                                EXPAND_X.set(true);
-                            }
-                        } else {
-                            setCellStateNE(row, col, false);
-                        }
-
+        int startRow = (linesPerThread * thread);
+        int endRow = linesPerThread * (thread + 1);
+        if (thread == ThreadPool.THREAD_NR - 1) {
+            int lastEndRow = gameBoard.size();
+            threadPool.addWork(() -> {
+                for (int row = startRow; row < lastEndRow; row++) {
+                    for (int col = 1; col < gameBoard.get(row).size(); col++) {
+                        doCheckRulesConcu(activeRule, row, col);
                     }
                 }
+            });
+        } else {
+            threadPool.addWork(() -> {
+                for (int row = startRow; row < endRow; row++) {
+                    for (int col = 1; col < gameBoard.get(row).size(); col++) {
+                        doCheckRulesConcu(activeRule, row, col);
+                    }
+                }
+            });
+        }
+    }
+
+    private void doCheckRulesConcu(Rule activeRule, int row, int col) {
+        if (gameBoard.get(row).get(col).intValue() != 0) {
+            if (activeRule.setLife(gameBoard.get(row).get(col).byteValue()) == 64) {
+                //Will not expand top or left sides
+                setCellStateNE(row, col, true);
+
+                //Will force expansion next gen if near border.
+                if (row < 4) {
+                    EXPAND_Y.set(true);
+                }
+                if (col < 4) {
+                    EXPAND_X.set(true);
+                }
+            } else {
+                setCellStateNE(row, col, false);
             }
 
-        });
+        }
     }
 
     @Override
