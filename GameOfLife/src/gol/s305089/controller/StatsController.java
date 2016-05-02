@@ -167,13 +167,17 @@ public class StatsController implements Initializable {
 
             ImageView imgViewCurrentPattern = new ImageView();
             generateTolltipGIF(gifmaker, imgViewCurrentPattern);
-            Label labelInfo = new Label("Iteration " + i + ". Current pattern:");
+            Label labelInfo = new Label("Iteration " + i + ".");
             labelInfo.setFont(new Font(15));
-            Label labelMatch = new Label("First/closest match on iteration number: " + simMeasureClosest.get(i));
-            labelMatch.setFont(new Font(15));
+            Label currentPattern = new Label("Current pattern:");
+            currentPattern.setFont(new Font(13));
+            Label labelMatch = new Label(data.YValueProperty().getValue() + " % match.");
+            labelMatch.setFont(new Font(14));
+            Label labelMatchWith = new Label("First/closest match on iteration number: " + simMeasureClosest.get(i));
+            labelMatchWith.setFont(new Font(14));
 
             VBox container = new VBox();
-            container.getChildren().addAll(labelInfo, imgViewCurrentPattern, labelMatch);
+            container.getChildren().addAll(labelInfo, labelMatch, labelMatchWith, currentPattern, imgViewCurrentPattern);
 
             tooltip.setGraphic(container);
             setTooltipMouseHandler(data, tooltip);
@@ -192,7 +196,7 @@ public class StatsController implements Initializable {
     private void generateTolltipGIF(GifMaker gifmaker, ImageView imgViewcurrentPattern) throws IOException {
         gifmaker.setPattern(activeBoard.getBoundingBoxBoard());
         File tempFileToolTip = File.createTempFile("golStats", ".gif");
-        
+
         gifmaker.writePatternToGIF(1, tempFileToolTip.getAbsolutePath());
 
         Image current = new Image(tempFileToolTip.toURI().toString());
