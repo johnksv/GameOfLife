@@ -140,13 +140,13 @@ public abstract class Board {
 
         if (EXPAND_X.get()) {
             threadPool.addWork(() -> {
-                expandBoardY(-1);
+                expandBoardX(0,-1);
                 EXPAND_X.set(false);
             });
         }
         if (EXPAND_Y.get()) {
             threadPool.addWork(() -> {
-                expandBoardX(0, -1);
+                expandBoardY(-1);
                 EXPAND_Y.set(false);
             });
         }

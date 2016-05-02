@@ -342,13 +342,13 @@ public class DynamicBoard extends Board {
                 System.out.println("X: " + x + " maxRow: " + maxRow);
                 for (ArrayList<AtomicInteger> row : gameBoard) {
                     row.add(0, new AtomicInteger(0));
-                    maxRow++;
                 }
+                maxRow++;
                 offsetValues[0] -= (cellSize + gridSpacing);
                 x++;
             }
         }
-
+        
         while (x >= gameBoard.get(y).size() - EXPANSION && gameBoard.get(y).size() < MAXWIDTH) {
             gameBoard.get(y).add(new AtomicInteger(0));
         }
