@@ -29,15 +29,15 @@ public class WriteRleS305054 {
         //y and x (metadata)
         int y = boundingBox.length;
         int x = boardToParse.getArrayLength(0);
+        int counter;
 
         StringBuilder metaData = new StringBuilder();
         StringBuilder pattern = new StringBuilder();
         metaData.append("#N " + title.getText() + "\n#O " + author.getText() + "\n#C " + description.getText() + "\nx = " + x + ", y = " + y + "\n");
 
-        //Have to find better solution than using both array and board.
         for (int i = 0; i < boundingBox.length; i++) {
             for (int j = 0; j < boundingBox[i].length; j++) {
-                //Need to fix so that multiple cells next to each other (dead or alive) has number of that type of cell (example: 27o)
+                //Save last value, and compare next value to last value. If the same counter ++. keeps going until not the same. One last counter++, set counter before the value, and counter = 0
                 if (boundingBox[i][j] == 0) {
                     pattern.append("b");
                 } else if (boundingBox[i][j] == 64) {
