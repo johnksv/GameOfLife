@@ -140,7 +140,7 @@ public abstract class Board {
 
         if (EXPAND_X.get()) {
             threadPool.addWork(() -> {
-                expandBoardX(0,-1);
+                expandBoardX(0, -1);
                 EXPAND_X.set(false);
             });
         }
@@ -150,6 +150,24 @@ public abstract class Board {
                 EXPAND_Y.set(false);
             });
         }
+    }
+
+    public void nextGenConcPrintPerformance() {
+        long start = System.nanoTime();
+        for (int i = 0; i < 1000; i++) {
+            nextGenConcurrent();
+        }
+        long elapsed = (System.nanoTime() - start) / 1000000;
+        System.out.println("1000 iterations: Concurrent. Counting time (ms): " + elapsed);
+    }
+
+    public void nextGenPrintPerformance() {
+        long start = System.nanoTime();
+        for (int i = 0; i < 1000; i++) {
+            nextGen();
+        }
+        long elapsed = (System.nanoTime() - start) / 1000000;
+        System.out.println("1000 iterations: One thread. Counting time (ms): " + elapsed);
     }
 
     /**

@@ -21,9 +21,10 @@ import java.util.List;
 public class ThreadPool {
 
     /**
-     * Number of availableProcessors on this computer.
+     * Number of availableProcessors on this computer multiplied by 2, since we
+     * assume the computer has hyper threading
      */
-    public static final int THREAD_NR = Runtime.getRuntime().availableProcessors();
+    public static final int THREAD_NR = Runtime.getRuntime().availableProcessors() * 2;
 
     private final List<Thread> threads = new ArrayList<>();
 

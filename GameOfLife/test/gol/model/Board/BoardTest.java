@@ -1,12 +1,13 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package gol.model.Board;
 
-import gol.model.Logic.Rule;
+import gol.model.FileIO.PatternFormatException;
+import gol.model.FileIO.ReadFile;
+import gol.model.ThreadPool;
 import gol.other.Configuration;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -17,7 +18,7 @@ import static org.junit.Assert.*;
 
 /**
  *
- * @author
+ * @author s305054, s305089, s305084
  */
 public class BoardTest {
 
@@ -54,8 +55,6 @@ public class BoardTest {
     /**
      * //TODO: Comment about expand board
      */
-    
-    
     @Test
     public void testNextGen() {
         System.out.println("nextGen");
@@ -98,11 +97,11 @@ public class BoardTest {
         dynamicInstance.clearBoard();
         dynamicInstance.setCellState(1, 1, true);
         assertEquals(true, dynamicInstance.getCellState(50, 50));
-        
+
         dynamicInstance.clearBoard();
         dynamicInstance.setCellState(2, 2, true);
         assertEquals(true, dynamicInstance.getCellState(2, 2));
-        
+
         dynamicInstance.clearBoard();
         dynamicInstance.setCellState(0, 0, true);
         assertEquals(true, dynamicInstance.getCellState(50, 50));
@@ -147,7 +146,6 @@ public class BoardTest {
         dynamicInstance.clearBoard();
         dynamicInstance.insertArray(patternGlider, -10, -10);
         result = dynamicInstance.getBoundingBoxBoard();
-        System.out.println(Arrays.deepToString(result));
         assertArrayEquals(expResult, result);
 
         dynamicInstance.clearBoard();
@@ -173,9 +171,6 @@ public class BoardTest {
         expResult[3] = 11;
 
         int[] result = arrayInstance.getBoundingBox();
-        System.out.println("");
-        System.out.println(Arrays.toString(result));
-        System.out.println(Arrays.toString(expResult));
         assertArrayEquals(expResult, result);
     }
 
@@ -201,8 +196,25 @@ public class BoardTest {
         assertEquals("010001111", dynamicInstance.toString());
 
         dynamicInstance.insertArray(patternGlider, -2, -2);
-        // assertEquals("00100010111000000000000000000000", dynamicInstance.toString());
+        assertEquals("00100010111000000000000000000000", dynamicInstance.toString());
 
+    }
+
+    @Test
+    public void printPerformanceConcurrent() throws IOException, PatternFormatException {
+        System.out.println("printPerformance:");
+        File url = new File("test/patternTestFiles/turingmachine.rle");
+        Path file = Paths.get(url.toURI());
+        byte[][] byteBoard = ReadFile.readFileFromDisk(file);
+        System.out.println("Number of threads: " + ThreadPool.THREAD_NR);
+        System.out.println(Arrays.deepToString(byteBoard));
+        dynamicInstance.clearBoard();
+        dynamicInstance.insertArray(byteBoard, 5, 5);
+        dynamicInstance.nextGenConcPrintPerformance();
+
+        dynamicInstance.clearBoard();
+        dynamicInstance.insertArray(byteBoard, 5, 5);
+        dynamicInstance.nextGenPrintPerformance();
     }
 
     public void testSetCellState_5args() {
