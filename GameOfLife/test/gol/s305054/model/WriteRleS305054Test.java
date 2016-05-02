@@ -51,6 +51,8 @@ public class WriteRleS305054Test {
         TextField description = new TextField();
         
         title.setText("Glider");
+        author.setText("");
+        description.setText("");
         byte[][] pattern = {
             {0,64,0},
             {0,0,64},
@@ -61,7 +63,7 @@ public class WriteRleS305054Test {
         WriteRleS305054 instance = new WriteRleS305054();
         instance.writeRLE(boardToParse, title, author, description);
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        
     }
     
 }

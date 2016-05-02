@@ -2,6 +2,8 @@ package gol.s305054.model;
 
 import gol.model.Board.Board;
 import java.io.IOException;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.TextField;
 
 /**
@@ -21,15 +23,22 @@ public class WriteRleS305054 {
      * @param author author of this pattern
      * @param description description of this pattern
      */
-    public void writeRLE(Board boardToParse, TextField title, TextField author, TextField description) throws IOException {
+    public void writeRLE(Board boardToParse, TextField title, TextField author, TextField description) {
         //TODO title, author, etc
         //TODO boundingboxBoard, parse rle from that
+        
+        if(boardToParse.getArrayLength() == 0) {
+            Alert error = new Alert(AlertType.ERROR);
+            error.setContentText("Can't create a pattern from an empty gameboard.");
+            return;
+        }
+        
         boundingBox = boardToParse.getBoundingBoxBoard();
-
+        
         //y and x (metadata)
         int y = boundingBox.length;
-        int x = boardToParse.getArrayLength(0);
-        int counter;
+        int x = boundingBox[0].length;
+        int counter = 0;
 
         StringBuilder metaData = new StringBuilder();
         StringBuilder pattern = new StringBuilder();
@@ -55,6 +64,23 @@ public class WriteRleS305054 {
 
             }
         }
+        System.out.println(pattern); //Sjekke før parsing
+        for (int index = 0; index < pattern.length(); index++) {
+            if(pattern.charAt(index) == '!') {
+                break;
+            }
+            if(pattern.charAt(index) == pattern.charAt(index + 1)) {
+                counter++;
+            }
+            if(pattern.charAt(index) != pattern.charAt(index + 1)) {
+                if(counter > 0) {
+                    pattern.replace((index-counter), index, String.valueOf((counter+1) + pattern.charAt(index)));
+                    //TODO slik at hele døde linjer blir gjort om til ""
+                }
+            }
+            
+        }
+        System.out.println(pattern); //Sjekke etter parsing
 
         /*
         [o]{2,} //Regex for å finne to eller flere o ved siden av seg - bruk ala searchand replace
