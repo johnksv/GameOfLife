@@ -19,6 +19,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Tooltip;
+import javafx.scene.layout.AnchorPane;
 
 import javafx.scene.layout.VBox;
 import javafx.scene.media.AudioClip;
@@ -40,7 +41,7 @@ public class SoundController implements Initializable {
     @FXML
     private VBox vboxUser;
     @FXML
-    private VBox vboxGenerated;
+    private AnchorPane ancPaneGenerated;
     @FXML
     private WavMakerController wavMakerController;
     @FXML
@@ -123,10 +124,10 @@ public class SoundController implements Initializable {
         rbGenerated.selectedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
             disposeMediaPlayers();
             if (newValue) {
-                vboxGenerated.setVisible(true);
+                ancPaneGenerated.setVisible(true);
                 vboxUser.setVisible(false);
             } else {
-                vboxGenerated.setVisible(false);
+                ancPaneGenerated.setVisible(false);
                 vboxUser.setVisible(true);
             }
         });

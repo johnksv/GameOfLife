@@ -55,12 +55,19 @@ public class WavMakerController implements Initializable {
         spinnDur.setValueFactory(new SpinnerValueFactory.DoubleSpinnerValueFactory(0.1, 100, 1, 0.2));
         spinnDur.setEditable(true);
         comBxRootTone.getItems().setAll(Tone.C3, Tone.D3, Tone.E3, Tone.F3, Tone.G3, Tone.A3, Tone.B3);
+        comBxRootTone.setValue(Tone.C3);
 
     }
 
     private void getValuesFromView() {
         iterationsToCalc = (int) spinnIte.getValue();
         durEachIt = (double) spinnDur.getValue();;
+    }
+
+    public void setBoard(Board activeBoard) {
+        originalPattern = activeBoard.getBoundingBoxBoard();
+        this.activeBoard = new DynamicBoard();
+        this.activeBoard.insertArray(originalPattern, 3, 3);
     }
 
     @FXML
@@ -78,6 +85,7 @@ public class WavMakerController implements Initializable {
 
             handleMode();
             Sound.makeSound(previewFile, durEachIt);
+            System.out.println(previewFile);
             MediaPlayer player = new MediaPlayer(new Media(previewFile.toURI().toString()));
             player.setOnEndOfMedia(() -> player.dispose());
             player.play();
@@ -98,11 +106,10 @@ public class WavMakerController implements Initializable {
                     countLiving++;
                 }
             }
-            double amplitude = (double) countLiving / board.length();
-            System.out.println(amplitude);
-
+            double rootToneFreq = ((Tone) comBxRootTone.getValue()).getFreq();
+            double frequency = (double) 10 * rootToneFreq * countLiving / board.length();
             //TODO DYNAMIC ADDING!
-            Sound.addToSequence(i, Tone.G4.getFreq(), amplitude);
+            Sound.addToSequence(i, frequency);
 
             activeBoard.nextGen();
         }
@@ -130,13 +137,14 @@ public class WavMakerController implements Initializable {
                 countOnRow = 0;
             }
             rowCoherentAddSound(countOnRowSet, iteration);
+            activeBoard.nextGen();
         }
     }
 
     private <T> void rowCoherentAddSound(Set<Integer> values, int ite) {
         for (Integer countOnRow : values) {
             if (countOnRow == 1) {
-                Sound.addToSequence(ite, Tone.D4, 0.3);
+                Sound.addToSequence(ite, Tone.D4);
             } else if (countOnRow == 2) {
                 Sound.addToSequence(ite, Tone.E4);
             } else if (countOnRow == 3) {
@@ -151,12 +159,6 @@ public class WavMakerController implements Initializable {
                 Sound.addToSequence(ite, Tone.G2);
             }
         }
-    }
-
-    public void setBoard(Board activeBoard) {
-        originalPattern = activeBoard.getBoundingBoxBoard();
-        this.activeBoard = new DynamicBoard();
-        this.activeBoard.insertArray(originalPattern, 3, 3);
     }
 
     private void setPattern(byte[][] patternToSet) {

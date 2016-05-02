@@ -33,7 +33,7 @@
         </HBox>
         <StackPane prefHeight="352.0" prefWidth="485.0">
             <children>
-                <AnchorPane>
+                <AnchorPane fx:id="ancPaneGenerated">
                     <children>
                         <HBox layoutX="14.0" layoutY="6.0" prefWidth="200.0" spacing="7.0">
                             <children>

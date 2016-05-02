@@ -42,6 +42,6 @@ public enum Tone {
 
     @Override
     public String toString() {
-        return "Frequency: " + frequency;
+        return this.name() +", frequency: " + frequency;
     }
 }
