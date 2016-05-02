@@ -125,10 +125,10 @@ public class GameController implements Initializable {
         cellSizeSlider.setBlockIncrement(0.75);
 
         //TODO Valg for Array eller dynamisk brett
-        if (Configuration.getProp("board").equals("arrayboard")) {
-            activeBoard = new ArrayBoard();
-        } else {
+        if (Configuration.getProp("dynamicBoard").equals("true")) {
             activeBoard = new DynamicBoard();
+        } else {
+            activeBoard = new ArrayBoard();
         }
         cellCP.setValue(Color.web("#000000"));
         backgroundCP.setValue(Color.web("#9CB5D3"));

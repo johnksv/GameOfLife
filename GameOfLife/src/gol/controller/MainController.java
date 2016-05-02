@@ -37,7 +37,6 @@ public class MainController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         primaryStage.getIcons().add(new Image(new File("src\\mics\\gen1.PNG").toURI().toString()));
         primaryStage.setTitle(" Game of Life");
-        primaryStage.setResizable(false);
     }
 
     /**
@@ -74,6 +73,7 @@ public class MainController implements Initializable {
         HowToPlayController.loadStage(primaryStage);
         Parent root = FXMLLoader.load(getClass().getResource("/gol/view/HowToPlay.fxml"));
         Scene scene = new Scene(root);
+        primaryStage.setResizable(false);
         primaryStage.setScene(scene);
     }
 

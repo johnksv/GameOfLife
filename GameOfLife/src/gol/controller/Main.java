@@ -2,6 +2,7 @@ package gol.controller;
 
 import gol.model.Board.ArrayBoard;
 import gol.model.Board.Board;
+import gol.model.Board.DynamicBoard;
 import gol.model.FileIO.PatternFormatException;
 import gol.model.FileIO.ReadFile;
 import gol.other.Configuration;
@@ -72,14 +73,14 @@ public class Main extends Application {
 
         }
 
-        Board brett = new ArrayBoard();
+        Board brett = new DynamicBoard();
         brett.insertArray(boardFromFile, 1, 1);
 
         int n = 0;
         int antall = 1000;
         long startTime = System.nanoTime();
         while (n < antall) {
-            brett.nextGen();
+            brett.nextGenConcurrent();
             n++;
         }
 

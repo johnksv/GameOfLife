@@ -22,7 +22,6 @@ public class Configuration {
      */
     public static void loadConfig() {
         try {
-            System.out.println(configFile);
             FileInputStream input = new FileInputStream(configFile);
             properties.load(input);
         } catch (IOException ex) {
@@ -35,9 +34,10 @@ public class Configuration {
     public static String getProp(String property) {
         return properties.getProperty(property, "-1").toLowerCase();
     }
-    
+
     private static void makePropFile() {
-        properties.setProperty("board", "dynamicBoard");
+        //Nasty, but has to be done
+        properties.setProperty("dynamicBoard", "true");
         properties.setProperty("maxWidth", "200");
         properties.setProperty("maxHeight", "200");
         properties.setProperty("expansion", "50");
