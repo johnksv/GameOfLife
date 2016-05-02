@@ -207,7 +207,7 @@ public class BoardTest {
         Path file = Paths.get(url.toURI());
         byte[][] byteBoard = ReadFile.readFileFromDisk(file);
         System.out.println("Number of threads: " + ThreadPool.THREAD_NR);
-        System.out.println(Arrays.deepToString(byteBoard));
+        System.out.println("Brett: " + url.getName());
         dynamicInstance.clearBoard();
         dynamicInstance.insertArray(byteBoard, 5, 5);
         dynamicInstance.nextGenConcPrintPerformance();
