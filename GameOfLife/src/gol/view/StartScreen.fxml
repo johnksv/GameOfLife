@@ -1,26 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.text.*?>
-<?import javafx.scene.control.*?>
-<?import java.lang.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
-<BorderPane stylesheets="@MainStylesheet.css" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gol.controller.MainController">
+<BorderPane prefHeight="400.0" prefWidth="600.0" stylesheets="@MainStylesheet.css" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gol.controller.MainController">
    <center>
-      <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0">
+      <StackPane>
          <children>
-            <Button layoutX="229.0" layoutY="150.0" mnemonicParsing="false" onAction="#startGame" text="Start with empty board" />
-            <Button layoutX="136.0" layoutY="237.0" mnemonicParsing="false" text="Start with random pattern" />
-            <Button layoutX="300.0" layoutY="237.0" mnemonicParsing="false" text="Start with selected pattern" />
-            <Button layoutX="245.0" layoutY="187.0" mnemonicParsing="false" text="Load last game" />
-            <Label layoutX="213.0" layoutY="88.0" text="(Animasjon i bakgrunn (Hvis mulig))" />
-            <Text layoutX="164.0" layoutY="64.0" strokeType="OUTSIDE" strokeWidth="0.0" text="GAME OF LIFE">
-               <font>
-                  <Font size="46.0" />
-               </font>
-            </Text>
-            <Button layoutX="263.0" layoutY="289.0" mnemonicParsing="false" onAction="#howToPlay" text="How to play" />
+            <ImageView fitHeight="401.0" fitWidth="602.0" pickOnBounds="true">
+               <image>
+                  <Image url="@../../mics/testGif.gif" />
+               </image>
+            </ImageView>
+            <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0">
+               <children>
+                  <Button layoutX="229.0" layoutY="150.0" mnemonicParsing="false" onAction="#startGame" text="Start with empty board" />
+                  <Button layoutX="136.0" layoutY="237.0" mnemonicParsing="false" text="Start with random pattern" />
+                  <Button layoutX="300.0" layoutY="237.0" mnemonicParsing="false" text="Start with selected pattern" />
+                  <Button layoutX="245.0" layoutY="187.0" mnemonicParsing="false" text="Load last game" />
+                  <Text layoutX="164.0" layoutY="64.0" strokeType="OUTSIDE" strokeWidth="0.0" text="GAME OF LIFE">
+                     <font>
+                        <Font size="46.0" />
+                     </font>
+                  </Text>
+                  <Button layoutX="263.0" layoutY="289.0" mnemonicParsing="false" onAction="#howToPlay" text="How to play" />
+               </children>
+            </Pane>
          </children>
-      </Pane>
+      </StackPane>
    </center>
 </BorderPane>

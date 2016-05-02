@@ -37,6 +37,7 @@ public class MainController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         primaryStage.getIcons().add(new Image(new File("src\\mics\\gen1.PNG").toURI().toString()));
         primaryStage.setTitle(" Game of Life");
+        primaryStage.setResizable(false);
     }
 
     /**
@@ -86,5 +87,5 @@ public class MainController implements Initializable {
     public static void loadStage(Stage stage) {
         primaryStage = stage;
     }
-
+    
 }
