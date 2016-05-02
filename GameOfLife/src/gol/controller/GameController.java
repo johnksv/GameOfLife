@@ -432,7 +432,7 @@ public class GameController implements Initializable {
             Stage statistics = new Stage();
             statistics.setResizable(false);
             //TODO ICON stats
-            statistics.getIcons().add(new Image(new File("src\\mics\\icon.png").toURI().toString()));
+            statistics.getIcons().add(new Image(new File("src\\mics\\linechart.png").toURI().toString()));
 
             statistics.initModality(Modality.WINDOW_MODAL);
             statistics.initOwner(canvas.getScene().getWindow());
