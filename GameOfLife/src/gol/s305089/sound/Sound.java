@@ -5,8 +5,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 /**
- * //TODO: JAVADOC
- * Created: 1.05.2016
+ * //TODO: JAVADOC Created: 1.05.2016
+ *
+ * Contains overloading methods for adding both tones and custom frequencies to
+ * the soundContainer before writing to wav.
+ *
  * @author s305089 - John Kasper Svergja
  */
 public class Sound {
@@ -14,7 +17,7 @@ public class Sound {
     private static final int SAMPLE_RATE = 44100;
     private static final int CHANNELS = 2;
     private static boolean CLIPPING = false;
-    
+
     /**
      * Each element represents one step. In the child element
      * (<code>ArrayList type double[]</code>) each element represents one tone.
@@ -24,25 +27,52 @@ public class Sound {
     private static final ArrayList<ArrayList<double[]>> SoundContainer = new ArrayList<>();
 
     /**
-     * Adds a frequency to both channels, at the given step, with amplitude 0.5.
-     * This is the same as calling {@link #addToSequence(int, double, double, int)},
-     * with the parameter amplitude = 0.5, and channels = 2.
+     * Adds a tone to both channels, at the given step, with amplitude 0.5. This
+     * is the same as calling {@link #addToSequence(int, double, double, int)},
+     * with the parameters frequency = tone.getFreq(), amplitude = 0.5, and
+     * channels = 2.
      *
+     * @param tone The tone you want to add
      * @see #addToSequence(int, double, double, int)
      */
-    public static void addToSequence(int iteration, double frequency) {
-        addToSequence(iteration, frequency, 0.5, CHANNELS);
+    public static void addToSequence(int step, Tone tone) {
+        addToSequence(step, tone.getFreq(), 0.5, CHANNELS);
     }
 
     /**
      * Adds a frequency with this amplitude to both channels, at the given step.
-     * This is the same as calling {@link #addToSequence(int, double, double, int)},
-     * with the parameter channels = 2.
+     * This is the same as calling
+     * {@link #addToSequence(int, double, double, int)}, with the parameters
+     *  frequency = tone.getFreq(), channels = 2.
      *
      * @see #addToSequence(int, double, double, int)
      */
-    public static void addToSequence(int iteration, double frequency, double amplitude) {
-        addToSequence(iteration, frequency, amplitude, CHANNELS);
+    public static void addToSequence(int step, Tone tone, double amplitude) {
+        addToSequence(step, tone.getFreq(), amplitude, CHANNELS);
+    }
+
+    /**
+     * Adds a frequency to both channels, at the given step, with amplitude 0.5.
+     * This is the same as calling
+     * {@link #addToSequence(int, double, double, int)}, with the parameter
+     * amplitude = 0.5, and channels = 2.
+     *
+     * @see #addToSequence(int, double, double, int)
+     */
+    public static void addToSequence(int step, double frequency) {
+        addToSequence(step, frequency, 0.5, CHANNELS);
+    }
+
+    /**
+     * Adds a frequency with this amplitude to both channels, at the given step.
+     * This is the same as calling
+     * {@link #addToSequence(int, double, double, int)}, with the parameter
+     * channels = 2.
+     *
+     * @see #addToSequence(int, double, double, int)
+     */
+    public static void addToSequence(int step, double frequency, double amplitude) {
+        addToSequence(step, frequency, amplitude, CHANNELS);
     }
 
     /**
@@ -93,8 +123,8 @@ public class Sound {
 
     /**
      * Produce a sound file based on the content that is added with
-     * {@link #addToSequence(int, double, double, int)}. Much of the basics of this
-     * method is copied from the library example at
+     * {@link #addToSequence(int, double, double, int)}. Much of the basics of
+     * this method is copied from the library example at
      * http://www.labbookpages.co.uk/audio/javaWavFiles.html . I.e. construct
      * wavfile, count frames, remaining frames, loop until frames is filled up.
      * Adjustments have been made, to avoid clipping, and therefor support

@@ -7,7 +7,9 @@ import java.util.ResourceBundle;
 import javafx.fxml.Initializable;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.animation.Timeline;
@@ -40,6 +42,8 @@ public class SoundController implements Initializable {
     @FXML
     private VBox vboxGenerated;
     @FXML
+    private WavMakerController wavMakerController;
+    @FXML
     private Button btnPlayPause;
     @FXML
     private Button btnRewind;
@@ -55,7 +59,8 @@ public class SoundController implements Initializable {
     //The board that is actually being used in main window.
     private Board activeBoard;
 
-    private final List<AudioClip> audioClipQueue = new ArrayList<>();
+    //Allow only one uniqe value
+    private final Set<AudioClip> audioClipQueue = new HashSet<>();
     //Use mediaplayer for selected files, beacuse this is more realiable on larger files.
     private final List<MediaPlayer> mediaPlayerQueue = new ArrayList<>();
     private final MediaView mediaview = new MediaView();
@@ -63,7 +68,7 @@ public class SoundController implements Initializable {
     private AudioClip drumBass;
     private AudioClip drumSnare;
     private AudioClip Db3;
-    private AudioClip F3Sharp;
+    private AudioClip FSharp3;
     private AudioClip E3;
     private AudioClip E4;
     private AudioClip nextGen;
@@ -103,6 +108,7 @@ public class SoundController implements Initializable {
 
     public void setBoard(Board activeBoard) {
         this.activeBoard = activeBoard;
+        wavMakerController.setBoard(activeBoard);
     }
 
     public void disposeMediaPlayers() {
@@ -131,7 +137,7 @@ public class SoundController implements Initializable {
         drumSnare = new AudioClip(new File("src/gol/s305089/sound/files/drumSnare.wav").toURI().toString());
         nextGen = new AudioClip(new File("src/gol/s305089/sound/files/nextGen.wav").toURI().toString());
         Db3 = new AudioClip(new File("src/gol/s305089/sound/files/Db3.wav").toURI().toString());
-        F3Sharp = new AudioClip(new File("src/gol/s305089/sound/files/F3#.wav").toURI().toString());
+        FSharp3 = new AudioClip(new File("src/gol/s305089/sound/files/F3#.wav").toURI().toString());
         E3 = new AudioClip(new File("src/gol/s305089/sound/files/E3.wav").toURI().toString());
         E4 = new AudioClip(new File("src/gol/s305089/sound/files/E4.wav").toURI().toString());
     }
@@ -143,6 +149,7 @@ public class SoundController implements Initializable {
         File result = directoryChooser.showDialog(null);
         if (result != null && result.isDirectory()) {
             File[] musicFiles = result.listFiles((File dir, String name) -> {
+                //Check if file ends with wav or mp3
                 boolean wav = name.toLowerCase().endsWith(".wav");
                 boolean mp3 = name.toLowerCase().endsWith(".mp3");
                 return wav || mp3;
@@ -197,32 +204,23 @@ public class SoundController implements Initializable {
         if (countSameChar == -1) {
             audioClipQueue.add(nextGen);
         } else if (countSameChar == 1) {
-            if (!audioClipQueue.contains(drumSnare)) {
-                audioClipQueue.add(drumSnare);
-            }
+            audioClipQueue.add(drumSnare);
         } else if (countSameChar == 2) {
-            if (!audioClipQueue.contains(E3)) {
-                audioClipQueue.add(E3);
-            }
+            audioClipQueue.add(E3);
         } else if (countSameChar == 3) {
-            if (!audioClipQueue.contains(drumBass)) {
-                audioClipQueue.add(drumBass);
-            }
+            audioClipQueue.add(drumBass);
         } else if (countSameChar <= 5) {
-            if (!audioClipQueue.contains(E4)) {
-                audioClipQueue.add(E4);
-            }
-        } else if (countSameChar <= 10) {
-            if (!audioClipQueue.contains(F3Sharp)) {
-                audioClipQueue.add(F3Sharp);
-            }
-        } else if (!audioClipQueue.contains(Db3)) {
+            audioClipQueue.add(E4);
+        } else if (countSameChar <= 7) {
+            audioClipQueue.add(FSharp3);
+        } else {
             audioClipQueue.add(Db3);
         }
     }
 
     /**
-     * Parses the board in 1d. Row by row. Could have (and should) used toString.
+     * Parses the board in 1d. Row by row. Could have (and should) used
+     * toString.
      */
     private void parseBoard1D() {
         byte[][] current = activeBoard.getBoundingBoxBoard();

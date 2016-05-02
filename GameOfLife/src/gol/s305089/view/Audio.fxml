@@ -48,32 +48,32 @@
                         <VBox layoutX="14.0" layoutY="30.0">
                             <children>
                                 <fx:include fx:id="wavMaker" source="WavMaker.fxml" />
+                              <Accordion prefHeight="129.0" prefWidth="267.0">
+                                  <panes>
+                                      <TitledPane expanded="false" prefHeight="129.0" prefWidth="453.0" text="Difference">
+                                          <content>
+                                              <VBox prefWidth="250.0">
+                                                  <children>
+                                                      <TextFlow prefHeight="200.0" prefWidth="200.0">
+                                                          <children>
+                                                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="&quot;Playback audio&quot;" />
+                                                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text=" will play pre generated audio files as the game run. The speed is decided by iterations per second in the main window. Be aware that generations WILL NOT play if a generation is already playing. Recommended speed: 1 it per sec." />
+                                                          </children>
+                                                      </TextFlow>
+                                                      <TextFlow prefHeight="200.0" prefWidth="200.0">
+                                                          <children>
+                                                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="&quot;Save audio&quot;" />
+                                                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text=" allows you to generate a self-made wav file, with a chosen root tone and duration between each iteration." />
+                                                          </children>
+                                                      </TextFlow>
+                                                  </children>
+                                              </VBox>
+                                          </content>
+                                      </TitledPane>
+                                  </panes>
+                              </Accordion>
                             </children>
                         </VBox>
-                        <Accordion layoutX="14.0" layoutY="209.0" prefHeight="129.0" prefWidth="267.0">
-                            <panes>
-                                <TitledPane expanded="false" prefHeight="129.0" prefWidth="453.0" text="Difference">
-                                    <content>
-                                        <VBox prefWidth="250.0">
-                                            <children>
-                                                <TextFlow prefHeight="200.0" prefWidth="200.0">
-                                                    <children>
-                                                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="&quot;Playback audio&quot;" />
-                                                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text=" will play pre generated audio files as the game run. The speed is decided by iterations per second in the main window. Be aware that generations WILL NOT play if a generation is already playing. Recommended speed: 1 it per sec." />
-                                                    </children>
-                                                </TextFlow>
-                                                <TextFlow prefHeight="200.0" prefWidth="200.0">
-                                                    <children>
-                                                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="&quot;Save audio&quot;" />
-                                                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text=" allows you to generate a self-made wav file, with a chosen root tone and duration between each iteration." />
-                                                    </children>
-                                                </TextFlow>
-                                            </children>
-                                        </VBox>
-                                    </content>
-                                </TitledPane>
-                            </panes>
-                        </Accordion>
                     </children>
                 </AnchorPane>
                 <VBox fx:id="vboxUser" spacing="5.0" visible="false">
