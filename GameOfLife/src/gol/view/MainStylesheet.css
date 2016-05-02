@@ -43,7 +43,7 @@
 }
 
 /* BUTTON */
-.button{
+.button {
     -fx-border-color: #000000;
     -fx-bar-gap: 10;
 }
@@ -52,4 +52,9 @@
 }
 .button:hover {
     -fx-background-color: linear-gradient(#56657b 75%, #2c343e);
+}
+
+/* HowToPlay */
+.advanced-tips {
+    -fx-text-fill: #000000;
 }
