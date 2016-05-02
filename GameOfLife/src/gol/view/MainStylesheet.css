@@ -53,3 +53,9 @@
 .button:hover {
     -fx-background-color: linear-gradient(#56657b 75%, #2c343e);
 }
+
+.tab-pane:top .tab-header-area .headers-region .tab:top:selected, 
+.tab-pane:top .tab-header-area .headers-region .tab:top:selected .tab-container .tab-label{
+    -fx-background-color: -fx-CompBackground;  
+    -fx-text-fill: #000000;
+}
