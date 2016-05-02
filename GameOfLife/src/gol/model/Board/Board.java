@@ -140,13 +140,13 @@ public abstract class Board {
 
         if (EXPAND_X.get()) {
             threadPool.addWork(() -> {
-                expandBoard(0, -1);
+                expandBoardY(-1);
                 EXPAND_X.set(false);
             });
         }
         if (EXPAND_Y.get()) {
             threadPool.addWork(() -> {
-                expandBoard(-1, 0);
+                expandBoardX(0, -1);
                 EXPAND_Y.set(false);
             });
         }
@@ -207,6 +207,10 @@ public abstract class Board {
     public double getGridSpacing() {
         return gridSpacing;
     }
+
+    protected abstract int expandBoardY(int y);
+
+    protected abstract int expandBoardX(int y, int x);
 
     /**
      * Expands the board to fit the coordinates given. Expands with the number

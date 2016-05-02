@@ -24,7 +24,8 @@ public class DynamicBoard extends Board {
 
     public DynamicBoard(int y, int x) {
         this();
-        expandBoard(-y, -x);
+        y = expandBoardY(-y);
+        expandBoardX(y, -x);
     }
 
     @Override
@@ -153,6 +154,9 @@ public class DynamicBoard extends Board {
     public void insertArray(byte[][] boardToInsert, int y, int x) {
         //Expand if close to border. This has to do with NextGen
         if (x < 2 || y < 2) {
+            y = expandBoardY(y - 1) + 1;
+            x = expandBoardX(y - 1, x - 1) + 1;
+
             expandBoard(y - 1, x - 1);
             y = (y < 2) ? EXPANSION + 1 : y;
             x = (x < 2) ? EXPANSION + 1 : x;
@@ -172,17 +176,19 @@ public class DynamicBoard extends Board {
     @Override
     public void setCellState(int y, int x, boolean alive) {
 
-        expandBoard(y, x);
-
         //All zero or less cordinates will be set to the corresponding value after expanding.
         //This is a fundamental part of DynamicBoard.
-        y = (y < 2) ? EXPANSION : y;
-        x = (x < 2) ? EXPANSION : x;
+        y = expandBoardY(y);
+        x = expandBoardX(y, x);
 
-        if (alive) {
-            gameBoard.get(y).set(x, new AtomicInteger(64));
-        } else {
-            gameBoard.get(y).set(x, new AtomicInteger(0));
+        if (y < gameBoard.size() && y >= 0) {
+            if (x < gameBoard.get(y).size() && x >= 0) {
+                if (alive) {
+                    gameBoard.get(y).set(x, new AtomicInteger(64));
+                } else {
+                    gameBoard.get(y).set(x, new AtomicInteger(0));
+                }
+            }
         }
     }
 
@@ -299,40 +305,83 @@ public class DynamicBoard extends Board {
     }
 
     private void incrementCellValue(int y, int x) {
-        expandBoard(y, x);
-
         //All zero or less cordinates will be set to 1.
         //This is a fundamental part of DynamicBoard.
-        y = (y < 2) ? EXPANSION : y;
-        x = (x < 2) ? EXPANSION : x;
-        gameBoard.get(y).get(x).incrementAndGet();
+
+        y = expandBoardY(y);
+        x = expandBoardX(y, x);
+
+        if (y < gameBoard.size() && y >= 0) {
+            if (x < gameBoard.get(y).size() && x >= 0) {
+                gameBoard.get(y).get(x).incrementAndGet();
+
+            }
+        }
 
     }
 
-    @Override
-    protected void expandBoard(int y, int x) {
-
+    protected final int expandBoardY(int y) {
         if (y < 2) {
-            while (y < EXPANSION) {
+            while (y < EXPANSION && y < MAXHEIGHT) {
                 gameBoard.add(0, new ArrayList<>());
                 offsetValues[1] -= (cellSize + gridSpacing);
                 y++;
             }
         }
-        while (y >= gameBoard.size() - EXPANSION) {
+        while (y >= gameBoard.size() - EXPANSION && y < MAXHEIGHT) {
             gameBoard.add(new ArrayList<>());
         }
+        return y;
+    }
+
+    protected final int expandBoardX(int y, int x) {
         if (x < 2) {
-            while (x < EXPANSION) {
+            //For performance. Avoid calling method each time
+            int maxRow = getMaxRowLength();
+            while (x < EXPANSION && maxRow < MAXWIDTH) {
+                System.out.println("X: " + x + " maxRow: " + maxRow);
                 for (ArrayList<AtomicInteger> row : gameBoard) {
                     row.add(0, new AtomicInteger(0));
+                    maxRow++;
                 }
                 offsetValues[0] -= (cellSize + gridSpacing);
                 x++;
             }
         }
 
-        while (x >= gameBoard.get(y).size() - EXPANSION) {
+        while (x >= gameBoard.get(y).size() - EXPANSION && gameBoard.get(y).size() < MAXWIDTH) {
+            gameBoard.get(y).add(new AtomicInteger(0));
+        }
+        return x;
+    }
+
+    @Override
+    protected void expandBoard(int y, int x) {
+
+        if (y < 2) {
+            while (y < EXPANSION && y < MAXHEIGHT) {
+                gameBoard.add(0, new ArrayList<>());
+                offsetValues[1] -= (cellSize + gridSpacing);
+                y++;
+            }
+        }
+        while (y >= gameBoard.size() - EXPANSION && y < MAXHEIGHT) {
+            gameBoard.add(new ArrayList<>());
+        }
+        if (x < 2) {
+            //For performance. Avoid calling method each time
+            int maxRow = getMaxRowLength();
+            while (x < EXPANSION && maxRow < MAXWIDTH) {
+                for (ArrayList<AtomicInteger> row : gameBoard) {
+                    row.add(0, new AtomicInteger(0));
+                    maxRow++;
+                }
+                offsetValues[0] -= (cellSize + gridSpacing);
+                x++;
+            }
+        }
+
+        while (x >= gameBoard.get(y).size() - EXPANSION && gameBoard.get(y).size() < MAXWIDTH) {
             gameBoard.get(y).add(new AtomicInteger(0));
         }
 

@@ -517,7 +517,7 @@ public class GameController implements Initializable {
         gc.setFill(backgroundColor);
         gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
         gc.setFill(cellColor);
-
+        drawBorder();
         for (int i = startRow; i < endRow; i++) {
             for (int j = startCol; j < endCol && j < activeBoard.getArrayLength(i); j++) {
                 if (activeBoard.getCellState(i, j)) {
@@ -528,6 +528,19 @@ public class GameController implements Initializable {
             }
         }
 
+    }
+
+    private void drawBorder() {
+        try {
+            gc.fillRect(activeBoard.offsetValues[0], activeBoard.offsetValues[1], activeBoard.getCellSize() * activeBoard.getMaxRowLength(), activeBoard.getCellSize());
+            gc.fillRect(activeBoard.offsetValues[0], activeBoard.offsetValues[1], activeBoard.getCellSize(), activeBoard.getCellSize() * activeBoard.getArrayLength());
+
+            gc.fillRect(activeBoard.offsetValues[0], activeBoard.offsetValues[1] + activeBoard.getCellSize() * activeBoard.getArrayLength(), activeBoard.getCellSize() * activeBoard.getMaxRowLength(), activeBoard.getCellSize());
+            gc.fillRect(activeBoard.offsetValues[0] + activeBoard.getCellSize() * activeBoard.getMaxRowLength(), activeBoard.offsetValues[1], activeBoard.getCellSize(), activeBoard.getCellSize() * activeBoard.getArrayLength());
+
+        } catch (Exception e) {
+            System.out.println(e);
+        }
     }
 
     private void drawGhostTiles() {
