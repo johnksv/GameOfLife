@@ -52,8 +52,10 @@ public class BoardTest {
     byte[][] patternGlider;
 
     /**
-     * Test of nextGen method, of class Board.
+     * //TODO: Comment about expand board
      */
+    
+    
     @Test
     public void testNextGen() {
         System.out.println("nextGen");
@@ -203,10 +205,8 @@ public class BoardTest {
 
     }
 
-    @Test
     public void testSetCellState_5args() {
         //This is a method witch calculates a mouse click to a point on the board
         //Testing this is much easier with a visual test.
-        assertEquals(1, 1);
     }
 }
