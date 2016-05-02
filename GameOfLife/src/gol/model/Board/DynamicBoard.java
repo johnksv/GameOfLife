@@ -157,7 +157,7 @@ public class DynamicBoard extends Board {
             y = (y < 2) ? EXPANSION + 1 : y;
             x = (x < 2) ? EXPANSION + 1 : x;
         }
-        
+
         for (int i = 0; i < boardToInsert.length; i++) {
             for (int j = 0; j < boardToInsert[i].length; j++) {
                 if (boardToInsert[i][j] == 64) {
@@ -294,7 +294,7 @@ public class DynamicBoard extends Board {
                 }
             }
         }
-   
+
         return result.toString();
     }
 
@@ -338,6 +338,9 @@ public class DynamicBoard extends Board {
 
     }
 
+    /**
+     * Set cell state, no expand
+     */
     private void setCellStateNE(int row, int col, boolean alive) {
         if (alive) {
             gameBoard.get(row).set(col, new AtomicInteger(64));
@@ -346,6 +349,9 @@ public class DynamicBoard extends Board {
         }
     }
 
+    /**
+     * increment cell value no expand.
+     */
     private void incrementCellValueNE(int y, int x) {
         if (y < 0) {
             return;

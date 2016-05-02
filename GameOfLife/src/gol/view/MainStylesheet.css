@@ -21,7 +21,7 @@
 .pane-standard, .tool-bar, .tab-pane:top .tab-header-area .tab-header-background {
     -fx-background-color: -fx-MainBackground;
 }
-#borderpane{
+#borderpane {
     -fx-background-color: -fx-CompBackground;
 }
 
@@ -31,6 +31,12 @@
     -fx-border-radius: 0;
     -fx-border-color: #272e36;
 
+}
+
+.tab-pane:top .tab-header-area .headers-region .tab:top:selected, 
+.tab-pane:top .tab-header-area .headers-region .tab:top:selected .tab-container .tab-label {
+    -fx-background-color: -fx-CompBackground;  
+    -fx-text-fill: #000000;
 }
 
 /*TEXT COLOR*/

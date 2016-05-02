@@ -12,7 +12,7 @@ import java.util.Arrays;
 @Deprecated
 public class ArrayBoard extends Board {
 
-    private final int WIDTH, HEIGHT;
+    private final int HEIGHT, WIDTH;
     private byte[][] gameBoard;
 
     /**
@@ -20,9 +20,9 @@ public class ArrayBoard extends Board {
      */
     public ArrayBoard() {
         super();
-        WIDTH = 200;
         HEIGHT = 200;
-        gameBoard = new byte[WIDTH][HEIGHT];
+        WIDTH = 200;
+        gameBoard = new byte[HEIGHT][WIDTH];
     }
 
     /**
@@ -33,9 +33,9 @@ public class ArrayBoard extends Board {
      */
     public ArrayBoard(int width, int height) {
         super();
-        this.WIDTH = width;
-        this.HEIGHT = height;
-        gameBoard = new byte[WIDTH][HEIGHT];
+        this.HEIGHT = width;
+        this.WIDTH = height;
+        gameBoard = new byte[HEIGHT][WIDTH];
 
     }
 
@@ -224,7 +224,7 @@ public class ArrayBoard extends Board {
 
     @Override
     public int getMaxRowLength() {
-        return HEIGHT;
+        return WIDTH;
     }
 
     @Override
