@@ -416,16 +416,14 @@ public class GameController implements Initializable {
             soundController.playSound();
         });
         timeline.getKeyFrames().add(soundFrame);
-        golAudio.setOnCloseRequest(e -> {
-            timeline.stop();
-            timeline.getKeyFrames().remove(soundFrame);
-            soundController.disposeMediaPlayers();
-        });
 
         golAudio.setScene(scene);
         golAudio.setTitle("Audio controll panel - Game of Life");
         golAudio.initOwner(borderpane.getScene().getWindow());
-        golAudio.show();
+        golAudio.showAndWait();
+        timeline.stop();
+        timeline.getKeyFrames().remove(soundFrame);
+        soundController.disposeMediaPlayers();
     }
 
     @FXML

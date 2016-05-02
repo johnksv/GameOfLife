@@ -13,6 +13,7 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.animation.Timeline;
+import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -43,6 +44,8 @@ public class SoundController implements Initializable {
     @FXML
     private AnchorPane ancPaneGenerated;
     @FXML
+    private VBox wavMaker;
+    @FXML
     private WavMakerController wavMakerController;
     @FXML
     private Button btnPlayPause;
@@ -53,9 +56,11 @@ public class SoundController implements Initializable {
     @FXML
     private Label labelLocation;
     @FXML
-    private RadioButton rbGenerated;
+    private RadioButton rbDynamic;
     @FXML
-    private RadioButton rbnGenPlayback;
+    private RadioButton rbSavePlayback;
+    @FXML
+    private RadioButton rbFromClips;
 
     //The board that is actually being used in main window.
     private Board activeBoard;
@@ -85,26 +90,26 @@ public class SoundController implements Initializable {
      *
      */
     public void playSound() {
-        if (!playing && rbGenerated.isSelected() && rbnGenPlayback.isSelected()) {
-            audioClipQueue.clear();
-            playing = true;
-            parseBoard1D();
-            playAudioQueue();
+        if (!playing) {
+            if (rbDynamic.isSelected() && rbFromClips.isSelected()) {
+                audioClipQueue.clear();
+                playing = true;
+                parseBoard1D();
+                playAudioQueue();
 
-            //Nasty, but probably best way.Use of timeline would be overkill. 
-            Thread th = new Thread(() -> {
-                try {
-                    //The duration of the Audioclips are ca 0.8 sec.
-                    Thread.sleep(800);
-                } catch (InterruptedException ex) {
-                    System.out.println("Not able to sleep..\n " + ex);
-                }
-                playing = false;
-            });
-
-            th.start();
+                //Nasty, but probably best way.Use of timeline would be overkill. 
+                Thread th = new Thread(() -> {
+                    try {
+                        //The duration of the Audioclips are ca 0.8 sec.
+                        Thread.sleep(800);
+                    } catch (InterruptedException ex) {
+                        System.out.println("Not able to sleep..\n " + ex);
+                    }
+                    playing = false;
+                });
+                th.start();
+            }
         }
-
     }
 
     public void setBoard(Board activeBoard) {
@@ -121,16 +126,15 @@ public class SoundController implements Initializable {
     }
 
     private void initFXMLControls() {
-        rbGenerated.selectedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+        rbDynamic.selectedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
             disposeMediaPlayers();
-            if (newValue) {
-                ancPaneGenerated.setVisible(true);
-                vboxUser.setVisible(false);
-            } else {
-                ancPaneGenerated.setVisible(false);
-                vboxUser.setVisible(true);
-            }
+            ancPaneGenerated.setVisible(newValue);
+            vboxUser.setVisible(!newValue);
         });
+        rbFromClips.selectedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+            wavMaker.setDisable(newValue);
+        });
+
     }
 
     private void initMediaFiles() {

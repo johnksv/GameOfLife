@@ -10,16 +10,18 @@ import java.net.URL;
 import java.util.HashSet;
 import java.util.ResourceBundle;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
+import javafx.util.Duration;
 
 /**
  * @author s305089 - John Kasper Svergja
@@ -38,11 +40,17 @@ public class WavMakerController implements Initializable {
     private RadioButton rbCountNeigh;
     @FXML
     private ComboBox comBxRootTone;
+    @FXML
+    private Button btnPlayPreview;
+    @FXML
+    private Text textInfo;
 
     private byte[][] originalPattern;
     private Board activeBoard;
     private int iterationsToCalc;
     private double durEachIt;
+    private File previewFile;
+    private MediaPlayer previewPlayer;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -56,12 +64,10 @@ public class WavMakerController implements Initializable {
         spinnDur.setEditable(true);
         comBxRootTone.getItems().setAll(Tone.C3, Tone.D3, Tone.E3, Tone.F3, Tone.G3, Tone.A3, Tone.B3);
         comBxRootTone.setValue(Tone.C3);
-
     }
 
-    private void getValuesFromView() {
-        iterationsToCalc = (int) spinnIte.getValue();
-        durEachIt = (double) spinnDur.getValue();;
+    public File getPreviewFile() {
+        return previewFile;
     }
 
     public void setBoard(Board activeBoard) {
@@ -72,7 +78,18 @@ public class WavMakerController implements Initializable {
 
     @FXML
     private void saveWav() {
+        setPattern(originalPattern);
         getValuesFromView();
+
+        FileChooser filechooser = new FileChooser();
+        filechooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Waveform Audio", ".wav"),
+                new FileChooser.ExtensionFilter(" ", ".*"));
+
+        File result = filechooser.showSaveDialog(rbCountNeigh.getParent().getScene().getWindow());
+        if (result != null) {
+            handleWriteMode();
+            Sound.makeSound(previewFile, durEachIt);
+        }
     }
 
     @FXML
@@ -81,19 +98,36 @@ public class WavMakerController implements Initializable {
             setPattern(originalPattern);
             getValuesFromView();
 
-            File previewFile = File.createTempFile("golSoundPreview", ".wav");
+            previewFile = File.createTempFile("golSoundPreview", ".wav");
 
-            handleMode();
+            handleWriteMode();
             Sound.makeSound(previewFile, durEachIt);
-            System.out.println(previewFile);
-            MediaPlayer player = new MediaPlayer(new Media(previewFile.toURI().toString()));
-            player.setOnEndOfMedia(() -> player.dispose());
-            player.play();
+            textInfo.setText("Preview file successfully made.");
+            
+            previewPlayer.dispose();
+            previewPlayer = new MediaPlayer(new Media(previewFile.toURI().toString()));
+            previewPlayer.setOnEndOfMedia(() -> {
+                previewPlayer.seek(Duration.ZERO);
+                previewPlayer.pause();
+                btnPlayPreview.setText("Play preview");
+            });
 
         } catch (IOException ex) {
             System.out.println("There was an error creating the preview...\n" + ex);
         }
+    }
 
+    @FXML
+    private void playPreview() {
+        if (previewPlayer.statusProperty().get() == MediaPlayer.Status.STALLED
+                || previewPlayer.statusProperty().get() == MediaPlayer.Status.PLAYING) {
+            previewPlayer.pause();
+            btnPlayPreview.setText("Play preview");
+        } else {
+            previewPlayer.play();
+            btnPlayPreview.setText("Pause preview");
+
+        }
     }
 
     private void append1dLivingDeadRatio() {
@@ -116,7 +150,7 @@ public class WavMakerController implements Initializable {
     }
 
     private void append1dRowCoherent() {
-        for (int iteration = 0; iteration < iterationsToCalc; iteration++) {
+        for (int ite = 0; ite < iterationsToCalc; ite++) {
             byte[][] current = activeBoard.getBoundingBoxBoard();
             Set<Integer> countOnRowSet = new HashSet<>();
 
@@ -136,37 +170,35 @@ public class WavMakerController implements Initializable {
                 }
                 countOnRow = 0;
             }
-            rowCoherentAddSound(countOnRowSet, iteration);
+
+            for (Integer cntRow : countOnRowSet) {
+                if (cntRow == 1) {
+                    Sound.addToSequence(ite, Tone.D4);
+                } else if (cntRow == 2) {
+                    Sound.addToSequence(ite, Tone.E4);
+                } else if (cntRow == 3) {
+                    Sound.addToSequence(ite, Tone.G4);
+                } else if (cntRow == 4) {
+                    Sound.addToSequence(ite, Tone.C4);
+                } else if (cntRow == 5) {
+                    Sound.addToSequence(ite, Tone.E3);
+                } else if (cntRow <= 7) {
+                    Sound.addToSequence(ite, Tone.C3);
+                } else {
+                    Sound.addToSequence(ite, Tone.G2);
+                }
+            }
+
             activeBoard.nextGen();
         }
     }
 
-    private <T> void rowCoherentAddSound(Set<Integer> values, int ite) {
-        for (Integer countOnRow : values) {
-            if (countOnRow == 1) {
-                Sound.addToSequence(ite, Tone.D4);
-            } else if (countOnRow == 2) {
-                Sound.addToSequence(ite, Tone.E4);
-            } else if (countOnRow == 3) {
-                Sound.addToSequence(ite, Tone.G4);
-            } else if (countOnRow == 4) {
-                Sound.addToSequence(ite, Tone.C4);
-            } else if (countOnRow == 5) {
-                Sound.addToSequence(ite, Tone.E3);
-            } else if (countOnRow <= 7) {
-                Sound.addToSequence(ite, Tone.C3);
-            } else {
-                Sound.addToSequence(ite, Tone.G2);
-            }
-        }
+    private void getValuesFromView() {
+        iterationsToCalc = (int) spinnIte.getValue();
+        durEachIt = (double) spinnDur.getValue();
     }
 
-    private void setPattern(byte[][] patternToSet) {
-        activeBoard.clearBoard();
-        activeBoard.insertArray(patternToSet, 5, 5);
-    }
-
-    private void handleMode() {
+    private void handleWriteMode() {
         if (rbLivingDead.isSelected()) {
             append1dLivingDeadRatio();
         } else if (rbCountRow.isSelected()) {
@@ -174,5 +206,10 @@ public class WavMakerController implements Initializable {
         } else if (rbCountNeigh.isSelected()) {
 
         }
+    }
+
+    private void setPattern(byte[][] patternToSet) {
+        activeBoard.clearBoard();
+        activeBoard.insertArray(patternToSet, 5, 5);
     }
 }

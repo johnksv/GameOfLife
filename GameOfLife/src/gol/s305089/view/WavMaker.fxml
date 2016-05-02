@@ -12,8 +12,10 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
-<VBox id="vboxWavRoot" prefHeight="311.0" prefWidth="352.0" spacing="5.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gol.s305089.controller.WavMakerController">
+<VBox id="vboxWavRoot" prefHeight="307.0" prefWidth="352.0" spacing="5.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gol.s305089.controller.WavMakerController">
     <children>
         <Label text="Generate WAV" />
       <GridPane prefHeight="55.0" vgap="5.0">
@@ -41,7 +43,6 @@
         <rowConstraints>
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
             <RadioButton fx:id="rbLivingDead" mnemonicParsing="false" selected="true" text="Living/empty ratio (1D)">
@@ -56,12 +57,18 @@
         <ComboBox fx:id="comBxRootTone" prefWidth="150.0" />
         <HBox spacing="20.0">
             <children>
-                <Button mnemonicParsing="false" onAction="#previewWav" text="Preview" />
+                <Button mnemonicParsing="false" onAction="#previewWav" text="Generate preview" />
                 <Button mnemonicParsing="false" onAction="#saveWav" text="Save as Wav" />
             </children>
             <VBox.margin>
                 <Insets top="10.0" />
             </VBox.margin>
         </HBox>
+      <Button fx:id="btnPlayPreview" mnemonicParsing="false" onAction="#playPreview" text="Play preview" />
+      <Text fx:id="textInfo" strokeType="OUTSIDE" strokeWidth="0.0">
+         <font>
+            <Font name="Berlin Sans FB" size="14.0" />
+         </font>
+      </Text>
     </children>
 </VBox>
