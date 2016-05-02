@@ -133,11 +133,11 @@ public class DynamicBoard extends Board {
                             setCellStateNE(row, col, true);
 
                             //Will force expansion next gen if near border.
-                            if (row < 3) {
-                                EXPAND_X.set(true);
-                            }
-                            if (col < 3) {
+                            if (row < 4) {
                                 EXPAND_Y.set(true);
+                            }
+                            if (col < 4) {
+                                EXPAND_X.set(true);
                             }
                         } else {
                             setCellStateNE(row, col, false);
@@ -322,7 +322,7 @@ public class DynamicBoard extends Board {
 
     @Override
     protected final int expandBoardY(int y) {
-        if (y < 2) {
+        if (y < 3) {
             while (y < EXPANSION && gameBoard.size() < MAXHEIGHT) {
                 gameBoard.add(0, new ArrayList<>());
                 offsetValues[1] -= (cellSize + gridSpacing);
