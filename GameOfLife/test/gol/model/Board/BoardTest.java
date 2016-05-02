@@ -52,8 +52,10 @@ public class BoardTest {
     byte[][] patternGlider;
 
     /**
-     * Test of nextGen method, of class Board.
+     * //TODO: Comment about expand board
      */
+    
+    
     @Test
     public void testNextGen() {
         System.out.println("nextGen");

@@ -392,7 +392,7 @@ public class DynamicBoard extends Board {
     }
 
     /**
-     * Set cell state, no expand
+     * Set cell state, no expand top left
      */
     private void setCellStateNE(int row, int col, boolean alive) {
         if (alive) {
@@ -403,7 +403,7 @@ public class DynamicBoard extends Board {
     }
 
     /**
-     * increment cell value no expand.
+     * increment cell value no expand top left.
      */
     private void incrementCellValueNE(int y, int x) {
         if (y < 0) {
