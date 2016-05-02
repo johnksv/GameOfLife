@@ -203,10 +203,8 @@ public class BoardTest {
 
     }
 
-    @Test
     public void testSetCellState_5args() {
         //This is a method witch calculates a mouse click to a point on the board
         //Testing this is much easier with a visual test.
-        assertEquals(1, 1);
     }
 }

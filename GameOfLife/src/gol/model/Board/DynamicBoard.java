@@ -320,26 +320,31 @@ public class DynamicBoard extends Board {
 
     }
 
+    @Override
     protected final int expandBoardY(int y) {
         if (y < 2) {
-            while (y < EXPANSION && y < MAXHEIGHT) {
+            while (y < EXPANSION && gameBoard.size() < MAXHEIGHT) {
                 gameBoard.add(0, new ArrayList<>());
                 offsetValues[1] -= (cellSize + gridSpacing);
                 y++;
             }
         }
-        while (y >= gameBoard.size() - EXPANSION && y < MAXHEIGHT) {
+        while (y >= gameBoard.size() - EXPANSION && gameBoard.size() < MAXHEIGHT) {
             gameBoard.add(new ArrayList<>());
         }
         return y;
     }
 
+    @Override
     protected final int expandBoardX(int y, int x) {
+        if (y >= gameBoard.size() || y < 0) {
+            return -1;
+        }
+
         if (x < 2) {
             //For performance. Avoid calling method each time
             int maxRow = getMaxRowLength();
             while (x < EXPANSION && maxRow < MAXWIDTH) {
-                System.out.println("X: " + x + " maxRow: " + maxRow);
                 for (ArrayList<AtomicInteger> row : gameBoard) {
                     row.add(0, new AtomicInteger(0));
                 }
@@ -348,7 +353,6 @@ public class DynamicBoard extends Board {
                 x++;
             }
         }
-        
         while (x >= gameBoard.get(y).size() - EXPANSION && gameBoard.get(y).size() < MAXWIDTH) {
             gameBoard.get(y).add(new AtomicInteger(0));
         }
