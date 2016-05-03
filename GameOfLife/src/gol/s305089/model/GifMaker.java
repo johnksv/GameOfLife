@@ -120,7 +120,7 @@ public final class GifMaker {
                         x2 += (int) activeBoard.offsetValues[0];
                         y1 += (int) activeBoard.offsetValues[1];
                         y2 += (int) activeBoard.offsetValues[1];
-                       
+
                         if (x1 >= 0 && x2 >= 0 && y1 >= 0 && y2 >= 0) {
                             if (x1 < gifWidth && x2 < gifWidth && y1 < gifHeight && y2 < gifHeight) {
                                 gifWriter.fillRect(x1, x2, y1, y2, cellColor);
@@ -137,16 +137,21 @@ public final class GifMaker {
         }
     }
 
+    /**
+     * Needs to be called while center pattern is true. Else the pattern will be
+     * way off, due to the offset.
+     */
     private void calculateCellSize() {
-        double spacing = 5;
-        byte[][] currentGenBoard = activeBoard.getBoundingBoxBoard();
-        int rowLength = currentGenBoard[0].length;
-        cellSize = Math.floor(gifHeight / (activeBoard.getBoundingBoxBoard().length + spacing));
-        if (cellSize > gifWidth / (rowLength + spacing)) {
-            cellSize = Math.floor(gifWidth / (rowLength + spacing));
+        if (centerPattern) {
+            double spacing = 5;
+            byte[][] currentGenBoard = activeBoard.getBoundingBoxBoard();
+            int rowLength = currentGenBoard[0].length;
+            cellSize = Math.floor(gifHeight / (activeBoard.getBoundingBoxBoard().length + spacing));
+            if (cellSize > gifWidth / (rowLength + spacing)) {
+                cellSize = Math.floor(gifWidth / (rowLength + spacing));
+            }
+            setPattern(currentGenBoard);
         }
-        activeBoard.clearBoard();
-        setPattern(currentGenBoard);
     }
 
     /**
@@ -205,7 +210,7 @@ public final class GifMaker {
             int x = (int) ((gifWidth / cellSize) / 2 - patternToSet[0].length / 2);
             activeBoard.insertArray(patternToSet, y, x);
         } else {
-            activeBoard.insertArray(patternToSet, 5, 5);
+            activeBoard.insertArray(patternToSet, 1, 1);
         }
     }
 

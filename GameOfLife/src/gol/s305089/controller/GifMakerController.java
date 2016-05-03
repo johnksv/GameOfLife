@@ -35,7 +35,7 @@ import javafx.stage.Stage;
 /**
  * FXML Controller class
  *
-* @author s305089 - John Kasper Svergja
+ * @author s305089 - John Kasper Svergja
  */
 public class GifMakerController implements Initializable {
 
@@ -104,7 +104,7 @@ public class GifMakerController implements Initializable {
     }
 
     private void initSpinners() {
-        spinnNumIterations.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 100, 20, 1));
+        spinnNumIterations.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 100, 20, 5));
         spinnNumIterations.setEditable(true);
 
         spinnTimeBetween.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 10000, 200, 100));
@@ -139,7 +139,13 @@ public class GifMakerController implements Initializable {
         spinnHeight.valueProperty().addListener(this::autoUpdatedPreview);
         cpCellColor.valueProperty().addListener(this::autoUpdatedPreview);
         cpBackColor.valueProperty().addListener(this::autoUpdatedPreview);
-        cbCenterPattern.selectedProperty().addListener(this::autoUpdatedPreview);
+        cbCenterPattern.selectedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+            autoUpdatedPreview(observable, oldValue, newValue);
+            cbCalcCellSize.setDisable(!newValue);
+            if (!newValue) {
+                cbCalcCellSize.setSelected(false);
+            }
+        });
         cbRndCellColor.selectedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
             gifmaker.setRandomColor(newValue);
             autoUpdatedPreview(observable, oldValue, newValue);
@@ -215,6 +221,8 @@ public class GifMakerController implements Initializable {
     @FXML
     private void previewGif() {
         borderpane.getScene().getWindow().setWidth(550);
+        borderpane.getScene().getWindow().setHeight(550);
+        ((Stage) borderpane.getScene().getWindow()).setResizable(false);
 
         try {
             File previewFile = File.createTempFile("golPreview", ".gif");

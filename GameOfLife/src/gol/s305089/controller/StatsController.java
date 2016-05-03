@@ -58,9 +58,6 @@ public class StatsController implements Initializable {
     private final XYChart.Series<String, Integer> similarityMeasure = new XYChart.Series();
     private final ArrayList<Integer> simMeasureClosest = new ArrayList();
 
-    /**
-     * Initializes the controller class.
-     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         gameStats = new Stats();
@@ -157,6 +154,7 @@ public class StatsController implements Initializable {
         GifMaker gifmaker = new GifMaker();
 
         //Set the original pattern to imgView First.
+        gifmaker.setCenterPattern(true);
         gifmaker.setAutoCellSize(true);
         generateTolltipGIF(gifmaker, imgViewOriginalPattern);
 
