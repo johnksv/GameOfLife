@@ -99,7 +99,7 @@ public final class WriteRLE {
      *  If several rows are blank, this is the method sets how many before the exclamation mark. 
      *  
      *  appendBlank makes sure the file do not end with:"$!" 
-     *  f.eks: bob$!
+     *  e.g.: bob$!
      * 
      */
     private static int appendBlank(StringBuilder line, byte[][] pattern, int i) {

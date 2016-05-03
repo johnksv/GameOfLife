@@ -2,6 +2,7 @@ package gol.s305084;
 
 import gol.model.Board.Board;
 import gol.model.Board.DynamicBoard;
+import gol.other.Configuration;
 import java.net.URL;
 import java.util.ResourceBundle;
 import org.junit.After;
@@ -30,6 +31,7 @@ public class StatisticsControllerTest {
     
     @Before
     public void setUp() {
+        Configuration.loadConfig();
     }
     
     @After
@@ -61,16 +63,5 @@ public class StatisticsControllerTest {
         result = StatisticsController.calcChangeCells(3,10);
         assertEquals(expResult, result);
     }
-    @Test
-    public void testSimValue() {
-        System.out.println("simValue");
-        byte[][] pattern = null;
-        int aliveCount = 0;
-        int aliveChange = 0;
-        double expResult = 0.0;
-        double result = StatisticsController.simValue(pattern, aliveCount, aliveChange);
-        assertEquals(expResult, result, 0.0);
-        fail("The test case is a prototype.");
-    }
-    
+      
 }
