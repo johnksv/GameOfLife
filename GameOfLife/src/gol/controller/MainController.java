@@ -2,15 +2,12 @@ package gol.controller;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -18,32 +15,19 @@ import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 
 /**
- * FXML Controller, controls the splash screen. This class is where the stage is
- * stored.
+ * FXML Controller, controls the splash screen. 
+ * This class stores the stage.
  *
  * @author s305054, s305084, s305089
  */
-public class MainController implements Initializable {
+public class MainController {
 
     private Stage primaryStage;
     private static List<String> input = new ArrayList<String>();
 
     /**
-     * Sets title and game icon, whenever the program starts.
-     *
-     * @see javafx.fxml.Initializable
-     * @param location
-     * @param resources
-     */
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-
-    }
-
-    /**
      * Loads Game.fxml witch sets {@link gol.controller.GameController} as its
-     * controller. This method will also call
-     * {@link GameController#handleKeyEvents(javafx.scene.input.KeyEvent) setKeyEvents}.
+     * controller. Will also call{@link GameController#handleKeyEvents(javafx.scene.input.KeyEvent) setKeyEvents.}
      *
      * @throws IOException Reads a FXML file
      */
@@ -71,7 +55,7 @@ public class MainController implements Initializable {
      * @throws IOException Reads a FXML file
      */
     @FXML
-    public void howToPlay() throws IOException {
+    private void howToPlay() throws IOException {
         try {
             Stage howToPlay = new Stage();
             howToPlay.initOwner(primaryStage.getScene().getWindow());
@@ -90,14 +74,14 @@ public class MainController implements Initializable {
 
     /**
      * Loads the primaryStage to be stored. The stage is stored as a private
-     * variable. Needs to be done first in {@link Main#start } after initialise.
+     * variable. Sets icon and title.
      *
      * @param stage
      */
     public void loadStage(Stage stage) {
         primaryStage = stage;
         primaryStage.getIcons().add(new Image(new File("src\\mics\\gen1.PNG").toURI().toString()));
-        primaryStage.setTitle(" Game of Life");
+        primaryStage.setTitle("Game of Life");
     }
 
 }

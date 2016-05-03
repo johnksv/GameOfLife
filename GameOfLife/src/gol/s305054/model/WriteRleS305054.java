@@ -1,10 +1,7 @@
 package gol.s305054.model;
 
-import gol.controller.UsefullMethods;
 import gol.model.Board.Board;
-import gol.s305054.controller.EditorController;
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
