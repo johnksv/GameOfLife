@@ -161,9 +161,9 @@ public class ReadFile {
             if (line.startsWith("#")) {
                 commentLines++;
                 if (line.contains("#N")) {
-                    appendMetaData("Name:" + line.substring(3));
+                    appendMetaData("Name: " + line.substring(3));
                 } else if (line.contains("#O")) {
-                    appendMetaData("Author:" + line.substring(3));
+                    appendMetaData("Author: " + line.substring(3));
                 } else {
                     appendMetaData(line.substring(3));
                 }
