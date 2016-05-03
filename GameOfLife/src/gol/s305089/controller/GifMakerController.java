@@ -180,7 +180,7 @@ public class GifMakerController implements Initializable {
     @FXML
     private void chooseSaveDest() {
         FileChooser filechooser = new FileChooser();
-        filechooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Graphics Interchange Format", ".gif"));
+        filechooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Graphics Interchange Format", "*.gif"));
         File fileSaveLocation = filechooser.showSaveDialog(null);
 
         if (fileSaveLocation != null) {

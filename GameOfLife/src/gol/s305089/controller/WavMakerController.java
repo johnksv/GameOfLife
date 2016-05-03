@@ -106,8 +106,8 @@ public class WavMakerController implements Initializable {
         getValuesFromView();
 
         FileChooser filechooser = new FileChooser();
-        filechooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Waveform Audio", ".wav"),
-                new FileChooser.ExtensionFilter(" ", ".*"));
+        filechooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Waveform Audio", "*.wav"),
+                new FileChooser.ExtensionFilter(" ", "*.*"));
 
         File result = filechooser.showSaveDialog(null);
         if (result != null) {
