@@ -66,7 +66,6 @@ public class DynamicBoard extends Board {
     protected void countNeighConcurrent(int thread) {
 
         int linesPerThread = gameBoard.size() / ThreadPool.THREAD_NR;
-        int rest = gameBoard.size() % ThreadPool.THREAD_NR;
         int startRow = (linesPerThread * thread);
         int endRow = linesPerThread * (thread + 1);
 
@@ -133,7 +132,6 @@ public class DynamicBoard extends Board {
     @Override
     protected void checkRulesConcurrent(Rule activeRule, int thread) {
         int linesPerThread = gameBoard.size() / ThreadPool.THREAD_NR;
-        int rest = gameBoard.size() % ThreadPool.THREAD_NR;
         int startRow = (linesPerThread * thread);
         int endRow = linesPerThread * (thread + 1);
         if (thread == ThreadPool.THREAD_NR - 1) {
@@ -438,13 +436,20 @@ public class DynamicBoard extends Board {
         if (x < 0) {
             return;
         }
-        while (y >= gameBoard.size() - EXPANSION) {
+        while (y >= gameBoard.size() - EXPANSION && gameBoard.size() < MAXHEIGHT) {
             gameBoard.add(new ArrayList<>());
         }
-        while (x >= gameBoard.get(y).size() - EXPANSION) {
-            gameBoard.get(y).add(new AtomicInteger(0));
+        if (y < MAXHEIGHT) {
+            while (x >= gameBoard.get(y).size() - EXPANSION && gameBoard.get(y).size() < MAXWIDTH) {
+                gameBoard.get(y).add(new AtomicInteger(0));
+            }
         }
-        gameBoard.get(y).get(x).incrementAndGet();
+
+        if (y < gameBoard.size()) {
+            if (x < gameBoard.get(y).size()) {
+                gameBoard.get(y).get(x).incrementAndGet();
+            }
+        }
 
     }
 }

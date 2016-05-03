@@ -425,9 +425,7 @@ public class GameController implements Initializable {
             activeBoard.setGameRule(new CustomRule(cellsToSurvive, cellsToBeBorn));
         } catch (unsupportedRuleException ex) {
             Alert alert = new Alert(Alert.AlertType.ERROR, ex.getMessage());
-            alert.setTitle("Error");
-            alert.setHeaderText("Your given rule is not supported. \n Try again.");
-            alert.showAndWait();
+            UsefullMethods.showErrorAlert("Oops!", "Your given rule is not supported. \n Try again.");
         }
     }
 
@@ -663,6 +661,12 @@ public class GameController implements Initializable {
 
             case "k":
                 handleAnimation();
+                break;
+            case "q":
+                rbRemoveCell.fire();
+                break;
+            case "a":
+                //TODO set addcells
                 break;
         }
         draw();
