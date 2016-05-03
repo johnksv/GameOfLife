@@ -1,0 +1,21 @@
+TODO:
+Mulighet for cellestørrelse
+Mulighet for plassere mønsteret på midten av brettet hver gang.
+
+"Disse variablene er: størrelse til GIF bildet (i piksler), 
+tid mellom hvert bilde i animasjonen (i millisekunder), 
+antall iterasjoner som skal skrives til GIF bildet, 
+størrelsen til hver celle på brettet (i piksler), 
+og grafikken til hver celle (rektangler eller noe mer ‘fancy’). 
+Det er naturlig å la brukeren manipulere flere av disse variablene." 
+
+
+Automatisk Loop
+Feilmelding når brettet er for stort
+
+Should have(?)
+Brett like stort som brettstørrelse * antall itterasjoner
+
+
+Nice to Have
+Tekst i hjørnet for hvilken itteratsjon du er på

@@ -1,15 +1,18 @@
 package gol.controller;
 
-import gol.model.Board.ArrayBoard;
 import gol.model.Board.Board;
+import gol.model.Board.ArrayBoard;
 import gol.model.Board.DynamicBoard;
-import gol.model.Board.HashBoard;
 import gol.model.FileIO.PatternFormatException;
 import gol.model.FileIO.ReadFile;
 import gol.model.Logic.ConwaysRule;
 import gol.model.Logic.CustomRule;
 import gol.model.Logic.Rule;
 import gol.model.Logic.unsupportedRuleException;
+import gol.s305089.controller.PatternEditorController;
+import gol.s305089.controller.GifMakerController;
+import gol.s305089.controller.SoundController;
+import gol.s305089.controller.StatsController;
 import gol.other.Configuration;
 import gol.s305054.model.GIFWriterS305054;
 import gol.s305054.controller.EditorController;
@@ -17,7 +20,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Optional;
-
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -45,7 +47,6 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
-import javafx.scene.control.TitledPane;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
@@ -55,7 +56,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
@@ -110,8 +110,6 @@ public class GameController implements Initializable {
     @FXML
     private Button btnUseRule;
     @FXML
-    private Button saveGifTrygve;
-    @FXML
     private Slider timeSliderGifTrygve;
     @FXML
     private Label timeLabelGifTrygve;
@@ -152,6 +150,7 @@ public class GameController implements Initializable {
         handleZoom();
         handleGridSpacingSlider();
         handleColor();
+        handleZoom();
         handleAnimationSpeedSlider();
         initAnimation();
         initGameRulesListner();
@@ -199,6 +198,7 @@ public class GameController implements Initializable {
 
     @FXML
     private void handleAnimation() {
+
         if (timeline.getStatus() == Status.RUNNING) {
             timeline.pause();
             animationTimer.stop();
@@ -471,6 +471,91 @@ public class GameController implements Initializable {
             error.show();
 
         }
+    }
+
+    @FXML
+    private void s89openPatternEditor() throws IOException {
+        timeline.pause();
+
+        Stage editor = new Stage();
+        FXMLLoader root = new FXMLLoader(getClass().getResource("/gol/s305089/view/PatternEditor.fxml"));
+
+        Scene scene = new Scene((Parent) root.load());
+        PatternEditorController editorController = root.<PatternEditorController>getController();
+        editorController.setActiveBoard(activeBoard);
+        editorController.setGameController(this);
+
+        editor.setTitle("Pattern Editor - Game of Life");
+        editor.initModality(Modality.WINDOW_MODAL);
+        editor.setMinWidth(800);
+        editor.setMinHeight(600);
+        editor.initOwner(borderpane.getScene().getWindow());
+        editor.setScene(scene);
+        editor.showAndWait();
+        draw();
+    }
+
+    @FXML
+    private void s89saveAsGIF() throws IOException {
+        timeline.pause();
+
+        Stage gifMaker = new Stage();
+        FXMLLoader root = new FXMLLoader(getClass().getResource("/gol/s305089/view/GifMaker.fxml"));
+
+        Scene scene = new Scene((Parent) root.load());
+
+        GifMakerController gifcontroller = root.<GifMakerController>getController();
+        gifcontroller.setByteBoard(activeBoard);
+
+        gifMaker.setScene(scene);
+        gifMaker.setTitle("Generate GIF - Game of Life");
+        gifMaker.setWidth(215);
+        gifMaker.setHeight(535);
+        gifMaker.initOwner(borderpane.getScene().getWindow());
+        gifMaker.show();
+    }
+
+    @FXML
+    public void s89showStats() throws IOException {
+        timeline.pause();
+
+        Stage golStats = new Stage();
+        FXMLLoader root = new FXMLLoader(getClass().getResource("/gol/s305089/view/Stats.fxml"));
+
+        Scene scene = new Scene((Parent) root.load());
+
+        StatsController statsController = root.<StatsController>getController();
+        statsController.setByteBoard(activeBoard.getBoundingBoxBoard());
+
+        golStats.setScene(scene);
+        golStats.setTitle("Stats - Game of Life");
+        golStats.initOwner(borderpane.getScene().getWindow());
+        golStats.show();
+    }
+    
+    @FXML
+    private void s89showSoundController() throws IOException {
+        timeline.pause();
+
+        Stage golAudio = new Stage();
+        FXMLLoader root = new FXMLLoader(getClass().getResource("/gol/s305089/view/Sound.fxml"));
+        Scene scene = new Scene((Parent) root.load());
+
+        SoundController soundController = root.<SoundController>getController();
+        soundController.setBoard(activeBoard);
+
+        KeyFrame soundFrame = new KeyFrame(Duration.millis(1000), (event) -> {
+            soundController.playSound();
+        });
+        timeline.getKeyFrames().add(soundFrame);
+
+        golAudio.setScene(scene);
+        golAudio.setTitle("Audio control panel - Game of Life");
+        golAudio.initOwner(borderpane.getScene().getWindow());
+        golAudio.showAndWait();
+        timeline.stop();
+        timeline.getKeyFrames().remove(soundFrame);
+        soundController.disposeMediaPlayers();
     }
 
     @FXML

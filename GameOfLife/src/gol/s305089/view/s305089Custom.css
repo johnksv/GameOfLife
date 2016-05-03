@@ -1,0 +1,26 @@
+/* 
+    Created on : 30.apr.2016, 11:33:49
+    Author     : s305089 - John Kasper Svergja
+*/
+* {
+    -fx-defaultBackground: #ebedf3;
+}
+.h1{
+    -fx-font-size: 16px;
+}
+
+.underlined{
+    -fx-underline: true;
+}
+
+.check-box{
+    -fx-text-fill: -fx-defaultBackground;
+
+}
+.slider .axis:bottom{
+    -fx-tick-label-fill: -fx-defaultBackground;
+}
+
+.tab-pane:top .tab-header-area .tab-header-background{
+    -fx-background-color: -fx-defaultBackground;
+}

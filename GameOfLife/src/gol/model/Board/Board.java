@@ -64,7 +64,7 @@ public abstract class Board {
     /**
      * Width and height of all cells, defined in pixels
      */
-    protected double cellSize;
+    protected double cellSize = 5;
 
     /**
      * Gives access for use of Threadpool

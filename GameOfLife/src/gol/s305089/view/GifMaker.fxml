@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ColorPicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.Spinner?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane fx:id="borderpane" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="530.0" styleClass="pane-standard" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gol.s305089.controller.GifMakerController">
+    <center>
+        <ImageView fx:id="imgViewPreview" fitHeight="465.0" fitWidth="320.0" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER_LEFT" />
+    </center>
+    <left>
+        <TitledPane collapsible="false" prefHeight="500.0" prefWidth="210.0" text="Generate GIF" BorderPane.alignment="TOP_LEFT">
+            <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefWidth="200.0" styleClass="pane-standard">
+                    <children>
+                        <TabPane layoutY="-8.0" prefWidth="200.0" rotateGraphic="true" tabClosingPolicy="UNAVAILABLE" AnchorPane.topAnchor="0.0">
+                            <tabs>
+                                <Tab closable="false" text="General">
+                                    <content>
+                                        <VBox prefWidth="198.0" spacing="10.0">
+                                            <children>
+                                                <Button mnemonicParsing="false" onAction="#chooseSaveDest" text="Choose save destination">
+                                       <VBox.margin>
+                                          <Insets top="-5.0" />
+                                       </VBox.margin></Button>
+                                                <Label fx:id="labelCurrentDest" text="Current:" wrapText="true">
+                                                    <tooltip>
+                                                        <Tooltip fx:id="tooltipSaveLoc" wrapText="true" />
+                                                    </tooltip>
+                                                    <VBox.margin>
+                                                        <Insets />
+                                                    </VBox.margin>
+                                                </Label>
+                                                <Separator prefWidth="200.0" />
+                                                <Label text="Cellsize" />
+                                                <Slider fx:id="sliderCellSize" min="2.0" minorTickCount="5" prefWidth="4.0" showTickLabels="true" value="5">
+                                                    <VBox.margin>
+                                                        <Insets top="-7.0" />
+                                                    </VBox.margin>
+                                                    <padding>
+                                                        <Insets right="10.0" />
+                                                    </padding>
+                                                </Slider>
+                                                <Separator prefWidth="200.0" />
+                                                <Label text="Number of iterations to draw" />
+                                                <Spinner fx:id="spinnNumIterations" prefHeight="25.0" prefWidth="147.0">
+                                                    <VBox.margin>
+                                                        <Insets top="-7.0" />
+                                                    </VBox.margin>
+                                                </Spinner>
+                                                <Separator prefWidth="200.0" />
+                                                <Label text="Time between frames (in ms)" />
+                                                <Spinner fx:id="spinnTimeBetween">
+                                                    <VBox.margin>
+                                                        <Insets top="-7.0" />
+                                                    </VBox.margin>
+                                                </Spinner>
+                                                <Separator prefWidth="200.0" />
+                                                <CheckBox fx:id="cbCenterPattern" mnemonicParsing="false" text="Center pattern" />
+                                    <CheckBox fx:id="cbCalcCellSize" mnemonicParsing="false" text="Auto calculate cell size" />
+                                                <CheckBox fx:id="cbAutoPreview" mnemonicParsing="false" text="Automatically preview" />
+                                            </children>
+                                            <padding>
+                                                <Insets left="10.0" top="15.0" />
+                                            </padding>
+                                        </VBox>
+                                    </content>
+                                </Tab>
+                                <Tab closable="false" text="Advanced">
+                                    <content>
+                                        <VBox prefWidth="198.0" spacing="10.0">
+                                            <children>
+                                                <HBox spacing="20.0">
+                                                    <children>
+                                                        <VBox spacing="5.0">
+                                                            <children>
+                                                                <Label text="Width (in px)" />
+                                                                <Spinner fx:id="spinnWidth" prefHeight="25.0" prefWidth="82.0" />
+                                                            </children>
+                                                        </VBox>
+                                                        <VBox spacing="5.0">
+                                                            <children>
+                                                                <Label text="Height (in px)" />
+                                                                <Spinner fx:id="spinnHeight" prefHeight="25.0" prefWidth="82.0" />
+                                                            </children>
+                                                        </VBox>
+                                                    </children>
+                                                </HBox>
+                                                <Separator prefWidth="200.0" />
+                                                <Label text="Cell color" />
+                                                <ColorPicker fx:id="cpCellColor">
+                                                    <VBox.margin>
+                                                        <Insets top="-7.0" />
+                                                    </VBox.margin>
+                                                </ColorPicker>
+                                                <CheckBox fx:id="cbRndCellColor" mnemonicParsing="false" text="Random cell colors" />
+                                                <Separator prefWidth="200.0" />
+                                                <Label text="Background color" />
+                                                <ColorPicker fx:id="cpBackColor">
+                                                    <VBox.margin>
+                                                        <Insets top="-7.0" />
+                                                    </VBox.margin>
+                                                </ColorPicker>
+                                                <Separator prefWidth="200.0" />
+                                                <HBox alignment="CENTER_LEFT" spacing="20.0">
+                                                    <children>
+                                                        <CheckBox fx:id="cbInfinityLoop" mnemonicParsing="false" text="Infinity loop" />
+                                                        <Button mnemonicParsing="false" onAction="#openStats" text="Open stats" />
+                                                    </children>
+                                                </HBox>
+                                                <VBox fx:id="vBoxThreashold" prefHeight="80.0" visible="false">
+                                                    <children>
+                                                        <CheckBox fx:id="cbCheckPrevGen" mnemonicParsing="false" text="Check previous generations" />
+                                                        <HBox spacing="20.0">
+                                                            <children>
+                                                                <Label text="Threshold:">
+                                                                    <HBox.margin>
+                                                                        <Insets top="5.0" />
+                                                                    </HBox.margin>
+                                                                </Label>
+                                                                <Spinner fx:id="spinnThreshold" prefHeight="25.0" prefWidth="76.0" />
+                                                            </children>
+                                                            <VBox.margin>
+                                                                <Insets top="5.0" />
+                                                            </VBox.margin>
+                                                        </HBox>
+                                                        <Label fx:id="labelLoopStatus" />
+                                                    </children>
+                                                </VBox>
+                                            </children>
+                                            <padding>
+                                                <Insets left="10.0" top="15.0" />
+                                            </padding>
+                                        </VBox>
+                                    </content>
+                                </Tab>
+                            </tabs>
+                            <padding>
+                                <Insets bottom="60.0" />
+                            </padding>
+                        </TabPane>
+                        <VBox layoutY="393" AnchorPane.bottomAnchor="10.0">
+                            <children>
+                                <Separator prefWidth="200.0">
+                                    <padding>
+                                        <Insets bottom="5.0" />
+                                    </padding>
+                                </Separator>
+                                <HBox spacing="38.0">
+                                    <children>
+                                        <Button mnemonicParsing="false" onAction="#previewGif" text="Preview">
+                                            <HBox.margin>
+                                                <Insets />
+                                            </HBox.margin>
+                                        </Button>
+                                        <Button mnemonicParsing="false" onAction="#generateGIF" text="Generate GIF" />
+                                    </children>
+                                    <padding>
+                                        <Insets left="10.0" />
+                                    </padding>
+                                </HBox>
+                                <Label fx:id="labelGenerateFeedback">
+                                    <VBox.margin>
+                                        <Insets left="10.0" />
+                                    </VBox.margin>
+                                </Label>
+                            </children>
+                        </VBox>
+                    </children>
+                    <padding>
+                        <Insets top="-4.0" />
+                    </padding>
+                </AnchorPane>
+            </content>
+        </TitledPane>
+    </left>
+</BorderPane>
