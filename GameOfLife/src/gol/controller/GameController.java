@@ -10,6 +10,8 @@ import gol.model.Logic.CustomRule;
 import gol.model.Logic.Rule;
 import gol.model.Logic.unsupportedRuleException;
 import gol.other.Configuration;
+import gol.s305054.model.GIFWriterS305054;
+import gol.s305054.controller.EditorController;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -26,7 +28,9 @@ import javafx.animation.Timeline;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -49,9 +53,12 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
 
@@ -100,6 +107,12 @@ public class GameController implements Initializable {
     private TextField tfCellsToSurvive;
     @FXML
     private Button btnUseRule;
+    @FXML
+    private Button saveGifTrygve;
+    @FXML
+    private Slider timeSliderGifTrygve;
+    @FXML
+    private Label timeLabelGifTrygve;
 
     private Board activeBoard;
     private final Timeline timeline = new Timeline();
@@ -125,8 +138,6 @@ public class GameController implements Initializable {
         borderpane.heightProperty().addListener(e -> draw());
 
         cellSizeSlider.setBlockIncrement(0.75);
-
-        //TODO Valg for Array eller dynamisk brett
         if (Configuration.getProp("dynamicBoard").equals("true")) {
             activeBoard = new DynamicBoard();
         } else {
@@ -416,6 +427,51 @@ public class GameController implements Initializable {
     }
 
     @FXML
+    private void handleGIFTrygve() {
+        timeline.pause();
+        GIFWriterS305054 gifTrygve;
+        java.awt.Color bgColor = new java.awt.Color((float) backgroundColor.getRed(), (float) backgroundColor.getGreen(), (float) backgroundColor.getBlue());
+        java.awt.Color cColor = new java.awt.Color((float) cellColor.getRed(), (float) cellColor.getGreen(), (float) cellColor.getBlue());
+        gifTrygve = new GIFWriterS305054();
+        gifTrygve.prepareGIF(activeBoard, (int) activeBoard.getCellSize(), timeSliderGifTrygve.getValue(), bgColor, cColor);
+        gifTrygve.makeGIF();
+    }
+
+    @FXML
+    private void handleGifSliderTrygve() {
+        timeSliderGifTrygve.setMin(0.001);
+        timeSliderGifTrygve.setMax(2.0);
+        timeLabelGifTrygve.setText("Time Between pictures: " + (float) timeSliderGifTrygve.getValue());
+    }
+
+    @FXML
+    private void openEditorTrygve() {
+        timeline.pause();
+        try {
+            Stage editor = new Stage();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/gol/s305054/view/Editor.fxml"));
+            Parent root = loader.load();
+            Scene scene = new Scene(root);
+            EditorController edController = loader.getController();
+            edController.setBoard(activeBoard);
+
+            editor.setTitle("Pattern Editor");
+            editor.initModality(Modality.WINDOW_MODAL);
+            editor.initOwner(borderpane.getScene().getWindow());
+            editor.setScene(scene);
+
+            editor.show();
+
+        } catch (IOException ie) {
+            Alert error = new Alert(AlertType.ERROR);
+            error.setTitle("Error");
+            error.setHeaderText("Could not open pattern editor. Please try again.");
+            error.show();
+
+        }
+    }
+
+    @FXML
     private void rotateBoardFromFile() {
         if (boardFromFile != null) {
             boardFromFile = UsefullMethods.rotateArray90Deg(boardFromFile);
@@ -674,8 +730,8 @@ public class GameController implements Initializable {
     }
 
     /**
-     * When cellsize is changed, this methods is called. It then calculates a new
-     * offset with the new cellsize. The offset is based at the center of
+     * When cellsize is changed, this methods is called. It then calculates a
+     * new offset with the new cellsize. The offset is based at the center of
      * canvas.
      *
      * NB: Does not support gridspacing yet.

@@ -9,9 +9,10 @@ public final class UsefullMethods {
 
     private UsefullMethods() {
     }
-    
+
     /**
      * Transposes this given pattern.
+     *
      * @param matrix pattern that will be transposed
      * @return a transposed matrix
      */
@@ -22,13 +23,14 @@ public final class UsefullMethods {
                 returnMatrix[j][i] = matrix[i][j];
             }
         }
-        return returnMatrix;
+        return matrix;
     }
 
     /**
      * Rotates this pattern 90 degrees clockwise.
-     * @param arrayToRotate patter that will be rotated
-     * @return a rotated matrix
+     *
+     * @param arrayToRotate pattern to be rotated
+     * @return The rotated matrix
      */
     public static byte[][] rotateArray90Deg(byte[][] arrayToRotate) {
         int longestRow = 0;
@@ -53,7 +55,7 @@ public final class UsefullMethods {
 
     /**
      * Show this error dialogue box.
-     * 
+     *
      * @param headerText specifies what the header text will commute
      * @param contentText specifies what the content text will commute
      */
@@ -63,5 +65,4 @@ public final class UsefullMethods {
         alert.setHeaderText(headerText);
         alert.showAndWait();
     }
-
 }
