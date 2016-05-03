@@ -3,7 +3,6 @@ package gol.s305054.model;
 import gol.model.Board.Board;
 import gol.s305054.controller.EditorController;
 import java.io.BufferedWriter;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -49,8 +48,8 @@ public class WriteRleS305054 {
         int counter = 0;
 
         BufferedWriter metaData = Files.newBufferedWriter(sLocation);
-
         StringBuilder pattern = new StringBuilder();
+        StringBuilder formatedPattern = new StringBuilder();
 
         if (title.getText() != null && !title.equals("")) {
             metaData.append("#N " + title.getText());
@@ -72,29 +71,31 @@ public class WriteRleS305054 {
 
         metaData.append("\nx = " + x + ", y = " + y + "\n");
 
-        for (int i = 0; i < boundingBox.length; i++) {
-            for (int j = 0; j < boundingBox[i].length; j++) {
-                //Save last value, and compare next value to last value. If the same counter ++. keeps going until not the same. One last counter++, set counter before the value, and counter = 0
-                if (boundingBox[i][j] == 0) {
+        for (int row = 0; row < boundingBox.length; row++) {
+            for (int column = 0; column < boundingBox[row].length; column++) {
+                if (boundingBox[row][column] == 0) {
                     pattern.append("b");
-                } else if (boundingBox[i][j] == 64) {
+                } 
+                
+                if (boundingBox[row][column] == 64) {
                     pattern.append("o");
                 }
 
-                if (j == boundingBox[i].length && i == boundingBox.length) { //Last element in array ?
+                if (column == boundingBox[0].length-1 && row == boundingBox.length-1) { 
                     pattern.append("!");
                     break;
                 }
 
-                if (j == boundingBox[i].length) { //Last element in row ?
+                if (column == boundingBox[row].length-1) { 
                     pattern.append("$");
                 }
 
             }
         }
-        System.out.println(pattern); //Sjekke før parsing
+        
         for (int index = 0; index < pattern.length(); index++) {
             if (pattern.charAt(index) == '!') {
+                formatedPattern.append("!");
                 break;
             }
             if (pattern.charAt(index) == pattern.charAt(index + 1)) {
@@ -102,36 +103,19 @@ public class WriteRleS305054 {
             }
             if (pattern.charAt(index) != pattern.charAt(index + 1)) {
                 if (counter > 0) {
-                    pattern.replace((index - counter), index, String.valueOf((counter + 1) + pattern.charAt(index)));
-                    //TODO slik at hele døde linjer blir gjort om til ""
+                    counter++;
+                    formatedPattern.append(counter);
+                    counter = 0;
                 }
+                formatedPattern.append(pattern.charAt(index));
             }
-            if (counter == (y + 1) && pattern.charAt(index) == 'b') {
-                //Hvis det er en hel linje med bare døde celler.
+            if (counter == (x - 1) && pattern.charAt(index) == 'b') {
+                //TODO fjern linjer som er helt tom.
             }
 
         }
-        System.out.println(pattern); //Sjekke etter parsing
-
-        /*
-        [o]{2,} //Regex for å finne to eller flere o ved siden av seg - bruk ala searchand replace
-        [b]{2,} //Regex for b
-        [$]{2,} //Regex for ny linje
-        
-        if(numberOfO == boundingBox[0].length) {
-            replace("");
-        }
-         */
- /*
-         * A finished .rle file is looking like this:
-        
-            #N Name
-            #O Author
-            #C Comment
-            x = How many columns, y = how many rows, rule = B(what number its born on)/S(what number it survives on)
-            (actual pattern where b is dead, o is alive, $ is new line, and ! ends the pattern)
-         */
-        metaData.append(pattern); //Add pattern to metadata and make it into a string?
+        System.out.println(formatedPattern);
+        metaData.append(formatedPattern); //Add pattern to metadata and make it into a string?
         metaData.close();
 
     }

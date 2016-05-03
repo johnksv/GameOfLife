@@ -209,8 +209,9 @@ public class EditorController implements Initializable {
     @FXML
     private void handleSave() {
         FileChooser fileChooser = new FileChooser();
+        fileChooser.setInitialFileName(titleField.getText() + ".rle");
         fileChooser.setTitle("Save Pattern");
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("RLE", ".rle"));
+        
         
         File file = fileChooser.showSaveDialog(null); //Stage?
         if(file != null) {
