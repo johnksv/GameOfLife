@@ -443,8 +443,15 @@ public class GameController implements Initializable {
         java.awt.Color bgColor = new java.awt.Color((float) backgroundColor.getRed(), (float) backgroundColor.getGreen(), (float) backgroundColor.getBlue());
         java.awt.Color cColor = new java.awt.Color((float) cellColor.getRed(), (float) cellColor.getGreen(), (float) cellColor.getBlue());
 
-        gifTrygve.prepareGIF(activeBoard, (int) activeBoard.getCellSize(), timeSliderGifTrygve.getValue(), bgColor, cColor);
-        gifTrygve.makeGIF();
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("GIF", "*.gif"));
+        fileChooser.setTitle("Save as GIF");
+
+        File file = fileChooser.showSaveDialog(null);
+        if (file != null) {
+            gifTrygve.prepareGIF(activeBoard, (int) activeBoard.getCellSize(), timeSliderGifTrygve.getValue(), bgColor, cColor, file.toPath());
+            gifTrygve.makeGIF();
+        }
     }
 
     @FXML

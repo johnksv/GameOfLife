@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.awt.Color;
+import java.nio.file.Path;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import lieng.GIFWriter;
@@ -26,7 +27,6 @@ public class GIFWriterS305054 {
     private short nPicturesLeft = 50; //number of pictures left - TODO nPictures cannot be less than 1
     private Color bgColor = Color.WHITE; //Standard color
     private Color cColor = Color.BLACK; //Standard color
-    String savePath = "testGif.gif"; //Filepath - later, normal output stream
     private GIFWriter gifWriter;
     
     private int gifWriterSize;
@@ -40,7 +40,7 @@ public class GIFWriterS305054 {
      * @param bgColor Background color of the board
      * @param cColor Color of cell in board.
      */
-    public void prepareGIF(Board originaleBoard, int cellSize, double time, Color bgColor, Color cColor) { //TODO add parameters height width
+    public void prepareGIF(Board originaleBoard, int cellSize, double time, Color bgColor, Color cColor, Path saveLocation) { //TODO add parameters height width
         try {
             byte[][] originaleArray = originaleBoard.getBoundingBoxBoard();
             copiedBoard = new ArrayBoard(originaleArray[0].length + nPicturesLeft, originaleArray.length + nPicturesLeft);
@@ -70,7 +70,7 @@ public class GIFWriterS305054 {
             }
             
             gifWriterSize = (int)(copiedBoard.getArrayLength()*copiedBoard.getCellSize());
-            gifWriter = new GIFWriter(gifWriterSize, gifWriterSize, savePath, this.time);
+            gifWriter = new GIFWriter(gifWriterSize, gifWriterSize, saveLocation.toString(), this.time);
             gifWriter.setBackgroundColor(this.bgColor);
             gifWriter.flush(); //Flushing to set background color to the first image.
             

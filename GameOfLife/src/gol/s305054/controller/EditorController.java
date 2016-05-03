@@ -6,13 +6,11 @@ package gol.s305054.controller;
 
 import gol.model.Board.ArrayBoard;
 import gol.model.Board.Board;
+import gol.model.Board.DynamicBoard;
 import gol.s305054.model.WriteRleS305054;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
-import java.nio.file.Path;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -141,7 +139,7 @@ public class EditorController implements Initializable {
     
     private void stripParts() {
         //TODO height, width, sånn shit. Vil ha 20 patterns på en canvas. Affain klasse som er nøkkelordet
-        stripBoard = new ArrayBoard();
+        stripBoard = new DynamicBoard();
     }
 
     private void mouseInit() {
@@ -209,11 +207,12 @@ public class EditorController implements Initializable {
     @FXML
     private void handleSave() {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setInitialFileName(titleField.getText() + ".rle");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("RLE", "*.rle"));
+        fileChooser.setInitialFileName(titleField.getText());
         fileChooser.setTitle("Save Pattern");
         
         
-        File file = fileChooser.showSaveDialog(null); //Stage?
+        File file = fileChooser.showSaveDialog(null);
         if(file != null) {
             try {
                 WriteRleS305054 writer = new WriteRleS305054();
