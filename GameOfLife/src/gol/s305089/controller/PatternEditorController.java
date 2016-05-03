@@ -201,7 +201,7 @@ public class PatternEditorController implements Initializable {
         Scene scene = new Scene((Parent) root.load());
 
         GifMakerController gifcontroller = root.<GifMakerController>getController();
-        gifcontroller.setByteBoard(activeBoard);
+        gifcontroller.setBoard(activeBoard);
 
         gifMaker.setScene(scene);
         gifMaker.setTitle("Generate GIF - Game of Life");
