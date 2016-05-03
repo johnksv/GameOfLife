@@ -95,7 +95,7 @@ public class WavMakerController implements Initializable {
         referenceBoard = activeBoard;
         originalPattern = activeBoard.getBoundingBoxBoard();
         this.activeBoard = new DynamicBoard();
-        this.activeBoard.setGameRule(activeBoard.getRule());
+        this.activeBoard.setRule(activeBoard.getRule());
         this.activeBoard.insertArray(originalPattern, 3, 3);
 
         generateBoardGIFPreview();

@@ -17,7 +17,7 @@
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="455.0" prefWidth="670.0" style="-fx-background-color: #7c8fa5;" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gol.s305084.PatternEditorController">
    <children>
       <Canvas id="canvasEditor" fx:id="canvas" height="316.0" width="437.0" />
-      <VBox layoutX="446.0" layoutY="14.0" prefHeight="284.0" prefWidth="194.0" spacing="10.0">
+      <VBox layoutX="446.0" layoutY="14.0" prefHeight="284.0" prefWidth="194.0" spacing="8.0">
          <children>
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Editor:" wrappingWidth="88.201416015625">
                <font>
@@ -47,7 +47,7 @@
             </HBox>
             <TextField fx:id="txtName" promptText="Pattern Name">
                <VBox.margin>
-                  <Insets top="35.0" />
+                  <Insets top="20.0" />
                </VBox.margin></TextField>
             <TextField fx:id="txtAuthor" prefHeight="25.0" prefWidth="132.0" promptText="Author" />
             <TextField fx:id="txtComment" promptText="Comment" />
@@ -55,6 +55,7 @@
                <VBox.margin>
                   <Insets top="5.0" />
                </VBox.margin></Button>
+            <Button cancelButton="true" onAction="#handleBack"  minWidth="60.0" mnemonicParsing="false" text="Back" />
          </children>
          <opaqueInsets>
             <Insets />

@@ -18,21 +18,21 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Affine;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import lieng.GIFWriter;
 
-//TODO make close button
 /**
  * Pattern editor, for creating small and complex patterns.
- * 
- * Implements much of the same code as {@link gol.controller.GameController gamController}. 
- * Important note, this class only change from the main game is {@link #drawStrip() the strip.}
+ *
+ * Implements much of the same code as
+ * {@link gol.controller.GameController gamController}. Important note, this
+ * class only change from the main game is {@link #drawStrip() the strip.}
  * Saving a pattern to GIF or RLE is also possible from the GUI.
  *
  * @author S305084
  */
 public class PatternEditorController implements Initializable {
 
-    //TODO Make junit tester
     @FXML
     private Canvas canvas;
     @FXML
@@ -57,6 +57,12 @@ public class PatternEditorController implements Initializable {
         activeBoard.clearBoard();
         draw();
         drawStrip();
+    }
+
+    @FXML
+    private void handleBack() {
+        Stage stage = (Stage) canvas.getScene().getWindow();
+        stage.close();
     }
 
     @FXML
@@ -90,7 +96,7 @@ public class PatternEditorController implements Initializable {
     private void handlebtnRLE() {
         //neagtiv value means that there are no alive cells on the board
         if (activeBoard.getBoundingBox()[1] - activeBoard.getBoundingBox()[0] < 0) {
-                 UsefullMethods.showErrorAlert("Board is empty.", "Sorry, but you cant make a gif with no living cells.");
+            UsefullMethods.showErrorAlert("Board is empty.", "Sorry, but you cant make a gif with no living cells.");
         } else {
             try {
                 FileChooser fileChooser = new FileChooser();
@@ -105,7 +111,7 @@ public class PatternEditorController implements Initializable {
                 }
             } catch (IOException ex) {
                 UsefullMethods.showErrorAlert("Sorry!", "Something went wrong during saving \n please try again.");
-        
+
             }
         }
     }
@@ -114,7 +120,7 @@ public class PatternEditorController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         gc = canvas.getGraphicsContext2D();
         gcStrip = theStrip.getGraphicsContext2D();
-        activeBoard = new ArrayBoard(100,100);
+        activeBoard = new ArrayBoard(100, 100);
 
         activeBoard.setCellSize(15);
         activeBoard.setGridSpacing(0.6);
@@ -135,9 +141,10 @@ public class PatternEditorController implements Initializable {
 
                 });
     }
+
     /**
-     * Sets a new bgColor value.
-     * Default color gray.
+     * Sets a new bgColor value. Default color gray.
+     *
      * @param bgColor Background Color.
      */
     public void setBGColor(Color bgColor) {
@@ -147,10 +154,10 @@ public class PatternEditorController implements Initializable {
         draw();
         drawStrip();
     }
-    
+
     /**
-     * Sets a new cellColor value.
-     * Default color black.
+     * Sets a new cellColor value. Default color black.
+     *
      * @param cellColor Cell Color.
      */
     public void setCellColor(Color cellColor) {
@@ -218,13 +225,14 @@ public class PatternEditorController implements Initializable {
         gcStrip.setTransform(xform);
 
     }
-    
+
     /**
      * Returns the edited pattern, null if board is empty.
+     *
      * @return byte pattern.
      */
-    public byte[][] getPattern(){
-        if(activeBoard.getBoundingBox()[1] - activeBoard.getBoundingBox()[0] < 0){
+    public byte[][] getPattern() {
+        if (activeBoard.getBoundingBox()[1] - activeBoard.getBoundingBox()[0] < 0) {
             return null;
         }
         return activeBoard.getBoundingBoxBoard();
