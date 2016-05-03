@@ -37,18 +37,20 @@ public class Stats {
      * @return The result from the calculations. The data has the following
      * index: Living cells: 0, Change in living cells: 1, Similarity: 3, closest
      * similar generation: 4.
-     * @see #getCountLiving(int)
-     * @see #getChangeInLiving(int)
+     * @see #calcCountLiving(int)
+     * @see #calcChangeInLiving(int)
      * @see #getSimilarityMeasure(int)
      */
     public int[][] getStatistics(int iterations, boolean calcChangeLiving, boolean calcSimilarity) {
         int[][] stats = new int[iterations + 1][4];
 
-        livingCells = getCountLiving(iterations);
-        changeLivingCells = calcChangeLiving ? getChangeInLiving(iterations) : null;
+        calcCountLiving(iterations);
+        if (calcChangeLiving) {
+            calcChangeInLiving(iterations);
+        }
         if (calcSimilarity) {
             if (changeLivingCells == null) {
-                changeLivingCells = getChangeInLiving(iterations);
+                changeLivingCells = calcChangeInLiving(iterations);
             }
             similarityMeasure = getSimilarityMeasure(iterations);
         } else {
@@ -77,7 +79,7 @@ public class Stats {
      * corresponds to the number of iteration. Index 0 refers to the 0-th
      * generation.
      */
-    public int[] getCountLiving(int iterationsToCalcualte) {
+    public int[] calcCountLiving(int iterationsToCalcualte) {
         if (iterationsToCalcualte == 0) {
             return new int[]{0};
         }
@@ -99,12 +101,13 @@ public class Stats {
             countOfLiving[i] = livingThisGen;
             activeBoard.nextGen();
         }
+        livingCells = countOfLiving;
         return countOfLiving;
     }
 
-    public int[] getChangeInLiving(int iterationsToCalcualte) {
+    public int[] calcChangeInLiving(int iterationsToCalcualte) {
         if (livingCells == null) {
-            livingCells = getCountLiving(iterationsToCalcualte + 1);
+            calcCountLiving(iterationsToCalcualte + 1);
         }
         int[] countChangeOfLiving = new int[iterationsToCalcualte];
         setPattern(originalPattern);
@@ -112,6 +115,7 @@ public class Stats {
             countChangeOfLiving[time] = livingCells[time + 1] - livingCells[time];
             activeBoard.nextGen();
         }
+        changeLivingCells = countChangeOfLiving;
         return countChangeOfLiving;
     }
 
@@ -130,7 +134,7 @@ public class Stats {
     public int[][] getSimilarityMeasure(int iterationsToCalcualte) {
         int[][] similarity = new int[iterationsToCalcualte + 1][2];
         if (changeLivingCells == null) {
-            changeLivingCells = getChangeInLiving(iterationsToCalcualte);
+            changeLivingCells = calcChangeInLiving(iterationsToCalcualte);
         }
         calculateGeometricFactor(iterationsToCalcualte);
 
@@ -218,9 +222,9 @@ public class Stats {
         setPattern(originalPattern);
     }
 
-    private void setPattern(byte[][] Pattern) {
+    private void setPattern(byte[][] pattern) {
         activeBoard.clearBoard();
-        activeBoard.insertArray(originalPattern);
+        activeBoard.insertArray(pattern);
     }
 
     public void setCheckSimilarityPrevGen(boolean checkSimilarityPrevGen) {
