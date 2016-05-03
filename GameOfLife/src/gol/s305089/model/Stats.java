@@ -4,7 +4,7 @@ import gol.model.Board.Board;
 import gol.model.Board.DynamicBoard;
 
 /**
- * @author s305089
+ * @author s305089 - John Kasper Svergja
  */
 public class Stats {
 

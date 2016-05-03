@@ -2,6 +2,7 @@ package gol.s305054.model;
 
 import gol.model.Board.ArrayBoard;
 import gol.model.Board.Board;
+import gol.model.Board.DynamicBoard;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -20,15 +21,13 @@ import lieng.GIFWriter;
 public class GIFWriterS305054 {
 
     private Board copiedBoard; //deep copy of board - TODO check if boundBox or not.
-    private int width = 50; //Width of .gif - Hardcoded value will be changed - rows
-    private int height = 50; //Height of .gif - Hardcoded value will be changed - columns
     private int time; // 1000 ms = 1s - later, listener to a slider
     private int cellSize = 10;
-    private short nPicturesLeft = 50; //number of pictures left - TODO nPictures cannot be less than 1
+    private short nPicturesLeft = 20; //number of pictures left - TODO nPictures cannot be less than 1
     private Color bgColor = Color.WHITE; //Standard color
     private Color cColor = Color.BLACK; //Standard color
     private GIFWriter gifWriter;
-    
+
     private int gifWriterSize;
 
     /**
@@ -43,13 +42,13 @@ public class GIFWriterS305054 {
     public void prepareGIF(Board originaleBoard, int cellSize, double time, Color bgColor, Color cColor, Path saveLocation) { //TODO add parameters height width
         try {
             byte[][] originaleArray = originaleBoard.getBoundingBoxBoard();
-            copiedBoard = new ArrayBoard(originaleArray[0].length + nPicturesLeft, originaleArray.length + nPicturesLeft);
+            copiedBoard = new DynamicBoard(originaleArray[0].length + nPicturesLeft, originaleArray.length + nPicturesLeft);
             copiedBoard.setCellSize(cellSize);
             /*
              Param originaleBoard - get array, each element in originaleArray, assigned to copied array
              assigns copied array to copiedBoard.
              */
-            copiedBoard.insertArray(originaleArray, (int) (copiedBoard.getArrayLength()/2-originaleArray[0].length/2), (int) (copiedBoard.getArrayLength()/2-originaleArray.length/2)); //Get boundingBox and insert it to an empty.
+            copiedBoard.insertArray(originaleArray, (int) ((copiedBoard.getArrayLength() / 2) - (originaleArray[0].length / 2)), (int) ((copiedBoard.getArrayLength() / 2) - (originaleArray.length / 2))); //Get boundingBox and insert it to an empty.
 
             if (cellSize < 10) {
                 this.cellSize = 10;
@@ -68,12 +67,12 @@ public class GIFWriterS305054 {
             if (cColor != null) {
                 this.cColor = cColor;
             }
-            
-            gifWriterSize = (int)(copiedBoard.getArrayLength()*copiedBoard.getCellSize());
-            gifWriter = new GIFWriter(gifWriterSize, gifWriterSize, saveLocation.toString(), this.time);
+
+            gifWriterSize = (int) (copiedBoard.getArrayLength() * copiedBoard.getCellSize());
+            gifWriter = new GIFWriter(gifWriterSize/2, gifWriterSize/2, saveLocation.toString(), this.time);
             gifWriter.setBackgroundColor(this.bgColor);
             gifWriter.flush(); //Flushing to set background color to the first image.
-            
+
         } catch (IOException ex) {
             Logger.getLogger(GIFWriterS305054.class.getName()).log(Level.SEVERE, null, ex);
             Alert alert = new Alert(AlertType.ERROR);
@@ -95,22 +94,24 @@ public class GIFWriterS305054 {
             if (nPicturesLeft == 1) { //number of pictures left == 1
                 for (int i = 0; i < copiedBoard.getArrayLength(); i++) {
                     for (int j = 0; j < copiedBoard.getArrayLength(i); j++) {
-                        if (copiedBoard.getCellState(i, j) && (i * cellSize < gifWriterSize && i * cellSize + cellSize < gifWriterSize && j * cellSize < gifWriterSize && j * cellSize + cellSize < gifWriterSize)) {
-                            gifWriter.fillRect(j * cellSize, j * cellSize + cellSize, i * cellSize, i * cellSize + cellSize, cColor);
+                        if (copiedBoard.getCellState(i, j)) {
+                            if (i * cellSize + cellSize < gifWriterSize && j * cellSize + cellSize < gifWriterSize) {
+                                gifWriter.fillRect(j * cellSize, j * cellSize + cellSize, i * cellSize, i * cellSize + cellSize, cColor);
+                            }
                         }
                     }
                 }
-                
+
                 gifWriter.insertAndProceed();
                 gifWriter.close();
                 System.out.println("Bilder igjen: " + nPicturesLeft + "\nDone.");
                 //return the finished gif, ready to be exported            
             } else {
-                                
+
                 for (int i = 0; i < copiedBoard.getArrayLength(); i++) {
                     for (int j = 0; j < copiedBoard.getArrayLength(i); j++) {
                         if (copiedBoard.getCellState(i, j) && (i * cellSize < gifWriterSize && i * cellSize + cellSize < gifWriterSize && j * cellSize < gifWriterSize && j * cellSize + cellSize < gifWriterSize)) {
-                            
+
                             gifWriter.fillRect(j * cellSize, (j * cellSize + cellSize), i * cellSize, (i * cellSize + cellSize), cColor);
                         }
                     }

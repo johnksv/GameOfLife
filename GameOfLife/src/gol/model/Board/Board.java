@@ -55,7 +55,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * the pattern than can expand, without having to concernce that it may hit a
  * "wall". For lager patterns (such as the turing machine) it is recommended to
  * use array board. This is because dynamic board uses to much resources to
- * check and edit the board (even with concurrent next generation) compared to ArrayBoard.
+ * check and edit the board (even with concurrent next generation) compared to
+ * ArrayBoard.
  *
  * @author s305054, s305084, s305089
  */
@@ -233,21 +234,30 @@ public abstract class Board {
     }
 
     /**
-     * Expands the board to fit the row index given. Expands with the number
-     * of cells, defined as "expansion" in the config file. Will not be
-     * implemented in {@link ArrayBoard arraybors.}
+     * Returns the currently active rule.
+     *
+     * @return the active rule.
+     */
+    public Rule getRule() {
+        return activeRule;
+    }
+
+    /**
+     * Expands the board to fit the row index given. Expands with the number of
+     * cells, defined as "expansion" in the config file. Will not be implemented
+     * in {@link ArrayBoard arraybors.}
      *
      * @param row cell index.
      */
     protected abstract int expandBoardY(int row);
 
     /**
-     * Expands the board to fit the col index given. Expands with the number
-     * of cells, defined as "expansion" in the config file. Will not be
-     * implemented in {@link ArrayBoard arraybors.}
-     * 
+     * Expands the board to fit the col index given. Expands with the number of
+     * cells, defined as "expansion" in the config file. Will not be implemented
+     * in {@link ArrayBoard arraybors.}
+     *
      * If the row index exceeds row count in gameBoard col will return as -1.
-     * 
+     *
      * @param row pixel coordinate.
      * @param col pixel coordinate.
      */
@@ -326,7 +336,7 @@ public abstract class Board {
      * @param boardToInsert bytearray to insert into the current gameboard.
      * @param y coordinate for where the first row is placed
      * @param x coordinate for where the first column is placed
-     */    
+     */
     public abstract void insertArray(byte[][] boardToInsert, int y, int x);
 
     /**

@@ -35,7 +35,7 @@ import javafx.stage.Stage;
 /**
  * FXML Controller class for pattern editor.
  *
- * @author s305089
+ * @author s305089 - John Kasper Svergja
  */
 public class PatternEditorController implements Initializable {
 
@@ -166,7 +166,7 @@ public class PatternEditorController implements Initializable {
             WriteFile.setRule(tfRules.getText());
 
             FileChooser filechooser = new FileChooser();
-            filechooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("RLE-format", ".rle"));
+            filechooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("RLE-format", "*.rle"));
             filechooser.setInitialFileName(tfName.getText());
             File file = filechooser.showSaveDialog(null);
             if (file != null) {
