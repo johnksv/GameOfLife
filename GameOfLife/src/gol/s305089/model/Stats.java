@@ -8,7 +8,7 @@ import gol.model.Board.DynamicBoard;
  */
 public class Stats {
 
-    private Board gameboard;
+    private Board activeBoard;
     private byte[][] originalPattern;
     private int[] livingCells;
     private int[] changeLivingCells;
@@ -67,7 +67,7 @@ public class Stats {
             }
 
             int livingThisGen = 0;
-            for (byte[] row : (byte[][]) gameboard.getBoundingBoxBoard()) {
+            for (byte[] row : (byte[][]) activeBoard.getBoundingBoxBoard()) {
                 for (byte value : row) {
                     if (value == 64) {
                         livingThisGen++;
@@ -75,7 +75,7 @@ public class Stats {
                 }
             }
             countOfLiving[i] = livingThisGen;
-            gameboard.nextGen();
+            activeBoard.nextGen();
         }
         livingCells = countOfLiving;
         return countOfLiving;
@@ -89,7 +89,7 @@ public class Stats {
         setPattern(originalPattern);
         for (int time = 0; time < iterationsToCalcualte - 1; time++) {
             countChangeOfLiving[time] = livingCells[time + 1] - livingCells[time];
-            gameboard.nextGen();
+            activeBoard.nextGen();
         }
         changeLivingCells = countChangeOfLiving;
         return countChangeOfLiving;
@@ -142,14 +142,14 @@ public class Stats {
 
     private double getTheta(int time) {
         double theta;
-        if(shouldUseCustom){
+        if (shouldUseCustom) {
             theta = alphaCustom * livingCells[time]
-                + betaCustom * changeLivingCells[time]
-                + gammaCustom * geometricFactor[time];
-        }else{
+                    + betaCustom * changeLivingCells[time]
+                    + gammaCustom * geometricFactor[time];
+        } else {
             theta = alpha * livingCells[time]
-                + beta * changeLivingCells[time]
-                + gamma * geometricFactor[time];
+                    + beta * changeLivingCells[time]
+                    + gamma * geometricFactor[time];
         }
         return theta;
     }
@@ -164,7 +164,7 @@ public class Stats {
         setPattern(originalPattern);
 
         for (int iterations = 0; iterations < iterationsToCalcualte; iterations++) {
-            byte[][] boundedBoard = gameboard.getBoundingBoxBoard();
+            byte[][] boundedBoard = activeBoard.getBoundingBoxBoard();
             for (int row = 0; row < boundedBoard.length; row++) {
                 for (int column = 0; column < boundedBoard[row].length; column++) {
                     if (boundedBoard[row][column] == 64) {
@@ -173,22 +173,25 @@ public class Stats {
                     }
                 }
             }
-            gameboard.nextGen();
+            activeBoard.nextGen();
         }
     }
 
     /**
-     * Constructs an new Board instance, and inserts this board
+     * Constructs an new Board instance, and inserts the given board bounding box pattern.
      *
+     * @param boardToSet
      * @see gol.model.Board.Board#insertArray(byte[][], int, int)
-     * @param Pattern the startPattern to set
      */
-    public void setPattern(byte[][] Pattern) {
-        //TODO dynaimc size of board
-        //TODO Move Method to helper method?
-        gameboard = new DynamicBoard(10, 10);
-        originalPattern = Pattern;
-        gameboard.insertArray(originalPattern);
+    public void setBoard(Board boardToSet) {
+        originalPattern = boardToSet.getBoundingBoxBoard();
+        activeBoard = new DynamicBoard();
+        activeBoard.setRule(boardToSet.getRule());
+    }
+
+    private void setPattern(byte[][] Pattern) {
+        activeBoard.clearBoard();
+        activeBoard.insertArray(originalPattern);
     }
 
     public void setCheckSimilarityPrevGen(boolean checkSimilarityPrevGen) {

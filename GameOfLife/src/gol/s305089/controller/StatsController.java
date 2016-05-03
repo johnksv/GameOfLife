@@ -200,15 +200,17 @@ public class StatsController implements Initializable {
         tempFileToolTip.delete();
     }
 
-    public void setByteBoard(byte[][] Pattern) {
-        setPattern(Pattern);
-        gameStats.setPattern(Pattern);
+    public void setBoard(Board boardToSet) {
+        gameStats.setBoard(boardToSet);
+        originalPattern = boardToSet.getBoundingBoxBoard();
+        activeBoard = new DynamicBoard(10,10);
+        activeBoard.setRule(boardToSet.getRule());
+        setPattern(originalPattern);
     }
 
-    public void setPattern(byte[][] Pattern) {
-        activeBoard = new DynamicBoard(10, 10);
-        originalPattern = Pattern;
-        activeBoard.insertArray(originalPattern);
+    private void setPattern(byte[][] Pattern) {
+        activeBoard.clearBoard();
+        activeBoard.insertArray(Pattern);
     }
 
 }

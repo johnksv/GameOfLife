@@ -188,13 +188,13 @@ public final class GifMaker {
     }
 
     /**
-     * Constructs an new Board instance, and inserts this board
+     * Constructs an new Board instance, and inserts the given boards pattern.
      *
      * @param boardToSet
      * @see gol.model.Board.Board#insertArray(byte[][], int, int)
      */
     public void setBoard(Board boardToSet) {
-        this.originalPattern = boardToSet.getBoundingBoxBoard();;
+        originalPattern = boardToSet.getBoundingBoxBoard();;
         this.activeBoard = new DynamicBoard(10, 10);
         this.activeBoard.setRule(boardToSet.getRule());
         setPattern(originalPattern);

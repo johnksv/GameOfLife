@@ -495,7 +495,7 @@ public class GameController implements Initializable {
 
         Scene scene = new Scene((Parent) root.load());
         PatternEditorController editorController = root.<PatternEditorController>getController();
-        editorController.setActiveBoard(activeBoard);
+        editorController.setBoard(activeBoard);
         editorController.setGameController(this);
 
         editor.setTitle("Pattern Editor - Game of Life");
@@ -538,7 +538,7 @@ public class GameController implements Initializable {
         Scene scene = new Scene((Parent) root.load());
 
         StatsController statsController = root.<StatsController>getController();
-        statsController.setByteBoard(activeBoard.getBoundingBoxBoard());
+        statsController.setBoard(activeBoard);
 
         golStats.setScene(scene);
         golStats.setTitle("Stats - Game of Life");

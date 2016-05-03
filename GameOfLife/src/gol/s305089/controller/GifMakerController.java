@@ -85,7 +85,8 @@ public class GifMakerController implements Initializable {
     private GifMaker gifmaker;
     private String saveLocation;
     private int iterations;
-    private byte[][] originalPattern;
+    //This class uses only the activeBoard to open stats
+    private Board activeBoard;
     Tooltip tipInfinity = new Tooltip("Check which iteration the 0-th generation matches best with.");
     Tooltip tipCheckPrev = new Tooltip("Check if some other generation matches with the 0-th generation.");
 
@@ -171,7 +172,7 @@ public class GifMakerController implements Initializable {
             Scene scene = new Scene((Parent) root.load());
 
             StatsController statsController = root.<StatsController>getController();
-            statsController.setByteBoard(originalPattern);
+            statsController.setBoard(activeBoard);
 
             golStats.setScene(scene);
             golStats.setTitle("Stats - Game of Life");
@@ -242,7 +243,7 @@ public class GifMakerController implements Initializable {
     }
 
     public void setBoard(Board boardToSet) {
-        originalPattern = boardToSet.getBoundingBoxBoard();
+        activeBoard = boardToSet;
         gifmaker.setBoard(boardToSet);
     }
 
@@ -277,7 +278,7 @@ public class GifMakerController implements Initializable {
             int closestIteration = -1;
 
             Stats stats = new Stats();
-            stats.setPattern(originalPattern);
+            stats.setBoard(activeBoard);
 
             stats.setCheckSimilarityPrevGen(cbCheckPrevGen.isSelected());
 
