@@ -6,6 +6,7 @@ package gol.s305089.model;
 
 import gol.model.Board.ArrayBoard;
 import gol.model.Board.Board;
+import gol.other.Configuration;
 import java.util.Arrays;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,8 +25,9 @@ public class StatsTest {
 
     @Before
     public void setUp() {
+        Configuration.loadConfig();
         instance = new Stats();
-        patternBoard = new ArrayBoard(20, 20);
+        patternBoard = new ArrayBoard(6, 6);
         patternBoard.insertArray(new byte[][]{{0, 64, 0}, {0, 64, 0}, {0, 64, 0}});
         instance.setBoard(patternBoard);
     }
@@ -44,7 +46,7 @@ public class StatsTest {
         System.out.println(Arrays.deepToString(result));
         for (int iteration = 0; iteration < result.length - 1; iteration++) {
 
-            assertEquals(5, result[iteration][0]);
+            assertEquals(3, result[iteration][0]);
             assertEquals(0, result[iteration][1]);
 
             //For each generation, there should be a 100% match with another generation
@@ -86,13 +88,15 @@ public class StatsTest {
         }
 
         //Need to make an new instance, or else calcualtions is done on old pattern.
+        //TODO Test with another pattern
+        /*
         instance.setBoard(patternBoard);
         int[] resArray = instance.getChangeInLiving(10);
         System.out.println(Arrays.toString(resArray));
         assertEquals(0, resArray[0]);
         assertEquals(2, resArray[1]);
         assertEquals(0, resArray[2]);
-
+         */
     }
 
     //@Test

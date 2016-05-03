@@ -47,7 +47,9 @@ public class Stats {
         livingCells = getCountLiving(iterations);
         changeLivingCells = calcChangeLiving ? getChangeInLiving(iterations) : null;
         if (calcSimilarity) {
-            changeLivingCells = getChangeInLiving(iterations);
+            if (changeLivingCells == null) {
+                changeLivingCells = getChangeInLiving(iterations);
+            }
             similarityMeasure = getSimilarityMeasure(iterations);
         } else {
             similarityMeasure = null;
@@ -97,13 +99,12 @@ public class Stats {
             countOfLiving[i] = livingThisGen;
             activeBoard.nextGen();
         }
-        livingCells = countOfLiving;
         return countOfLiving;
     }
 
     public int[] getChangeInLiving(int iterationsToCalcualte) {
         if (livingCells == null) {
-            getCountLiving(iterationsToCalcualte + 1);
+            livingCells = getCountLiving(iterationsToCalcualte + 1);
         }
         int[] countChangeOfLiving = new int[iterationsToCalcualte];
         setPattern(originalPattern);
@@ -111,7 +112,6 @@ public class Stats {
             countChangeOfLiving[time] = livingCells[time + 1] - livingCells[time];
             activeBoard.nextGen();
         }
-        changeLivingCells = countChangeOfLiving;
         return countChangeOfLiving;
     }
 
@@ -130,7 +130,7 @@ public class Stats {
     public int[][] getSimilarityMeasure(int iterationsToCalcualte) {
         int[][] similarity = new int[iterationsToCalcualte + 1][2];
         if (changeLivingCells == null) {
-            getChangeInLiving(iterationsToCalcualte);
+            changeLivingCells = getChangeInLiving(iterationsToCalcualte);
         }
         calculateGeometricFactor(iterationsToCalcualte);
 
@@ -213,8 +213,9 @@ public class Stats {
      */
     public void setBoard(Board boardToSet) {
         originalPattern = boardToSet.getBoundingBoxBoard();
-        activeBoard = new DynamicBoard();
+        activeBoard = new DynamicBoard(5, 5);
         activeBoard.setRule(boardToSet.getRule());
+        setPattern(originalPattern);
     }
 
     private void setPattern(byte[][] Pattern) {
