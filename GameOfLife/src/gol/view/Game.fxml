@@ -173,10 +173,10 @@
                                                             <content>
                                                                 <AnchorPane minHeight="0.0" minWidth="0.0" prefWidth="200.0" styleClass="pane-standard">
                                                                     <children>
-                                                                        <Label fx:id="timeLabelGifTrygve" layoutX="13.0" text="Time Between pictures: " />
-                                                                        <Slider fx:id="timeSliderGifTrygve" layoutX="14.0" layoutY="17.0" onValueChange="#handleGifSliderTrygve" />
-                                                                        <Button fx:id="saveGifTrygve" layoutX="14.0" layoutY="86.0" mnemonicParsing="false" onAction="#handleGIFTrygve" text="Save as .gif" />
-                                                                        <Spinner fx:id="nPicturesGif" editable="true" layoutX="14.0" layoutY="54.0" prefHeight="27.0" prefWidth="89.0" />
+                                                                        <Label fx:id="timeLabelGifTrygve" layoutX="13.0" text="Time Between pictures: 0.0001" />
+                                                                        <Slider fx:id="timeSliderGifTrygve" layoutX="14.0" layoutY="17.0" max="2" min="0.0001" onValueChange="#handleGifSliderTrygve" value="0.0001" />
+                                                                        <Button layoutX="14.0" layoutY="86.0" mnemonicParsing="false" onAction="#handleGIFTrygve" text="Save as .gif" />
+                                                                        <Spinner editable="true" layoutX="14.0" layoutY="54.0" prefHeight="27.0" prefWidth="89.0" />
                                                                         <Label layoutX="14.0" layoutY="36.0" text="Number of pictures in .gif: " />
                                                                         <Button layoutX="15.0" layoutY="120.0" mnemonicParsing="false" onAction="#openEditorTrygve" text="Pattern Editor" />
                                                                     </children>
