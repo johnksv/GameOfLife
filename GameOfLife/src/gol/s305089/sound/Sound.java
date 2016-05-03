@@ -77,13 +77,13 @@ public class Sound {
 
     /**
      * Adds a frequency with this amplitude to the given channel, at the given
-     * step. For use with {@link #makeSound(java.io.File, int)}. Frequency of
+     * step. For use with {@link #makeSound(java.io.File, double)}. Frequency of
      * tones can be found at
      * <a href="http://www.phy.mtu.edu/~suits/notefreqs.html">http://www.phy.mtu.edu/~suits/notefreqs.html</a>.
      *
      * @param step The step/iteration the frequency and amplitude should be
      * assigned to. Must be larger than 0. The duration of the step is decided
-     * when calling on {@link #makeSound(java.io.File, int)}.
+     * when calling on {@link #makeSound(java.io.File, double)}.
      * @param frequency A frequency between min 16.35 Hz and max 7902.13 hz.
      * Values that is not in this domain will be sat to the closest legal
      * frequency.

@@ -13,9 +13,9 @@ import lieng.GIFWriter;
  * library by Henrik Lieng. It acts as an helper class between the Controller
  * {@link gol.s305089.controller.GifMakerController} and the GIF library.
  * Savelocation must
- * <p>
+ * 
  * If no variabels are set, the default one will be used.
- * <table>
+ * <table summary="Tabel of variables with default values">
  * <tr><td>Variable</td><td>Default value</td></tr>
  * <tr><td>Gif width</td><td>200 px</td></tr>
  * <tr><td>Gif height</td><td>200 px</td></tr>
@@ -27,7 +27,7 @@ import lieng.GIFWriter;
  * <tr><td>Cell color</td><td>Black</td></tr>
  * <tr><td>Background color</td><td>White</td></tr>
  * </table>
- * </p>
+ * 
  * <h3>Answers regarding tail recursion</h3>
  * Answer to questions from assignment paper. The questions relates to the
  * private method {@link #writeGIF(int)}.
