@@ -17,16 +17,14 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         Configuration.loadConfig();
-        //Passing the stage to main controller for later use.
-        //needs to be done first
-        MainController.loadStage(primaryStage);
-
-        Parent root = FXMLLoader.load(getClass().getResource("/gol/view/StartScreen.fxml"));
-        Scene scene = new Scene(root);
-        primaryStage.setScene(scene);
+        
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/gol/view/StartScreen.fxml"));
+        Parent root = loader.load();
+        MainController mainControll = loader.getController();
+        mainControll.loadStage(primaryStage);
+        
+        primaryStage.setScene(new Scene(root));
         primaryStage.show();
-
-        MainController.loadStage(primaryStage);
 
     }
 

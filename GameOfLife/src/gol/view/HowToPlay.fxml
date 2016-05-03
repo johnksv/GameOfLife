@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane stylesheets="@MainStylesheet.css" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gol.controller.HowToPlayController">
+<AnchorPane stylesheets="@MainStylesheet.css" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gol.controller.HowToPlayController">
    <children>
       <TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE">
         <tabs>
@@ -89,6 +89,6 @@
           </Tab>
         </tabs>
       </TabPane>
-      <Button alignment="CENTER_RIGHT" layoutX="452.0" layoutY="362.0" mnemonicParsing="false" nodeOrientation="RIGHT_TO_LEFT" onAction="#handleMainMenuBtn" text="Back to main menu" AnchorPane.bottomAnchor="11.0" />
+      <Button fx:id="btnBack" alignment="CENTER" layoutX="515.0" layoutY="355.0" mnemonicParsing="false" nodeOrientation="RIGHT_TO_LEFT" onAction="#handleBackBtn" prefHeight="27.0" prefWidth="58.0" text="Back" AnchorPane.bottomAnchor="18.0" />
    </children>
 </AnchorPane>
