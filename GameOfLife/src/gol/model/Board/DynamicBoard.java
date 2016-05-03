@@ -423,4 +423,9 @@ public class DynamicBoard extends Board {
         }
 
     }
+
+    @Override
+    public void insertArray(byte[][] boardToInsert) {
+        insertArray(boardToInsert, 2, 2);
+    }
 }

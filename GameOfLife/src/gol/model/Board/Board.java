@@ -197,7 +197,7 @@ public abstract class Board {
      *
      * @param activeRule The rule to be used when calculation next generation
      */
-    public final void setGameRule(Rule activeRule) {
+    public final void setRule(Rule activeRule) {
         this.activeRule = activeRule;
     }
 
@@ -323,10 +323,22 @@ public abstract class Board {
     protected abstract void checkRulesConcurrent(Rule activeRule, int threadNr);
 
     /**
+     * Inserts a byte 2D-array into the current gameboard at top left position.
+     * 
+     * Elements from boardFromFile that exceeds the dimensions of the current
+     * gameboard is not inserted.
+     *
+     *
+     * @param boardToInsert bytearray to insert into the current gameboard.
+     */
+    public abstract void insertArray(byte[][] boardToInsert);
+    
+    //TODO remove example?
+    /**
      * Inserts a byte 2D-array into the current gameboard at the given (y, x)
      * position.
      * <p>
-     * For example: To insert boardFromFile to upper left corner of the current
+     * E.g: To insert boardFromFile to upper left corner of the current
      * gameboard, insert at position (0,0).
      * <p>
      * Elements from boardFromFile that exceeds the dimensions of the current

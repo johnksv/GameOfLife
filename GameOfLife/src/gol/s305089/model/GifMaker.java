@@ -196,7 +196,7 @@ public final class GifMaker {
     public void setBoard(Board boardToSet) {
         this.originalPattern = boardToSet.getBoundingBoxBoard();;
         this.activeBoard = new DynamicBoard(10, 10);
-        this.activeBoard.setGameRule(boardToSet.getRule());
+        this.activeBoard.setRule(boardToSet.getRule());
         setPattern(originalPattern);
         this.activeBoard.setCellSize(cellSize);
     }

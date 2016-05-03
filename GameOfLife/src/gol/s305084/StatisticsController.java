@@ -83,7 +83,8 @@ public class StatisticsController implements Initializable {
      * @param activeBoard
      */
     public void loadeBoard(Board activeBoard) {
-        statBoard.insertArray(activeBoard.getBoundingBoxBoard(), 1, 1);
+        statBoard.insertArray(activeBoard.getBoundingBoxBoard());
+        statBoard.setRule(activeBoard.getRule());
     }
 
     /**
@@ -100,10 +101,11 @@ public class StatisticsController implements Initializable {
         CELLCHANGE.getData().clear();
 
         Board copyBoard = new DynamicBoard();
-        copyBoard.insertArray(statBoard.getBoundingBoxBoard(), 1, 1);
+        copyBoard.insertArray(statBoard.getBoundingBoxBoard());
+        copyBoard.setRule(statBoard.getRule());
         for (int i = 0; i <= genIterations; i++) {
             byte[][] pattern = copyBoard.getBoundingBoxBoard();
-
+            
             //Counting
             int living = countLivingCells(copyBoard);
             LIVINGCELLS.getData().add(new XYChart.Data(i, living));
@@ -235,8 +237,8 @@ public class StatisticsController implements Initializable {
     @FXML
     private void handleGifBtn() {
         Board activeBoard = new DynamicBoard();
-        activeBoard.insertArray(statBoard.getBoundingBoxBoard(), 1, 1);
-
+        activeBoard.insertArray(statBoard.getBoundingBoxBoard());
+        activeBoard.setRule(statBoard.getRule());
         //Finding best loop
         //loop array contains {generationIndex}, {value}
         double[] loop = new double[2];
@@ -289,7 +291,7 @@ public class StatisticsController implements Initializable {
         File selected = fileChooser.showSaveDialog(null);
         if (selected != null) {
             try {
-                GifMaker.makeGif(activeBoard.getBoundingBoxBoard(), new GIFWriter(GIFW, GIFH, selected.toString(),
+                GifMaker.makeGif(activeBoard, new GIFWriter(GIFW, GIFH, selected.toString(),
                         500), GIFW, GIFH, java.awt.Color.WHITE, java.awt.Color.BLACK, frames);
 
             } catch (IOException ex) {

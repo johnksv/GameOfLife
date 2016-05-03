@@ -176,7 +176,7 @@ public class GameController implements Initializable {
                 tfCellsToSurvive.setDisable(true);
                 tfCellsToBeBorn.setDisable(true);
                 btnUseRule.setDisable(true);
-                activeBoard.setGameRule(new ConwaysRule());
+                activeBoard.setRule(new ConwaysRule());
             }
         });
     }
@@ -400,7 +400,7 @@ public class GameController implements Initializable {
         Optional<ButtonType> result = alert.showAndWait();
 
         if (result.get() == btnInsert) {
-            activeBoard.insertArray(boardFromFile, 1, 1);
+            activeBoard.insertArray(boardFromFile);
             boardFromFile = null;
             updateRules();
         } else if (result.get() == btnGhostTiles) {
@@ -419,7 +419,7 @@ public class GameController implements Initializable {
      */
     private void updateRules() {
         Rule newRule = ReadFile.getParsedRule();
-        activeBoard.setGameRule(newRule);
+        activeBoard.setRule(newRule);
         rbCustomGameRules.fire();
 
         String born = "";
@@ -645,11 +645,11 @@ public class GameController implements Initializable {
                 Optional<ButtonType> result = alert.showAndWait();
 
                 if (result.get() == btnInsert) {
-                    activeBoard.insertArray(boardFromFile, 3, 3);
+                    activeBoard.insertArray(boardFromFile);
                     boardFromFile = null;
                 } else if (result.get() == btnGhostTiles) {
                     btnStartPause.setDisable(true);
-                    activeBoard.setGameRule(ReadFile.getParsedRule());
+                    activeBoard.setRule(ReadFile.getParsedRule());
                 } else {
                     boardFromFile = null;
                     alert.close();
@@ -664,7 +664,7 @@ public class GameController implements Initializable {
 
     public void constructRule(byte[] cellsToSurvive, byte[] cellsToBeBorn) {
         try {
-            activeBoard.setGameRule(new CustomRule(cellsToSurvive, cellsToBeBorn));
+            activeBoard.setRule(new CustomRule(cellsToSurvive, cellsToBeBorn));
         } catch (unsupportedRuleException ex) {
             UsefullMethods.showErrorAlert("Oops!", "Your given rule is not supported. \n Try again.");
         }

@@ -12,10 +12,9 @@ import java.util.Arrays;
  */
 @Deprecated
 public class ArrayBoard extends Board {
-
+    
     private final int WIDTH, HEIGHT;
     protected byte[][] gameBoard;
-
 
     /**
      * Constructs a new Arrayboard with default width and height
@@ -38,7 +37,7 @@ public class ArrayBoard extends Board {
         this.HEIGHT = width;
         this.WIDTH = height;
         gameBoard = new byte[HEIGHT][WIDTH];
-
+        
     }
 
     /*
@@ -52,7 +51,7 @@ public class ArrayBoard extends Board {
             }
         }
     }
-
+    
     @Override
     protected void countNeigh() {
 
@@ -74,11 +73,11 @@ public class ArrayBoard extends Board {
                         }
                     }
                 }
-
+                
             }
         }
     }
-
+    
     @Override
     protected void checkRules(Rule activeRule) {
         for (int i = 1; i < (gameBoard.length - 1); i++) {
@@ -89,7 +88,7 @@ public class ArrayBoard extends Board {
             }
         }
     }
-
+    
     @Override
     public void insertArray(byte[][] boardToInsert, int y, int x) {
         for (int i = 0; i < boardToInsert.length; i++) {
@@ -102,8 +101,7 @@ public class ArrayBoard extends Board {
             }
         }
     }
-
-
+    
     @Override
     public void setCellState(int y, int x, boolean alive) {
         byte value = 0;
@@ -113,19 +111,19 @@ public class ArrayBoard extends Board {
         if (y <= 0 || x <= 0) {
             return;
         }
-
+        
         if (y < gameBoard.length && y >= 0) {
             if (x < gameBoard[y].length && x >= 0) {
                 gameBoard[y][x] = value;
             } else {
                 System.err.println("x or y was not in gameboard.");
             }
-
+            
         } else {
             System.err.println("x or y was not in gameboard.");
         }
     }
-
+    
     @Override
     public void setCellState(double y, double x, boolean alive, double offsetX, double offsetY) {
 
@@ -137,27 +135,27 @@ public class ArrayBoard extends Board {
         x = x / (cellSize + gridSpacing);
         offsetY = offsetY / (cellSize + gridSpacing);
         offsetX = offsetX / (cellSize + gridSpacing);
-
+        
         setCellState((int) Math.floor(y - offsetY), (int) Math.floor(x - offsetX), alive);
     }
-
+    
     @Override
     public int getArrayLength() {
         return gameBoard.length - 1;
     }
-
+    
     @Override
     public int getArrayLength(int i) {
         return gameBoard[i].length - 1;
     }
-
+    
     @Override
     public byte[][] getBoundingBoxBoard() {
-
+        
         int[] boundingBox = getBoundingBox();
         if ((boundingBox[1] - boundingBox[0] + 1) > 0 || (boundingBox[3] - boundingBox[2] + 1) > 0) {
             byte[][] board = new byte[boundingBox[1] - boundingBox[0] + 1][boundingBox[3] - boundingBox[2] + 1];
-
+            
             for (int y = 0; y < board.length; y++) {
                 for (int x = 0; x < board[y].length; x++) {
                     if (gameBoard[boundingBox[0] + y][x + boundingBox[2]] == 64) {
@@ -172,7 +170,7 @@ public class ArrayBoard extends Board {
             return new byte[][]{{}};
         }
     }
-
+    
     @Override
     public int[] getBoundingBox() {
         int[] boundingBox = new int[4]; // minrow maxrow mincolumn maxcolumn 
@@ -201,10 +199,10 @@ public class ArrayBoard extends Board {
         }
         return boundingBox;
     }
-
+    
     @Override
     public boolean getCellState(int y, int x) {
-
+        
         if (y < 1 || y >= gameBoard.length) {
             return false;
         }
@@ -213,10 +211,10 @@ public class ArrayBoard extends Board {
         }
         return gameBoard[y][x] >= 64;
     }
-
+    
     @Override
     public String toString() {
-
+        
         StringBuilder result = new StringBuilder();
         for (byte row[] : gameBoard) {
             for (byte cell : row) {
@@ -229,30 +227,34 @@ public class ArrayBoard extends Board {
         }
         return result.toString();
     }
-
-
+    
     @Override
     public int getMaxRowLength() {
         return WIDTH;
     }
-
+    
     @Override
     protected void countNeighConcurrent(int threadNr) {
         throw new UnsupportedOperationException("Threads for ArrayBoard is not supported.");
     }
-
+    
     @Override
     protected void checkRulesConcurrent(Rule activeRule, int threadNr) {
         throw new UnsupportedOperationException("Threads for ArrayBoard is not supported.");
     }
-
+    
     @Override
     protected int expandBoardY(int y) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
+    
     @Override
     protected int expandBoardX(int y, int x) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    @Override
+    public void insertArray(byte[][] boardToInsert) {
+        insertArray(boardToInsert, 1, 1);
     }
 }
