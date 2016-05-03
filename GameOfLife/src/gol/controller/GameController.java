@@ -449,14 +449,18 @@ public class GameController implements Initializable {
 
         File file = fileChooser.showSaveDialog(null);
         if (file != null) {
-            gifTrygve.prepareGIF(activeBoard, (int) activeBoard.getCellSize(), timeSliderGifTrygve.getValue(), bgColor, cColor, file.toPath());
+            gifTrygve.setCellSize((int) activeBoard.getCellSize());
+            gifTrygve.setBoard(activeBoard);
+            gifTrygve.setTime(timeSliderGifTrygve.getValue());
+            gifTrygve.setColor(bgColor, cColor);
+            gifTrygve.prepareGIF(file.toPath());
             gifTrygve.makeGIF();
         }
     }
 
     @FXML
     private void handleGifSliderTrygve() {
-        timeLabelGifTrygve.setText("Time Between Pictures: " + String.format("%.3f %s", timeSliderGifTrygve.getValue(), ""));
+        timeLabelGifTrygve.setText("Time Between Pictures: " + String.format("%.3f %s", timeSliderGifTrygve.getValue(), "s"));
     }
 
     @FXML
