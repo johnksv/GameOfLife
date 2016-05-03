@@ -51,9 +51,12 @@ public class Stats {
     }
 
     /**
+     * Calculate the living cells for the iterations given.
      *
-     * @param iterationsToCalcualte
-     * @return
+     * @param iterationsToCalcualte The number of iterations to calculate
+     * @return The array containing the values. The length of the array
+     * corresponds to the number of iteration. Index 0 refers to the 0-th
+     * generation.
      */
     public int[] getCountLiving(int iterationsToCalcualte) {
         if (iterationsToCalcualte == 0) {
@@ -96,10 +99,16 @@ public class Stats {
     }
 
     /**
+     * Calculates the similarity of a pattern in the iterations given.
+     * <p>
+     * By default this method will only calculate similarity with patterns in
+     * the future. This can be changed by calling {@link #setCheckSimilarityPrevGen(boolean)
+     * }.
+     * </p>
      *
-     * @param iterationsToCalcualte
+     * @param iterationsToCalcualte The number of iterations to calculate
      * @return First index: similarity measure, second index: iteration number
-     * of closest match.
+     * of closest match
      */
     public int[][] getSimilarityMeasure(int iterationsToCalcualte) {
         int[][] similarity = new int[iterationsToCalcualte + 1][2];
@@ -178,9 +187,11 @@ public class Stats {
     }
 
     /**
-     * Constructs an new Board instance, and inserts the given board bounding box pattern.
+     * Constructs an new Board instance, and inserts the given board bounding
+     * box pattern.
      *
-     * @param boardToSet
+     * @param boardToSet The board that should be copied. Copies the pattern and
+     * rule
      * @see gol.model.Board.Board#insertArray(byte[][], int, int)
      */
     public void setBoard(Board boardToSet) {

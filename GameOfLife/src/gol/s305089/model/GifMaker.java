@@ -2,7 +2,6 @@ package gol.s305089.model;
 
 import gol.model.Board.Board;
 import gol.model.Board.DynamicBoard;
-import gol.s305089.Util;
 import java.io.IOException;
 import java.util.Random;
 import javafx.scene.paint.Color;
@@ -12,9 +11,9 @@ import lieng.GIFWriter;
  * The GifMaker class delivers functionality to write GIFs with the GIFLib
  * library by Henrik Lieng. It acts as an helper class between the Controller
  * {@link gol.s305089.controller.GifMakerController} and the GIF library.
- * Savelocation must
- * 
- * If no variabels are set, the default one will be used.
+ *
+ * <p>
+ * If no variabels are set, the default one will be used.</p>
  * <table summary="Tabel of variables with default values">
  * <tr><td>Variable</td><td>Default value</td></tr>
  * <tr><td>Gif width</td><td>200 px</td></tr>
@@ -27,7 +26,7 @@ import lieng.GIFWriter;
  * <tr><td>Cell color</td><td>Black</td></tr>
  * <tr><td>Background color</td><td>White</td></tr>
  * </table>
- * 
+ *
  * <h3>Answers regarding tail recursion</h3>
  * Answer to questions from assignment paper. The questions relates to the
  * private method {@link #writeGIF(int)}.
@@ -74,11 +73,14 @@ public final class GifMaker {
     }
 
     /**
+     * Writes the currently active board (given by {@link #setBoard(gol.model.Board.Board)
+     * }) to an GIF. The default values will be used if no values has been
+     * changed with the set methods.
      *
-     *
-     * @param iterations Number of iterations to draw in GIF.
-     * @param saveLocation
-     * @throws java.io.IOException
+     * @param iterations number of iterations to draw in GIF
+     * @param saveLocation the location (absolute path) where the file should be
+     * stored
+     * @throws java.io.IOException if the file could not be created
      */
     public void writePatternToGIF(int iterations, String saveLocation) throws IOException {
 
@@ -155,9 +157,11 @@ public final class GifMaker {
     }
 
     /**
-     * Set the size for each cell in the GIF.
+     * Set the size for each cell in the GIF. This value will be overwritten if
+     * automatic cell size has been sat to true.
      *
-     * @param cellSize the size given in pixels
+     * @param cellSize the cell size given in pixels
+     * @see #setAutoCalcCellSize(boolean)
      */
     public void setCellSize(double cellSize) {
         this.cellSize = cellSize;
@@ -174,6 +178,8 @@ public final class GifMaker {
     }
 
     /**
+     * The width that a new GIF should have.
+     *
      * @param gifWidth set the width of the GIF, in pixels
      */
     public void setGifWidth(int gifWidth) {
@@ -181,6 +187,8 @@ public final class GifMaker {
     }
 
     /**
+     * * The height that a new GIF should have.
+     *
      * @param gifHeight set the height of the GIF, in pixels
      */
     public void setGifHeight(int gifHeight) {
@@ -188,9 +196,24 @@ public final class GifMaker {
     }
 
     /**
+     * Calculates the maximum cell size so all cells will fill the gif.
+     * <b>NB:</b> Auto cell size will only be calculated if center pattern is
+     * true. This is due to board implementation.
+     *
+     * @param autoCalcCellSize if true a new cell size will be calculated each
+     * iteration of the gif. This will overwrite the current cell size.<p>
+     * If false the previous cell size will be used.</p>
+     * @see #setCellSize(double)
+     */
+    public void setAutoCalcCellSize(boolean autoCalcCellSize) {
+        this.autoCellSize = autoCalcCellSize;
+    }
+
+    /**
      * Constructs an new Board instance, and inserts the given boards pattern.
      *
-     * @param boardToSet
+     * @param boardToSet The board that should be copied. Copies the pattern and
+     * rule
      * @see gol.model.Board.Board#insertArray(byte[][], int, int)
      */
     public void setBoard(Board boardToSet) {
@@ -217,27 +240,11 @@ public final class GifMaker {
     /**
      * Set if the originalPattern should be centered on GIF or not.
      *
-     * @param centerPattern If false, the originalPattern will be placed at
+     * @param centerPattern if false, the originalPattern will be placed at
      * top-left corner
      */
     public void setCenterPattern(boolean centerPattern) {
         this.centerPattern = centerPattern;
-    }
-
-    /**
-     * Calculates the maximum cell size so all cells in first generation will
-     * fill the gif.
-     *
-     * Be aware that this only set the cell size based on the length/size of the
-     * first generation of the board.
-     *
-     * If this method is set to false under runtime, be sure to call
-     * {@link #setCellSize(double)} to not use this value.
-     *
-     * @param autoCellSize
-     */
-    public void setAutoCellSize(boolean autoCellSize) {
-        this.autoCellSize = autoCellSize;
     }
 
     public void setCellColor(Color cellColor) {
@@ -248,6 +255,12 @@ public final class GifMaker {
         this.cellColor = newColor;
     }
 
+    /**
+     * Sets the background color of the GIF to this color.
+     *
+     * @param backgroundColor The background color the gif will have when
+     * generated
+     */
     public void setBackgroundColor(Color backgroundColor) {
         //Converts each rgb double values to int (in domain 0-255).
         java.awt.Color newColor = new java.awt.Color((int) (backgroundColor.getRed() * 255),
@@ -256,8 +269,16 @@ public final class GifMaker {
         this.backgroundColor = newColor;
     }
 
-    public void setRandomColor(boolean randomCellColor) {
-        this.randomCellColor = randomCellColor;
+    /**
+     * Set if a random cell color should be used for each cell and generation.
+     * This option will suppress the current cell color.
+     *
+     * @param value true for random cell color each generation. False for not.
+     * Default: false.
+     * @see #setCellColor(javafx.scene.paint.Color)
+     */
+    public void setRandomColor(boolean value) {
+        this.randomCellColor = value;
     }
 
 }

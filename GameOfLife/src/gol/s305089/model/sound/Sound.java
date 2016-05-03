@@ -1,21 +1,35 @@
-package gol.s305089.sound;
+package gol.s305089.model.sound;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
 /**
- * //TODO: JAVADOC Created: 1.05.2016
- *
  * Contains overloading methods for adding both tones and custom frequencies to
- * the soundContainer before writing to wav.
+ * the a container before writing it to wav.
+ *
+ * Created: 1.05.2016
  *
  * @author s305089 - John Kasper Svergja
  */
-public class Sound {
+public final class Sound {
 
-    private static final int SAMPLE_RATE = 44100;
-    private static final int CHANNELS = 2;
+    /**
+     * Is not instantiable.
+     */
+    private Sound() {
+    }
+
+    /**
+     * The sampling rate to be used when writing to wav.
+     */
+    public static final int SAMPLE_RATE = 44100;
+    /**
+     * The number of channels in the wav. 2 channels is stereo. 3 channels is
+     * stereo + center. 4 channels is left front, left back, right front, and
+     * right back.
+     */
+    public static final int CHANNELS = 2;
     private static boolean CLIPPING = false;
 
     /**
@@ -32,7 +46,10 @@ public class Sound {
      * with the parameters frequency = tone.getFreq(), amplitude = 0.5, and
      * channels = 2.
      *
-     * @param tone The tone you want to add
+     * @param step The step/iteration the frequency and amplitude should be
+     * assigned to. Must be larger than 0. The duration of the step is decided
+     * when calling on {@link #makeSound(java.io.File, double)}.
+     * @param tone The tone that should be added to the sequence
      * @see #addToSequence(int, double, double, int)
      */
     public static void addToSequence(int step, Tone tone) {
@@ -45,6 +62,13 @@ public class Sound {
      * {@link #addToSequence(int, double, double, int)}, with the parameters
      * frequency = tone.getFreq(), channels = 2.
      *
+     * @param step The step/iteration the frequency and amplitude should be
+     * assigned to. Must be larger than 0. The duration of the step is decided
+     * when calling on {@link #makeSound(java.io.File, double)}.
+     * @param tone The tone that should be added to the sequence
+     * @param amplitude The amplitude/force of the frequency. 1 is max and
+     * loudest. 0 is min and silent. Values over 1 is sat to 1. Values under 0
+     * is sat to 0.
      * @see #addToSequence(int, double, double, int)
      */
     public static void addToSequence(int step, Tone tone, double amplitude) {
@@ -57,6 +81,12 @@ public class Sound {
      * {@link #addToSequence(int, double, double, int)}, with the parameter
      * amplitude = 0.5, and channels = 2.
      *
+     * @param step The step/iteration the frequency and amplitude should be
+     * assigned to. Must be larger than 0. The duration of the step is decided
+     * when calling on {@link #makeSound(java.io.File, double)}.
+     * @param frequency A frequency between min 16.35 Hz and max 7902.13 hz.
+     * Values that is not in this domain will be sat to the closest legal
+     * frequency.
      * @see #addToSequence(int, double, double, int)
      */
     public static void addToSequence(int step, double frequency) {
@@ -69,6 +99,15 @@ public class Sound {
      * {@link #addToSequence(int, double, double, int)}, with the parameter
      * channels = 2.
      *
+     * @param step The step/iteration the frequency and amplitude should be
+     * assigned to. Must be larger than 0. The duration of the step is decided
+     * when calling on {@link #makeSound(java.io.File, double)}.
+     * @param frequency A frequency between min 16.35 Hz and max 7902.13 hz.
+     * Values that is not in this domain will be sat to the closest legal
+     * frequency.
+     * @param amplitude The amplitude/force of the frequency. 1 is max and
+     * loudest. 0 is min and silent. Values over 1 is sat to 1. Values under 0
+     * is sat to 0.
      * @see #addToSequence(int, double, double, int)
      */
     public static void addToSequence(int step, double frequency, double amplitude) {

@@ -155,7 +155,7 @@ public class StatsController implements Initializable {
 
         //Set the original pattern to imgView First.
         gifmaker.setCenterPattern(true);
-        gifmaker.setAutoCellSize(true);
+        gifmaker.setAutoCalcCellSize(true);
         generateTolltipGIF(gifmaker, imgViewOriginalPattern);
 
         for (int i = 0; i < similarityMeasure.getData().size(); i++) {
