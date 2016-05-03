@@ -4,6 +4,8 @@
  */
 package gol.s305089.model;
 
+import gol.model.Board.ArrayBoard;
+import gol.model.Board.Board;
 import java.util.Arrays;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,9 +25,12 @@ public class StatsTest {
     @Before
     public void setUp() {
         instance = new Stats();
-        instance.setPattern(new byte[][]{{0, 64, 0}, {0, 64, 0}, {0, 64, 0}});
+        patternBoard = new ArrayBoard(20, 20);
+        patternBoard.insertArray(new byte[][]{{0, 64, 0}, {0, 64, 0}, {0, 64, 0}});
+        instance.setBoard(patternBoard);
     }
     Stats instance;
+    Board patternBoard;
 
     @Rule
     public ExpectedException expectedExeption = ExpectedException.none();
@@ -34,7 +39,7 @@ public class StatsTest {
     public void testGetStatistics() {
         System.out.println("getStatistics");
 
-        instance.setPattern(new byte[][]{{0, 64, 0}, {0, 0, 64}, {64, 64, 64}});
+        instance.setBoard(patternBoard);
         int[][] result = instance.getStatistics(20, true, true);
         for (int iteration = 0; iteration < result.length - 1; iteration++) {
 
@@ -73,16 +78,16 @@ public class StatsTest {
     public void testChangeInLiving() {
         System.out.println("changeInLiving");
 
-        instance.setPattern(new byte[][]{{0, 64, 0}, {0, 64, 0}, {0, 64, 0}});
+        instance.setBoard(patternBoard);
         int[] countChangeOfLiving = instance.getChangeInLiving(10);
         for (int i = 0; i < countChangeOfLiving.length; i++) {
             assertEquals(0, countChangeOfLiving[i]);
         }
 
         //Need to make an new instance, or else calcualtions is done on old pattern.
-        Stats instance = new Stats();
-        instance.setPattern(new byte[][]{{64, 64, 0}, {0, 64, 0}, {0, 64, 0}});
+        instance.setBoard(patternBoard);
         int[] resArray = instance.getChangeInLiving(10);
+        System.out.println(Arrays.toString(resArray));
         assertEquals(0, resArray[0]);
         assertEquals(2, resArray[1]);
         assertEquals(0, resArray[2]);
@@ -94,7 +99,7 @@ public class StatsTest {
         System.out.println("similarityMeasure");
         int time = 10;
         int expResult = 0;
-        instance.setPattern(new byte[][]{{0, 64, 0}, {0, 64, 0}, {0, 64, 0}});
+        instance.setBoard(patternBoard);
         int[][] result = instance.getSimilarityMeasure(time);
         // assertEquals(expResult, result);
         fail("The test case is a prototype.");
@@ -113,7 +118,7 @@ public class StatsTest {
      assertEquals(expResult, result);
      }
 
-     instance.setPattern(new byte[][]{{0, 64, 0}, {0, 0, 64}, {64, 64, 64}});
+     instance.setBoard(patternBoard);
      for (int i = 1; i < 10; i++) {
      if (i % 2 == 0) {
      expResult = 13;
