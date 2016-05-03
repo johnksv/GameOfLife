@@ -4,12 +4,13 @@
  */
 package gol.s305089.sound;
 
+import gol.s305089.model.sound.Sound;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import org.junit.Before;
 import org.junit.Test;
-import gol.s305089.sound.Tone;
+import gol.s305089.model.sound.Tone;
 import static org.junit.Assert.*;
 
 /**

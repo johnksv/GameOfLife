@@ -156,7 +156,7 @@ public class GifMakerController implements Initializable {
             autoUpdatedPreview(observable, oldValue, newValue);
         });
         cbCalcCellSize.selectedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
-            gifmaker.setAutoCellSize(newValue);
+            gifmaker.setAutoCalcCellSize(newValue);
             sliderCellSize.setDisable(newValue);
             autoUpdatedPreview(observable, oldValue, newValue);
         });

@@ -1,16 +1,16 @@
-package gol.s305089.sound;
+package gol.s305089.model.sound;
 
 /**
  *
- * //TODO JAVADOC
- * 
+ * Enum class providing all tones from C0 to B8. All tones are copied from
+ * http://www.phy.mtu.edu/~suits/notefreqs.html
+ *
+ *
  * Created: 1.05.2016
+ *
  * @author S305089 - John Kasper Svergja
  */
 public enum Tone {
-    /**
-     * All tones are copied from http://www.phy.mtu.edu/~suits/notefreqs.html
-     */
     C0(16.35), CSharp0(17.32), D0(18.35), DSharp0(19.45), E0(20.60), F0(21.83),
     FSharp0(23.12), G0(24.50), GSharp0(25.96), A0(27.50), ASharp0(29.14), B0(30.87),
     C1(32.70), CSharp1(34.65), D1(36.71), DSharp1(38.89), E1(41.20), F1(43.65),
@@ -42,6 +42,6 @@ public enum Tone {
 
     @Override
     public String toString() {
-        return this.name() +", frequency: " + frequency;
+        return this.name() + ", frequency: " + frequency;
     }
 }
