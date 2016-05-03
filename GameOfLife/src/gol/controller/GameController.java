@@ -119,6 +119,8 @@ public class GameController implements Initializable {
     @FXML
     private Label timeLabelGifTrygve;
     @FXML
+    private TextField nPicturesGIFTrygve;
+    @FXML
     private CheckBox cbDrawBox;
 
     private Board activeBoard;
@@ -439,6 +441,9 @@ public class GameController implements Initializable {
     @FXML
     private void handleGIFTrygve() {
         timeline.pause();
+        String sPictures = nPicturesGIFTrygve.getText();
+        int pictures = Integer.parseInt(sPictures.replaceAll("\\D", ""));
+        
         GIFWriterS305054 gifTrygve = new GIFWriterS305054();
         java.awt.Color bgColor = new java.awt.Color((float) backgroundColor.getRed(), (float) backgroundColor.getGreen(), (float) backgroundColor.getBlue());
         java.awt.Color cColor = new java.awt.Color((float) cellColor.getRed(), (float) cellColor.getGreen(), (float) cellColor.getBlue());
@@ -450,6 +455,7 @@ public class GameController implements Initializable {
         File file = fileChooser.showSaveDialog(null);
         if (file != null) {
             gifTrygve.setCellSize((int) activeBoard.getCellSize());
+            gifTrygve.setPictures(pictures);
             gifTrygve.setBoard(activeBoard);
             gifTrygve.setTime(timeSliderGifTrygve.getValue());
             gifTrygve.setColor(bgColor, cColor);
@@ -587,7 +593,7 @@ public class GameController implements Initializable {
         try {
             Stage statistics = new Stage();
             statistics.setResizable(false);
-            statistics.getIcons().add(new Image(new File("src\\mics\\linechart.png").toURI().toString()));
+            statistics.getIcons().add(new Image(new File("src/mics/linechart.png").toURI().toString()));
 
             statistics.initModality(Modality.WINDOW_MODAL);
             statistics.initOwner(canvas.getScene().getWindow());
@@ -615,7 +621,7 @@ public class GameController implements Initializable {
             }
             Stage editor = new Stage();
             editor.setResizable(false);
-            editor.getIcons().add(new Image(new File("src\\mics\\icon.png").toURI().toString()));
+            editor.getIcons().add(new Image(new File("src/mics/icon.png").toURI().toString()));
 
             editor.initModality(Modality.WINDOW_MODAL);
             editor.initOwner(canvas.getScene().getWindow());

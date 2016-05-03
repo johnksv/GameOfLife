@@ -23,7 +23,7 @@ public class GIFWriterS305054 {
     byte[][] originaleArray;
     private int time; // 1000 ms = 1s - later, listener to a slider
     private int cellSize = 10;
-    private short nPicturesLeft = 50; //number of pictures left - TODO nPictures cannot be less than 1
+    private int nPicturesLeft = 1; //number of pictures left - TODO nPictures cannot be less than 1
     private Color bgColor = Color.WHITE; //Standard color
     private Color cColor = Color.BLACK; //Standard color
     private GIFWriter gifWriter;
@@ -36,7 +36,13 @@ public class GIFWriterS305054 {
         }
 
         originaleArray = originaleBoard.getBoundingBoxBoard();
-        copiedBoard = new ArrayBoard(originaleArray[0].length + nPicturesLeft, originaleArray.length + nPicturesLeft);
+        
+        if (nPicturesLeft < 10) {
+            copiedBoard = new ArrayBoard(originaleArray[0].length + 10, originaleArray.length + 10);
+        } else {
+            copiedBoard = new ArrayBoard(originaleArray[0].length + nPicturesLeft, originaleArray.length + nPicturesLeft);
+        }
+        
         copiedBoard.setCellSize(this.cellSize);
         copiedBoard.insertArray(originaleArray, (int) ((copiedBoard.getArrayLength() / 2) - (originaleArray[0].length / 2)), (int) ((copiedBoard.getArrayLength() / 2) - (originaleArray.length / 2)));
     }
@@ -62,7 +68,15 @@ public class GIFWriterS305054 {
             this.cColor = cColor;
         }
     }
-    
+
+    public void setPictures(int nPictures) {
+        if (nPictures < 1) {
+            return;
+        } else {
+            this.nPicturesLeft = nPictures;
+        }
+    }
+
     /**
      * Deep copy the active gameboard into a copied gameboard. When changing the
      * copied board, the originale board will stay the same.

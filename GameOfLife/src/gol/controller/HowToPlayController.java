@@ -54,7 +54,7 @@ public class HowToPlayController implements Initializable {
 
         //TODO ICON HowToPlay
         stage.setResizable(false);
-        stage.getIcons().add(new Image(new File("src\\mics\\gen1.PNG").toURI().toString()));
+        stage.getIcons().add(new Image(new File("src/mics/gen1.PNG").toURI().toString()));
         stage.setTitle("How to play");
     }
 

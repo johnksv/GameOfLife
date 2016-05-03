@@ -80,7 +80,7 @@ public class MainController {
      */
     public void loadStage(Stage stage) {
         primaryStage = stage;
-        primaryStage.getIcons().add(new Image(new File("src\\mics\\gen1.PNG").toURI().toString()));
+        primaryStage.getIcons().add(new Image(new File("src/mics/gen1.PNG").toURI().toString()));
         primaryStage.setTitle("Game of Life");
     }
 
