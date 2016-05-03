@@ -98,7 +98,6 @@
                                                                     <children>
                                                                         <Button layoutX="16.0" layoutY="11.0" mnemonicParsing="false" onAction="#handleImportFileBtn" text="Import pattern from file" />
                                                                         <Button layoutX="16.0" layoutY="47.0" mnemonicParsing="false" onAction="#handleImportInternet" text="Import/search pattern from internet" />
-                                                                        <Button layoutX="170.0" layoutY="11.0" mnemonicParsing="false" onAction="#rotateBoardFromFile" text="Rotate" />
                                                                     </children>
                                                                 </AnchorPane>
                                                             </content>
