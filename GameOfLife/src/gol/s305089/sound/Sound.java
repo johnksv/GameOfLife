@@ -43,7 +43,7 @@ public class Sound {
      * Adds a frequency with this amplitude to both channels, at the given step.
      * This is the same as calling
      * {@link #addToSequence(int, double, double, int)}, with the parameters
-     *  frequency = tone.getFreq(), channels = 2.
+     * frequency = tone.getFreq(), channels = 2.
      *
      * @see #addToSequence(int, double, double, int)
      */
@@ -78,7 +78,8 @@ public class Sound {
     /**
      * Adds a frequency with this amplitude to the given channel, at the given
      * step. For use with {@link #makeSound(java.io.File, int)}. Frequency of
-     * tones can be found at http://www.phy.mtu.edu/~suits/notefreqs.html .
+     * tones can be found at
+     * <a href="http://www.phy.mtu.edu/~suits/notefreqs.html">http://www.phy.mtu.edu/~suits/notefreqs.html</a>.
      *
      * @param step The step/iteration the frequency and amplitude should be
      * assigned to. Must be larger than 0. The duration of the step is decided
@@ -92,6 +93,9 @@ public class Sound {
      * @param channel Which (stereo)channel the tone should be added to. 0 for
      * left side, 1 for right side, 2 for both sides. Invalid values will be
      * corrected to use both sides.
+     *
+     * @see
+     * <a href="http://www.phy.mtu.edu/~suits/notefreqs.html">http://www.phy.mtu.edu/~suits/notefreqs.html</a>
      */
     public static void addToSequence(int step, double frequency, double amplitude, int channel) {
         if (step < 0) {

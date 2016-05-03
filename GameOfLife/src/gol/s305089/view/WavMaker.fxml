@@ -19,6 +19,19 @@
          <font>
             <Font name="System Bold" size="14.0" />
          </font></Label>
+      <GridPane>
+         <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="181.0" minWidth="10.0" prefWidth="138.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="219.0" minWidth="10.0" prefWidth="214.0" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+         </rowConstraints>
+         <children>
+            <Label fx:id="labelCurrentPattern" text="Current pattern (hover)" />
+            <Button mnemonicParsing="false" onAction="#updateBoard" prefWidth="100.0" text="Update pattern" GridPane.columnIndex="1" />
+         </children>
+      </GridPane>
       <GridPane prefHeight="55.0" vgap="5.0">
          <columnConstraints>
             <ColumnConstraints hgrow="SOMETIMES" maxWidth="217.0" minWidth="10.0" prefWidth="213.0" />
@@ -46,30 +59,20 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <RadioButton fx:id="rbLivingDead" mnemonicParsing="false" selected="true" text="Living/empty ratio (1D)">
+            <RadioButton fx:id="rbLivingDead" mnemonicParsing="false" selected="true" text="Living/empty ratio">
                <toggleGroup>
                   <ToggleGroup fx:id="playMode" />
                </toggleGroup></RadioButton>
-            <RadioButton fx:id="rbCountRow" mnemonicParsing="false" text="Count on row (1D)" toggleGroup="$playMode" GridPane.columnIndex="1" />
-            <RadioButton fx:id="rbCountNeigh" mnemonicParsing="false" text="Neighbour count (2D)" toggleGroup="$playMode" GridPane.rowIndex="1" />
-            <RadioButton mnemonicParsing="false" text="Living &amp; change in rate" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <RadioButton fx:id="rbCountRow" mnemonicParsing="false" text="Count on row" toggleGroup="$playMode" GridPane.columnIndex="1" />
+            <RadioButton fx:id="rbCountNeigh" mnemonicParsing="false" text="Neighbour count" toggleGroup="$playMode" GridPane.rowIndex="1" />
          </children>
       </GridPane>
-        <Label text="Base/root tone" />
-        <ComboBox fx:id="comBxRootTone" prefWidth="150.0" />
-      <GridPane>
-         <columnConstraints>
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="181.0" minWidth="10.0" prefWidth="138.0" />
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="219.0" minWidth="10.0" prefWidth="214.0" />
-         </columnConstraints>
-         <rowConstraints>
-            <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-         </rowConstraints>
+      <VBox fx:id="vboxBaseTone">
          <children>
-            <Label fx:id="labelCurrentPattern" text="Current pattern (hover)" />
-            <Button mnemonicParsing="false" onAction="#updateBoard" prefWidth="100.0" text="Update pattern" GridPane.columnIndex="1" />
+              <Label text="Base/root tone" />
+              <ComboBox fx:id="comBxRootTone" prefWidth="150.0" />
          </children>
-      </GridPane>
+      </VBox>
       <GridPane>
          <columnConstraints>
             <ColumnConstraints hgrow="SOMETIMES" maxWidth="156.0" minWidth="10.0" prefWidth="138.0" />

@@ -14,6 +14,8 @@ import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -38,6 +40,8 @@ import javafx.util.Duration;
  */
 public class WavMakerController implements Initializable {
 
+    @FXML
+    private VBox vboxBaseTone;
     @FXML
     private Spinner spinnDur;
     @FXML
@@ -78,6 +82,9 @@ public class WavMakerController implements Initializable {
         spinnDur.setEditable(true);
         comBxRootTone.getItems().setAll(Tone.C3, Tone.D3, Tone.E3, Tone.F3, Tone.G3, Tone.A3, Tone.B3);
         comBxRootTone.setValue(Tone.C3);
+        rbCountRow.selectedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+            vboxBaseTone.setDisable(newValue);
+        });
     }
 
     public File getPreviewFile() {
@@ -106,6 +113,7 @@ public class WavMakerController implements Initializable {
         if (result != null) {
             handleWriteMode();
             Sound.makeSound(previewFile, durEachIt);
+            labelInfo.setText("Wav file successfully generated.");
         }
     }
 
@@ -119,7 +127,7 @@ public class WavMakerController implements Initializable {
 
             handleWriteMode();
             Sound.makeSound(previewFile, durEachIt);
-            labelInfo.setText("Preview file successfully made.");
+            labelInfo.setText("Preview file successfully generated.");
             if (previewPlayer != null) {
                 previewPlayer.dispose();
             }
@@ -154,7 +162,8 @@ public class WavMakerController implements Initializable {
         setBoard(referenceBoard);
     }
 
-    private void append1dLivingDeadRatio() {
+    private void livingDeadRatio() {
+        double rootToneFreq = ((Tone) comBxRootTone.getValue()).getFreq();
         for (int i = 0; i < iterationsToCalc; i++) {
             String board = activeBoard.toString();
             char[] letters = board.toCharArray();
@@ -164,16 +173,14 @@ public class WavMakerController implements Initializable {
                     countLiving++;
                 }
             }
-            double rootToneFreq = ((Tone) comBxRootTone.getValue()).getFreq();
             double frequency = (double) 10 * rootToneFreq * countLiving / board.length();
-            //TODO DYNAMIC ADDING!
             Sound.addToSequence(i, frequency);
 
             activeBoard.nextGen();
         }
     }
 
-    private void append1dRowCoherent() {
+    private void countRowCoherent() {
         for (int ite = 0; ite < iterationsToCalc; ite++) {
             byte[][] current = activeBoard.getBoundingBoxBoard();
             Set<Integer> countOnRowSet = new HashSet<>();
@@ -217,6 +224,37 @@ public class WavMakerController implements Initializable {
         }
     }
 
+    private void neighCount() {
+        double rootToneFreq = ((Tone) comBxRootTone.getValue()).getFreq();
+
+        for (int ite = 0; ite < iterationsToCalc; ite++) {
+            Set<Integer> frequencySet = new HashSet<>();
+            for (int i = 0; i < activeBoard.getArrayLength(); i++) {
+                for (int j = 0; j < activeBoard.getArrayLength(i); j++) {
+                    double neigh = 0.2;
+                    if (activeBoard.getCellState(i, j)) {
+                        //Goes through surrounding neighbours
+                        for (int k = -1; k <= 1; k++) {
+                            for (int l = -1; l <= 1; l++) {
+                                if (!(k == 0 && l == 0)) {
+                                    if (activeBoard.getCellState(i + k, j + l)) {
+                                        neigh++;
+                                    }
+                                }
+                            }
+                        }
+                        frequencySet.add((int) (rootToneFreq * neigh));
+                    }
+                }
+            } //End of counting.
+
+            for (Integer frequency : frequencySet) {
+                Sound.addToSequence(ite, frequency);
+            }
+            activeBoard.nextGen();
+        }
+    }
+
     private void getValuesFromView() {
         iterationsToCalc = (int) spinnIte.getValue();
         durEachIt = (double) spinnDur.getValue();
@@ -224,11 +262,11 @@ public class WavMakerController implements Initializable {
 
     private void handleWriteMode() {
         if (rbLivingDead.isSelected()) {
-            append1dLivingDeadRatio();
+            livingDeadRatio();
         } else if (rbCountRow.isSelected()) {
-            append1dRowCoherent();
+            countRowCoherent();
         } else if (rbCountNeigh.isSelected()) {
-
+            neighCount();
         }
     }
 
