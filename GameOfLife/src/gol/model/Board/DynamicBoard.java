@@ -7,10 +7,12 @@ import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * As a subclass of Board, DynamicBoard implements all of boards methods.
- * The gameBoard will automatically resize to fit cells.
- * A max size is implemented to stop the game from crashing.
+ * This class allows the game board to automatically expand as the pattern
+ * expands. A max size is implemented to prevent the game from crashing. This
+ * max size can be changed in the configuration file.
  * 
+ * <p>Due to how java </p>
+ *
  * @author s305054, s305089, s305084
  */
 public class DynamicBoard extends Board {
@@ -182,11 +184,11 @@ public class DynamicBoard extends Board {
     public void insertArray(byte[][] boardToInsert, int y, int x) {
         y = expandBoardY(y);
         x = expandBoardX(y, x);
-        
+
         //Handle under max value
         x = (x < 1) ? 1 : x;
         y = (y < 1) ? 1 : y;
-        
+
         for (int i = 0; i < boardToInsert.length; i++) {
             for (int j = 0; j < boardToInsert[i].length; j++) {
                 if (boardToInsert[i][j] == 64) {
@@ -205,7 +207,7 @@ public class DynamicBoard extends Board {
         //This is a fundamental part of DynamicBoard.
         y = expandBoardY(y);
         x = expandBoardX(y, x);
-        
+
         if (y < gameBoard.size() && y >= 0) {
             if (x < gameBoard.get(y).size() && x >= 0) {
                 if (alive) {

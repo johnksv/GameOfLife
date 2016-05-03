@@ -56,6 +56,8 @@ import javafx.stage.StageStyle;
 import javafx.util.Duration;
 
 /**
+ * FXML controller, controls the main game-screen.
+ *
  * @author s305054, s305084, s305089
  */
 public class GameController implements Initializable {
@@ -429,7 +431,7 @@ public class GameController implements Initializable {
     }
 
     /**
-     * Sets current board to this.
+     * Sets current board as the given board.
      *
      * @param activeBoard Board to set.
      */
@@ -528,16 +530,11 @@ public class GameController implements Initializable {
     }
 
     private void drawBorder() {
-        try {
-            gc.fillRect(activeBoard.offsetValues[0], activeBoard.offsetValues[1], activeBoard.getCellSize() * activeBoard.getMaxRowLength(), activeBoard.getCellSize());
-            gc.fillRect(activeBoard.offsetValues[0], activeBoard.offsetValues[1], activeBoard.getCellSize(), activeBoard.getCellSize() * activeBoard.getArrayLength());
+        gc.fillRect(activeBoard.offsetValues[0], activeBoard.offsetValues[1], activeBoard.getCellSize() * activeBoard.getMaxRowLength(), activeBoard.getCellSize());
+        gc.fillRect(activeBoard.offsetValues[0], activeBoard.offsetValues[1], activeBoard.getCellSize(), activeBoard.getCellSize() * activeBoard.getArrayLength());
 
-            gc.fillRect(activeBoard.offsetValues[0], activeBoard.offsetValues[1] + activeBoard.getCellSize() * activeBoard.getArrayLength(), activeBoard.getCellSize() * activeBoard.getMaxRowLength(), activeBoard.getCellSize());
-            gc.fillRect(activeBoard.offsetValues[0] + activeBoard.getCellSize() * activeBoard.getMaxRowLength(), activeBoard.offsetValues[1], activeBoard.getCellSize(), activeBoard.getCellSize() * activeBoard.getArrayLength());
-
-        } catch (Exception e) {
-            System.out.println(e);
-        }
+        gc.fillRect(activeBoard.offsetValues[0], activeBoard.offsetValues[1] + activeBoard.getCellSize() * activeBoard.getArrayLength(), activeBoard.getCellSize() * activeBoard.getMaxRowLength(), activeBoard.getCellSize());
+        gc.fillRect(activeBoard.offsetValues[0] + activeBoard.getCellSize() * activeBoard.getMaxRowLength(), activeBoard.offsetValues[1], activeBoard.getCellSize(), activeBoard.getCellSize() * activeBoard.getArrayLength());
     }
 
     private void drawGhostTiles() {
@@ -568,7 +565,7 @@ public class GameController implements Initializable {
     }
 
     /**
-     * Calculates new offset based on mouse movement, than draws the board
+     * Calculates new offset based on mouse movement, then draws the board
      * again.
      */
     private void moveGrid(MouseEvent e) {
@@ -621,7 +618,7 @@ public class GameController implements Initializable {
     }
 
     /**
-     * Updates the screen accordingly to event and radio button selected.
+     * Updates the screen according to event and radio-button selected.
      */
     private void handleMouseClick(MouseEvent e) {
         double x = e.getX();
@@ -677,8 +674,8 @@ public class GameController implements Initializable {
     }
 
     /**
-     * When cellsize is changed, this methods is called. It then calculates
-     * offset with the new cellsize. The offset is based on the center of
+     * When cellsize is changed, this methods is called. It then calculates a new
+     * offset with the new cellsize. The offset is based at the center of
      * canvas.
      *
      * NB: Does not support gridspacing yet.

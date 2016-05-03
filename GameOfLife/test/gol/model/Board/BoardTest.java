@@ -216,13 +216,21 @@ public class BoardTest {
         byte[][] byteBoard = ReadFile.readFileFromDisk(file);
         System.out.println("Number of threads: " + ThreadPool.THREAD_NR);
         System.out.println("Brett: " + url.getName());
+        System.out.println("Testing dynamic concurrent");
         dynamicInstance.clearBoard();
         dynamicInstance.insertArray(byteBoard, 5, 5);
         dynamicInstance.nextGenConcPrintPerformance();
 
+        System.out.println("Testing dynamicBoard");
         dynamicInstance.clearBoard();
         dynamicInstance.insertArray(byteBoard, 5, 5);
         dynamicInstance.nextGenPrintPerformance();
+
+        System.out.println("Testing Arrayboard");
+        Board arrayBoard = new ArrayBoard(2000, 2000);
+        arrayBoard.insertArray(byteBoard, 100, 100);
+        arrayBoard.nextGenPrintPerformance();
+
     }
 
     public void testSetCellState_5args() {
