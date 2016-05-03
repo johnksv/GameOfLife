@@ -2,7 +2,6 @@ package gol.s305054.model;
 
 import gol.model.Board.ArrayBoard;
 import gol.model.Board.Board;
-import gol.model.Board.DynamicBoard;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -21,55 +20,58 @@ import lieng.GIFWriter;
 public class GIFWriterS305054 {
 
     private Board copiedBoard; //deep copy of board - TODO check if boundBox or not.
+    byte[][] originaleArray;
     private int time; // 1000 ms = 1s - later, listener to a slider
     private int cellSize = 10;
-    private short nPicturesLeft = 20; //number of pictures left - TODO nPictures cannot be less than 1
+    private short nPicturesLeft = 50; //number of pictures left - TODO nPictures cannot be less than 1
     private Color bgColor = Color.WHITE; //Standard color
     private Color cColor = Color.BLACK; //Standard color
     private GIFWriter gifWriter;
-
     private int gifWriterSize;
 
+    public void setBoard(Board originaleBoard) {
+        if (originaleBoard.getArrayLength() == 0) {
+            //Error message
+            return;
+        }
+
+        originaleArray = originaleBoard.getBoundingBoxBoard();
+        copiedBoard = new ArrayBoard(originaleArray[0].length + nPicturesLeft, originaleArray.length + nPicturesLeft);
+        copiedBoard.setCellSize(this.cellSize);
+        copiedBoard.insertArray(originaleArray, (int) ((copiedBoard.getArrayLength() / 2) - (originaleArray[0].length / 2)), (int) ((copiedBoard.getArrayLength() / 2) - (originaleArray.length / 2)));
+    }
+
+    public void setCellSize(int cellSize) {
+        if (cellSize < 10) {
+            return;
+        } else {
+            this.cellSize = cellSize;
+        }
+    }
+
+    public void setTime(double time) {
+        this.time = (int) (time * 1000);
+    }
+
+    public void setColor(Color bgColor, Color cColor) {
+        if (bgColor != null) {
+            this.bgColor = bgColor;
+        }
+
+        if (cColor != null) {
+            this.cColor = cColor;
+        }
+    }
+    
     /**
      * Deep copy the active gameboard into a copied gameboard. When changing the
      * copied board, the originale board will stay the same.
      *
-     * @param originaleBoard Active board that is being displayed in the Game of
-     * Life GUI.
-     * @param bgColor Background color of the board
-     * @param cColor Color of cell in board.
      */
-    public void prepareGIF(Board originaleBoard, int cellSize, double time, Color bgColor, Color cColor, Path saveLocation) { //TODO add parameters height width
+    public void prepareGIF(Path saveLocation) {
         try {
-            byte[][] originaleArray = originaleBoard.getBoundingBoxBoard();
-            copiedBoard = new DynamicBoard(originaleArray[0].length + nPicturesLeft, originaleArray.length + nPicturesLeft);
-            copiedBoard.setCellSize(cellSize);
-            /*
-             Param originaleBoard - get array, each element in originaleArray, assigned to copied array
-             assigns copied array to copiedBoard.
-             */
-            copiedBoard.insertArray(originaleArray, (int) ((copiedBoard.getArrayLength() / 2) - (originaleArray[0].length / 2)), (int) ((copiedBoard.getArrayLength() / 2) - (originaleArray.length / 2))); //Get boundingBox and insert it to an empty.
-
-            if (cellSize < 10) {
-                this.cellSize = 10;
-            } else {
-                this.cellSize = cellSize;
-            }
-            if (time < 0.1) {
-                this.time = 100;
-            } else {
-                this.time = (int) (time * 1000);
-            }
-            if (bgColor != null) {
-                this.bgColor = bgColor;
-            }
-
-            if (cColor != null) {
-                this.cColor = cColor;
-            }
-
             gifWriterSize = (int) (copiedBoard.getArrayLength() * copiedBoard.getCellSize());
-            gifWriter = new GIFWriter(gifWriterSize/2, gifWriterSize/2, saveLocation.toString(), this.time);
+            gifWriter = new GIFWriter(gifWriterSize, gifWriterSize, saveLocation.toString(), this.time);
             gifWriter.setBackgroundColor(this.bgColor);
             gifWriter.flush(); //Flushing to set background color to the first image.
 
