@@ -176,16 +176,14 @@ public class DynamicBoard extends Board {
 
     @Override
     public void insertArray(byte[][] boardToInsert, int y, int x) {
-        //Expand if close to border. This has to do with NextGen
-        if (x < 2 || y < 2) {
-            y = expandBoardY(y - 1) + 1;
-            x = expandBoardX(y - 1, x - 1) + 1;
-
-            expandBoard(y - 1, x - 1);
-            y = (y < 2) ? EXPANSION + 1 : y;
-            x = (x < 2) ? EXPANSION + 1 : x;
-        }
-
+        
+        y = expandBoardY(y);
+        x = expandBoardX(y, x);
+        
+        //Handle under max value
+        x = (x < 1) ? 1 : x;
+        y = (y < 1) ? 1 : y;
+        
         for (int i = 0; i < boardToInsert.length; i++) {
             for (int j = 0; j < boardToInsert[i].length; j++) {
                 if (boardToInsert[i][j] == 64) {
@@ -204,7 +202,7 @@ public class DynamicBoard extends Board {
         //This is a fundamental part of DynamicBoard.
         y = expandBoardY(y);
         x = expandBoardX(y, x);
-
+        
         if (y < gameBoard.size() && y >= 0) {
             if (x < gameBoard.get(y).size() && x >= 0) {
                 if (alive) {
