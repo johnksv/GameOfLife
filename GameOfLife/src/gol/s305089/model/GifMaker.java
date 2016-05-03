@@ -13,9 +13,9 @@ import lieng.GIFWriter;
  * library by Henrik Lieng. It acts as an helper class between the Controller
  * {@link gol.s305089.controller.GifMakerController} and the GIF library.
  * Savelocation must
- * <p>
+ * 
  * If no variabels are set, the default one will be used.
- * <table>
+ * <table summary="Tabel of variables with default values">
  * <tr><td>Variable</td><td>Default value</td></tr>
  * <tr><td>Gif width</td><td>200 px</td></tr>
  * <tr><td>Gif height</td><td>200 px</td></tr>
@@ -27,7 +27,7 @@ import lieng.GIFWriter;
  * <tr><td>Cell color</td><td>Black</td></tr>
  * <tr><td>Background color</td><td>White</td></tr>
  * </table>
- * </p>
+ * 
  * <h3>Answers regarding tail recursion</h3>
  * Answer to questions from assignment paper. The questions relates to the
  * private method {@link #writeGIF(int)}.
@@ -120,7 +120,7 @@ public final class GifMaker {
                         x2 += (int) activeBoard.offsetValues[0];
                         y1 += (int) activeBoard.offsetValues[1];
                         y2 += (int) activeBoard.offsetValues[1];
-                       
+
                         if (x1 >= 0 && x2 >= 0 && y1 >= 0 && y2 >= 0) {
                             if (x1 < gifWidth && x2 < gifWidth && y1 < gifHeight && y2 < gifHeight) {
                                 gifWriter.fillRect(x1, x2, y1, y2, cellColor);
@@ -137,16 +137,21 @@ public final class GifMaker {
         }
     }
 
+    /**
+     * Needs to be called while center pattern is true. Else the pattern will be
+     * way off, due to the offset.
+     */
     private void calculateCellSize() {
-        double spacing = 5;
-        byte[][] currentGenBoard = activeBoard.getBoundingBoxBoard();
-        int rowLength = currentGenBoard[0].length;
-        cellSize = Math.floor(gifHeight / (activeBoard.getBoundingBoxBoard().length + spacing));
-        if (cellSize > gifWidth / (rowLength + spacing)) {
-            cellSize = Math.floor(gifWidth / (rowLength + spacing));
+        if (centerPattern) {
+            double spacing = 5;
+            byte[][] currentGenBoard = activeBoard.getBoundingBoxBoard();
+            int rowLength = currentGenBoard[0].length;
+            cellSize = Math.floor(gifHeight / (activeBoard.getBoundingBoxBoard().length + spacing));
+            if (cellSize > gifWidth / (rowLength + spacing)) {
+                cellSize = Math.floor(gifWidth / (rowLength + spacing));
+            }
+            setPattern(currentGenBoard);
         }
-        activeBoard.clearBoard();
-        setPattern(currentGenBoard);
     }
 
     /**
@@ -183,13 +188,13 @@ public final class GifMaker {
     }
 
     /**
-     * Constructs an new Board instance, and inserts this board
+     * Constructs an new Board instance, and inserts the given boards pattern.
      *
      * @param boardToSet
      * @see gol.model.Board.Board#insertArray(byte[][], int, int)
      */
     public void setBoard(Board boardToSet) {
-        this.originalPattern = boardToSet.getBoundingBoxBoard();;
+        originalPattern = boardToSet.getBoundingBoxBoard();;
         this.activeBoard = new DynamicBoard(10, 10);
         this.activeBoard.setRule(boardToSet.getRule());
         setPattern(originalPattern);
@@ -205,7 +210,7 @@ public final class GifMaker {
             int x = (int) ((gifWidth / cellSize) / 2 - patternToSet[0].length / 2);
             activeBoard.insertArray(patternToSet, y, x);
         } else {
-            activeBoard.insertArray(patternToSet, 5, 5);
+            activeBoard.insertArray(patternToSet);
         }
     }
 

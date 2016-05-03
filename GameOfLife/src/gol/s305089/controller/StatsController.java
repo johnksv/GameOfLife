@@ -58,9 +58,6 @@ public class StatsController implements Initializable {
     private final XYChart.Series<String, Integer> similarityMeasure = new XYChart.Series();
     private final ArrayList<Integer> simMeasureClosest = new ArrayList();
 
-    /**
-     * Initializes the controller class.
-     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         gameStats = new Stats();
@@ -157,6 +154,7 @@ public class StatsController implements Initializable {
         GifMaker gifmaker = new GifMaker();
 
         //Set the original pattern to imgView First.
+        gifmaker.setCenterPattern(true);
         gifmaker.setAutoCellSize(true);
         generateTolltipGIF(gifmaker, imgViewOriginalPattern);
 
@@ -202,15 +200,17 @@ public class StatsController implements Initializable {
         tempFileToolTip.delete();
     }
 
-    public void setByteBoard(byte[][] Pattern) {
-        setPattern(Pattern);
-        gameStats.setPattern(Pattern);
+    public void setBoard(Board boardToSet) {
+        gameStats.setBoard(boardToSet);
+        originalPattern = boardToSet.getBoundingBoxBoard();
+        activeBoard = new DynamicBoard(10,10);
+        activeBoard.setRule(boardToSet.getRule());
+        setPattern(originalPattern);
     }
 
-    public void setPattern(byte[][] Pattern) {
-        activeBoard = new DynamicBoard(10, 10);
-        originalPattern = Pattern;
-        activeBoard.insertArray(originalPattern, 1, 1);
+    private void setPattern(byte[][] Pattern) {
+        activeBoard.clearBoard();
+        activeBoard.insertArray(Pattern);
     }
 
 }

@@ -8,7 +8,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * Contains static methods for writing a board to an rle file.
+ * Contains static methods for writing a board to RLE.
  *
  * @author s305084
  */
@@ -18,10 +18,9 @@ public final class WriteRLE {
     }
 
     /**
-     * Converts a non empty Board to RLE format. Supports the metadata: name,
-     * author, comment
+     * Converts a non empty Board to RLE format. Supports the metadata: name, author, comment
      *
-     * @param path
+     * @param path 
      * @param board
      * @param name
      * @param author

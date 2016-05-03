@@ -113,9 +113,10 @@ public class SoundController implements Initializable {
         }
     }
 
-    public void setBoard(Board activeBoard) {
-        this.activeBoard = activeBoard;
-        wavMakerController.setBoard(activeBoard);
+    public void setBoard(Board boardToSet) {
+        this.activeBoard = boardToSet;
+        this.activeBoard.setRule(boardToSet.getRule());
+        wavMakerController.setBoard(boardToSet);
     }
 
     public void disposeMediaPlayers() {

@@ -182,6 +182,7 @@ public class PatternEditorController implements Initializable {
 
         //TODO for strip to be dynamic after size
         theStripBoard = new ArrayBoard(100, 100);
+        theStripBoard.setRule(activeBoard.getRule());
         theStripBoard.insertArray(patternToDraw, 10, 10);
         initTheStrip();
         theStripBoard.clearBoard();
@@ -212,7 +213,7 @@ public class PatternEditorController implements Initializable {
 
     }
 
-    public void setActiveBoard(Board gameBoardToCopy) {
+    public void setBoard(Board gameBoardToCopy) {
         ghostByteBoard = gameBoardToCopy.getBoundingBoxBoard();
 
         int rows = (int) (Util.getScreenSize()[1]
@@ -221,6 +222,7 @@ public class PatternEditorController implements Initializable {
                 / gameBoardToCopy.getCellSize());
 
         activeBoard = new ArrayBoard(rows, columns);
+        activeBoard.setRule(gameBoardToCopy.getRule());
         this.activeBoard.setCellSize(gameBoardToCopy.getCellSize());
 
     }
@@ -233,7 +235,7 @@ public class PatternEditorController implements Initializable {
     private void sendCurrentBoard() {
         if (gameController != null) {
             Board board = new DynamicBoard();
-            board.insertArray(activeBoard.getBoundingBoxBoard(), 3, 3);
+            board.insertArray(activeBoard.getBoundingBoxBoard());
             gameController.setActiveBoard(board);
         }
     }
