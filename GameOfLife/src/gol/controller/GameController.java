@@ -28,6 +28,7 @@ import javafx.animation.Animation.Status;
 import javafx.animation.AnimationTimer;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -41,6 +42,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
@@ -96,6 +98,8 @@ public class GameController implements Initializable {
     @FXML
     private ColorPicker backgroundCP;
     @FXML
+    private RadioButton rbAddCell;
+    @FXML
     private RadioButton rbRemoveCell;
     @FXML
     private RadioButton rbMoveGrid;
@@ -113,6 +117,8 @@ public class GameController implements Initializable {
     private Slider timeSliderGifTrygve;
     @FXML
     private Label timeLabelGifTrygve;
+    @FXML
+    private CheckBox cbDrawBox;
 
     private Board activeBoard;
     private final Timeline timeline = new Timeline();
@@ -125,7 +131,7 @@ public class GameController implements Initializable {
     private int mousePositionY;
     private long gencount = 0;
     private AnimationTimer animationTimer;
-
+    
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         gc = canvas.getGraphicsContext2D();
@@ -136,6 +142,7 @@ public class GameController implements Initializable {
         toolBarQuickStats.prefWidthProperty().bind(borderpane.widthProperty());
         borderpane.widthProperty().addListener(e -> draw());
         borderpane.heightProperty().addListener(e -> draw());
+        cbDrawBox.selectedProperty().addListener(e -> draw());
 
         cellSizeSlider.setBlockIncrement(0.75);
         if (Configuration.getProp("dynamicBoard").equals("true")) {
@@ -744,7 +751,9 @@ public class GameController implements Initializable {
         gc.setFill(backgroundColor);
         gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
         gc.setFill(cellColor);
-        drawBorder();
+        if(cbDrawBox.isSelected()){
+            drawBorder();
+        }
         for (int i = startRow; i < endRow; i++) {
             for (int j = startCol; j < endCol && j < activeBoard.getArrayLength(i); j++) {
                 if (activeBoard.getCellState(i, j)) {
@@ -758,11 +767,12 @@ public class GameController implements Initializable {
     }
 
     private void drawBorder() {
-        gc.fillRect(activeBoard.offsetValues[0], activeBoard.offsetValues[1], activeBoard.getCellSize() * activeBoard.getMaxRowLength(), activeBoard.getCellSize());
-        gc.fillRect(activeBoard.offsetValues[0], activeBoard.offsetValues[1], activeBoard.getCellSize(), activeBoard.getCellSize() * activeBoard.getArrayLength());
+        double size = activeBoard.getCellSize() + activeBoard.getGridSpacing();
+        gc.fillRect(activeBoard.offsetValues[0], activeBoard.offsetValues[1], size * activeBoard.getMaxRowLength(), size);
+        gc.fillRect(activeBoard.offsetValues[0], activeBoard.offsetValues[1], size, size * activeBoard.getArrayLength());
 
-        gc.fillRect(activeBoard.offsetValues[0], activeBoard.offsetValues[1] + activeBoard.getCellSize() * activeBoard.getArrayLength(), activeBoard.getCellSize() * activeBoard.getMaxRowLength(), activeBoard.getCellSize());
-        gc.fillRect(activeBoard.offsetValues[0] + activeBoard.getCellSize() * activeBoard.getMaxRowLength(), activeBoard.offsetValues[1], activeBoard.getCellSize(), activeBoard.getCellSize() * activeBoard.getArrayLength());
+        gc.fillRect(activeBoard.offsetValues[0], activeBoard.offsetValues[1] + size * activeBoard.getArrayLength(), size * activeBoard.getMaxRowLength(), size);
+        gc.fillRect(activeBoard.offsetValues[0] + size * activeBoard.getMaxRowLength(), activeBoard.offsetValues[1], size, size * activeBoard.getArrayLength());
     }
 
     private void drawGhostTiles() {
@@ -890,7 +900,7 @@ public class GameController implements Initializable {
                 rbRemoveCell.fire();
                 break;
             case "a":
-                //TODO set addcells
+                rbAddCell.fire();
                 break;
             case "i":
                 handleImportFileBtn();

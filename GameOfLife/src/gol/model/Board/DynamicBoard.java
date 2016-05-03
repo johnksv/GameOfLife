@@ -407,11 +407,11 @@ public class DynamicBoard extends Board {
         if (x < 0) {
             return;
         }
-        while (y >= gameBoard.size() - EXPANSION && gameBoard.size() < MAXHEIGHT) {
+        while (y >= gameBoard.size() && gameBoard.size() < MAXHEIGHT) {
             gameBoard.add(new ArrayList<>());
         }
         if (y < MAXHEIGHT) {
-            while (x >= gameBoard.get(y).size() - EXPANSION && gameBoard.get(y).size() < MAXWIDTH) {
+            while (x >= gameBoard.get(y).size() && gameBoard.get(y).size() < MAXWIDTH) {
                 gameBoard.get(y).add(new AtomicInteger(0));
             }
         }

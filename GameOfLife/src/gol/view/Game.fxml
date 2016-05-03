@@ -95,7 +95,7 @@
                                                                         </RadioButton>
                                                                         <RadioButton fx:id="rbRemoveCell" mnemonicParsing="false" text="Remove cells" toggleGroup="$mouseActions" GridPane.rowIndex="1" />
                                                                         <RadioButton fx:id="rbMoveGrid" mnemonicParsing="false" text="Move grid" toggleGroup="$mouseActions" GridPane.rowIndex="2" />
-                                                      <CheckBox mnemonicParsing="false" styleClass="label" text="Show box" GridPane.rowIndex="3" />
+                                                      <CheckBox fx:id="cbDrawBox"  mnemonicParsing="false" styleClass="label" text="Show box" GridPane.rowIndex="3" />
                                                       <Button mnemonicParsing="false" text="How to play" GridPane.rowIndex="4" />
                                                    </children>
                                                 </GridPane>
