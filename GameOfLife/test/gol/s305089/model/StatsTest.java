@@ -41,6 +41,7 @@ public class StatsTest {
 
         instance.setBoard(patternBoard);
         int[][] result = instance.getStatistics(20, true, true);
+        System.out.println(Arrays.deepToString(result));
         for (int iteration = 0; iteration < result.length - 1; iteration++) {
 
             assertEquals(5, result[iteration][0]);
@@ -104,31 +105,4 @@ public class StatsTest {
         // assertEquals(expResult, result);
         fail("The test case is a prototype.");
     }
-
-    /*
-     @Test
-     public void testGeometricFactor() {
-     System.out.println("geometricFactor");
-     int expResult;
-     int result;
-     instance.setPattern(new byte[][]{{0, 64, 0}, {0, 64, 0}, {0, 64, 0}});
-     for (int i = 0; i < 10; i++) {
-     expResult = 3;
-     result = instance.geometricFactor(i);
-     assertEquals(expResult, result);
-     }
-
-     instance.setBoard(patternBoard);
-     for (int i = 1; i < 10; i++) {
-     if (i % 2 == 0) {
-     expResult = 13;
-     } else {
-     expResult = 10;
-     }
-     result = instance.geometricFactor(i);
-     assertEquals(expResult, result);
-     }
-
-     }
-     */
 }

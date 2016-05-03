@@ -1,8 +1,5 @@
 package gol.s305089;
 
-import gol.model.Board.ArrayBoard;
-import gol.model.Board.Board;
-import gol.model.Board.DynamicBoard;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
@@ -21,15 +18,32 @@ public class Util {
     private Util() {
     }
 
+    /**
+     * Display a tooltip right beside to the mouse position given by the mouse
+     * event. This method is natural to use on Mouse_Entered or another mouse
+     * event when you want to show a tooltip. The method does NOT hide the
+     * tooltip when the mouse is moved.
+     * <p>
+     * Example usage:</p>
+     * <code>
+     * Tooltip tooltip = new Tooltip("This tooltip should be desplayed on mouse entered.");
+     * Node.setOnMouseEntered(mouseEvent -> Util.showTooltip(mouseEvent, Node, tooltip));
+     * Node.setOnMouseExited(mouseEvent -> tooltip.hide());
+     * </code>
+     *
+     * @param e the mouse event that will trigger the tooltip to show.
+     * @param ownerNode the owner of this tooltip.
+     * @param tip the tooltip that should be displayed.
+     */
     public static void showTooltip(MouseEvent e, Node ownerNode, Tooltip tip) {
-        double anchorX = ownerNode.getScene().getWindow().getX() + 20;
-        double anchorY = ownerNode.getScene().getWindow().getY() + 20;
+        double anchorX = ownerNode.getScene().getWindow().getX() + 10;
+        double anchorY = ownerNode.getScene().getWindow().getY() + 40;
         tip.setFont(new Font(12));
         tip.show(ownerNode, anchorX + e.getSceneX(), anchorY + e.getSceneY());
     }
 
     /**
-     * Retrives the users screens width and height in pixels.
+     * Retrieves the users screens width and height in pixels.
      *
      * @return Array with screen width at index 0, and screen height at index 1
      */
@@ -40,8 +54,15 @@ public class Util {
         return result;
     }
 
-    public static void setTimeLabel(MediaPlayer current, Label timeLabel) {
-        current.currentTimeProperty().addListener((ObservableValue<? extends Duration> observable, Duration oldValue, Duration newValue) -> {
+    /**
+     * Updates an label meant to display time, as the media player plays.
+     *
+     * @param mediaPlayer The mediaplayer that plays the media that should be
+     * tracked.
+     * @param timeLabel The label that should display the time.
+     */
+    public static void setTimeLabel(MediaPlayer mediaPlayer, Label timeLabel) {
+        mediaPlayer.currentTimeProperty().addListener((ObservableValue<? extends Duration> observable, Duration oldValue, Duration newValue) -> {
             //Current time elapsed
             int secondsElapsed = (int) newValue.toSeconds();
             int minuts = secondsElapsed / 60;
@@ -53,7 +74,7 @@ public class Util {
                 elapsedTime += seconds;
             }
             //Total time of whole mediafile
-            int totalDur = (int) current.getTotalDuration().toSeconds();
+            int totalDur = (int) mediaPlayer.getTotalDuration().toSeconds();
             int totalMin = totalDur / 60;
             int totalSec = totalDur - totalMin * 60;
             String totalTime = totalMin + ":";

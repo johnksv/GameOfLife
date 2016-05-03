@@ -24,6 +24,23 @@ public class Stats {
     private boolean shouldUseCustom = false;
     private boolean checkSimilarityPrevGen;
 
+    /**
+     * Calculates all statistics provided by this class. The provided statistics
+     * are living cells, change in living cells, and similarity with future and
+     * previous patterns.
+     *
+     * @param iterations The number of iteration the statistics should cover
+     * @param calcChangeLiving If change in living cells should be calculated or
+     * not.
+     * @param calcSimilarity If similarity with future patterns should be
+     * calculated.
+     * @return The result from the calculations. The data has the following
+     * index: Living cells: 0, Change in living cells: 1, Similarity: 3, closest
+     * similar generation: 4.
+     * @see #getCountLiving(int)
+     * @see #getChangeInLiving(int)
+     * @see #getSimilarityMeasure(int)
+     */
     public int[][] getStatistics(int iterations, boolean calcChangeLiving, boolean calcSimilarity) {
         int[][] stats = new int[iterations + 1][4];
 
@@ -108,7 +125,7 @@ public class Stats {
      *
      * @param iterationsToCalcualte The number of iterations to calculate
      * @return First index: similarity measure, second index: iteration number
-     * of closest match
+     * of closest match (this value is -1 if no match was found).
      */
     public int[][] getSimilarityMeasure(int iterationsToCalcualte) {
         int[][] similarity = new int[iterationsToCalcualte + 1][2];
@@ -164,9 +181,9 @@ public class Stats {
     }
 
     /**
+     * Calculates the geometric factor for the pattern.
      *
-     * @param time
-     * @return The sum of x and y coordinates of living cells
+     * @param iterationsToCalcualte the number of iterations to calculate
      */
     private void calculateGeometricFactor(int iterationsToCalcualte) {
         geometricFactor = new int[iterationsToCalcualte + 1];
