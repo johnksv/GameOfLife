@@ -1,5 +1,6 @@
 package gol.controller;
 
+import gol.model.UsefullMethods;
 import gol.model.Board.Board;
 import gol.model.Board.ArrayBoard;
 import gol.model.Board.DynamicBoard;
@@ -872,7 +873,10 @@ public class GameController implements Initializable {
 
         draw();
     }
-
+    @FXML
+    private void handleHowToPlay(){
+        
+    }
     public void handleKeyEvents(KeyEvent e) {
         btnStartPause.requestFocus();
         String key = e.getText();

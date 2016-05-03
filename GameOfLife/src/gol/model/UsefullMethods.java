@@ -1,4 +1,4 @@
-package gol.controller;
+package gol.model;
 
 import javafx.scene.control.Alert;
 

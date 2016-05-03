@@ -1,6 +1,6 @@
 package gol.s305084;
 
-import gol.controller.UsefullMethods;
+import gol.model.UsefullMethods;
 import gol.model.Board.ArrayBoard;
 import gol.model.Board.Board;
 import gol.model.Board.DynamicBoard;
