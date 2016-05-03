@@ -1,6 +1,7 @@
 package gol.s305089.controller;
 
 import gol.model.Board.Board;
+import gol.s305089.Util;
 import static gol.s305089.Util.showTooltip;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -266,7 +267,7 @@ public class SoundController implements Initializable {
             current.setOnEndOfMedia(() -> {
                 next.play();
                 mediaview.setMediaPlayer(next);
-                setTimeLabel(next);
+                Util.setTimeLabel(next, labelTime);
                 current.dispose();
 
             });
@@ -281,7 +282,7 @@ public class SoundController implements Initializable {
 
         //First mediaplayer is not part of loop. Has to start it explicitly.
         mediaview.setMediaPlayer(mediaPlayerQueue.get(0));
-        setTimeLabel(mediaPlayerQueue.get(0));
+        Util.setTimeLabel(mediaPlayerQueue.get(0), labelTime);
         mediaPlayerQueue.get(0).play();
         if (mediaPlayerQueue.size() == 1) {
             onEndLastMP(mediaPlayerQueue.get(0));
@@ -301,34 +302,6 @@ public class SoundController implements Initializable {
             btnPlayPause.setDisable(true);
             btnRewind.setDisable(true);
             disposeMediaPlayers();
-        });
-    }
-
-    private void setTimeLabel(MediaPlayer current) {
-        current.currentTimeProperty().addListener((ObservableValue<? extends Duration> observable, Duration oldValue, Duration newValue) -> {
-            //Current time elapsed
-            int secondsElapsed = (int) newValue.toSeconds();
-            int minuts = secondsElapsed / 60;
-            int seconds = secondsElapsed - minuts * 60;
-            String elapsedTime = minuts + ":";
-            if (seconds < 10) {
-                elapsedTime += "0" + seconds;
-            } else {
-                elapsedTime += seconds;
-            }
-
-            //Total time of whole mediafile
-            int totalDur = (int) current.getTotalDuration().toSeconds();
-            int totalMin = totalDur / 60;
-            int totalSec = totalDur - totalMin * 60;
-            String totalTime = totalMin + ":";
-            if (totalSec < 10) {
-                totalTime += "0" + totalSec;
-            } else {
-                totalTime += totalSec;
-            }
-
-            labelTime.setText(elapsedTime + "/" + totalTime);
         });
     }
 }

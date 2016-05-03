@@ -2,6 +2,8 @@ package gol.s305089.controller;
 
 import gol.model.Board.Board;
 import gol.model.Board.DynamicBoard;
+import gol.s305089.Util;
+import gol.s305089.model.GifMaker;
 import gol.s305089.sound.Sound;
 import gol.s305089.sound.Tone;
 import java.io.File;
@@ -10,15 +12,23 @@ import java.net.URL;
 import java.util.HashSet;
 import java.util.ResourceBundle;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
+import javafx.scene.control.Tooltip;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.util.Duration;
@@ -43,9 +53,13 @@ public class WavMakerController implements Initializable {
     @FXML
     private Button btnPlayPreview;
     @FXML
-    private Text textInfo;
+    private Label labelInfo;
+    @FXML
+    private Label labelCurrentPattern;
 
     private byte[][] originalPattern;
+    //The board that that was the parameter in setBoard
+    private Board referenceBoard;
     private Board activeBoard;
     private int iterationsToCalc;
     private double durEachIt;
@@ -71,9 +85,12 @@ public class WavMakerController implements Initializable {
     }
 
     public void setBoard(Board activeBoard) {
+        referenceBoard = activeBoard;
         originalPattern = activeBoard.getBoundingBoxBoard();
         this.activeBoard = new DynamicBoard();
         this.activeBoard.insertArray(originalPattern, 3, 3);
+
+        generateBoardGIFPreview();
     }
 
     @FXML
@@ -102,14 +119,16 @@ public class WavMakerController implements Initializable {
 
             handleWriteMode();
             Sound.makeSound(previewFile, durEachIt);
-            textInfo.setText("Preview file successfully made.");
-            
-            previewPlayer.dispose();
+            labelInfo.setText("Preview file successfully made.");
+            if (previewPlayer != null) {
+                previewPlayer.dispose();
+            }
             previewPlayer = new MediaPlayer(new Media(previewFile.toURI().toString()));
             previewPlayer.setOnEndOfMedia(() -> {
+                btnPlayPreview.setText("Play preview");
+                labelInfo.setText("");
                 previewPlayer.seek(Duration.ZERO);
                 previewPlayer.pause();
-                btnPlayPreview.setText("Play preview");
             });
 
         } catch (IOException ex) {
@@ -125,9 +144,14 @@ public class WavMakerController implements Initializable {
             btnPlayPreview.setText("Play preview");
         } else {
             previewPlayer.play();
+            Util.setTimeLabel(previewPlayer, labelInfo);
             btnPlayPreview.setText("Pause preview");
-
         }
+    }
+
+    @FXML
+    private void updateBoard() {
+        setBoard(referenceBoard);
     }
 
     private void append1dLivingDeadRatio() {
@@ -211,5 +235,34 @@ public class WavMakerController implements Initializable {
     private void setPattern(byte[][] patternToSet) {
         activeBoard.clearBoard();
         activeBoard.insertArray(patternToSet, 5, 5);
+    }
+
+    private void generateBoardGIFPreview() {
+        try {
+            Tooltip tooltip = new Tooltip();
+            GifMaker gifmaker = new GifMaker();
+
+            ImageView imgViewGIFPreview = new ImageView();
+            gifmaker.setPattern(originalPattern);
+            File tempFileToolTip = File.createTempFile("golStats", ".gif");
+
+            gifmaker.setSaveLocation(tempFileToolTip.getAbsolutePath());
+            gifmaker.writePatternToGIF(1);
+
+            Image current = new Image(tempFileToolTip.toURI().toString());
+            imgViewGIFPreview.setImage(current);
+
+            tempFileToolTip.delete();
+
+            VBox container = new VBox();
+            container.getChildren().add(imgViewGIFPreview);
+
+            tooltip.setGraphic(container);
+            labelCurrentPattern.setOnMouseEntered((event) -> Util.showTooltip(event, labelCurrentPattern, tooltip));
+            labelCurrentPattern.setOnMouseExited(event -> tooltip.hide());
+
+        } catch (IOException ex) {
+            System.err.println("Unable to create GIF preview.\n" + ex);
+        }
     }
 }
