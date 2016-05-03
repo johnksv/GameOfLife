@@ -232,19 +232,26 @@ public abstract class Board {
         return gridSpacing;
     }
 
-    protected abstract int expandBoardY(int y);
-
-    protected abstract int expandBoardX(int y, int x);
-
     /**
-     * Expands the board to fit the coordinates given. Expands with the number
+     * Expands the board to fit the row index given. Expands with the number
      * of cells, defined as "expansion" in the config file. Will not be
      * implemented in {@link ArrayBoard arraybors.}
      *
-     * @param y pixel coordinate.
-     * @param x pixel coordinate.
+     * @param row cell index.
      */
-    protected abstract void expandBoard(int y, int x);
+    protected abstract int expandBoardY(int row);
+
+    /**
+     * Expands the board to fit the col index given. Expands with the number
+     * of cells, defined as "expansion" in the config file. Will not be
+     * implemented in {@link ArrayBoard arraybors.}
+     * 
+     * If the row index exceeds row count in gameBoard col will return as -1.
+     * 
+     * @param row pixel coordinate.
+     * @param col pixel coordinate.
+     */
+    protected abstract int expandBoardX(int row, int col);
 
     /**
      * Calculates the smallest possible array of living cells, and returns that

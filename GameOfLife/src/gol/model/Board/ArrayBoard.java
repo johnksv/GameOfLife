@@ -238,11 +238,6 @@ public class ArrayBoard extends Board {
     }
 
     @Override
-    protected void expandBoard(int y, int x) {
-        throw new UnsupportedOperationException("Threads for ArrayBoard is not supported.");
-    }
-
-    @Override
     protected int expandBoardY(int y) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
