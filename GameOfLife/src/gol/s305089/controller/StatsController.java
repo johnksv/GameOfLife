@@ -29,7 +29,7 @@ import javafx.scene.text.Font;
 /**
  * FXML Controller class
  *
- * @author John Kasper
+ * @author s305089 - John Kasper Svergja
  */
 public class StatsController implements Initializable {
 
@@ -187,9 +187,7 @@ public class StatsController implements Initializable {
     }
 
     private void setTooltipMouseHandler(XYChart.Data<String, Integer> data, Tooltip tooltip) {
-        data.getNode().setOnMouseEntered(event -> {
-            Util.showTooltip(event, data.getNode(), tooltip);
-        });
+        data.getNode().setOnMouseEntered(event -> Util.showTooltip(event, data.getNode(), tooltip));
         data.getNode().setOnMouseExited(event -> tooltip.hide());
     }
 
@@ -210,8 +208,6 @@ public class StatsController implements Initializable {
     }
 
     public void setPattern(byte[][] Pattern) {
-        //TODO dynaimc size of board
-        //TODO Move Method to helper method?
         activeBoard = new DynamicBoard(10, 10);
         originalPattern = Pattern;
         activeBoard.insertArray(originalPattern, 1, 1);

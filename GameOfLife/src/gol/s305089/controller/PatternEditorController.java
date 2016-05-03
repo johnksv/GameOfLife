@@ -35,7 +35,7 @@ import javafx.stage.Stage;
 /**
  * FXML Controller class for pattern editor.
  *
- * @author s305089
+ * @author s305089 - John Kasper Svergja
  */
 public class PatternEditorController implements Initializable {
 

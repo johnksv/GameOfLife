@@ -35,7 +35,7 @@ import javafx.stage.Stage;
 /**
  * FXML Controller class
  *
- * @author s305089
+* @author s305089 - John Kasper Svergja
  */
 public class GifMakerController implements Initializable {
 

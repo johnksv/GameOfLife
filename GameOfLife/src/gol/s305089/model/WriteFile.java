@@ -7,7 +7,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 /**
- * @author s305089
+ * @author s305089 - John Kasper Svergja
  */
 public final class WriteFile {
 
@@ -17,7 +17,7 @@ public final class WriteFile {
 
     /**
      * Writes this byte board to RLE-format, and saves at this path.<b>The given
-     * byte board should be quadratic.</b>If the byte board is empty (length is
+     * byte board should be rectangular.</b>If the byte board is empty (length is
      * zero), the method will return false,as it does not make sense to write an
      * empty board to a file.
      *
@@ -26,7 +26,7 @@ public final class WriteFile {
      * @return True if file was successfully written to. Otherwise false.
      */
     public static boolean writeToRLE(byte[][] boardToWrite, Path saveLocation) {
-        //Check if the board is empty. We know its quadratic, so its ok to check index 0.
+        //Check if the board is empty. We know its rectangular, so its ok to check index 0.
         if (boardToWrite[0].length == 0) {
             return false;
         }
