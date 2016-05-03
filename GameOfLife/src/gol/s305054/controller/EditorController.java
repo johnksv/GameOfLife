@@ -6,10 +6,16 @@ package gol.s305054.controller;
 
 import gol.model.Board.ArrayBoard;
 import gol.model.Board.Board;
+import gol.s305054.model.WriteRleS305054;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Path;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
@@ -208,7 +214,12 @@ public class EditorController implements Initializable {
         
         File file = fileChooser.showSaveDialog(null); //Stage?
         if(file != null) {
-            //WriteRleObject.writeRle
+            try {
+                WriteRleS305054 writer = new WriteRleS305054();
+                writer.writeRLE(activeBoard, titleField, authorField, descriptionField, file.toPath());
+            } catch (IOException ex) {
+                Logger.getLogger(EditorController.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
 
