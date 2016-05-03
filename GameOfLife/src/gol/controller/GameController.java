@@ -438,19 +438,17 @@ public class GameController implements Initializable {
     @FXML
     private void handleGIFTrygve() {
         timeline.pause();
-        GIFWriterS305054 gifTrygve;
+        GIFWriterS305054 gifTrygve = new GIFWriterS305054();
         java.awt.Color bgColor = new java.awt.Color((float) backgroundColor.getRed(), (float) backgroundColor.getGreen(), (float) backgroundColor.getBlue());
         java.awt.Color cColor = new java.awt.Color((float) cellColor.getRed(), (float) cellColor.getGreen(), (float) cellColor.getBlue());
-        gifTrygve = new GIFWriterS305054();
+
         gifTrygve.prepareGIF(activeBoard, (int) activeBoard.getCellSize(), timeSliderGifTrygve.getValue(), bgColor, cColor);
         gifTrygve.makeGIF();
     }
 
     @FXML
     private void handleGifSliderTrygve() {
-        timeSliderGifTrygve.setMin(0.001);
-        timeSliderGifTrygve.setMax(2.0);
-        timeLabelGifTrygve.setText("Time Between pictures: " + (float) timeSliderGifTrygve.getValue());
+        timeLabelGifTrygve.setText("Time Between Pictures: " + String.format("%.3f %s", timeSliderGifTrygve.getValue(), ""));
     }
 
     @FXML
