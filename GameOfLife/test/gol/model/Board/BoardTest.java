@@ -89,7 +89,7 @@ public class BoardTest {
         //Get negeative velues arrayBoard
         arrayInstance.setCellState(-2, 1, true);
         assertEquals(false, arrayInstance.getCellState(-2, 1));
-        
+
         //Dynamic test
         dynamicInstance.clearBoard();
         dynamicInstance.setCellState(-1, -1, true);
@@ -201,7 +201,7 @@ public class BoardTest {
         dynamicInstance.clearBoard();
         dynamicInstance.insertArray(patternGlider, 1, 1);
         assertEquals("010001111", dynamicInstance.toString());
-        
+
         dynamicInstance.clearBoard();
         dynamicInstance.insertArray(patternGlider, -2, -2);
         assertEquals("010001111", dynamicInstance.toString());

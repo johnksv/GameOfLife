@@ -1,6 +1,7 @@
 package gol.model.Board;
 
 import gol.model.Logic.Rule;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
@@ -12,8 +13,9 @@ import java.util.Arrays;
 @Deprecated
 public class ArrayBoard extends Board {
 
-    private final int HEIGHT, WIDTH;
-    private byte[][] gameBoard;
+    private final int WIDTH, HEIGHT;
+    protected byte[][] gameBoard;
+
 
     /**
      * Constructs a new Arrayboard with default width and height
@@ -101,12 +103,17 @@ public class ArrayBoard extends Board {
         }
     }
 
+
     @Override
     public void setCellState(int y, int x, boolean alive) {
         byte value = 0;
         if (alive) {
             value = 64;
         }
+        if (y <= 0 || x <= 0) {
+            return;
+        }
+
         if (y < gameBoard.length && y >= 0) {
             if (x < gameBoard[y].length && x >= 0) {
                 gameBoard[y][x] = value;
@@ -197,6 +204,7 @@ public class ArrayBoard extends Board {
 
     @Override
     public boolean getCellState(int y, int x) {
+
         if (y < 1 || y >= gameBoard.length) {
             return false;
         }
@@ -221,6 +229,7 @@ public class ArrayBoard extends Board {
         }
         return result.toString();
     }
+
 
     @Override
     public int getMaxRowLength() {

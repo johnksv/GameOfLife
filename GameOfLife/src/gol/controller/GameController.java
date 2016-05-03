@@ -3,6 +3,7 @@ package gol.controller;
 import gol.model.Board.ArrayBoard;
 import gol.model.Board.Board;
 import gol.model.Board.DynamicBoard;
+import gol.model.Board.HashBoard;
 import gol.model.FileIO.PatternFormatException;
 import gol.model.FileIO.ReadFile;
 import gol.model.Logic.ConwaysRule;
@@ -47,6 +48,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.image.Image;
 import javafx.scene.control.ToolBar;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -219,7 +221,6 @@ public class GameController implements Initializable {
     private void handleRuleBtn() {
         byte[] toBeBorn;
         byte[] toSurvive;
-
         if (tfCellsToSurvive.getText().replaceAll("\\D", "").equals("")) {
             tfCellsToSurvive.setText("");
             toSurvive = new byte[]{-1};
@@ -320,6 +321,7 @@ public class GameController implements Initializable {
             File selected = fileChooser.showOpenDialog(null);
             if (selected != null) {
                 boardFromFile = ReadFile.readFileFromDisk(selected.toPath());
+
                 showInsertDialog();
 
             }
@@ -478,7 +480,92 @@ public class GameController implements Initializable {
         }
     }
 
-    private void constructRule(byte[] cellsToSurvive, byte[] cellsToBeBorn) {
+    @FXML
+    private void handleShowSStats() {
+        try {
+            Stage statistics = new Stage();
+            statistics.setResizable(false);
+            //TODO ICON stats
+            statistics.getIcons().add(new Image(new File("src\\mics\\linechart.png").toURI().toString()));
+
+            statistics.initModality(Modality.WINDOW_MODAL);
+            statistics.initOwner(canvas.getScene().getWindow());
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/gol/s305084/view/Statistics.fxml"));
+
+            Parent root = loader.load();
+            gol.s305084.StatisticsController statisticsController = loader.getController();
+            statisticsController.loadeBoard(activeBoard);
+            statisticsController.showStats();
+            Scene scene = new Scene(root);
+            statistics.setScene(scene);
+
+            statistics.setTitle("Gol: Statistics");
+            statistics.show();
+        } catch (IOException ex) {
+            Logger.getLogger(GameController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    @FXML
+    private void handleSEditor() {
+        try {
+            if(timeline.getStatus() == Status.RUNNING){
+                handleAnimation();
+            }
+            Stage editor = new Stage();
+            editor.setResizable(false);
+            editor.getIcons().add(new Image(new File("src\\mics\\icon.png").toURI().toString()));
+
+            editor.initModality(Modality.WINDOW_MODAL);
+            editor.initOwner(canvas.getScene().getWindow());
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/gol/s305084/view/Editor.fxml"));
+
+            Parent root = loader.load();
+            gol.s305084.PatternEditorController editorController = loader.getController();
+            editorController.setBGColor(backgroundColor);
+            editorController.setCellColor(cellColor);
+
+            Scene scene = new Scene(root);
+            editor.setScene(scene);
+
+            editor.setTitle("Gol: Pattern Editor");
+            editor.showAndWait();
+            //TODO ask about this code(not 100% my own).
+
+            boardFromFile = editorController.getPattern();
+            if (boardFromFile != null) {
+                Alert alert = new Alert(AlertType.NONE);
+                alert.setTitle("Place pattern");
+                alert.initStyle(StageStyle.UTILITY);
+                alert.setContentText("How do you want to insert the pattern?");
+
+                ButtonType btnGhostTiles = new ButtonType("Insert with ghost tiles");
+                ButtonType btnInsert = new ButtonType("Insert at top-left");
+                ButtonType btnCancel = new ButtonType("Cancel");
+
+                alert.getButtonTypes().addAll(btnGhostTiles, btnInsert, btnCancel);
+
+                Optional<ButtonType> result = alert.showAndWait();
+
+                if (result.get() == btnInsert) {
+                    activeBoard.insertArray(boardFromFile, 3, 3);
+                    boardFromFile = null;
+                } else if (result.get() == btnGhostTiles) {
+                    btnStartPause.setDisable(true);
+                    activeBoard.setGameRule(ReadFile.getParsedRule());
+                } else {
+                    boardFromFile = null;
+                    alert.close();
+                }
+            }
+            draw();
+
+        } catch (IOException ex) {
+            Logger.getLogger(GameController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void constructRule(byte[] cellsToSurvive, byte[] cellsToBeBorn) {
         try {
             activeBoard.setGameRule(new CustomRule(cellsToSurvive, cellsToBeBorn));
         } catch (unsupportedRuleException ex) {
