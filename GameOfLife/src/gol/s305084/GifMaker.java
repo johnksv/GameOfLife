@@ -49,7 +49,7 @@ public final class GifMaker {
      * @param genCount number of remaining frames
      * @throws IOException
      */
-    public static void makeGif(byte[][] board, GIFWriter gw,
+    public static void makeGif(Board board, GIFWriter gw,
             int newWidth, int newHeight, Color bgCl, Color cellCl, int genCount) throws IOException {
 
         cellColor = cellCl;
@@ -60,7 +60,8 @@ public final class GifMaker {
         gifWriter.setBackgroundColor(bgCl);
 
         Board activeboard = new DynamicBoard();
-        activeboard.insertArray(board, 0, 0);
+        activeboard.insertArray(board.getBoundingBoxBoard());
+        activeboard.setRule(board.getRule());
 
         orginalPattern = activeboard.getBoundingBoxBoard();
         makeFrame(activeboard, genCount);

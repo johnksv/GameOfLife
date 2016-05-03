@@ -12,7 +12,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Alert;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
@@ -77,7 +76,7 @@ public class PatternEditorController implements Initializable {
                     java.awt.Color awtCellColor = new java.awt.Color((float) cellColor.getRed(), (float) cellColor.getGreen(), (float) cellColor.getBlue());
                     java.awt.Color awtBgColor = new java.awt.Color((float) bgColor.getRed(), (float) bgColor.getGreen(), (float) bgColor.getBlue());
 
-                    GifMaker.makeGif(activeBoard.getBoundingBoxBoard(), new GIFWriter(140, 140, selected.toString(),
+                    GifMaker.makeGif(activeBoard, new GIFWriter(140, 140, selected.toString(),
                             500), 140, 140, awtBgColor, awtCellColor, 20);
 
                 } catch (IOException ex) {
@@ -191,7 +190,7 @@ public class PatternEditorController implements Initializable {
     private void drawStrip() {
         byte[][] trimmedBoard = activeBoard.getBoundingBoxBoard();
         Board boardStrip = new DynamicBoard();
-        boardStrip.insertArray(trimmedBoard, 1, 1);
+        boardStrip.insertArray(trimmedBoard);
         Affine xform = new Affine();
 
         double tx = 0;
