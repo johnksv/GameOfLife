@@ -772,7 +772,7 @@ public class GameController implements Initializable {
         gc.fillRect(activeBoard.offsetValues[0], activeBoard.offsetValues[1], size, size * activeBoard.getArrayLength());
 
         gc.fillRect(activeBoard.offsetValues[0], activeBoard.offsetValues[1] + size * activeBoard.getArrayLength(), size * activeBoard.getMaxRowLength(), size);
-        gc.fillRect(activeBoard.offsetValues[0] + size * activeBoard.getMaxRowLength(), activeBoard.offsetValues[1], size, size * activeBoard.getArrayLength());
+        gc.fillRect(activeBoard.offsetValues[0] + size * activeBoard.getMaxRowLength(), activeBoard.offsetValues[1], size, size * (activeBoard.getArrayLength() + 1));
     }
 
     private void drawGhostTiles() {
