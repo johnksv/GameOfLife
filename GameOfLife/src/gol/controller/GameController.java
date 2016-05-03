@@ -131,7 +131,7 @@ public class GameController implements Initializable {
     private int mousePositionY;
     private long gencount = 0;
     private AnimationTimer animationTimer;
-    
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         gc = canvas.getGraphicsContext2D();
@@ -539,7 +539,7 @@ public class GameController implements Initializable {
         golStats.initOwner(borderpane.getScene().getWindow());
         golStats.show();
     }
-    
+
     @FXML
     private void s89showSoundController() throws IOException {
         timeline.pause();
@@ -601,7 +601,7 @@ public class GameController implements Initializable {
     @FXML
     private void handleSEditor() {
         try {
-            if(timeline.getStatus() == Status.RUNNING){
+            if (timeline.getStatus() == Status.RUNNING) {
                 handleAnimation();
             }
             Stage editor = new Stage();
@@ -751,7 +751,7 @@ public class GameController implements Initializable {
         gc.setFill(backgroundColor);
         gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
         gc.setFill(cellColor);
-        if(cbDrawBox.isSelected()){
+        if (cbDrawBox.isSelected()) {
             drawBorder();
         }
         for (int i = startRow; i < endRow; i++) {
@@ -876,39 +876,46 @@ public class GameController implements Initializable {
     public void handleKeyEvents(KeyEvent e) {
         btnStartPause.requestFocus();
         String key = e.getText();
-        switch (key) {
-            case "f":
-                if (boardFromFile != null) {
-                    boardFromFile = UsefullMethods.transposeMatrix(boardFromFile);
-                }
-                break;
-
-            case "r":
-                if (boardFromFile != null) {
-                    boardFromFile = UsefullMethods.rotateArray90Deg(boardFromFile);
-                }
-                break;
-
-            case "c":
-                handleClearBtn();
-                break;
-
-            case "k":
-                handleAnimation();
-                break;
-            case "q":
-                rbRemoveCell.fire();
-                break;
-            case "a":
-                rbAddCell.fire();
-                break;
-            case "i":
-                handleImportFileBtn();
-                break;
-
+        if (e.isShiftDown()) {
+            switch (key) {
+                case "a":
+                    rbRemoveCell.fire();
+                    break;
+                case "i":
+                    handleImportInternet();
+                    break;
+            }
+        } else {
+            switch (key) {
+                case "a":
+                    rbAddCell.fire();
+                    break;
+                case "b":
+                    cbDrawBox.fire();
+                    break;
+                case "c":
+                    handleClearBtn();
+                    break;
+                case "f":
+                    if (boardFromFile != null) {
+                        boardFromFile = UsefullMethods.transposeMatrix(boardFromFile);
+                    }
+                    break;
+                case "i":
+                    handleImportFileBtn();
+                    break;
+                case "k":
+                    handleAnimation();
+                    break;
+                case "r":
+                    if (boardFromFile != null) {
+                        boardFromFile = UsefullMethods.rotateArray90Deg(boardFromFile);
+                    }
+                    break;
+            }
+            draw();
+            drawGhostTiles();
         }
-        draw();
-        drawGhostTiles();
     }
 
     /**
