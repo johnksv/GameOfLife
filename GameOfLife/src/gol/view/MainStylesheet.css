@@ -41,7 +41,7 @@
 
 /*TEXT COLOR*/
 .tool-bar *.label, .tab-label, .color-picker, .button, 
-.radio-button, .label {
+.radio-button, .label, .check-box:determinate .text {
     -fx-text-fill: -fx-TextBase1;
 }
 .radio-button, .label {
