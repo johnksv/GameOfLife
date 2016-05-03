@@ -23,11 +23,10 @@ import lieng.GIFWriter;
 
 /**
  * Pattern editor, for creating small and complex patterns.
- *
  * Implements much of the same code as
- * {@link gol.controller.GameController gamController}. Important note, this
- * class only change from the main game is {@link #drawStrip() the strip.}
- * Saving a pattern to GIF or RLE is also possible from the GUI.
+ * {@link gol.controller.GameController gamController}. Note that the
+ * only change from the main game is {@link #drawStrip() the strip}, and
+ * saving a pattern to GIF or RLE.
  *
  * @author S305084
  */
@@ -143,7 +142,7 @@ public class PatternEditorController implements Initializable {
     }
 
     /**
-     * Sets a new bgColor value. Default color gray.
+     * Sets a new bgColor value. <br> <b>Default color:</b> Gray.
      *
      * @param bgColor Background Color.
      */
@@ -156,7 +155,7 @@ public class PatternEditorController implements Initializable {
     }
 
     /**
-     * Sets a new cellColor value. Default color black.
+     * Sets a new cellColor value. <br> <b>Default color:</b> Black.
      *
      * @param cellColor Cell Color.
      */
@@ -227,9 +226,9 @@ public class PatternEditorController implements Initializable {
     }
 
     /**
-     * Returns the edited pattern, null if board is empty.
+     * Returns the pattern, null if board is empty.
      *
-     * @return byte pattern.
+     * @return byte pattern
      */
     public byte[][] getPattern() {
         if (activeBoard.getBoundingBox()[1] - activeBoard.getBoundingBox()[0] < 0) {

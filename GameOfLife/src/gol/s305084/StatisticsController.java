@@ -20,12 +20,13 @@ import javafx.stage.FileChooser;
 import lieng.GIFWriter;
 
 /**
- * Shows statistics of a Board through a number of generations.
- *
- * Notable static functions:  {@link #countLivingCells(gol.model.Board.Board) countLivingCells.}
- * {@link #calcChangeCells(int, int) countLivingCells.}
- * {@link #simValue(byte[][], int, int) calculate similarity value.}
- *
+ * Shows statistics for a Board through a number of generations. <br>
+ *  
+ * <b>Notable static functions:</b>  
+ * <ul><li>{@link #countLivingCells(gol.model.Board.Board) countLivingCells}</li>
+ * <li>{@link #calcChangeCells(int, int) countLivingCells}</li>
+ * <li>{@link #simValue(byte[][], int, int) calculate similarity value}</li>
+ * </ul>
  * @author s305084
  */
 public class StatisticsController implements Initializable {
@@ -88,11 +89,12 @@ public class StatisticsController implements Initializable {
     }
 
     /**
+     * <p>
      * Calculates and visualise statistics. Types of data: Living cells, change
      * in cells, and similarity value. Similarity value is by default defined by
      * how similar each generation is to generation 0.
-     *
-     * Note: Mouse-click on the lineChart will change witch generation the
+     *</p>
+     * <b>Note:</b> Mouse-click on the lineChart will change witch generation the
      * similarity value will compare to.
      */
     public void showStats() {
@@ -137,7 +139,7 @@ public class StatisticsController implements Initializable {
     /**
      * Returns number of living cells for given pattern.
      *
-     * @param pattern
+     * @param pattern Board object
      * @return Living cells
      */
     public static int countLivingCells(Board pattern) {
@@ -170,11 +172,10 @@ public class StatisticsController implements Initializable {
      * <p>
      * <b>ALPHA * aliveCount + BETA * aliveChange + GAMMA * geoSum</b>
      * </p>
-     * ALPHA
      *
-     * @param pattern
-     * @param aliveCount
-     * @param aliveChange
+     * @param pattern Board object
+     * @param aliveCount number of living cells
+     * @param aliveChange change of living cells
      * @return
      */
     public static double simValue(byte[][] pattern, int aliveCount, int aliveChange) {

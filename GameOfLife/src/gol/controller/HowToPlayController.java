@@ -11,7 +11,7 @@ import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 /**
- * //TODO Javadoc
+ * Controls "how to play" screen.
  *
  *
  * @author s305054, s305084, s305089
@@ -41,9 +41,14 @@ public class HowToPlayController implements Initializable {
     }
 
     /**
-     * Loads the stage, and sets stage values.
-     *
-     * @param stage
+     * <p>
+     * Loads the stage, and sets stage values. 
+     * </p>
+     * <b>Stage values: </b> <br>
+     * Resizable = false <br>
+     * Title = How to play <br>
+     * Icon = gen1.PNG <br>
+     * @param stage how to play stage
      */
     public void loadStage(Stage stage) {
 
