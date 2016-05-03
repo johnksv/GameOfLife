@@ -426,7 +426,6 @@ public class GameController implements Initializable {
         try {
             activeBoard.setGameRule(new CustomRule(cellsToSurvive, cellsToBeBorn));
         } catch (unsupportedRuleException ex) {
-            Alert alert = new Alert(Alert.AlertType.ERROR, ex.getMessage());
             UsefullMethods.showErrorAlert("Oops!", "Your given rule is not supported. \n Try again.");
         }
     }
@@ -665,6 +664,10 @@ public class GameController implements Initializable {
             case "a":
                 //TODO set addcells
                 break;
+            case "i":
+                handleImportFileBtn();
+                break;
+
         }
         draw();
         drawGhostTiles();

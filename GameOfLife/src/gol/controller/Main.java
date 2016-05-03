@@ -1,25 +1,14 @@
 package gol.controller;
 
-import gol.model.Board.ArrayBoard;
-import gol.model.Board.Board;
-import gol.model.Board.DynamicBoard;
-import gol.model.FileIO.PatternFormatException;
-import gol.model.FileIO.ReadFile;
 import gol.other.Configuration;
-import java.io.File;
-import java.io.IOException;
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.image.Image;
-import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 /**
- * Starting- and endingpoint of application.
+ * Starting and ending point of application.
  *
  * @author s305054, s305084, s305089
  */
@@ -43,50 +32,6 @@ public class Main extends Application {
 
     public static void main(String[] args) {
         launch(args);
-    }
-
-    public static void test100NextGen() {
-        byte[][] boardFromFile = {{}};
-        try {
-            FileChooser fileChooser = new FileChooser();
-
-            fileChooser.getExtensionFilters().addAll(
-                    new FileChooser.ExtensionFilter("Game of Life Files", "*.rle", "*.lif", "*.cells"),
-                    new FileChooser.ExtensionFilter("All Files", "*.*"));
-
-            File selected = fileChooser.showOpenDialog(null);
-            if (selected != null) {
-                boardFromFile = ReadFile.readFileFromDisk(selected.toPath());
-
-            }
-
-        } catch (IOException ex) {
-            Alert alert = new Alert(Alert.AlertType.ERROR, "There was an error reading the file");
-            alert.setTitle("Error");
-            alert.setHeaderText("Reading File Error");
-            alert.showAndWait();
-        } catch (PatternFormatException ex) {
-            Alert alert = new Alert(Alert.AlertType.ERROR, ex.getMessage());
-            alert.setTitle("Error");
-            alert.setHeaderText("Pattern Error");
-            alert.showAndWait();
-
-        }
-
-        Board brett = new DynamicBoard();
-        brett.insertArray(boardFromFile, 1, 1);
-
-        int n = 0;
-        int antall = 1000;
-        long startTime = System.nanoTime();
-        while (n < antall) {
-            brett.nextGenConcurrent();
-            n++;
-        }
-
-        long estimatedTime = System.nanoTime() - startTime;
-        System.out.println("Tid totalt (i nanosek): " + estimatedTime);
-        System.out.println("Tid for 1 (i nanosek): " + estimatedTime / antall);
     }
 
 }
