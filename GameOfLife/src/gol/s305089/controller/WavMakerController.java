@@ -95,6 +95,7 @@ public class WavMakerController implements Initializable {
         referenceBoard = activeBoard;
         originalPattern = activeBoard.getBoundingBoxBoard();
         this.activeBoard = new DynamicBoard();
+        this.activeBoard.setGameRule(activeBoard.getRule());
         this.activeBoard.insertArray(originalPattern, 3, 3);
 
         generateBoardGIFPreview();
@@ -281,7 +282,7 @@ public class WavMakerController implements Initializable {
             GifMaker gifmaker = new GifMaker();
 
             ImageView imgViewGIFPreview = new ImageView();
-            gifmaker.setPattern(originalPattern);
+            gifmaker.setBoard(activeBoard);
             File tempFileToolTip = File.createTempFile("golStats", ".gif");
 
             gifmaker.writePatternToGIF(1, tempFileToolTip.getAbsolutePath());

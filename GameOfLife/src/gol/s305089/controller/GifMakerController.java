@@ -233,9 +233,9 @@ public class GifMakerController implements Initializable {
         }
     }
 
-    public void setByteBoard(Board activeBoard) {
-        originalPattern = activeBoard.getBoundingBoxBoard();
-        gifmaker.setPattern(activeBoard.getBoundingBoxBoard());
+    public void setBoard(Board boardToSet) {
+        originalPattern = boardToSet.getBoundingBoxBoard();
+        gifmaker.setBoard(boardToSet);
     }
 
     private void updateSaveLabels() {

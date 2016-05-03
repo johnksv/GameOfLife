@@ -1,5 +1,6 @@
 package gol.s305089.model;
 
+import gol.model.Board.Board;
 import gol.model.Board.DynamicBoard;
 import gol.s305089.Util;
 import java.io.IOException;
@@ -59,7 +60,6 @@ public final class GifMaker {
     private int gifWidth = 200;
     private int gifHeight = 200;
     private int durationBetweenFrames = 500;
-    private double[] moveGridValues;
     private double cellSize = 10;
     private boolean centerPattern = false;
     private boolean autoCellSize = false;
@@ -115,12 +115,12 @@ public final class GifMaker {
                         int y1 = (int) (y * cellSize);
                         int y2 = (int) (y * cellSize + cellSize);
 
-                        //Need moveGridValues so the GIF dosn't follow top left when expanding.
-                        x1 += (int) moveGridValues[0];
-                        x2 += (int) moveGridValues[0];
-                        y1 += (int) moveGridValues[1];
-                        y2 += (int) moveGridValues[1];
-
+                        //Need offsetValues so the GIF dosn't follow top left when expanding.
+                        x1 += (int) activeBoard.offsetValues[0];
+                        x2 += (int) activeBoard.offsetValues[0];
+                        y1 += (int) activeBoard.offsetValues[1];
+                        y2 += (int) activeBoard.offsetValues[1];
+                       
                         if (x1 >= 0 && x2 >= 0 && y1 >= 0 && y2 >= 0) {
                             if (x1 < gifWidth && x2 < gifWidth && y1 < gifHeight && y2 < gifHeight) {
                                 gifWriter.fillRect(x1, x2, y1, y2, cellColor);
@@ -146,7 +146,7 @@ public final class GifMaker {
             cellSize = Math.floor(gifWidth / (rowLength + spacing));
         }
         activeBoard.clearBoard();
-        placePattern(currentGenBoard);
+        setPattern(currentGenBoard);
     }
 
     /**
@@ -185,26 +185,27 @@ public final class GifMaker {
     /**
      * Constructs an new Board instance, and inserts this board
      *
+     * @param boardToSet
      * @see gol.model.Board.Board#insertArray(byte[][], int, int)
-     * @param patternToSet the originalPattern to set
      */
-    public void setPattern(byte[][] patternToSet) {
-        activeBoard = new DynamicBoard(10, 10);
-        moveGridValues = activeBoard.offsetValues;
-        this.originalPattern = patternToSet;
-        placePattern(patternToSet);
-        activeBoard.setCellSize(cellSize);
+    public void setBoard(Board boardToSet) {
+        this.originalPattern = boardToSet.getBoundingBoxBoard();;
+        this.activeBoard = new DynamicBoard(10, 10);
+        this.activeBoard.setGameRule(boardToSet.getRule());
+        setPattern(originalPattern);
+        this.activeBoard.setCellSize(cellSize);
     }
 
-    private void placePattern(byte[][] patternToSet) {
-        moveGridValues[0] = 0;
-        moveGridValues[1] = 0;
+    private void setPattern(byte[][] patternToSet) {
+        activeBoard.clearBoard();
+        activeBoard.offsetValues[0] = 0;
+        activeBoard.offsetValues[1] = 0;
         if (centerPattern) {
             int y = (int) ((gifHeight / cellSize) / 2 - patternToSet.length / 2);
             int x = (int) ((gifWidth / cellSize) / 2 - patternToSet[0].length / 2);
             activeBoard.insertArray(patternToSet, y, x);
         } else {
-            activeBoard.insertArray(patternToSet, 2, 2);
+            activeBoard.insertArray(patternToSet, 5, 5);
         }
     }
 
