@@ -50,6 +50,12 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * need to work with a second array, and calculations can be done in real-time
  * on the actual game board. </p>
  *
+ * <h3>Performance vs Size</h3>
+ * For small patterns it is recommended to use dynamic board. This is because
+ * the pattern than can expand, without having to concernce that it may hit a
+ * "wall". For lager patterns (such as the turing machine) it is recommended to
+ * use array board. This is because dynamic board uses to much resources to
+ * check and edit the board (even with concurrent next generation) compared to ArrayBoard.
  *
  * @author s305054, s305084, s305089
  */
@@ -154,20 +160,20 @@ public abstract class Board {
 
     public void nextGenConcPrintPerformance() {
         long start = System.nanoTime();
-        for (int i = 0; i < 1000; i++) {
+        for (int i = 0; i < 100; i++) {
             nextGenConcurrent();
         }
         long elapsed = (System.nanoTime() - start) / 1000000;
-        System.out.println("1000 iterations: Concurrent. Counting time (ms): " + elapsed);
+        System.out.println("100 iterations: Concurrent. Counting time (ms): " + elapsed);
     }
 
     public void nextGenPrintPerformance() {
         long start = System.nanoTime();
-        for (int i = 0; i < 1000; i++) {
+        for (int i = 0; i < 100; i++) {
             nextGen();
         }
         long elapsed = (System.nanoTime() - start) / 1000000;
-        System.out.println("1000 iterations: One thread. Counting time (ms): " + elapsed);
+        System.out.println("100 iterations: One thread. Counting time (ms): " + elapsed);
     }
 
     /**
@@ -277,6 +283,7 @@ public abstract class Board {
      * done by going through each living cell, and incrementing its neighbors.
      * Adds the runnable to the current {@link #threadPool threadPool.}
      *
+     * @param threadNr this number of thread, between 0 and ThreadPool.THREAD_NR
      * @see #nextGenConcurrent()
      */
     protected abstract void countNeighConcurrent(int threadNr);
