@@ -1,8 +1,10 @@
 package gol.s305054.model;
 
+import gol.controller.UsefullMethods;
 import gol.model.Board.Board;
 import gol.s305054.controller.EditorController;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -51,23 +53,21 @@ public class WriteRleS305054 {
         StringBuilder pattern = new StringBuilder();
         StringBuilder formatedPattern = new StringBuilder();
 
-        if (title.getText() != null && !title.equals("")) {
+        if (title.getText() != null && !title.equals("") && !title.equals(" ")) {
             metaData.append("#N " + title.getText());
         } else {
-            //Error dialoge - usefull methods...
+            metaData.append("#N Unknown");
         }
 
-        if (author.getText() != null && !author.equals("")) {
+        if (author.getText() != null && !author.equals("") && !author.equals(" ")) {
             metaData.append("\n#O " + author.getText());
         } else {
-            //Error dialoge - usefull methods...
+            metaData.append("\n#O Unknown");
         }
 
-        if (description.getText() != null && !description.equals("")) {
+        if (description.getText() != null && !description.equals("") && !description.equals(" ")) {
             metaData.append("\n#C " + description.getText());
-        } else {
-            //Error dialoge - usefull methods...
-        }
+        } 
 
         metaData.append("\nx = " + x + ", y = " + y + "\n");
 
