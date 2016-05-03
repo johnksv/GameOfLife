@@ -208,7 +208,7 @@ public class StatsController implements Initializable {
     public void setPattern(byte[][] Pattern) {
         activeBoard = new DynamicBoard(10, 10);
         originalPattern = Pattern;
-        activeBoard.insertArray(originalPattern, 1, 1);
+        activeBoard.insertArray(originalPattern);
     }
 
 }

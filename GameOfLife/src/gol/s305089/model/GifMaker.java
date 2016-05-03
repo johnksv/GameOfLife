@@ -210,7 +210,7 @@ public final class GifMaker {
             int x = (int) ((gifWidth / cellSize) / 2 - patternToSet[0].length / 2);
             activeBoard.insertArray(patternToSet, y, x);
         } else {
-            activeBoard.insertArray(patternToSet, 1, 1);
+            activeBoard.insertArray(patternToSet);
         }
     }
 

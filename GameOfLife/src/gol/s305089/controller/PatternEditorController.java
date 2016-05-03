@@ -233,7 +233,7 @@ public class PatternEditorController implements Initializable {
     private void sendCurrentBoard() {
         if (gameController != null) {
             Board board = new DynamicBoard();
-            board.insertArray(activeBoard.getBoundingBoxBoard(), 3, 3);
+            board.insertArray(activeBoard.getBoundingBoxBoard());
             gameController.setActiveBoard(board);
         }
     }
