@@ -1,7 +1,3 @@
-/*
- * Here comes the text of your license
- * Each line should be prefixed with  * 
- */
 package gol.controller;
 
 import java.io.File;
@@ -9,17 +5,13 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 /**
- * FXML Controller, controls the how to play screen.
+ * //TODO Javadoc
  *
  *
  * @author s305054, s305084, s305089
@@ -27,21 +19,13 @@ import javafx.stage.Stage;
 public class HowToPlayController implements Initializable {
 
     @FXML
-    private TableView shortcutTableView;
-    @FXML
-    private TableColumn wTableColumn;
-    @FXML
-    private TableColumn kTableColumn;
-    
-    private static Stage stage;
+    Button btnBack;
 
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        stage.getIcons().add(new Image(new File("src\\mics\\gen1.PNG").toURI().toString()));
-        stage.setTitle(" How to play");
     }
 
     /**
@@ -51,26 +35,22 @@ public class HowToPlayController implements Initializable {
      * @throws IOException
      */
     @FXML
-    private void handleMainMenuBtn() throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("/gol/view/StartScreen.fxml"));
-        Scene scene = new Scene(root);
-        stage.setScene(scene);
-        stage.setTitle(" Game of Life");
-    }
-    
-    private void setTableValues() {
-        //TODO
+    private void handleBackBtn() throws IOException {
+        Stage stage = (Stage) btnBack.getScene().getWindow();
+        stage.close();
     }
 
     /**
-     * Loads the primaryStage to be stored. The stage is stored as a static
-     * private variable. Needs to be done first in {@link Main#start }. This is
-     * because of {@link #initialize}.
+     * Loads the stage, and sets stage values.
      *
      * @param stage
      */
-    public static void loadStage(Stage stage) {
-        HowToPlayController.stage = stage;
+    public void loadStage(Stage stage) {
+
+        //TODO ICON HowToPlay
+        stage.setResizable(false);
+        stage.getIcons().add(new Image(new File("src\\mics\\gen1.PNG").toURI().toString()));
+        stage.setTitle("How to play");
     }
 
 }

@@ -576,7 +576,6 @@ public class GameController implements Initializable {
         try {
             Stage statistics = new Stage();
             statistics.setResizable(false);
-            //TODO ICON stats
             statistics.getIcons().add(new Image(new File("src\\mics\\linechart.png").toURI().toString()));
 
             statistics.initModality(Modality.WINDOW_MODAL);
@@ -871,10 +870,25 @@ public class GameController implements Initializable {
 
         draw();
     }
+
     @FXML
-    private void handleHowToPlay(){
-        
+    private void handleHowToPlay() {
+        try{ 
+            Stage howToPlay = new Stage();
+            howToPlay.initOwner(canvas.getScene().getWindow());
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/gol/view/HowToPlay.fxml"));
+            Parent root = loader.load();
+            HowToPlayController mainControll = loader.getController();
+            mainControll.loadStage(howToPlay);
+            
+            howToPlay.setScene(new Scene(root));
+            howToPlay.show();
+        } catch (IOException ex) {
+            Logger.getLogger(GameController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
+
     public void handleKeyEvents(KeyEvent e) {
         btnStartPause.requestFocus();
         String key = e.getText();
@@ -902,6 +916,9 @@ public class GameController implements Initializable {
                     if (boardFromFile != null) {
                         boardFromFile = UsefullMethods.transposeMatrix(boardFromFile);
                     }
+                    break;
+                case "h":
+                    handleHowToPlay();
                     break;
                 case "i":
                     handleImportFileBtn();
