@@ -76,16 +76,21 @@ public class BoardTest {
     @Test
     public void testSetGetCellState() {
         System.out.println("setCellState & getCellState");
-
+        //Array test
+        arrayInstance.setCellState(-1, 1, true);
         arrayInstance.setCellState(1, 1, true);
         arrayInstance.setCellState(1, 2, true);
         arrayInstance.setCellState(2, 1, true);
         String result1 = arrayInstance.toString();
 
         String expResult1 = "0000001100010000000000000";
-
         assertEquals(result1, expResult1);
 
+        //Get negeative velues arrayBoard
+        arrayInstance.setCellState(-2, 1, true);
+        assertEquals(false, arrayInstance.getCellState(-2, 1));
+        
+        //Dynamic test
         dynamicInstance.clearBoard();
         dynamicInstance.setCellState(-1, -1, true);
         assertEquals(true, dynamicInstance.getCellState(50, 50));
@@ -100,6 +105,7 @@ public class BoardTest {
 
         dynamicInstance.clearBoard();
         dynamicInstance.setCellState(2, 2, true);
+        System.out.println(Arrays.toString(dynamicInstance.getBoundingBox()));
         assertEquals(true, dynamicInstance.getCellState(2, 2));
 
         dynamicInstance.clearBoard();
@@ -192,15 +198,17 @@ public class BoardTest {
         assertEquals("0000000000000000001000001", arrayInstance.toString());
 
         //see test for setCellState, for DynamicBoard
+        dynamicInstance.clearBoard();
         dynamicInstance.insertArray(patternGlider, 1, 1);
         assertEquals("010001111", dynamicInstance.toString());
-
+        
+        dynamicInstance.clearBoard();
         dynamicInstance.insertArray(patternGlider, -2, -2);
-        assertEquals("00100010111000000000000000000000", dynamicInstance.toString());
+        assertEquals("010001111", dynamicInstance.toString());
 
     }
 
-    @Test
+    //@Test
     public void printPerformanceConcurrent() throws IOException, PatternFormatException {
         System.out.println("printPerformance:");
         File url = new File("test/patternTestFiles/turingmachine.rle");
