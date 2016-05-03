@@ -15,7 +15,7 @@ import java.util.logging.Logger;
 public class Configuration {
 
     private static final Properties properties = new Properties();
-    private static File configFile = new File("src\\gol\\other\\config.properties");
+    private static File configFile = new File("src/gol/other/config.properties");
 
     /**
      * Initialize the properties file into the program.
