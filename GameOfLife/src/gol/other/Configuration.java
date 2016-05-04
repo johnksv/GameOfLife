@@ -33,11 +33,46 @@ public class Configuration {
 
     /**
      * //TODO JAvadoc
+     *
      * @param property
-     * @return 
+     * @return
      */
     public static String getProp(String property) {
-        return properties.getProperty(property, "-1").toLowerCase();
+        String prop = properties.getProperty(property, "-1").toLowerCase();
+        if (prop.equals("-1")) {
+            makePropFile();
+            return properties.getProperty(property, "-1").toLowerCase();
+        } else {
+            return prop;
+        }
+    }
+
+    /**
+     * Configurations can not contain negative values!
+     *
+     * @param property
+     * @return
+     */
+    public static int getPropInt(String property) {
+        String prop = properties.getProperty(property, "-1").toLowerCase();
+        if (prop.equals("-1")) {
+            makePropFile();
+        }
+
+        prop = properties.getProperty(property, "-1").toLowerCase();
+        if (prop.equals("-1")) {
+            return -1;
+        }
+        prop = prop.replaceAll("\\D", "").trim();
+        
+        System.out.println(prop);
+        
+        if (prop.equals("")) {
+            return -1;
+        } else {
+            return Integer.parseInt(prop);
+        }
+
     }
 
     private static void makePropFile() {
