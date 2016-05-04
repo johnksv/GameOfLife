@@ -9,7 +9,8 @@ import lieng.GIFWriter;
 /**
  * Draws a board to GIF format for a chosen number of generations. <br>
  * Will not finish if the board becomes empty or if the board is a 100% match to the original. 
- * @author s305084
+ * 
+ * @author s305084 - Stian Stensli
  */
 public final class GifMaker {
 
@@ -21,8 +22,7 @@ public final class GifMaker {
     private static int width;
     private static int height;
     
-    //TODO width and hight from config!
-    private final static int maxCellSize = 20;
+    private final static int MAXCELLSIZE = 20;
     
     /**
      * Final abstract not allowed, but is now effectively abstract.
@@ -33,13 +33,13 @@ public final class GifMaker {
 
     /**
      * <p>
-     * Draws a sequence of next generations from a board to GIF formate. Stops drawing if the next
+     * Draws a sequence of next generations from given board to GIF formate. Stops drawing if the next
      * generation is the same as the first. Stops drawing if the next generation is empty.
      * This method "follows" the cells, it will always try to centre the pattern given to the middle of the gif.
      * It will automatically resize the cellSize to fit the gif width and height.
      * </p>
-     * <b>Important note:</b> Color is ava.awt.Color not javafx.scene.paint.Color
-     * 
+     * <b>Important note:</b> Color is ava.awt.Color not javafx.scene.paint.Color.
+     *
      * @param board given pattern
      * @param gw gif writer
      * @param newWidth gif width
@@ -47,7 +47,7 @@ public final class GifMaker {
      * @param bgCl background color
      * @param cellCl Cell color
      * @param genCount number of remaining frames
-     * @throws IOException
+     * @throws IOException If anything goes wrong during saving
      */
     public static void makeGif(Board board, GIFWriter gw,
             int newWidth, int newHeight, Color bgCl, Color cellCl, int genCount) throws IOException {
@@ -70,11 +70,14 @@ public final class GifMaker {
     /**
      * Tail recursion makes it possible to never get stackoverflow.
      *
-     * If your method is tail-recursive then the compiler will not store the values from each  method call. 
+     * If your method is tail-recursive then the compiler will not store the values from each method call. 
      * You can make your method tail-recursive if you do your calculations when you return your values for each call. 
-     * 
-     * This method is recursive, and since I chose to return if the board is empty or equals the first board,  
-     * and because of this I feel that a recursive method is less clunky then a for/while loop. 
+     *  
+     * e.g: 
+     *     return x + recursive method(x);
+     *
+     * This method is recursive, since I chose to return if the board is empty or equal to the first board,  
+     * then I do feel that a recursive method is less clunky then a for/while loop. 
      * 
      * Java does not support tail recursion. 
      *
@@ -107,8 +110,8 @@ public final class GifMaker {
         }
         
         //Sets the cellSize to a maximum value if the new cellSize is bigger then the maximum
-        if (cellSize > maxCellSize) {
-            cellSize = maxCellSize;
+        if (cellSize > MAXCELLSIZE) {
+            cellSize = MAXCELLSIZE;
             yoffset = height / 2 - (boarders.length * cellSize) / 2;
             xoffset = width / 2 - (boarders[0].length * cellSize) / 2;
         }
@@ -121,7 +124,9 @@ public final class GifMaker {
                     break;
                 } else if (boarders[i][j] == 64) {
                     if (cellSize < 3) {
-                        gifWriter.setPixelValue(j, i, cellColor);
+                        if(j != width && i != height ){
+                            gifWriter.setPixelValue(j, i, cellColor);
+                        }
                     } else {
                         gifWriter.fillRect(j * cellSize + 1 + xoffset, xoffset + j * cellSize + cellSize - 1,
                                 yoffset + i * cellSize + 1, yoffset + i * cellSize + cellSize - 1, cellColor);

@@ -4,15 +4,20 @@ import gol.model.UsefullMethods;
 import gol.model.Board.ArrayBoard;
 import gol.model.Board.Board;
 import gol.model.Board.DynamicBoard;
+import gol.model.FileIO.ReadFile;
 import gol.other.Configuration;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
@@ -20,15 +25,16 @@ import javafx.scene.paint.Color;
 import javafx.scene.transform.Affine;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import lieng.GIFWriter;
 
 /**
  * Pattern editor, for creating small and complex patterns. Implements much of
  * the same code as {@link gol.controller.GameController gamController}. Note
- * that the only change from the main game is {@link #drawStrip() the strip},
+ * that the only changes from the main game is {@link #drawStrip() the strip},
  * and saving a pattern to GIF or RLE.
  *
- * @author S305084
+ * @author S305084 - Stian Stensli
  */
 public class PatternEditorController implements Initializable {
 
@@ -53,96 +59,35 @@ public class PatternEditorController implements Initializable {
 
     private final int GIFW;
     private final int GIFH;
+    private final int GIFSPEED;
 
+    private final int CELLSIZE = 13;
+    private final double SPACING = 0.6;
+
+    /**
+     * Gets all configuration values when created.
+     */
     public PatternEditorController() {
         //Should never return -1
-        if (Configuration.getPropInt("gifWidth") == -1) {
-            GIFW = 200;
-        } else {
-            GIFW = Configuration.getPropInt("gifWidth");
-        }
-        if (Configuration.getPropInt("gifHeight") == -1) {
-            GIFH = 200;
-        } else {
-            GIFH = Configuration.getPropInt("gifHeight");
-        }
+        GIFW = Configuration.getPropInt("gifWidth");
+
+        GIFH = Configuration.getPropInt("gifHeight");
+
+        GIFSPEED = Configuration.getPropInt("gifSpeed");
     }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         gc = canvas.getGraphicsContext2D();
         gcStrip = theStrip.getGraphicsContext2D();
-        activeBoard = new ArrayBoard(100, 100);
+        activeBoard = new ArrayBoard((int) Math.ceil(canvas.getHeight() / (CELLSIZE + SPACING)),
+                (int) Math.ceil(canvas.getWidth() / (CELLSIZE + SPACING)));
 
-        activeBoard.setCellSize(15);
-        activeBoard.setGridSpacing(0.6);
+        activeBoard.setCellSize(CELLSIZE);
+        activeBoard.setGridSpacing(SPACING);
 
         mouseInit();
         drawStrip();
-    }
-
-    @FXML
-    private void handleClear() {
-        activeBoard.clearBoard();
-        draw();
-        drawStrip();
-    }
-
-    @FXML
-    private void handleBack() {
-        Stage stage = (Stage) canvas.getScene().getWindow();
-        stage.close();
-    }
-
-    @FXML
-    private void handleGIF() {
-        //neagtiv value means that there are no alive cells on the board
-        if (activeBoard.getBoundingBox()[1] - activeBoard.getBoundingBox()[0] < 0) {
-            UsefullMethods.showErrorAlert("Board is empty.", "Sorry, but you cant make a gif with no living cells.");
-        } else {
-
-            FileChooser fileChooser = new FileChooser();
-            fileChooser.getExtensionFilters().addAll(
-                    new FileChooser.ExtensionFilter("Gif format", "*.gif"),
-                    new FileChooser.ExtensionFilter("All Files", "*.*"));
-            File selected = fileChooser.showSaveDialog(null);
-            if (selected != null) {
-                try {
-                    java.awt.Color awtCellColor = new java.awt.Color((float) cellColor.getRed(), (float) cellColor.getGreen(), (float) cellColor.getBlue());
-                    java.awt.Color awtBgColor = new java.awt.Color((float) bgColor.getRed(), (float) bgColor.getGreen(), (float) bgColor.getBlue());
-
-                    GifMaker.makeGif(activeBoard, new GIFWriter(GIFW, GIFH, selected.toString(),
-                            500), GIFW, GIFH, awtBgColor, awtCellColor, 20);
-
-                } catch (IOException ex) {
-                    UsefullMethods.showErrorAlert("Oops!", "Something  went wrong during saving");
-                }
-            }
-        }
-    }
-
-    @FXML
-    private void handlebtnRLE() {
-        //neagtiv value means that there are no alive cells on the board
-        if (activeBoard.getBoundingBox()[1] - activeBoard.getBoundingBox()[0] < 0) {
-            UsefullMethods.showErrorAlert("Board is empty.", "Sorry, but you cant make a gif with no living cells.");
-        } else {
-            try {
-                FileChooser fileChooser = new FileChooser();
-
-                fileChooser.getExtensionFilters().addAll(
-                        new FileChooser.ExtensionFilter("Game of Life Files", "*.rle"),
-                        new FileChooser.ExtensionFilter("All Files", "*.*"));
-
-                File selected = fileChooser.showSaveDialog(null);
-                if (selected != null) {
-                    WriteRLE.toRLE(selected.toPath(), activeBoard, txtName.getText(), txtAuthor.getText(), txtComment.getText());
-                }
-            } catch (IOException ex) {
-                UsefullMethods.showErrorAlert("Sorry!", "Something went wrong during saving \n please try again.");
-
-            }
-        }
     }
 
     private void mouseInit() {
@@ -159,7 +104,40 @@ public class PatternEditorController implements Initializable {
     }
 
     /**
-     * Sets a new bgColor value. <br> <b>Default color:</b> Gray.
+     * Loads and inserts a board from the main game. User can
+     * chose not to if wised for. Will clip the pattern if it exceeds the view
+     * of the editor.
+     * Will not use rules from the main game because of some patterns that will take to long for the strip to draw.
+     * 
+     * @param board loaded board
+     */
+    public void loadInsertBoard(Board board) {
+        Alert alert = new Alert(Alert.AlertType.NONE);
+        alert.setTitle("Place pattern");
+        alert.initStyle(StageStyle.UTILITY);
+        alert.setHeaderText("Do you want to load pattern from main board?");
+        alert.setContentText("Pattern editor will allways use Conway's rule");
+
+        ButtonType btnInsert = new ButtonType("Insert");
+        ButtonType btnCancel = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+
+        alert.getButtonTypes().addAll(btnInsert, btnCancel);
+
+        Optional<ButtonType> result = alert.showAndWait();
+
+        if (result.get() == btnInsert) {
+            this.activeBoard.insertArray(board.getBoundingBoxBoard());
+            draw();
+            drawStrip();
+        } else {
+            alert.close();
+        }
+
+    }
+
+    /**
+     * Sets a new bgColor value. <br>
+     * <b>Default color:</b> Gray.
      *
      * @param bgColor Background Color.
      */
@@ -172,7 +150,8 @@ public class PatternEditorController implements Initializable {
     }
 
     /**
-     * Sets a new cellColor value. <br> <b>Default color:</b> Black.
+     * Sets a new cellColor value. <br>
+     * <b>Default color:</b> Black.
      *
      * @param cellColor Cell Color.
      */
@@ -184,7 +163,7 @@ public class PatternEditorController implements Initializable {
         double x = e.getX();
         double y = e.getY();
 
-        if (rbRemoveCell.isSelected()) {
+        if (rbRemoveCell.isSelected() ^ e.isSecondaryButtonDown()) {
             activeBoard.setCellState(y, x, false, 0, 0);
         } else {
             activeBoard.setCellState(y, x, true, 0, 0);
@@ -220,7 +199,6 @@ public class PatternEditorController implements Initializable {
         xform.setTx(tx);
         gcStrip.setTransform(xform);
 
-        gcStrip.clearRect(0, 0, theStrip.getWidth(), theStrip.getHeight());
         gcStrip.setFill(bgColor);
         gcStrip.fillRect(0, 0, theStrip.getWidth(), theStrip.getHeight());
         gcStrip.setLineWidth(1);
@@ -240,18 +218,6 @@ public class PatternEditorController implements Initializable {
         xform.setTx(0.0);
         gcStrip.setTransform(xform);
 
-    }
-
-    /**
-     * Returns the pattern, null if board is empty.
-     *
-     * @return byte pattern
-     */
-    public byte[][] getPattern() {
-        if (activeBoard.getBoundingBox()[1] - activeBoard.getBoundingBox()[0] < 0) {
-            return null;
-        }
-        return activeBoard.getBoundingBoxBoard();
     }
 
     private void drawStripPart(byte[][] pattern) {
@@ -298,4 +264,81 @@ public class PatternEditorController implements Initializable {
             }
         }
     }
+
+    @FXML
+    private void handleClear() {
+        activeBoard.clearBoard();
+        draw();
+        drawStrip();
+    }
+
+    @FXML
+    private void handleBack() {
+        Stage stage = (Stage) canvas.getScene().getWindow();
+        stage.close();
+    }
+
+    @FXML
+    private void handleGIF() {
+        //neagtiv value means that there are no alive cells on the board
+        if (activeBoard.getBoundingBox()[1] - activeBoard.getBoundingBox()[0] < 0) {
+            UsefullMethods.showErrorAlert("Board is empty.", "Sorry, but you cant make a gif with no living cells.");
+        } else {
+
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.getExtensionFilters().addAll(
+                    new FileChooser.ExtensionFilter("Gif format", "*.gif"),
+                    new FileChooser.ExtensionFilter("All Files", "*.*"));
+            File selected = fileChooser.showSaveDialog(null);
+            if (selected != null) {
+                try {
+                    java.awt.Color awtCellColor = new java.awt.Color((float) cellColor.getRed(), (float) cellColor.getGreen(), (float) cellColor.getBlue());
+                    java.awt.Color awtBgColor = new java.awt.Color((float) bgColor.getRed(), (float) bgColor.getGreen(), (float) bgColor.getBlue());
+
+                    GifMaker.makeGif(activeBoard, new GIFWriter(GIFW, GIFH, selected.toString(),
+                            GIFSPEED), GIFW, GIFH, awtBgColor, awtCellColor, 21);
+
+                } catch (IOException ex) {
+                    UsefullMethods.showErrorAlert("Oops!", "Something  went wrong during saving");
+                }
+            }
+        }
+    }
+
+    @FXML
+    private void handlebtnRLE() {
+        //neagtiv value means that there are no alive cells on the board
+        if (activeBoard.getBoundingBox()[1] - activeBoard.getBoundingBox()[0] < 0) {
+            UsefullMethods.showErrorAlert("Board is empty.", "Sorry, but you cant make a gif with no living cells.");
+        } else {
+            try {
+                FileChooser fileChooser = new FileChooser();
+
+                fileChooser.getExtensionFilters().addAll(
+                        new FileChooser.ExtensionFilter("Game of Life Files", "*.rle"),
+                        new FileChooser.ExtensionFilter("All Files", "*.*"));
+
+                File selected = fileChooser.showSaveDialog(null);
+                if (selected != null) {
+                    WriteRLE.toRLE(selected.toPath(), activeBoard, txtName.getText(), txtAuthor.getText(), txtComment.getText());
+                }
+            } catch (IOException ex) {
+                UsefullMethods.showErrorAlert("Sorry!", "Something went wrong during saving \n please try again.");
+
+            }
+        }
+    }
+
+    /**
+     * Returns the pattern, null if board is empty.
+     *
+     * @return byte pattern
+     */
+    public byte[][] getPattern() {
+        if (activeBoard.getBoundingBox()[1] - activeBoard.getBoundingBox()[0] < 0) {
+            return null;
+        }
+        return activeBoard.getBoundingBoxBoard();
+    }
+
 }

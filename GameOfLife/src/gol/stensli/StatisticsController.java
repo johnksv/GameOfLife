@@ -29,7 +29,7 @@ import lieng.GIFWriter;
  * <li>{@link #simValue(byte[][], int, int) calculate similarity value}</li>
  * </ul>
  *
- * @author s305084
+ * @author s305084 - Stian Stensli
  */
 public class StatisticsController implements Initializable {
 
@@ -56,6 +56,8 @@ public class StatisticsController implements Initializable {
 
     private final int GIFW;
     private final int GIFH;
+    private final int GIFSPEED;
+
     private int selectedGen = 0;
 
     private final static double ALPHA = 0.5;
@@ -66,18 +68,16 @@ public class StatisticsController implements Initializable {
 
     private double[] simValue = new double[genIterations + 1];
 
+    /**
+     * Gets all configuration values when created.
+     */
     public StatisticsController() {
         //Should never return -1
-        if (Configuration.getPropInt("gifWidth") == -1) {
-            GIFW = 200;
-        } else {
-            GIFW = Configuration.getPropInt("gifWidth");
-        }
-        if (Configuration.getPropInt("gifHeight") == -1) {
-            GIFH = 200;
-        } else {
-            GIFH = Configuration.getPropInt("gifHeight");
-        }
+        GIFW = Configuration.getPropInt("gifWidth");
+
+        GIFH = Configuration.getPropInt("gifHeight");
+
+        GIFSPEED = Configuration.getPropInt("gifSpeed");
     }
 
     @Override
@@ -98,9 +98,9 @@ public class StatisticsController implements Initializable {
     /**
      * Inserts the board which statistics is wished to be shown.
      *
-     * @param activeBoard
+     * @param activeBoard Inserted pattern with rule
      */
-    public void loadeBoard(Board activeBoard) {
+    public void loadBoard(Board activeBoard) {
         statBoard.insertArray(activeBoard.getBoundingBoxBoard());
         statBoard.setRule(activeBoard.getRule());
     }
@@ -193,7 +193,7 @@ public class StatisticsController implements Initializable {
      * @param pattern Board object
      * @param aliveCount number of living cells
      * @param aliveChange change of living cells
-     * @return
+     * @return Similarity value
      */
     public static double simValue(byte[][] pattern, int aliveCount, int aliveChange) {
         int geoSum = 0;
@@ -310,7 +310,7 @@ public class StatisticsController implements Initializable {
         if (selected != null) {
             try {
                 GifMaker.makeGif(activeBoard, new GIFWriter(GIFW, GIFH, selected.toString(),
-                        500), GIFW, GIFH, java.awt.Color.WHITE, java.awt.Color.BLACK, frames);
+                        GIFSPEED), GIFW, GIFH, java.awt.Color.WHITE, java.awt.Color.BLACK, frames);
 
             } catch (IOException ex) {
                 UsefullMethods.showErrorAlert("Sorry!", "Something went wrong during saving \n please try again.");

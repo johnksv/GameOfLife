@@ -413,6 +413,9 @@ public class GameController implements Initializable {
                 case "k":
                     handleAnimation();
                     break;
+                case "q":
+                    rbMoveGrid.fire();
+                    break;
                 case "r":
                     if (boardFromFile != null) {
                         boardFromFile = UsefullMethods.rotateArray90Deg(boardFromFile);
@@ -838,7 +841,7 @@ public class GameController implements Initializable {
 
             Parent root = loader.load();
             gol.stensli.StatisticsController statisticsController = loader.getController();
-            statisticsController.loadeBoard(activeBoard);
+            statisticsController.loadBoard(activeBoard);
             statisticsController.showStats();
             Scene scene = new Scene(root);
             statistics.setScene(scene);
@@ -868,11 +871,12 @@ public class GameController implements Initializable {
             gol.stensli.PatternEditorController editorController = loader.getController();
             editorController.setBGColor(backgroundColor);
             editorController.setCellColor(cellColor);
-
+            editorController.loadInsertBoard(activeBoard); 
+                    
             Scene scene = new Scene(root);
             editor.setScene(scene);
 
-            editor.setTitle("Gol: Pattern Editor");
+            editor.setTitle("Gol: Pattern Editor");            
             editor.showAndWait();
             //TODO ask about this code(not 100% my own).
 
@@ -881,10 +885,10 @@ public class GameController implements Initializable {
                 Alert alert = new Alert(AlertType.NONE);
                 alert.setTitle("Place pattern");
                 alert.initStyle(StageStyle.UTILITY);
-                alert.setContentText("How do you want to insert the pattern?");
+                alert.setHeaderText("How do you want to insert the pattern?");
 
-                ButtonType btnGhostTiles = new ButtonType("Insert with ghost tiles");
-                ButtonType btnInsert = new ButtonType("Insert at top-left");
+                ButtonType btnGhostTiles = new ButtonType("Insert: Ghost tiles");
+                ButtonType btnInsert = new ButtonType("Insert: Top-left");
                 ButtonType btnCancel = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
 
                 alert.getButtonTypes().addAll(btnGhostTiles, btnInsert, btnCancel);

@@ -4,8 +4,6 @@ import gol.stensli.StatisticsController;
 import gol.model.Board.Board;
 import gol.model.Board.DynamicBoard;
 import gol.other.Configuration;
-import java.net.URL;
-import java.util.ResourceBundle;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -15,7 +13,7 @@ import static org.junit.Assert.*;
 
 /**
  *
- * @author s305084
+ * @author s305084 - Stian Stensli
  */
 public class StatisticsControllerTest {
     
