@@ -77,26 +77,65 @@ public class ReadFile {
         return readFileFromDisk(saveLocation);
     }
 
-    /**
-     * Returns the newly parsed Rule. If no rule was parsed from the last file
-     * it will return ConwaysRule.
-     *
-     * @see Rule
-     * @see ConwaysRule
-     * @return Rule
-     */
-    public static Rule getParsedRule() {
-        Rule returnRule = parsedRule;
-        parsedRule = null;
-
-        if (returnRule == null) {
-            return new ConwaysRule();
-        }
-        return returnRule;
+    private static void appendMetaData(String line) {
+        METADATA.add(line);
     }
 
-    public static List<String> getMetadata() {
-        return METADATA;
+    private static void processRule(String ruleLine) {
+        byte[] born = null;
+        byte[] survive = null;
+
+        String[] rule = ruleLine.split("=");
+        if (rule.length == 1) {
+            return;
+        }
+        rule = rule[1].split("/");
+        for (int i = 0; i < rule.length; i++) {
+            if (rule[i].matches("[Ss]\\d*")) {
+                if (rule[i].length() > 1) {
+                    survive = new byte[rule[i].length() - 1];
+                    for (int j = 1; j < rule[i].length(); j++) {
+                        survive[j - 1] = (byte) Character.digit(rule[i].toCharArray()[j], 10);
+                    }
+                } else {
+                    survive = new byte[]{-1};
+                }
+
+            } else if (rule[i].matches("[Bb]\\d*")) {
+                if (rule[i].length() > 1) {
+                    born = new byte[rule[i].length() - 1];
+                    for (int j = 1; j < rule[i].length(); j++) {
+                        born[j - 1] = (byte) Character.digit(rule[i].toCharArray()[j], 10);
+                    }
+                } else {
+                    born = new byte[]{-1};
+                }
+
+            } else if (i == 0) {
+                if (rule[i].length() >= 1) {
+                    born = new byte[rule[i].length()];
+                    for (int j = 0; j < rule[i].length(); j++) {
+                        born[j] = (byte) Character.digit(rule[i].toCharArray()[j], 10);
+                    }
+                } else {
+                    born = new byte[]{-1};
+                }
+            } else if (i == 1) {
+                if (rule[i].length() >= 1) {
+                    survive = new byte[rule[i].length()];
+                    for (int j = 0; j < rule[i].length(); j++) {
+                        survive[j] = (byte) Character.digit(rule[i].toCharArray()[j], 10);
+                    }
+                } else {
+                    survive = new byte[]{-1};
+                }
+            }
+        }
+        try {
+            parsedRule = new CustomRule(survive, born);
+        } catch (unsupportedRuleException ex) {
+            parsedRule = new ConwaysRule();
+        }
     }
 
     /**
@@ -281,65 +320,30 @@ public class ReadFile {
 
     }
 
-    private static void processRule(String ruleLine) {
-        byte[] born = null;
-        byte[] survive = null;
+    /**
+     * Returns the newly parsed Rule. If no rule was parsed from the last file
+     * it will return ConwaysRule.
+     *
+     * @see Rule
+     * @see ConwaysRule
+     * @return Rule
+     */
+    public static Rule getParsedRule() {
+        Rule returnRule = parsedRule;
+        parsedRule = null;
 
-        String[] rule = ruleLine.split("=");
-        if (rule.length == 1) {
-            return;
+        if (returnRule == null) {
+            return new ConwaysRule();
         }
-        rule = rule[1].split("/");
-        for (int i = 0; i < rule.length; i++) {
-            if (rule[i].matches("[Ss]\\d*")) {
-                if (rule[i].length() > 1) {
-                    survive = new byte[rule[i].length() - 1];
-                    for (int j = 1; j < rule[i].length(); j++) {
-                        survive[j - 1] = (byte) Character.digit(rule[i].toCharArray()[j], 10);
-                    }
-                } else {
-                    survive = new byte[]{-1};
-                }
-
-            } else if (rule[i].matches("[Bb]\\d*")) {
-                if (rule[i].length() > 1) {
-                    born = new byte[rule[i].length() - 1];
-                    for (int j = 1; j < rule[i].length(); j++) {
-                        born[j - 1] = (byte) Character.digit(rule[i].toCharArray()[j], 10);
-                    }
-                } else {
-                    born = new byte[]{-1};
-                }
-
-            } else if (i == 0) {
-                if (rule[i].length() >= 1) {
-                    born = new byte[rule[i].length()];
-                    for (int j = 0; j < rule[i].length(); j++) {
-                        born[j] = (byte) Character.digit(rule[i].toCharArray()[j], 10);
-                    }
-                } else {
-                    born = new byte[]{-1};
-                }
-            } else if (i == 1) {
-                if (rule[i].length() >= 1) {
-                    survive = new byte[rule[i].length()];
-                    for (int j = 0; j < rule[i].length(); j++) {
-                        survive[j] = (byte) Character.digit(rule[i].toCharArray()[j], 10);
-                    }
-                } else {
-                    survive = new byte[]{-1};
-                }
-            }
-        }
-        try {
-            parsedRule = new CustomRule(survive, born);
-        } catch (unsupportedRuleException ex) {
-            parsedRule = new ConwaysRule();
-        }
+        return returnRule;
     }
 
-    private static void appendMetaData(String line) {
-        METADATA.add(line);
+    /**
+     * //TODO Javadoc
+     *
+     * @return
+     */
+    public static List<String> getMetadata() {
+        return METADATA;
     }
-
 }
