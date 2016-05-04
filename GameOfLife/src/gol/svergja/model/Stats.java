@@ -2,15 +2,11 @@ package gol.svergja.model;
 
 import gol.model.Board.ArrayBoard;
 import gol.model.Board.Board;
-import gol.model.Board.DynamicBoard;
-import gol.other.Configuration;
 
 /**
  * @author s305089 - John Kasper Svergja
  */
 public class Stats {
-
-    private final int arrayboardThreshold = Integer.parseInt(Configuration.getProp("arrayBoardThreshold"));
 
     private Board activeBoard;
     private byte[][] originalPattern;
@@ -195,19 +191,15 @@ public class Stats {
      */
     public void setBoard(Board boardToSet) {
         originalPattern = boardToSet.getBoundingBoxBoard();
-        if (originalPattern.length > arrayboardThreshold
-                && originalPattern[0].length > arrayboardThreshold) {
-            activeBoard = new ArrayBoard(2000, 2000);
-        } else {
-            activeBoard = new DynamicBoard(5, 5);
-        }
+        activeBoard = new ArrayBoard(2000, 2000);
+
         activeBoard.setRule(boardToSet.getRule());
         setPattern(originalPattern);
     }
 
     private void setPattern(byte[][] pattern) {
         activeBoard.clearBoard();
-        activeBoard.insertArray(pattern);
+        activeBoard.insertArray(pattern, 120, 120);
     }
 
     public void setCheckSimilarityPrevGen(boolean checkSimilarityPrevGen) {
