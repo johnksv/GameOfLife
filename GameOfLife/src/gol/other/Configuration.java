@@ -1,11 +1,7 @@
 package gol.other;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Class for reading from properties file.
@@ -32,10 +28,11 @@ public class Configuration {
     }
 
     /**
-     * //TODO JAvadoc
+     * Get the property from the configuration file. If the property is not
+     * found, -1 will be returned.
      *
-     * @param property
-     * @return
+     * @param property the property you want to get
+     * @return the value of the property. -1 if the property was not found.
      */
     public static String getProp(String property) {
         String prop = properties.getProperty(property, "-1").toLowerCase();
@@ -48,10 +45,12 @@ public class Configuration {
     }
 
     /**
-     * Configurations can not contain negative values!
+     * Get the property as an int from the configuration file.
      *
-     * @param property
-     * @return
+     *
+     * @param property the property you want to get
+     * @return the property parsed as an integer. If no integer or property is
+     * found, -1 will be returned.
      */
     public static int getPropInt(String property) {
         String prop = properties.getProperty(property, "-1").toLowerCase();
@@ -63,10 +62,11 @@ public class Configuration {
         if (prop.equals("-1")) {
             return -1;
         }
-        prop = prop.replaceAll("\\D", "").trim();
-        
+        //Removes all non-digits
+        prop = prop.replaceAll("\\D", "");
+
         System.out.println(prop);
-        
+
         if (prop.equals("")) {
             return -1;
         } else {

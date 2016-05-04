@@ -172,7 +172,8 @@ public abstract class Board {
     }
 
     /**
-     * Meassure how fast the program runs 100 generations of a given board that uses threads.
+     * Meassure how fast the program runs 100 generations of a given board that
+     * uses threads.
      */
     public void nextGenConcPrintPerformance() {
         long start = System.nanoTime();
@@ -268,6 +269,8 @@ public abstract class Board {
      * {@link #threadPool threadPool.}
      *
      * @param activeRule {@link gol.model.Logic.Rule}
+     * @param threadNr the number of the thread that is calling this method,
+     * between 0 and ThreadPool.THREAD_NR
      */
     protected abstract void checkRulesConcurrent(Rule activeRule, int threadNr);
 
@@ -283,7 +286,8 @@ public abstract class Board {
      * done by going through each living cell, and incrementing its neighbors.
      * Adds the runnable to the current {@link #threadPool threadPool.}
      *
-     * @param threadNr this number of thread, between 0 and ThreadPool.THREAD_NR
+     * @param threadNr the number of the thread that is calling this method,
+     * between 0 and ThreadPool.THREAD_NR
      * @see #nextGenConcurrent()
      */
     protected abstract void countNeighConcurrent(int threadNr);
@@ -294,6 +298,7 @@ public abstract class Board {
      * in {@link ArrayBoard arraybors.}
      *
      * @param row cell index.
+     * @return the new y value after expansion
      */
     protected abstract int expandBoardY(int row);
 
@@ -306,6 +311,7 @@ public abstract class Board {
      *
      * @param row pixel coordinate.
      * @param col pixel coordinate.
+     * @return the new x value after expansion
      */
     protected abstract int expandBoardX(int row, int col);
 

@@ -35,10 +35,10 @@ public class DynamicBoard extends Board {
     }
 
     /**
-     * Creates an arrayList in which the y x index are expanded to.
+     * Creates a dynamic board has the the given height and width.
      *
-     * @param y Height
-     * @param x Width
+     * @param y Start height
+     * @param x Start width
      */
     public DynamicBoard(int y, int x) {
         this();
