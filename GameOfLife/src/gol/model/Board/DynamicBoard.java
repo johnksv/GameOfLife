@@ -213,7 +213,6 @@ public class DynamicBoard extends Board {
         return col;
     }
 
-    //TODO change name here too!
     private void doCountNeigConcurrent(int row, int col) {
         //If cell is alive
         if (gameBoard.get(row).get(col).intValue() >= 64) {
@@ -237,7 +236,6 @@ public class DynamicBoard extends Board {
         }
     }
 
-    //TODO change name!
     private void doCheckRulesConcurrent(Rule activeRule, int row, int col) {
         if (gameBoard.get(row).get(col).intValue() != 0) {
             if (activeRule.setLife(gameBoard.get(row).get(col).byteValue()) == 64) {

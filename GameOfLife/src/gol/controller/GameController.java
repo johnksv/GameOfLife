@@ -248,16 +248,6 @@ public class GameController implements Initializable {
         }
     }
 
-    /**
-     * Sets current board as the given board.
-     *
-     * @param activeBoard Board to set.
-     */
-    public void setActiveBoard(Board activeBoard) {
-        this.activeBoard = activeBoard;
-        draw();
-    }
-
     private void draw() {
         double cellSize = activeBoard.getCellSize();
         double gridSpacing = activeBoard.getGridSpacing();
@@ -378,9 +368,11 @@ public class GameController implements Initializable {
     }
 
     /**
-     * Links different key inputs with a method, for easy access.
+     * Links different key inputs with a method, for easy access. This method is
+     * public so it can be instantiated on the scene which is instantiating this
+     * class.
      *
-     * @param e
+     * @param e The key event to respond to.
      */
     public void handleKeyEvents(KeyEvent e) {
         btnStartPause.requestFocus();
@@ -1016,4 +1008,15 @@ public class GameController implements Initializable {
             System.err.println("An error occurred...:\n" + ex);
         }
     }
+
+    /**
+     * Sets current board as the given board.
+     *
+     * @param activeBoard Board to set.
+     */
+    public void setActiveBoard(Board activeBoard) {
+        this.activeBoard = activeBoard;
+        draw();
+    }
+
 }
