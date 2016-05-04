@@ -17,7 +17,7 @@
          <children>
            <ImageView fitHeight="400.0" fitWidth="570.0" pickOnBounds="true" StackPane.alignment="TOP_RIGHT">
                <image>
-                  <Image url="@../../mics/background.gif" />
+                  <Image url="@../../misc/background.gif" />
                </image>
             </ImageView>
             <GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="179.0" prefWidth="600.0" StackPane.alignment="CENTER">
