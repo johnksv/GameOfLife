@@ -120,7 +120,7 @@ public class GIFWriterS305054 {
 
                 gifWriter.insertAndProceed();
                 gifWriter.close();
-                System.out.println("Bilder igjen: " + nPicturesLeft + "\nDone.");
+                System.out.println("Pictures left: " + nPicturesLeft + "\nDone.");
                 //return the finished gif, ready to be exported            
             } else {
 
@@ -135,7 +135,7 @@ public class GIFWriterS305054 {
                 gifWriter.insertAndProceed();
 
                 copiedBoard.nextGen(); //calculates the next generation of the board.
-                System.out.println("Bilder igjen: " + nPicturesLeft);
+                System.out.println("Pictures left: " + nPicturesLeft);
                 nPicturesLeft -= 1;
                 makeGIF(); //recursive call.
             }
