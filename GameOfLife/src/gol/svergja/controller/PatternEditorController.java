@@ -197,7 +197,7 @@ public class PatternEditorController implements Initializable {
     @FXML
     private void saveAsGIF() throws IOException {
         Stage gifMaker = new Stage();
-        FXMLLoader root = new FXMLLoader(getClass().getResource("/gol/s305089/view/GifMaker.fxml"));
+        FXMLLoader root = new FXMLLoader(getClass().getResource("/gol/svergja/view/GifMaker.fxml"));
 
         Scene scene = new Scene((Parent) root.load());
 

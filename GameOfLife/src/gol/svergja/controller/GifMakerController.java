@@ -167,7 +167,7 @@ public class GifMakerController implements Initializable {
     private void openStats() {
         try {
             Stage golStats = new Stage();
-            FXMLLoader root = new FXMLLoader(getClass().getResource("/gol/s305089/view/Stats.fxml"));
+            FXMLLoader root = new FXMLLoader(getClass().getResource("/gol/svergja/view/Stats.fxml"));
 
             Scene scene = new Scene((Parent) root.load());
 

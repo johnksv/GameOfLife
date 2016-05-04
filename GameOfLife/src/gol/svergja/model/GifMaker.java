@@ -10,7 +10,7 @@ import lieng.GIFWriter;
 /**
  * The GifMaker class delivers functionality to write GIFs with the GIFLib
  * library by Henrik Lieng. It acts as an helper class between the Controller
- * {@link gol.s305089.controller.GifMakerController} and the GIF library.
+ * {@link gol.svergja.controller.GifMakerController} and the GIF library.
  *
  * <p>
  * If no variabels are set, the default one will be used.</p>

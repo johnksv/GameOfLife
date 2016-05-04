@@ -501,7 +501,7 @@ public class GameController implements Initializable {
         timeline.pause();
 
         Stage editor = new Stage();
-        FXMLLoader root = new FXMLLoader(getClass().getResource("/gol/s305089/view/PatternEditor.fxml"));
+        FXMLLoader root = new FXMLLoader(getClass().getResource("/gol/svergja/view/PatternEditor.fxml"));
 
         Scene scene = new Scene((Parent) root.load());
         PatternEditorController editorController = root.<PatternEditorController>getController();
@@ -523,7 +523,7 @@ public class GameController implements Initializable {
         timeline.pause();
 
         Stage gifMaker = new Stage();
-        FXMLLoader root = new FXMLLoader(getClass().getResource("/gol/s305089/view/GifMaker.fxml"));
+        FXMLLoader root = new FXMLLoader(getClass().getResource("/gol/svergja/view/GifMaker.fxml"));
 
         Scene scene = new Scene((Parent) root.load());
 
@@ -543,7 +543,7 @@ public class GameController implements Initializable {
         timeline.pause();
 
         Stage golStats = new Stage();
-        FXMLLoader root = new FXMLLoader(getClass().getResource("/gol/s305089/view/Stats.fxml"));
+        FXMLLoader root = new FXMLLoader(getClass().getResource("/gol/svergja/view/Stats.fxml"));
 
         Scene scene = new Scene((Parent) root.load());
 
@@ -561,7 +561,7 @@ public class GameController implements Initializable {
         timeline.pause();
 
         Stage golAudio = new Stage();
-        FXMLLoader root = new FXMLLoader(getClass().getResource("/gol/s305089/view/Sound.fxml"));
+        FXMLLoader root = new FXMLLoader(getClass().getResource("/gol/svergja/view/Sound.fxml"));
         Scene scene = new Scene((Parent) root.load());
 
         SoundController soundController = root.<SoundController>getController();
