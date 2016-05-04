@@ -61,7 +61,7 @@ public class WriteRleS305054Test {
         boardToParse.insertArray(pattern, 1, 1);
         
         WriteRleS305054 instance = new WriteRleS305054();
-        instance.writeRLE(boardToParse, title, author, description);
+        //instance.writeRLE(boardToParse, title, author, description);
         // TODO review the generated test code and remove the default call to fail.
         
     }
