@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Tab?>
@@ -22,7 +23,13 @@
                      <children>
                         <VBox layoutX="14.0" layoutY="14.0" prefHeight="338.0" prefWidth="127.0">
                            <children>
-                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="To start playing Game of Life, press the &quot;Start with empty board&quot;-button. A brand new board is created, and there you can either spawn cells by pressing anywhere on the board, or you can the press &quot;Import pattern from file&quot; under the Advanced tab to open a board you have downloaded from the Internet. You can now start the game by pressing the &quot;Start game&quot;-button under the General tab, or you can add more cells, remove cells, or even change the game rules by using the &quot;Custom rule&quot; functionality." wrappingWidth="267.21875" />
+                              <Text lineSpacing="2.0" strokeType="OUTSIDE" strokeWidth="0.0" text="To start playing Game of Life, press the &quot;Start with empty board&quot;-button. A brand new board is created, and there you can spawn cells by pressing anywhere on the board." wrappingWidth="267.21875" />
+                              <Region prefHeight="13.0" prefWidth="269.0" />
+                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="You can also the press &quot;Import pattern from file&quot; under the Advanced tab to open a board you have downloaded from the Internet." wrappingWidth="259.95599365234375" />
+                              <Region prefHeight="18.0" prefWidth="269.0" />
+                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="You are now ready to start the game by pressing the &quot;Start game&quot;-button under the General tab." wrappingWidth="268.2832946777344" />
+                              <Region prefHeight="28.0" prefWidth="269.0" />
+                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="With the &quot;Custom rule&quot; functionality, you can choose your own game rules." wrappingWidth="267.70257568359375" />
                            </children>
                         </VBox>
                      </children>
@@ -35,11 +42,11 @@
                      <children>
                         <VBox layoutX="14.0" layoutY="14.0" prefHeight="340.0" prefWidth="327.0">
                            <children>
-                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Under the Extra tab, there is added functions for Game of Life. If you want to create your own pattern that can be imported on other computers, click on one of the «Pattern Editor»-buttons. " wrappingWidth="324.65850830078125" />
-                              <Region prefHeight="17.0" prefWidth="327.0" />
-                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="You also have the opportunity to save your active game board as a .gif file by pressing one of the «Save as .gif»-buttons. " wrappingWidth="326.20556640625" />
-                              <Region prefHeight="20.0" prefWidth="327.0" />
-                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="By pressing one of the «Statistics»-buttons you can see statistics for your game board like how many cells will be alive the next rounds, and similarity of the board over generations." wrappingWidth="325.38250732421875" />
+                              <Text lineSpacing="2.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Under the Extra tab, there is added functions for Game of Life. If you want to create your own pattern that can be imported on other computers, click on one of the «Pattern Editor»-buttons. " wrappingWidth="324.65850830078125" />
+                              <Region prefHeight="16.0" prefWidth="327.0" />
+                              <Text lineSpacing="2.0" strokeType="OUTSIDE" strokeWidth="0.0" text="You also have the opportunity to save your active game board as a .gif file by pressing one of the «Save as .gif»-buttons. " wrappingWidth="326.20556640625" />
+                              <Region prefHeight="16.0" prefWidth="327.0" />
+                              <Text lineSpacing="2.0" strokeType="OUTSIDE" strokeWidth="0.0" text="By pressing one of the «Statistics»-buttons you can see statistics for your game board like how many cells will be alive the next rounds, and similarity of the board over generations." wrappingWidth="325.38250732421875" />
                            </children>
                         </VBox>
                      </children>
@@ -64,19 +71,55 @@
                         <Label styleClass="advanced-tips" text="KEYBINDING" textAlignment="RIGHT" GridPane.columnIndex="2" />
                         <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                            <children>
-                              <Label styleClass="advanced-tips" text="Transpose Matrix (Ghosttiles)" />
-                              <Label styleClass="advanced-tips" text="Rotate Matrix (Ghosttiles)" />
-                              <Label styleClass="advanced-tips" text="Zoom" />
-                              <Label styleClass="advanced-tips" text="Clear Board" />
-                              <Label styleClass="advanced-tips" text="Start/pause animation" />
-                              <Label styleClass="advanced-tips" text="Add/remove" />
+                              <Label styleClass="advanced-tips" text="Transpose Matrix (Ghosttiles)">
+                                 <padding>
+                                    <Insets bottom="2.0" />
+                                 </padding>
+                              </Label>
+                              <Label styleClass="advanced-tips" text="Rotate Matrix (Ghosttiles)">
+                                 <padding>
+                                    <Insets bottom="2.0" />
+                                 </padding>
+                              </Label>
+                              <Label styleClass="advanced-tips" text="Zoom">
+                                 <padding>
+                                    <Insets bottom="2.0" />
+                                 </padding>
+                              </Label>
+                              <Label styleClass="advanced-tips" text="Clear Board">
+                                 <padding>
+                                    <Insets bottom="2.0" />
+                                 </padding>
+                              </Label>
+                              <Label styleClass="advanced-tips" text="Start/pause animation">
+                                 <padding>
+                                    <Insets bottom="2.0" />
+                                 </padding>
+                              </Label>
+                              <Label styleClass="advanced-tips" text="Add/remove">
+                                 <padding>
+                                    <Insets bottom="2.0" />
+                                 </padding>
+                              </Label>
                            </children>
                         </VBox>
                         <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
                            <children>
-                              <Label styleClass="advanced-tips" text="F" />
-                              <Label styleClass="advanced-tips" text="R" />
-                              <Label styleClass="advanced-tips" text="Scroll (mouse/touchpad)" />
+                              <Label styleClass="advanced-tips" text="F">
+                                 <padding>
+                                    <Insets bottom="2.0" />
+                                 </padding>
+                              </Label>
+                              <Label styleClass="advanced-tips" text="R">
+                                 <padding>
+                                    <Insets bottom="2.0" />
+                                 </padding>
+                              </Label>
+                              <Label styleClass="advanced-tips" text="Scroll (mouse/touchpad)">
+                                 <padding>
+                                    <Insets bottom="2.0" />
+                                 </padding>
+                              </Label>
                               <Label styleClass="advanced-tips" text="C" />
                               <Label styleClass="advanced-tips" text="K" />
                               <Label styleClass="advanced-tips" text="Mouse 1 and mouse 2" />
