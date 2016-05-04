@@ -463,8 +463,8 @@ public class GameController implements Initializable {
             } else {
                 //Negative beacuse offset on arrayboard always is negative
                 //max values is for right and bottom sides
-                double maxValueX = -((activeBoard.getCellSize() + activeBoard.getGridSpacing()) * activeBoard.getArrayLength() - canvas.getWidth());
-                double maxValueY = -((activeBoard.getCellSize() + activeBoard.getGridSpacing()) * activeBoard.getMaxRowLength() - canvas.getHeight());
+                double maxValueX = -((activeBoard.getCellSize() + activeBoard.getGridSpacing()) * activeBoard.getMaxRowLength() - canvas.getWidth());
+                double maxValueY = -((activeBoard.getCellSize() + activeBoard.getGridSpacing()) * activeBoard.getArrayLength() - canvas.getHeight());
 
                 //If positive, board should not move
                 if (newXoffset < 0) {
