@@ -573,7 +573,7 @@ public class GameController implements Initializable {
         try {
             Stage statistics = new Stage();
             statistics.setResizable(false);
-            statistics.getIcons().add(new Image(new File("src/mics/linechart.png").toURI().toString()));
+            statistics.getIcons().add(new Image(new File("src/misc/linechart.png").toURI().toString()));
 
             statistics.initModality(Modality.WINDOW_MODAL);
             statistics.initOwner(canvas.getScene().getWindow());
@@ -589,7 +589,7 @@ public class GameController implements Initializable {
             statistics.setTitle("Gol: Statistics");
             statistics.show();
         } catch (IOException ex) {
-            Logger.getLogger(GameController.class.getName()).log(Level.SEVERE, null, ex);
+            UsefullMethods.showErrorAlert("This should never happen!", "Your program is not working properly.");
         }
     }
 
@@ -601,7 +601,7 @@ public class GameController implements Initializable {
             }
             Stage editor = new Stage();
             editor.setResizable(false);
-            editor.getIcons().add(new Image(new File("src/mics/icon.png").toURI().toString()));
+            editor.getIcons().add(new Image(new File("src/misc/icon.png").toURI().toString()));
 
             editor.initModality(Modality.WINDOW_MODAL);
             editor.initOwner(canvas.getScene().getWindow());
@@ -648,7 +648,7 @@ public class GameController implements Initializable {
             draw();
 
         } catch (IOException ex) {
-            Logger.getLogger(GameController.class.getName()).log(Level.SEVERE, null, ex);
+            UsefullMethods.showErrorAlert("This should never happen!", "Your program is not working properly.");
         }
     }
 
