@@ -25,12 +25,12 @@ public class MainController {
     private Stage primaryStage;
 
     /**
-     * Loads the primaryStage to be stored. The stage is stored as a private
-     * variable. Sets icon and title.
+     * Sets the primaryStage that is shown. This method should only be called on
+     * startup when javaFX start is run.
      *
-     * @param stage
+     * @param stage The stage that is being displayed.
      */
-    public void loadStage(Stage stage) {
+    public void setStage(Stage stage) {
         primaryStage = stage;
         primaryStage.getIcons().add(new Image(new File("src/mics/gen1.PNG").toURI().toString()));
         primaryStage.setTitle("Game of Life");

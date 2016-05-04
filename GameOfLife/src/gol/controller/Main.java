@@ -21,7 +21,7 @@ public class Main extends Application {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/gol/view/StartScreen.fxml"));
         Parent root = loader.load();
         MainController mainControll = loader.getController();
-        mainControll.loadStage(primaryStage);
+        mainControll.setStage(primaryStage);
         
         primaryStage.setScene(new Scene(root));
         primaryStage.show();
