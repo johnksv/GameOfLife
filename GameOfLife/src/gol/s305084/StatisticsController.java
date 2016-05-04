@@ -54,8 +54,8 @@ public class StatisticsController implements Initializable {
     private final XYChart.Series<Integer, Integer> CELLCHANGE = new XYChart.Series();
     private final XYChart.Series<Integer, Integer> SIMPERCENT = new XYChart.Series();
 
-    private final int GIFW = Integer.parseInt(Configuration.getProp("gifWidth"));
-    private final int GIFH = Integer.parseInt(Configuration.getProp("gifHeight"));
+    private final int GIFW;
+    private final int GIFH;
     private int selectedGen = 0;
 
     private final static double ALPHA = 0.5;
@@ -65,6 +65,20 @@ public class StatisticsController implements Initializable {
     private final int genIterations = 20;
 
     private double[] simValue = new double[genIterations + 1];
+
+    public StatisticsController() {
+        //Should never return -1
+        if (Configuration.getPropInt("gifWidth") == -1) {
+            GIFW = 200;
+        } else {
+            GIFW = Configuration.getPropInt("gifWidth");
+        }
+        if (Configuration.getPropInt("gifHeight") == -1) {
+            GIFH = 200;
+        } else {
+            GIFH = Configuration.getPropInt("gifHeight");
+        }
+    }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {

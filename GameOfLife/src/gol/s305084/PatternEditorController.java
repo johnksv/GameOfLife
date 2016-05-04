@@ -23,11 +23,10 @@ import javafx.stage.Stage;
 import lieng.GIFWriter;
 
 /**
- * Pattern editor, for creating small and complex patterns.
- * Implements much of the same code as
- * {@link gol.controller.GameController gamController}. Note that the
- * only change from the main game is {@link #drawStrip() the strip}, and
- * saving a pattern to GIF or RLE.
+ * Pattern editor, for creating small and complex patterns. Implements much of
+ * the same code as {@link gol.controller.GameController gamController}. Note
+ * that the only change from the main game is {@link #drawStrip() the strip},
+ * and saving a pattern to GIF or RLE.
  *
  * @author S305084
  */
@@ -51,10 +50,36 @@ public class PatternEditorController implements Initializable {
     private GraphicsContext gcStrip;
     private Color bgColor = Color.GRAY;
     private Color cellColor = Color.BLACK;
-    
-    
-    private final int GIFW = Integer.parseInt(Configuration.getProp("gifWidth"));
-    private final int GIFH = Integer.parseInt(Configuration.getProp("gifHeight"));
+
+    private final int GIFW;
+    private final int GIFH;
+
+    public PatternEditorController() {
+        //Should never return -1
+        if (Configuration.getPropInt("gifWidth") == -1) {
+            GIFW = 200;
+        } else {
+            GIFW = Configuration.getPropInt("gifWidth");
+        }
+        if (Configuration.getPropInt("gifHeight") == -1) {
+            GIFH = 200;
+        } else {
+            GIFH = Configuration.getPropInt("gifHeight");
+        }
+    }
+
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+        gc = canvas.getGraphicsContext2D();
+        gcStrip = theStrip.getGraphicsContext2D();
+        activeBoard = new ArrayBoard(100, 100);
+
+        activeBoard.setCellSize(15);
+        activeBoard.setGridSpacing(0.6);
+
+        mouseInit();
+        drawStrip();
+    }
 
     @FXML
     private void handleClear() {
@@ -118,19 +143,6 @@ public class PatternEditorController implements Initializable {
 
             }
         }
-    }
-
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        gc = canvas.getGraphicsContext2D();
-        gcStrip = theStrip.getGraphicsContext2D();
-        activeBoard = new ArrayBoard(100, 100);
-
-        activeBoard.setCellSize(15);
-        activeBoard.setGridSpacing(0.6);
-
-        mouseInit();
-        drawStrip();
     }
 
     private void mouseInit() {
