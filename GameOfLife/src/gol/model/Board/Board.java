@@ -63,6 +63,21 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public abstract class Board {
 
     /**
+     * Offset of each cell in the board.
+     *
+     * <table summary="Content of offsetValue">
+     * <tr><th>Index</th><th>Value</th></tr>
+     * <tbody>
+     * <tr><td>0</td><td>Current offset x</td></tr>
+     * <tr><td>1</td><td>Current offset y</td></tr>
+     * <tr><td>2</td><td>Old mouse position x</td></tr>
+     * <tr><td>3</td><td>Old mouse position</td></tr>
+     * </tbody>
+     * </table>
+     */
+    public final double[] offsetValues = {0, 0, -Double.MAX_VALUE, -Double.MAX_VALUE};
+
+    /**
      * Width and height of all cells, defined in pixels
      */
     protected double cellSize = 5;
@@ -82,21 +97,6 @@ public abstract class Board {
      * If the board should expand in top (y) direction next generation.
      */
     protected final AtomicBoolean EXPAND_Y = new AtomicBoolean();
-
-    /**
-     * Offset of each cell in the board.
-     *
-     * <table summary="Content of offsetValue">
-     * <tr><th>Index</th><th>Value</th></tr>
-     * <tbody>
-     * <tr><td>0</td><td>Current offset x</td></tr>
-     * <tr><td>1</td><td>Current offset y</td></tr>
-     * <tr><td>2</td><td>Old mouse position x</td></tr>
-     * <tr><td>3</td><td>Old mouse position</td></tr>
-     * </tbody>
-     * </table>
-     */
-    public final double[] offsetValues = {0, 0, -Double.MAX_VALUE, -Double.MAX_VALUE};
 
     /**
      * Padding between cells, defined in pixels
@@ -159,15 +159,7 @@ public abstract class Board {
         }
     }
 
-    public void nextGenConcPrintPerformance() {
-        long start = System.nanoTime();
-        for (int i = 0; i < 100; i++) {
-            nextGenConcurrent();
-        }
-        long elapsed = (System.nanoTime() - start) / 1000000;
-        System.out.println("100 iterations: Concurrent. Counting time (ms): " + elapsed);
-    }
-
+    //TODO javadoc
     public void nextGenPrintPerformance() {
         long start = System.nanoTime();
         for (int i = 0; i < 100; i++) {
@@ -175,6 +167,16 @@ public abstract class Board {
         }
         long elapsed = (System.nanoTime() - start) / 1000000;
         System.out.println("100 iterations: One thread. Counting time (ms): " + elapsed);
+    }
+
+    //TODO javadoc
+    public void nextGenConcPrintPerformance() {
+        long start = System.nanoTime();
+        for (int i = 0; i < 100; i++) {
+            nextGenConcurrent();
+        }
+        long elapsed = (System.nanoTime() - start) / 1000000;
+        System.out.println("100 iterations: Concurrent. Counting time (ms): " + elapsed);
     }
 
     /**
@@ -193,15 +195,6 @@ public abstract class Board {
     }
 
     /**
-     * Sets the active rule to this rule.
-     *
-     * @param activeRule The rule to be used when calculation next generation
-     */
-    public final void setRule(Rule activeRule) {
-        this.activeRule = activeRule;
-    }
-
-    /**
      * Sets the spacing between each cell when the cells are drawn.
      *
      * @param gridSpacing A value of 0 or larger. If negativ, it sets this value
@@ -213,6 +206,15 @@ public abstract class Board {
         } else {
             this.gridSpacing = gridSpacing;
         }
+    }
+
+    /**
+     * Sets the active rule to this rule.
+     *
+     * @param activeRule The rule to be used when calculation next generation
+     */
+    public final void setRule(Rule activeRule) {
+        this.activeRule = activeRule;
     }
 
     /**
@@ -243,6 +245,46 @@ public abstract class Board {
     }
 
     /**
+     * Sets all the cells in the board to dead. This method should call a method
+     * to update the view (e.g. {@link gol.controller.GameController#draw()}.
+     */
+    public abstract void clearBoard();
+
+    /**
+     * Checks each cell to this rule. The cell is set to alive or dead,
+     * depending on the rule.
+     *
+     * @param activeRule {@link gol.model.Logic.Rule}
+     */
+    protected abstract void checkRules(Rule activeRule);
+
+    /**
+     * Creates a runnable that checks each cell to this rule. The cell is set to
+     * alive or dead, depending on the rule. Adds the runnable to the current
+     * {@link #threadPool threadPool.}
+     *
+     * @param activeRule {@link gol.model.Logic.Rule}
+     */
+    protected abstract void checkRulesConcurrent(Rule activeRule, int threadNr);
+
+    /**
+     * Counts the number of living neighbors. This is done by going through each
+     * living cell, and incrementing its neighbors.
+     *
+     */
+    protected abstract void countNeigh();
+
+    /**
+     * Creates a runnable that counts the number of living neighbors. This is
+     * done by going through each living cell, and incrementing its neighbors.
+     * Adds the runnable to the current {@link #threadPool threadPool.}
+     *
+     * @param threadNr this number of thread, between 0 and ThreadPool.THREAD_NR
+     * @see #nextGenConcurrent()
+     */
+    protected abstract void countNeighConcurrent(int threadNr);
+
+    /**
      * Expands the board to fit the row index given. Expands with the number of
      * cells, defined as "expansion" in the config file. Will not be implemented
      * in {@link ArrayBoard arraybors.}
@@ -264,67 +306,8 @@ public abstract class Board {
     protected abstract int expandBoardX(int row, int col);
 
     /**
-     * Calculates the smallest possible array of living cells, and returns that
-     * array.
-     * <p>
-     * Author: Henrik Lieng (Vedlegg 1 ark 5)
-     *
-     * @return Array of minrow, maxrow, mincolumn, maxcolumn
-     */
-    public abstract byte[][] getBoundingBoxBoard();
-
-    /**
-     * Calculates the smallest possible gamebord
-     * <p>
-     * Author: Henrik Lieng (Vedlegg 1 ark 5)
-     *
-     * @return Array of minrow, maxrow, mincolumn, maxcolumn
-     */
-    public abstract int[] getBoundingBox();
-
-    /**
-     * Sets all the cells in the board to dead. This method should call a method
-     * to update the view (e.g. {@link gol.controller.GameController#draw()}.
-     */
-    public abstract void clearBoard();
-
-    /**
-     * Counts the number of living neighbors. This is done by going through each
-     * living cell, and incrementing its neighbors.
-     *
-     */
-    protected abstract void countNeigh();
-
-    /**
-     * Creates a runnable that counts the number of living neighbors. This is
-     * done by going through each living cell, and incrementing its neighbors.
-     * Adds the runnable to the current {@link #threadPool threadPool.}
-     *
-     * @param threadNr this number of thread, between 0 and ThreadPool.THREAD_NR
-     * @see #nextGenConcurrent()
-     */
-    protected abstract void countNeighConcurrent(int threadNr);
-
-    /**
-     * Checks each cell to this rule. The cell is set to alive or dead,
-     * depending on the rule.
-     *
-     * @param activeRule {@link gol.model.Logic.Rule}
-     */
-    protected abstract void checkRules(Rule activeRule);
-
-    /**
-     * Creates a runnable that checks each cell to this rule. The cell is set to
-     * alive or dead, depending on the rule. Adds the runnable to the current
-     * {@link #threadPool threadPool.}
-     *
-     * @param activeRule {@link gol.model.Logic.Rule}
-     */
-    protected abstract void checkRulesConcurrent(Rule activeRule, int threadNr);
-
-    /**
      * Inserts a byte 2D-array into the current gameboard at top left position.
-     * 
+     *
      * Elements from boardFromFile that exceeds the dimensions of the current
      * gameboard is not inserted.
      *
@@ -332,7 +315,7 @@ public abstract class Board {
      * @param boardToInsert bytearray to insert into the current gameboard.
      */
     public abstract void insertArray(byte[][] boardToInsert);
-    
+
     //TODO remove example?
     /**
      * Inserts a byte 2D-array into the current gameboard at the given (y, x)
@@ -387,6 +370,25 @@ public abstract class Board {
      * @return elements in row i
      */
     public abstract int getArrayLength(int i);
+
+    /**
+     * Calculates the smallest possible array of living cells, and returns that
+     * array.
+     * <p>
+     * Author: Henrik Lieng (Vedlegg 1 ark 5)
+     *
+     * @return Array of minrow, maxrow, mincolumn, maxcolumn
+     */
+    public abstract byte[][] getBoundingBoxBoard();
+
+    /**
+     * Calculates the smallest possible gamebord
+     * <p>
+     * Author: Henrik Lieng (Vedlegg 1 ark 5)
+     *
+     * @return Array of minrow, maxrow, mincolumn, maxcolumn
+     */
+    public abstract int[] getBoundingBox();
 
     /**
      * Returns the Maximum elements in a array row or List.

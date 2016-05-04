@@ -1,8 +1,6 @@
 package gol.model.Board;
 
 import gol.model.Logic.Rule;
-import java.util.ArrayList;
-import java.util.Arrays;
 
 /**
  * This class implements all needed features for a Board in game of Life. The
@@ -13,8 +11,9 @@ import java.util.Arrays;
 @Deprecated
 public class ArrayBoard extends Board {
     
-    private final int WIDTH, HEIGHT;
     protected byte[][] gameBoard;
+    private final int WIDTH;
+    private final int HEIGHT;
 
     /**
      * Constructs a new Arrayboard with default width and height
@@ -40,7 +39,7 @@ public class ArrayBoard extends Board {
         
     }
 
-    /*
+    /* TODO javadoc
      * Bruker gameBoard.length i stedet for getArrayLength(i/j) for å ta med ramme.
      */
     @Override
@@ -48,32 +47,6 @@ public class ArrayBoard extends Board {
         for (int i = 0; i < gameBoard.length; i++) {
             for (int j = 0; j < gameBoard.length; j++) {
                 gameBoard[i][j] = 0;
-            }
-        }
-    }
-    
-    @Override
-    protected void countNeigh() {
-
-        //Goes through the board
-        for (int i = 1; i < getArrayLength(); i++) {
-            for (int j = 1; j < getArrayLength(i); j++) {
-
-                //If cell is alive
-                if (gameBoard[i][j] >= 64) {
-
-                    //Goes through surrounding neighbours
-                    for (int k = -1; k <= 1; k++) {
-                        for (int l = -1; l <= 1; l++) {
-
-                            //To not count itself
-                            if (!(k == 0 && l == 0)) {
-                                gameBoard[i + k][j + l] += 1;
-                            }
-                        }
-                    }
-                }
-                
             }
         }
     }
@@ -87,6 +60,57 @@ public class ArrayBoard extends Board {
                 }
             }
         }
+    }
+    
+    @Override
+    protected void checkRulesConcurrent(Rule activeRule, int threadNr) {
+        throw new UnsupportedOperationException("Threads for ArrayBoard is not supported.");
+    }
+    
+    @Override
+    protected void countNeigh() {
+        
+        //Goes through the board
+        for (int i = 1; i < getArrayLength(); i++) {
+            for (int j = 1; j < getArrayLength(i); j++) {
+                
+                //If cell is alive
+                if (gameBoard[i][j] >= 64) {
+                    
+                    //Goes through surrounding neighbours
+                    for (int k = -1; k <= 1; k++) {
+                        for (int l = -1; l <= 1; l++) {
+                            
+                            //To not count itself
+                            if (!(k == 0 && l == 0)) {
+                                gameBoard[i + k][j + l] += 1;
+                            }
+                        }
+                    }
+                }
+                
+            }
+        }
+    }
+    
+    @Override
+    protected void countNeighConcurrent(int threadNr) {
+        throw new UnsupportedOperationException("Threads for ArrayBoard is not supported.");
+    }
+    
+    @Override
+    protected int expandBoardY(int y) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    @Override
+    protected int expandBoardX(int y, int x) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    @Override
+    public void insertArray(byte[][] boardToInsert) {
+        insertArray(boardToInsert, 1, 1);
     }
     
     @Override
@@ -212,6 +236,12 @@ public class ArrayBoard extends Board {
         return gameBoard[y][x] >= 64;
     }
     
+    
+    @Override
+    public int getMaxRowLength() {
+        return WIDTH;
+    }
+    
     @Override
     public String toString() {
         
@@ -228,33 +258,4 @@ public class ArrayBoard extends Board {
         return result.toString();
     }
     
-    @Override
-    public int getMaxRowLength() {
-        return WIDTH;
-    }
-    
-    @Override
-    protected void countNeighConcurrent(int threadNr) {
-        throw new UnsupportedOperationException("Threads for ArrayBoard is not supported.");
-    }
-    
-    @Override
-    protected void checkRulesConcurrent(Rule activeRule, int threadNr) {
-        throw new UnsupportedOperationException("Threads for ArrayBoard is not supported.");
-    }
-    
-    @Override
-    protected int expandBoardY(int y) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-    
-    @Override
-    protected int expandBoardX(int y, int x) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-    
-    @Override
-    public void insertArray(byte[][] boardToInsert) {
-        insertArray(boardToInsert, 1, 1);
-    }
 }

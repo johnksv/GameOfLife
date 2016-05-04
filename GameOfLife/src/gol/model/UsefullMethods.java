@@ -11,22 +11,6 @@ public final class UsefullMethods {
     }
 
     /**
-     * Transposes this given pattern.
-     *
-     * @param matrix pattern that will be transposed
-     * @return a transposed matrix
-     */
-    public static byte[][] transposeMatrix(byte[][] matrix) {
-        byte[][] returnMatrix = new byte[matrix[0].length][matrix.length];
-        for (int i = 0; i < matrix.length; i++) {
-            for (int j = 0; j < matrix[0].length; j++) {
-                returnMatrix[j][i] = matrix[i][j];
-            }
-        }
-        return matrix;
-    }
-
-    /**
      * Rotates this pattern 90 degrees clockwise.
      *
      * @param arrayToRotate pattern to be rotated
@@ -54,7 +38,7 @@ public final class UsefullMethods {
     }
 
     /**
-     * Show this error dialogue box.
+     * Show an error dialogue box.
      *
      * @param headerText specifies what the header text will commute
      * @param contentText specifies what the content text will commute
@@ -64,5 +48,21 @@ public final class UsefullMethods {
         alert.setTitle("Error");
         alert.setHeaderText(headerText);
         alert.showAndWait();
+    }
+    
+    /**
+     * Transposes this given pattern.
+     *
+     * @param matrix pattern that will be transposed
+     * @return a transposed matrix
+     */
+    public static byte[][] transposeMatrix(byte[][] matrix) {
+        byte[][] returnMatrix = new byte[matrix[0].length][matrix.length];
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[0].length; j++) {
+                returnMatrix[j][i] = matrix[i][j];
+            }
+        }
+        return matrix;
     }
 }
