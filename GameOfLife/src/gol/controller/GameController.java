@@ -841,10 +841,10 @@ public class GameController implements Initializable {
 
             statistics.initModality(Modality.WINDOW_MODAL);
             statistics.initOwner(canvas.getScene().getWindow());
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/gol/s305084/view/Statistics.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/gol/stensli/view/Statistics.fxml"));
 
             Parent root = loader.load();
-            gol.s305084.StatisticsController statisticsController = loader.getController();
+            gol.stensli.StatisticsController statisticsController = loader.getController();
             statisticsController.loadeBoard(activeBoard);
             statisticsController.showStats();
             Scene scene = new Scene(root);
@@ -869,10 +869,10 @@ public class GameController implements Initializable {
 
             editor.initModality(Modality.WINDOW_MODAL);
             editor.initOwner(canvas.getScene().getWindow());
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/gol/s305084/view/Editor.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/gol/stensli/view/Editor.fxml"));
 
             Parent root = loader.load();
-            gol.s305084.PatternEditorController editorController = loader.getController();
+            gol.stensli.PatternEditorController editorController = loader.getController();
             editorController.setBGColor(backgroundColor);
             editorController.setCellColor(cellColor);
 

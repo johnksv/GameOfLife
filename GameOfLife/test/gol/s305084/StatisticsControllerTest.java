@@ -1,5 +1,6 @@
 package gol.s305084;
 
+import gol.stensli.StatisticsController;
 import gol.model.Board.Board;
 import gol.model.Board.DynamicBoard;
 import gol.other.Configuration;

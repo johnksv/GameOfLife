@@ -1,5 +1,6 @@
 package gol.s305084;
 
+import gol.stensli.WriteRLE;
 import gol.model.Board.Board;
 import gol.model.Board.DynamicBoard;
 import gol.model.FileIO.ReadFile;
