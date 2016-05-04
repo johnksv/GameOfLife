@@ -140,13 +140,13 @@ public class SoundController implements Initializable {
     }
 
     private void initMediaFiles() {
-        drumBass = new AudioClip(new File("src/gol/s305089/sound/files/drumBass.wav").toURI().toString());
-        drumSnare = new AudioClip(new File("src/gol/s305089/sound/files/drumSnare.wav").toURI().toString());
-        nextGen = new AudioClip(new File("src/gol/s305089/sound/files/nextGen.wav").toURI().toString());
-        Db3 = new AudioClip(new File("src/gol/s305089/sound/files/Db3.wav").toURI().toString());
-        FSharp3 = new AudioClip(new File("src/gol/s305089/sound/files/F3#.wav").toURI().toString());
-        E3 = new AudioClip(new File("src/gol/s305089/sound/files/E3.wav").toURI().toString());
-        E4 = new AudioClip(new File("src/gol/s305089/sound/files/E4.wav").toURI().toString());
+        drumBass = new AudioClip(new File("src/gol/svergja/sound/files/drumBass.wav").toURI().toString());
+        drumSnare = new AudioClip(new File("src/gol/svergja/sound/files/drumSnare.wav").toURI().toString());
+        nextGen = new AudioClip(new File("src/gol/svergja/sound/files/nextGen.wav").toURI().toString());
+        Db3 = new AudioClip(new File("src/gol/svergja/sound/files/Db3.wav").toURI().toString());
+        FSharp3 = new AudioClip(new File("src/gol/svergja/sound/files/F3#.wav").toURI().toString());
+        E3 = new AudioClip(new File("src/gol/svergja/sound/files/E3.wav").toURI().toString());
+        E4 = new AudioClip(new File("src/gol/svergja/sound/files/E4.wav").toURI().toString());
     }
 
     @FXML
