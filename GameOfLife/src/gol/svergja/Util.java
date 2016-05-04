@@ -3,12 +3,15 @@ package gol.svergja;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
+import javafx.scene.control.Spinner;
+import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.Tooltip;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.text.Font;
 import javafx.stage.Screen;
 import javafx.util.Duration;
+import javafx.util.StringConverter;
 
 /**
  * @author s305089 - John Kasper Svergja
@@ -85,5 +88,41 @@ public class Util {
             }
             timeLabel.setText(elapsedTime + "/" + totalTime);
         });
+    }
+
+    /**
+     * This method is copied from {@link javafx.scene.control.Spinner }. THis is
+     * because it is private, and no other easy way is provided to easily commit
+     * a changed value. From Spinners Javadoc: "To make sure the model has the
+     * same value as the editor, the user must commit the edit using the Enter
+     * key."
+     * <a href="https://docs.oracle.com/javase/8/javafx/api/javafx/scene/control/Spinner.html">https://docs.oracle.com/javase/8/javafx/api/javafx/scene/control/Spinner.html</a>
+     *
+     * <p>
+     * Added modification: Only spinners with IntegerSpinnerValueFactory is
+     * calling this method. I therefor added handling for when not typing a
+     * number.
+     * </p>
+     *
+     * @param <T> The type of the spinner
+     * @param spinner The spinner to set the value on.
+     * @see javafx.scene.control.Spinner
+     */
+    public static <T> void commitEditorText(Spinner<T> spinner) {
+        String text = spinner.getEditor().getText();
+        text = text.replaceAll("\\D", "");
+        if (text.equals("")) {
+            spinner.getEditor().setText("100");
+            return;
+        }
+        spinner.getEditor().setText(text);
+        SpinnerValueFactory<T> valueFactory = spinner.getValueFactory();
+        if (valueFactory != null) {
+            StringConverter<T> converter = valueFactory.getConverter();
+            if (converter != null) {
+                T value = converter.fromString(text);
+                valueFactory.setValue(value);
+            }
+        }
     }
 }

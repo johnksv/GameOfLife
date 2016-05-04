@@ -14,6 +14,13 @@ import java.util.ArrayList;
  */
 public final class Sound {
 
+    private static File prevSaveLoc;
+    private static boolean avoidClipping = true;
+    private static double clipValue = 0;
+    private static double clipAmplitudeFactor;
+    private static double lastStepDuration;
+    private static boolean isAviodClipModeRunning = false;
+
     /**
      * Is not instantiable.
      */
@@ -186,6 +193,8 @@ public final class Sound {
 
             //Bit depth of 16.
             WavFile wavFile = WavFile.newWavFile(saveLoc, CHANNELS, numFrames, 16, SAMPLE_RATE);
+            prevSaveLoc = saveLoc;
+            lastStepDuration = stepDuration;
 
             double[][] buffer = new double[CHANNELS][100];
 
@@ -226,28 +235,74 @@ public final class Sound {
             wavFile.close();
             if (CLIPPING) {
                 System.err.println("The sound was clipped one or many times..");
+
+            }
+            if (avoidClipping && !isAviodClipModeRunning && CLIPPING) {
+                calcNoClip();
             }
         } catch (IOException | WavFileException ex) {
             System.err.println("Error making file:\n" + ex);
         }
-        SoundContainer.clear();
+        if (isAviodClipModeRunning) {
+            isAviodClipModeRunning = false;
+            SoundContainer.clear();
+        }
         CLIPPING = false;
     }
 
     private static void checkClipping(double[][] buffer, int s) {
-        if (buffer[0][s] > 1) {
-            buffer[0][s] = 1;
-            CLIPPING = true;
-        } else if (buffer[0][s] < -1) {
-            buffer[0][s] = -1;
+        //Check one channel at a time
+        if (Math.abs(buffer[0][s]) > 1) {
+            if (Math.abs(buffer[0][s]) > clipValue) {
+                clipValue = buffer[0][s];
+            }
+            if (buffer[0][s] < 0) {
+                buffer[0][s] = -1;
+            } else {
+                buffer[0][s] = 1;
+            }
             CLIPPING = true;
         }
-        if (buffer[1][s] > 1) {
-            buffer[1][s] = 1;
-            CLIPPING = true;
-        } else if (buffer[1][s] < -1) {
-            buffer[1][s] = -1;
+
+        if (Math.abs(buffer[1][s]) > 1) {
+            if (Math.abs(buffer[1][s]) > clipValue) {
+                clipValue = buffer[1][s];
+            }
+            if (buffer[1][s] < 0) {
+                buffer[1][s] = -1;
+            } else {
+                buffer[1][s] = 1;
+            }
             CLIPPING = true;
         }
     }
+
+    private static void calcNoClip() {
+
+        clipAmplitudeFactor = 1 / clipValue;
+        System.out.println("Factor:" + clipAmplitudeFactor);
+        for (int i = 0; i < SoundContainer.size(); i++) {
+            for (double[] current : SoundContainer.get(i)) {
+                System.out.println("Old: " + current[0]);
+                current[0] = clipAmplitudeFactor * current[0];
+                System.out.println("new: " + current[0]);
+            }
+        }
+        isAviodClipModeRunning = true;
+        clipAmplitudeFactor = 0;
+        makeSound(prevSaveLoc, lastStepDuration);
+    }
+
+    /**
+     * Defines if the program should avoid clipping or not. Clipping is avoided
+     * by lowering the amplitude of each sound in the sequence.
+     *
+     *
+     * @param shouldAvoidClipping If the value is true clipping will be avoided.
+     * If false, clipping can occur.
+     */
+    public static void setAvoidClipping(boolean shouldAvoidClipping) {
+        avoidClipping = shouldAvoidClipping;
+    }
+
 }

@@ -73,6 +73,7 @@ public class StatsController implements Initializable {
 
         spinnerIterations.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(3, 100, 20, 1));
         spinnerIterations.setEditable(true);
+        spinnerIterations.focusedProperty().addListener(e -> Util.commitEditorText(spinnerIterations));
     }
 
     private void intiListners() {
@@ -84,11 +85,6 @@ public class StatsController implements Initializable {
 
     private void calculatGameStats(ObservableValue observable, Object oldValue, Object newValue) {
         displayData((int) spinnerIterations.getValue());
-    }
-
-    @FXML
-    private void onActionCalculate() {
-        calculatGameStats(null, null, null);
     }
 
     private void displayData(int iterations) {
@@ -110,28 +106,6 @@ public class StatsController implements Initializable {
             updateTooltipSimilarity();
         } catch (IOException ex) {
             System.err.println("Could not update tooltips:\n" + ex);
-        }
-    }
-
-    private void plotDataOnChart(int iterations) {
-        //Removes previous data
-        livingCells.getData().clear();
-        changeLivingCells.getData().clear();
-        similarityMeasure.getData().clear();
-        simMeasureClosest.clear();
-
-        //Ignors the last iteration of the list
-        for (int i = 0; i < iterations; i++) {
-            if (cbLivingCells.isSelected()) {
-                livingCells.getData().add(new XYChart.Data("" + i, gameData[i][0]));
-            }
-            if (cbChangeLiving.isSelected()) {
-                changeLivingCells.getData().add(new XYChart.Data("" + i, gameData[i][1]));
-            }
-            if (cbSimilarity.isSelected()) {
-                similarityMeasure.getData().add(new XYChart.Data("" + i, gameData[i][2]));
-                simMeasureClosest.add(gameData[i][3]);
-            }
         }
     }
 
@@ -189,9 +163,36 @@ public class StatsController implements Initializable {
         }
     }
 
+    private void plotDataOnChart(int iterations) {
+        //Removes previous data
+        livingCells.getData().clear();
+        changeLivingCells.getData().clear();
+        similarityMeasure.getData().clear();
+        simMeasureClosest.clear();
+
+        //Ignors the last iteration of the list
+        for (int i = 0; i < iterations; i++) {
+            if (cbLivingCells.isSelected()) {
+                livingCells.getData().add(new XYChart.Data("" + i, gameData[i][0]));
+            }
+            if (cbChangeLiving.isSelected()) {
+                changeLivingCells.getData().add(new XYChart.Data("" + i, gameData[i][1]));
+            }
+            if (cbSimilarity.isSelected()) {
+                similarityMeasure.getData().add(new XYChart.Data("" + i, gameData[i][2]));
+                simMeasureClosest.add(gameData[i][3]);
+            }
+        }
+    }
+
     private void setTooltipMouseHandler(XYChart.Data<String, Integer> data, Tooltip tooltip) {
         data.getNode().setOnMouseEntered(event -> Util.showTooltip(event, data.getNode(), tooltip));
         data.getNode().setOnMouseExited(event -> tooltip.hide());
+    }
+
+    @FXML
+    private void onActionCalculate() {
+        calculatGameStats(null, null, null);
     }
 
     private void generateTolltipGIF(GifMaker gifmaker, ImageView imgViewcurrentPattern) throws IOException {

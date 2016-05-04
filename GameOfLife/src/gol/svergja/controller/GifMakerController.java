@@ -8,7 +8,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
-import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -31,6 +30,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.util.StringConverter;
 
 /**
  * FXML Controller class
@@ -107,18 +107,48 @@ public class GifMakerController implements Initializable {
     private void initSpinners() {
         spinnNumIterations.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 100, 20, 5));
         spinnNumIterations.setEditable(true);
+        spinnNumIterations.focusedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+            //Should only happen when it loses focus
+            if (!newValue) {
+                Util.commitEditorText(spinnNumIterations);
+            }
+        });
 
         spinnTimeBetween.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 100000, 200, 100));
         spinnTimeBetween.setEditable(true);
+        spinnTimeBetween.focusedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+            //Should only happen when it loses focus
+            if (!newValue) {
+                Util.commitEditorText(spinnTimeBetween);
+            }
+        });
 
         spinnWidth.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 5000, 200, 100));
         spinnWidth.setEditable(true);
+        spinnWidth.focusedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+            //Should only happen when it loses focus
+            if (!newValue) {
+                Util.commitEditorText(spinnWidth);
+            }
+        });
 
         spinnHeight.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 5000, 200, 100));
         spinnHeight.setEditable(true);
+        spinnHeight.focusedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+            //Should only happen when it loses focus
+            if (!newValue) {
+                Util.commitEditorText(spinnHeight);
+            }
+        });
 
         spinnThreshold.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 100, 90, 1));
         spinnThreshold.setEditable(true);
+        spinnThreshold.focusedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+            //Should only happen when it loses focus
+            if (!newValue) {
+                Util.commitEditorText(spinnThreshold);
+            }
+        });
 
         cbInfinityLoop.setOnMouseEntered((event) -> {
             Util.showTooltip(event, cbInfinityLoop, tipInfinity);
@@ -221,7 +251,7 @@ public class GifMakerController implements Initializable {
 
     @FXML
     private void previewGif() {
-        borderpane.getScene().getWindow().setWidth(550);
+        borderpane.getScene().getWindow().setWidth(570);
         borderpane.getScene().getWindow().setHeight(550);
         ((Stage) borderpane.getScene().getWindow()).setResizable(false);
 
@@ -300,4 +330,5 @@ public class GifMakerController implements Initializable {
             }
         }
     }
+
 }
