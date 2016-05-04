@@ -420,7 +420,7 @@ public class GameController implements Initializable {
         timeline.pause();
         String sPictures = s54nPicturesGIF.getText();
         int pictures = Integer.parseInt(sPictures.replaceAll("\\D", ""));
-        
+
         GIFWriterS305054 gifTrygve = new GIFWriterS305054();
         java.awt.Color bgColor = new java.awt.Color((float) backgroundColor.getRed(), (float) backgroundColor.getGreen(), (float) backgroundColor.getBlue());
         java.awt.Color cColor = new java.awt.Color((float) cellColor.getRed(), (float) cellColor.getGreen(), (float) cellColor.getBlue());
@@ -516,7 +516,7 @@ public class GameController implements Initializable {
     }
 
     @FXML
-    public void s89showStats() throws IOException {
+    private void s89showStats() throws IOException {
         timeline.pause();
 
         Stage golStats = new Stage();
@@ -649,6 +649,12 @@ public class GameController implements Initializable {
         }
     }
 
+    /**
+     * Constructs a custom rule with the given parameters.
+     *
+     * @param cellsToSurvive a array of survive values
+     * @param cellsToBeBorn a array of to be born values
+     */
     public void constructRule(byte[] cellsToSurvive, byte[] cellsToBeBorn) {
         try {
             activeBoard.setRule(new CustomRule(cellsToSurvive, cellsToBeBorn));
@@ -867,7 +873,7 @@ public class GameController implements Initializable {
 
     @FXML
     private void handleHowToPlay() {
-        try{ 
+        try {
             Stage howToPlay = new Stage();
             howToPlay.initOwner(canvas.getScene().getWindow());
 
@@ -875,7 +881,7 @@ public class GameController implements Initializable {
             Parent root = loader.load();
             HowToPlayController mainControll = loader.getController();
             mainControll.loadStage(howToPlay);
-            
+
             howToPlay.setScene(new Scene(root));
             howToPlay.show();
         } catch (IOException ex) {

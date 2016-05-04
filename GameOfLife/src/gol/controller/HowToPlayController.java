@@ -18,17 +18,11 @@ import javafx.stage.Stage;
  *
  * @author s305054, s305084, s305089
  */
-public class HowToPlayController implements Initializable {
+public class HowToPlayController  {
 
     @FXML
     Button btnBack;
-
-    /**
-     * Initializes the controller class.
-     */
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
-    }
+    
 
     /**
      * <p>

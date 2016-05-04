@@ -32,7 +32,7 @@ public class ReadFile {
      * @param file location of chosen file
      * @return a playable gameboard of type byte[][]
      * @throws IOException If the file could not be created.
-     * @throws PatternFormatException if there are an error parsing or reading
+     * @throws PatternFormatException Ff there are an error parsing or reading
      * the file
      */
     public static byte[][] readFileFromDisk(Path file) throws IOException, PatternFormatException {
@@ -53,6 +53,16 @@ public class ReadFile {
         }
     }
 
+    /**
+     * Parses a file at the given URL.
+     * 
+     * 
+     * @param URLToSave the URL to the file you want to parse
+     * @return a playable gameboard of type byte[][]
+     * @throws PatternFormatException If there are an error parsing or reading
+     * the file
+     * @throws IOException If the connection to the URLToSave could not be made.
+     */
     public static byte[][] readFromURL(String URLToSave) throws PatternFormatException, IOException {
 
         URL url = new URL(URLToSave);

@@ -10,6 +10,13 @@ public class CustomRule implements Rule {
     private final byte[] toBeBorn;
     private final byte[] toSurvive;
 
+    /**
+     * Constructs a custom rule depending on the given parameters.
+     *
+     * @param toSurvive An array containing the values to be survive.
+     * @param toBeBorn An array containing the values to be born.
+     * @throws unsupportedRuleException If the given parameters are illegal.
+     */
     public CustomRule(byte[] toSurvive, byte[] toBeBorn) throws unsupportedRuleException {
         this.toSurvive = toSurvive;
         for (byte value : toBeBorn) {
