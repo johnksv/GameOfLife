@@ -55,10 +55,10 @@ public class StatsTest {
             assertEquals(0, result[iteration][1]);
 
             //For each generation, there should be a 100% match with another generation
-            //unless for the two last. Only checking for generation in future.
+            //unless for the last. Only checking for generation in future.
             if (iteration < result.length - 3) {
                 assertEquals(100, result[iteration][2], 0.0005);
-            } else if (iteration == result.length - 2) {
+            } else if (iteration == result.length - 1) {
                 assertEquals(0, result[iteration][2], 0.0005);
             }
         }
@@ -66,7 +66,8 @@ public class StatsTest {
 
     @Test
     public void testTuringMachineStats() throws IOException, PatternFormatException {
-        System.out.println("TuringMachine");
+        //Test the speed
+        System.out.println("Testing executing time of TuringMachine (check test result for result)");
         File url = new File("test/patternTestFiles/turingmachine.rle");
         Path file = Paths.get(url.toURI());
         byte[][] byteBoard = ReadFile.readFileFromDisk(file);
@@ -74,45 +75,6 @@ public class StatsTest {
         arrayBoard.insertArray(byteBoard);
         instance.setBoard(arrayBoard);
         instance.getStatistics(60, true, true);
-    }
-
-    @Test
-    public void testCountLiving() {
-        System.out.println("countLiving");
-
-        int[] result = instance.calcCountLiving(10);
-        for (int i = 0; i < result.length; i++) {
-            assertEquals(3, result[i]);
-        }
-
-        result = instance.calcCountLiving(0);
-        assertEquals(0, result[0]);
-
-        expectedExeption.expect(NegativeArraySizeException.class);
-        instance.calcCountLiving(-1);
-        instance.calcCountLiving(Integer.MIN_VALUE);
-
-    }
-
-    @Test
-    public void testChangeInLiving() {
-        System.out.println("changeInLiving");
-
-        instance.setBoard(patternBoard);
-        int[] countChangeOfLiving = instance.calcChangeInLiving(10);
-        for (int i = 0; i < countChangeOfLiving.length; i++) {
-            assertEquals(0, countChangeOfLiving[i]);
-        }
-
-        //Need to make an new instance, or else calcualtions is done on old pattern.
-        instance.setBoard(pattern2Board);
-        //Need to update count Living
-        instance.calcCountLiving(10);
-        int[] resArray = instance.calcChangeInLiving(10);
-        assertEquals(0, resArray[0]);
-        assertEquals(2, resArray[1]);
-        assertEquals(0, resArray[2]);
-
     }
 
 }
