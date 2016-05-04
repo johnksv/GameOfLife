@@ -326,17 +326,16 @@ public class GameController implements Initializable {
         Alert mainDialog = new Alert(AlertType.NONE);
         mainDialog.setTitle("Import from internet");
         mainDialog.initStyle(StageStyle.UTILITY);
-        mainDialog.setContentText("Type the url of the pattern you want to import");
+        mainDialog.setHeaderText("Type the url of the pattern you want to import");
 
         VBox container = new VBox();
         TextField input = new TextField("http://");
         container.getChildren().add(input);
 
-        mainDialog.getDialogPane().setExpandableContent(container);
-        mainDialog.getDialogPane().setExpanded(true);
-
+        mainDialog.getDialogPane().setContent(container);
+        
         ButtonType btnInsert = new ButtonType("Insert");
-        ButtonType btnCancel = new ButtonType("Cancel");
+        ButtonType btnCancel = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
         mainDialog.getButtonTypes().addAll(btnInsert, btnCancel);
 
         Optional<ButtonType> result = mainDialog.showAndWait();
@@ -373,7 +372,7 @@ public class GameController implements Initializable {
 
         ButtonType btnGhostTiles = new ButtonType("Insert with ghost tiles");
         ButtonType btnInsert = new ButtonType("Insert at top-left");
-        ButtonType btnCancel = new ButtonType("Cancel");
+        ButtonType btnCancel = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
 
         alert.getButtonTypes().addAll(btnGhostTiles, btnInsert, btnCancel);
 
@@ -384,7 +383,7 @@ public class GameController implements Initializable {
             boardFromFile = null;
             updateRules();
         } else if (result.get() == btnGhostTiles) {
-             if (timeline.getStatus() == Status.RUNNING) {
+            if (timeline.getStatus() == Status.RUNNING) {
                 handleAnimation();
             }
             btnStartPause.setDisable(true);
@@ -629,7 +628,7 @@ public class GameController implements Initializable {
 
                 ButtonType btnGhostTiles = new ButtonType("Insert with ghost tiles");
                 ButtonType btnInsert = new ButtonType("Insert at top-left");
-                ButtonType btnCancel = new ButtonType("Cancel");
+                ButtonType btnCancel = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
 
                 alert.getButtonTypes().addAll(btnGhostTiles, btnInsert, btnCancel);
 
@@ -892,6 +891,11 @@ public class GameController implements Initializable {
         }
     }
 
+    /**
+     * Links different key inputs with a method, for easy access.
+     *
+     * @param e
+     */
     public void handleKeyEvents(KeyEvent e) {
         btnStartPause.requestFocus();
         String key = e.getText();
