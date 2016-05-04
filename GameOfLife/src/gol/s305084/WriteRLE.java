@@ -95,7 +95,7 @@ public final class WriteRLE {
 
     /**
      *  Sets all end of line signs, and handles end of file sign.
-     *  If several rows are blank, this is the method sets how many before the exclamation mark. 
+     *  If several rows are blank, this method sets the number of blank lines before the dollar sign. 
      *  
      *  appendBlank makes sure the file do not end with:"$!" 
      *  e.g.: bob$!

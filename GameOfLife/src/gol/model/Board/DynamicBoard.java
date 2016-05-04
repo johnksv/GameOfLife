@@ -7,25 +7,27 @@ import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * This class allows the game board to automatically expand as the pattern
- * expands. A max size is implemented to prevent the game from crashing. This
- * max size can be changed in the configuration file.
- *
  * <p>
- * Due to how java </p>
- *
+ * This class allows the game board to automatically expand as the pattern
+ * grows. A max size is implemented to prevent the game from crashing. This
+ * max size can be changed in the configuration file.
+ * </p>
+ * <b>Note: </b>AtomicInteger is used to make the gameBoard thread safe. 
+ * This also makes this class slower than 
+ * {@link ArrayBoard ArrayBoard}, even with 4 threads.
  * @author s305054, s305089, s305084
  */
 public class DynamicBoard extends Board {
 
-    private final int MAXWIDTH = Integer.parseInt(Configuration.getProp("maxWidth"));
-    private final int MAXHEIGHT = Integer.parseInt(Configuration.getProp("maxHeight"));
-    private final int EXPANSION = Integer.parseInt(Configuration.getProp("expansion"));
+    private final int MAXWIDTH = Configuration.getPropInt("maxHeight");
+    private final int MAXHEIGHT = Configuration.getPropInt("maxHeight");
+    private final int EXPANSION = Configuration.getPropInt("expansion");
 
     private ArrayList<ArrayList<AtomicInteger>> gameBoard;
 
     /**
-     * Creates an empty arrayList. Calls super
+     * Creates an empty dynamycBoard. Witch contains an empty ArrayList and
+     * Conway's rule.
      */
     public DynamicBoard() {
         super();
@@ -33,7 +35,10 @@ public class DynamicBoard extends Board {
     }
 
     /**
-     * Creates an arrayList in witch the y x index are expanded. Calls super
+     * Creates an arrayList in witch the y x index are expanded to.
+     *
+     * @param y Height
+     * @param x Width
      */
     public DynamicBoard(int y, int x) {
         this();
@@ -113,7 +118,7 @@ public class DynamicBoard extends Board {
             threadPool.addWork(() -> {
                 for (int row = startRow; row < lastEndRow; row++) {
                     for (int col = 1; col < gameBoard.get(row).size(); col++) {
-                        doCountNeigConCu(row, col);
+                        doCountNeigConcurrent(row, col);
                     }
                 }
             });
@@ -121,7 +126,7 @@ public class DynamicBoard extends Board {
             threadPool.addWork(() -> {
                 for (int row = startRow; row < endRow; row++) {
                     for (int col = 1; col < gameBoard.get(row).size(); col++) {
-                        doCountNeigConCu(row, col);
+                        doCountNeigConcurrent(row, col);
                     }
                 }
             });
@@ -154,7 +159,7 @@ public class DynamicBoard extends Board {
             threadPool.addWork(() -> {
                 for (int row = startRow; row < lastEndRow; row++) {
                     for (int col = 1; col < gameBoard.get(row).size(); col++) {
-                        doCheckRulesConcu(activeRule, row, col);
+                        doCheckRulesConcurrent(activeRule, row, col);
                     }
                 }
             });
@@ -162,7 +167,7 @@ public class DynamicBoard extends Board {
             threadPool.addWork(() -> {
                 for (int row = startRow; row < endRow; row++) {
                     for (int col = 1; col < gameBoard.get(row).size(); col++) {
-                        doCheckRulesConcu(activeRule, row, col);
+                        doCheckRulesConcurrent(activeRule, row, col);
                     }
                 }
             });
@@ -209,7 +214,7 @@ public class DynamicBoard extends Board {
     }
 
     //TODO change name here too!
-    private void doCountNeigConCu(int row, int col) {
+    private void doCountNeigConcurrent(int row, int col) {
         //If cell is alive
         if (gameBoard.get(row).get(col).intValue() >= 64) {
 
@@ -233,7 +238,7 @@ public class DynamicBoard extends Board {
     }
 
     //TODO change name!
-    private void doCheckRulesConcu(Rule activeRule, int row, int col) {
+    private void doCheckRulesConcurrent(Rule activeRule, int row, int col) {
         if (gameBoard.get(row).get(col).intValue() != 0) {
             if (activeRule.setLife(gameBoard.get(row).get(col).byteValue()) == 64) {
                 //Will not expand top or left sides
