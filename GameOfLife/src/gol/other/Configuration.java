@@ -65,8 +65,6 @@ public class Configuration {
         }
         prop = prop.replaceAll("\\D", "").trim();
         
-        System.out.println(prop);
-        
         if (prop.equals("")) {
             return -1;
         } else {

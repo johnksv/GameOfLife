@@ -183,7 +183,7 @@ public class DynamicBoard extends Board {
                 row++;
             }
         }
-        while (row >= gameBoard.size() - EXPANSION && gameBoard.size() < MAXHEIGHT) {
+        while (row >= gameBoard.size() && gameBoard.size() < MAXHEIGHT) {
             gameBoard.add(new ArrayList<>());
         }
         return row;
@@ -207,7 +207,7 @@ public class DynamicBoard extends Board {
                 col++;
             }
         }
-        while (col >= gameBoard.get(row).size() - EXPANSION && gameBoard.get(row).size() < MAXWIDTH) {
+        while (col >= gameBoard.get(row).size()  && gameBoard.get(row).size() < MAXWIDTH) {
             gameBoard.get(row).add(new AtomicInteger(0));
         }
         return col;
