@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -29,25 +31,14 @@ public class HowToPlayController implements Initializable {
     }
 
     /**
-     * Loads StartScreen.fxml and set {@link gol.controller.MainController} as
-     * its controller.
-     *
-     * @throws IOException
-     */
-    @FXML
-    private void handleBackBtn() throws IOException {
-        Stage stage = (Stage) btnBack.getScene().getWindow();
-        stage.close();
-    }
-
-    /**
      * <p>
-     * Loads the stage, and sets stage values. 
+     * Loads the stage, and sets stage values.
      * </p>
      * <b>Stage values: </b> <br>
      * Resizable = false <br>
      * Title = How to play <br>
      * Icon = gen1.PNG <br>
+     *
      * @param stage how to play stage
      */
     public void loadStage(Stage stage) {
@@ -58,4 +49,9 @@ public class HowToPlayController implements Initializable {
         stage.setTitle("How to play");
     }
 
+    @FXML
+    private void handleBackBtn() {
+        Stage stage = (Stage) btnBack.getScene().getWindow();
+        stage.close();
+    }
 }
