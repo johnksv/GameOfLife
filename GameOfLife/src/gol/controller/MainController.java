@@ -37,7 +37,7 @@ public class MainController {
     }
 
     /**
-     * Loads Game.fxml witch sets {@link gol.controller.GameController} as its
+     * Loads Game.fxml which sets {@link gol.controller.GameController} as its
      * controller. Will also
      * call{@link GameController#handleKeyEvents(javafx.scene.input.KeyEvent) setKeyEvents.}
      *
@@ -64,7 +64,7 @@ public class MainController {
     }
 
     /**
-     * Loads HowToPlay.fxml witch sets
+     * Loads HowToPlay.fxml which sets
      * {@link gol.controller.HowToPlayController} as its controller.
      *
      * @throws IOException Reads a FXML file
