@@ -64,9 +64,7 @@ public class Configuration {
         }
         //Removes all non-digits
         prop = prop.replaceAll("\\D", "");
-
-        System.out.println(prop);
-
+        
         if (prop.equals("")) {
             return -1;
         } else {
