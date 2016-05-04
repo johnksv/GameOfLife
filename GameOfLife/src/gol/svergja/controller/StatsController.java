@@ -109,6 +109,17 @@ public class StatsController implements Initializable {
         }
     }
 
+    private void generateTolltipGIF(GifMaker gifmaker, ImageView imgViewcurrentPattern) throws IOException {
+        gifmaker.setBoard(activeBoard);
+        File tempFileToolTip = File.createTempFile("golStats", ".gif");
+
+        gifmaker.writePatternToGIF(1, tempFileToolTip.getAbsolutePath());
+
+        Image current = new Image(tempFileToolTip.toURI().toString());
+        imgViewcurrentPattern.setImage(current);
+        tempFileToolTip.delete();
+    }
+
     private void updateTooltips() {
         for (XYChart.Data<String, Integer> data : livingCells.getData()) {
             Tooltip tip = new Tooltip("Living: " + data.getYValue());
@@ -193,17 +204,6 @@ public class StatsController implements Initializable {
     @FXML
     private void onActionCalculate() {
         calculatGameStats(null, null, null);
-    }
-
-    private void generateTolltipGIF(GifMaker gifmaker, ImageView imgViewcurrentPattern) throws IOException {
-        gifmaker.setBoard(activeBoard);
-        File tempFileToolTip = File.createTempFile("golStats", ".gif");
-
-        gifmaker.writePatternToGIF(1, tempFileToolTip.getAbsolutePath());
-
-        Image current = new Image(tempFileToolTip.toURI().toString());
-        imgViewcurrentPattern.setImage(current);
-        tempFileToolTip.delete();
     }
 
     public void setBoard(Board boardToSet) {
