@@ -23,7 +23,7 @@
             <GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="179.0" prefWidth="600.0" StackPane.alignment="CENTER">
                <children>
                   <Button contentDisplay="CENTER" layoutX="229.0" layoutY="150.0" mnemonicParsing="false" onAction="#startGame" prefWidth="170.0" text="Start with empty board" GridPane.rowIndex="2" />
-                  <Button contentDisplay="CENTER" layoutX="300.0" layoutY="237.0" mnemonicParsing="false" prefWidth="170.0" text="Start with selected pattern" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                  <Button contentDisplay="CENTER" layoutX="300.0" layoutY="237.0" mnemonicParsing="false" onAction="#startGamePattern" prefWidth="170.0" text="Start with selected pattern" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                   <Label layoutX="164.0" layoutY="64.0" style="-fx-text-fill: black; -fx-font-weight: normal; -fx-background-color: #F4F4F4;" text="GAME OF LIFE" GridPane.columnSpan="2">
                      <font>
                         <Font size="46.0" />
