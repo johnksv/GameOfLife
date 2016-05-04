@@ -31,7 +31,7 @@ public class ReadFile {
      *
      * @param file location of chosen file
      * @return a playable gameboard of type byte[][]
-     * @throws IOException
+     * @throws IOException If the file could not be created.
      * @throws PatternFormatException if there are an error parsing or reading
      * the file
      */
@@ -339,9 +339,10 @@ public class ReadFile {
     }
 
     /**
-     * //TODO Javadoc
+     * Get the metadata from the last parsed of file. The metadata may be empty
+     * if the last parsed file did not contain any.
      *
-     * @return
+     * @return the list containing th metadata
      */
     public static List<String> getMetadata() {
         return METADATA;

@@ -32,7 +32,7 @@ public class HowToPlayController implements Initializable {
 
     /**
      * <p>
-     * Loads the stage, and sets stage values.
+     * Loads the stage, and set stage values
      * </p>
      * <b>Stage values: </b> <br>
      * Resizable = false <br>

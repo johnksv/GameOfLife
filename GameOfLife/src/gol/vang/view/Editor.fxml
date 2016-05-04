@@ -16,7 +16,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="598.0" prefWidth="883.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gol.vang.controller.EditorController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="598.0" prefWidth="883.0" stylesheets="@../../view/MainStylesheet.css" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gol.vang.controller.EditorController">
    <center>
       <AnchorPane prefHeight="612.0" prefWidth="915.0" BorderPane.alignment="CENTER">
          <children>
@@ -30,24 +30,24 @@
                                  <children>
                                     <TitledPane collapsible="false" layoutX="1.0" prefHeight="200.0" prefWidth="200.0">
                                        <content>
-                                          <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                          <AnchorPane prefHeight="200.0" prefWidth="200.0" styleClass="pane-standard">
                                              <children>
-                                                <RadioButton fx:id="addCell" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" selected="true" text="Add Cells">
+                                                <RadioButton fx:id="addCell" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" selected="true" styleClass="advanced-tips" text="Add Cells">
                                                     <toggleGroup>
                                                         <ToggleGroup fx:id="mouseActions" />
                                                     </toggleGroup>
                                                 </RadioButton>
-                                                <RadioButton fx:id="removeCell" layoutX="14.0" layoutY="41.0" mnemonicParsing="false" text="Remove Cells" toggleGroup="$mouseActions" />
-                                                <RadioButton fx:id="moveGrid" layoutX="14.0" layoutY="68.0" mnemonicParsing="false" text="Move Grid" toggleGroup="$mouseActions" />
+                                                <RadioButton fx:id="removeCell" layoutX="14.0" layoutY="41.0" mnemonicParsing="false" styleClass="advanced-tips" text="Remove Cells" toggleGroup="$mouseActions" />
+                                                <RadioButton fx:id="moveGrid" layoutX="14.0" layoutY="68.0" mnemonicParsing="false" styleClass="advanced-tips" text="Move Grid" toggleGroup="$mouseActions" />
                                                 <Slider fx:id="zoomSlider" layoutX="14.0" layoutY="118.0" onValueChange="#handleZoom" />
-                                                <Label layoutX="14.0" layoutY="98.0" text="Zoom:" />
+                                                <Label layoutX="14.0" layoutY="98.0" styleClass="advanced-tips" text="Zoom:" />
                                              </children>
                                           </AnchorPane>
                                        </content>
                                     </TitledPane>
                                     <TitledPane collapsible="false" layoutY="200.0" prefHeight="200.0" prefWidth="200.0">
                                        <content>
-                                          <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                          <AnchorPane prefHeight="200.0" prefWidth="200.0" styleClass="pane-standard">
                                              <children>
                                                 <Button fx:id="savePatternBtn" layoutX="13.0" layoutY="14.0" mnemonicParsing="false" onAction="#handleSave" text="Save Pattern" />
                                                 <Button fx:id="closeBtn" layoutX="14.0" layoutY="49.0" mnemonicParsing="false" text="Close" />
@@ -84,13 +84,13 @@
       </AnchorPane>
    </center>
    <bottom>
-      <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+      <VBox prefHeight="200.0" prefWidth="100.0" styleClass="pane-standard" BorderPane.alignment="CENTER">
          <children>
-            <ScrollPane prefHeight="173.0" prefWidth="877.0">
+            <ScrollPane prefHeight="173.0" prefWidth="877.0" styleClass="pane-standard">
                <content>
                   <Canvas fx:id="stripCanvas" height="155.0" width="2500.0" />
                </content></ScrollPane>
-            <Button fx:id="updateStripBtn" mnemonicParsing="false"  text="Update Strip" />
+            <Button fx:id="updateStripBtn" mnemonicParsing="false" text="Update Strip" />
          </children>
       </VBox>
    </bottom>

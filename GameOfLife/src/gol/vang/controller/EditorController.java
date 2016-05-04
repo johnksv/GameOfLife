@@ -66,7 +66,7 @@ public class EditorController implements Initializable {
     private GraphicsContext stripGc;
     private final Color cellColor = Color.BLACK;
     private final Color backgroundColor = Color.web("#F4F4F4");
-    private Board activeBoard = new ArrayBoard(150,150);
+    private Board activeBoard = new ArrayBoard(150, 150);
     private Board stripBoard;
     byte[][] patternToInsert;
     byte[][] stripBoundingBox;
@@ -79,11 +79,9 @@ public class EditorController implements Initializable {
         gc = editorCanvas.getGraphicsContext2D();
         stripGc = stripCanvas.getGraphicsContext2D();
         stripGc.clearRect(0, 0, stripCanvas.widthProperty().doubleValue(), stripCanvas.heightProperty().doubleValue());
-        
-        activeBoard.setCellSize(15);
-        activeBoard.setGridSpacing(0.8);
 
         mouseInit();
+        theStrip();
     }
 
     @FXML
@@ -120,12 +118,12 @@ public class EditorController implements Initializable {
         }
 
     }
-    
+
     private void drawStrip() {
         stripGc.setFill(backgroundColor);
         stripGc.fillRect(0, 0, stripCanvas.getWidth(), stripCanvas.getHeight());
         stripGc.setFill(cellColor);
-        
+
         for (int i = 1; i < stripBoard.getArrayLength(); i++) {
             for (int j = 1; j < stripBoard.getArrayLength(i); j++) {
                 if (stripBoard.getCellState(i, j)) {
@@ -137,23 +135,26 @@ public class EditorController implements Initializable {
             }
         }
     }
-    
-    
+
     private void theStrip() {
         //TODO height, width, sånn shit. Vil ha 20 patterns på en canvas. Affain klasse som er nøkkelordet
         stripBoundingBox = activeBoard.getBoundingBoxBoard();
         stripBoard = new DynamicBoard();
         stripBoard.insertArray(stripBoundingBox);
-        
+        stripBoard.setCellSize(1);
+        stripBoard.setGridSpacing(0.01);
+
         Affine xForm = new Affine();
         double tx = 0;
-        
-        //forloop
-        xForm.setTx(tx);
-        stripGc.setTransform(xForm);
-        stripBoard.nextGen();
-        drawStrip();
-        tx += stripBoundingBox.length + stripCanvas.getWidth()/20;
+
+        //Gjør denne ferdig.
+        for (int iteration = 0; iteration < 20; iteration++) {
+            xForm.setTx(tx);
+            stripGc.setTransform(xForm);
+            stripBoard.nextGen();
+            drawStrip();
+            tx += stripBoundingBox.length + (stripCanvas.getWidth() / 20);
+        }
         
         //reset transform
         xForm.setTx(0.0);
@@ -208,7 +209,7 @@ public class EditorController implements Initializable {
 
         if (removeCell.isSelected()) {
             activeBoard.setCellState(y, x, false, 0, 0);
-        }  else {
+        } else {
             activeBoard.setCellState(y, x, true, 0, 0);
         }
         draw();
@@ -221,17 +222,16 @@ public class EditorController implements Initializable {
         activeBoard.setGridSpacing(gameBoard.getGridSpacing());
         draw();
     }
-    
+
     @FXML
     private void handleSave() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("RLE", "*.rle"));
         fileChooser.setInitialFileName(titleField.getText());
         fileChooser.setTitle("Save Pattern");
-        
-        
+
         File file = fileChooser.showSaveDialog(null);
-        if(file != null) {
+        if (file != null) {
             try {
                 WriteRleS305054 writer = new WriteRleS305054();
                 writer.writeRLE(activeBoard, titleField, authorField, descriptionField, file.toPath());

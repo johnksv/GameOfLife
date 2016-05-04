@@ -35,7 +35,7 @@ public class DynamicBoard extends Board {
     }
 
     /**
-     * Creates an arrayList in witch the y x index are expanded to.
+     * Creates an arrayList in which the y x index are expanded to.
      *
      * @param y Height
      * @param x Width

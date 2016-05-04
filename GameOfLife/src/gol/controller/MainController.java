@@ -25,19 +25,19 @@ public class MainController {
     private Stage primaryStage;
 
     /**
-     * Loads the primaryStage to be stored. The stage is stored as a private
-     * variable. Sets icon and title.
+     * Sets the primaryStage that is shown. This method should only be called on
+     * startup when javaFX start is run.
      *
-     * @param stage
+     * @param stage The stage that is being displayed.
      */
-    public void loadStage(Stage stage) {
+    public void setStage(Stage stage) {
         primaryStage = stage;
         primaryStage.getIcons().add(new Image(new File("src/mics/gen1.PNG").toURI().toString()));
         primaryStage.setTitle("Game of Life");
     }
 
     /**
-     * Loads Game.fxml witch sets {@link gol.controller.GameController} as its
+     * Loads Game.fxml which sets {@link gol.controller.GameController} as its
      * controller. Will also
      * call{@link GameController#handleKeyEvents(javafx.scene.input.KeyEvent) setKeyEvents.}
      *
@@ -64,7 +64,7 @@ public class MainController {
     }
 
     /**
-     * Loads HowToPlay.fxml witch sets
+     * Loads HowToPlay.fxml which sets
      * {@link gol.controller.HowToPlayController} as its controller.
      *
      * @throws IOException Reads a FXML file
