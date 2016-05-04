@@ -8,7 +8,9 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -233,20 +235,15 @@ public class GifMakerController implements Initializable {
         setGIFValues();
         calculateInfinity();
 
-        Alert alertGenerating = new Alert(Alert.AlertType.NONE, "Generating GIF");
-        alertGenerating.getButtonTypes().add(new ButtonType("Please wait..."));
-        alertGenerating.show();
-        try {
-            gifmaker.writePatternToGIF(iterations, saveLocation);
-            labelGenerateFeedback.setText("GIF was successfully created");
-        } catch (IOException ex) {
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Det oppsto en feil...:\n" + ex.getMessage());
-            alert.setTitle("Error");
-            alert.setHeaderText("Pattern to GIF");
-            alert.showAndWait();
-        } finally {
-            alertGenerating.close();
-        }
+        labelGenerateFeedback.setText("Generating gif.");
+        Task<Void> drawGif = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                gifmaker.writePatternToGIF(iterations, saveLocation);
+                Platform.runLater(() -> labelGenerateFeedback.setText("GIF was successfully created"));
+                return null;
+            }
+        };
     }
 
     @FXML
@@ -257,15 +254,24 @@ public class GifMakerController implements Initializable {
 
         try {
             File previewFile = File.createTempFile("golPreview", ".gif");
-
+            labelGenerateFeedback.setText("Generating preview.");
             setGIFValues();
             calculateInfinity();
-
-            gifmaker.writePatternToGIF(iterations, previewFile.getAbsolutePath());
-            Image previewGif = new Image(previewFile.toURI().toString());
-            imgViewPreview.setImage(previewGif);
-
-            previewFile.delete();
+            Task<Void> drawGif = new Task<Void>() {
+                @Override
+                protected Void call() throws Exception {
+                    gifmaker.writePatternToGIF(iterations, previewFile.getAbsolutePath());
+                    Platform.runLater(() -> {
+                        Image previewGif = new Image(previewFile.toURI().toString());
+                        imgViewPreview.setImage(previewGif);
+                        labelGenerateFeedback.setText("");
+                        previewFile.delete();
+                    });
+                    return null;
+                }
+            };
+            Thread th = new Thread(drawGif);
+            th.start();
 
         } catch (IOException ex) {
             System.err.println("There was an error previewing the file...\n" + ex);
@@ -273,8 +279,8 @@ public class GifMakerController implements Initializable {
     }
 
     /**
-     * 
-     * @param boardToSet 
+     *
+     * @param boardToSet
      */
     public void setBoard(Board boardToSet) {
         activeBoard = boardToSet;
