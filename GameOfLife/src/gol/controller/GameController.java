@@ -917,87 +917,103 @@ public class GameController implements Initializable {
     }
 
     @FXML
-    private void s89openPatternEditor() throws IOException {
-        timeline.pause();
+    private void s89openPatternEditor() {
+        try {
+            timeline.pause();
 
-        Stage editor = new Stage();
-        FXMLLoader root = new FXMLLoader(getClass().getResource("/gol/svergja/view/PatternEditor.fxml"));
+            Stage editor = new Stage();
+            FXMLLoader root = new FXMLLoader(getClass().getResource("/gol/svergja/view/PatternEditor.fxml"));
 
-        Scene scene = new Scene((Parent) root.load());
-        PatternEditorController editorController = root.<PatternEditorController>getController();
-        editorController.setBoard(activeBoard);
-        editorController.setGameController(this);
+            Scene scene = new Scene((Parent) root.load());
+            PatternEditorController editorController = root.<PatternEditorController>getController();
+            editorController.setBoard(activeBoard);
+            editorController.setGameController(this);
 
-        editor.setTitle("Pattern Editor - Game of Life");
-        editor.initModality(Modality.WINDOW_MODAL);
-        editor.setMinWidth(800);
-        editor.setMinHeight(600);
-        editor.initOwner(borderpane.getScene().getWindow());
-        editor.setScene(scene);
-        editor.showAndWait();
-        draw();
+            editor.setTitle("Pattern Editor - Game of Life");
+            editor.initModality(Modality.WINDOW_MODAL);
+            editor.setMinWidth(800);
+            editor.setMinHeight(600);
+            editor.initOwner(borderpane.getScene().getWindow());
+            editor.setScene(scene);
+            editor.showAndWait();
+            draw();
+        } catch (IOException ex) {
+            System.err.println("An error occurred...:\n" + ex);
+        }
     }
 
     @FXML
-    private void s89saveAsGIF() throws IOException {
-        timeline.pause();
+    private void s89saveAsGIF() {
+        try {
+            timeline.pause();
 
-        Stage gifMaker = new Stage();
-        FXMLLoader root = new FXMLLoader(getClass().getResource("/gol/svergja/view/GifMaker.fxml"));
+            Stage gifMaker = new Stage();
+            FXMLLoader root = new FXMLLoader(getClass().getResource("/gol/svergja/view/GifMaker.fxml"));
 
-        Scene scene = new Scene((Parent) root.load());
+            Scene scene = new Scene((Parent) root.load());
 
-        GifMakerController gifcontroller = root.<GifMakerController>getController();
-        gifcontroller.setBoard(activeBoard);
+            GifMakerController gifcontroller = root.<GifMakerController>getController();
+            gifcontroller.setBoard(activeBoard);
 
-        gifMaker.setScene(scene);
-        gifMaker.setTitle("Generate GIF - Game of Life");
-        gifMaker.setWidth(215);
-        gifMaker.setHeight(535);
-        gifMaker.initOwner(borderpane.getScene().getWindow());
-        gifMaker.show();
+            gifMaker.setScene(scene);
+            gifMaker.setTitle("Generate GIF - Game of Life");
+            gifMaker.setWidth(215);
+            gifMaker.setHeight(535);
+            gifMaker.initOwner(borderpane.getScene().getWindow());
+            gifMaker.show();
+        } catch (IOException ex) {
+            System.err.println("An error occurred...:\n" + ex);
+        }
     }
 
     @FXML
-    private void s89showStats() throws IOException {
-        timeline.pause();
+    private void s89showStats() {
+        try {
+            timeline.pause();
 
-        Stage golStats = new Stage();
-        FXMLLoader root = new FXMLLoader(getClass().getResource("/gol/svergja/view/Stats.fxml"));
+            Stage golStats = new Stage();
+            FXMLLoader root = new FXMLLoader(getClass().getResource("/gol/svergja/view/Stats.fxml"));
 
-        Scene scene = new Scene((Parent) root.load());
+            Scene scene = new Scene((Parent) root.load());
 
-        StatsController statsController = root.<StatsController>getController();
-        statsController.setBoard(activeBoard);
+            StatsController statsController = root.<StatsController>getController();
+            statsController.setBoard(activeBoard);
 
-        golStats.setScene(scene);
-        golStats.setTitle("Stats - Game of Life");
-        golStats.initOwner(borderpane.getScene().getWindow());
-        golStats.show();
+            golStats.setScene(scene);
+            golStats.setTitle("Stats - Game of Life");
+            golStats.initOwner(borderpane.getScene().getWindow());
+            golStats.show();
+        } catch (IOException ex) {
+            System.err.println("An error occurred...:\n" + ex);
+        }
     }
 
     @FXML
-    private void s89showSoundController() throws IOException {
-        timeline.pause();
+    private void s89showSoundController() {
+        try {
+            timeline.pause();
 
-        Stage golAudio = new Stage();
-        FXMLLoader root = new FXMLLoader(getClass().getResource("/gol/svergja/view/Sound.fxml"));
-        Scene scene = new Scene((Parent) root.load());
+            Stage golAudio = new Stage();
+            FXMLLoader root = new FXMLLoader(getClass().getResource("/gol/svergja/view/Sound.fxml"));
+            Scene scene = new Scene((Parent) root.load());
 
-        SoundController soundController = root.<SoundController>getController();
-        soundController.setBoard(activeBoard);
+            SoundController soundController = root.<SoundController>getController();
+            soundController.setBoard(activeBoard);
 
-        KeyFrame soundFrame = new KeyFrame(Duration.millis(1000), (event) -> {
-            soundController.playSound();
-        });
-        timeline.getKeyFrames().add(soundFrame);
+            KeyFrame soundFrame = new KeyFrame(Duration.millis(1000), (event) -> {
+                soundController.playSound();
+            });
+            timeline.getKeyFrames().add(soundFrame);
 
-        golAudio.setScene(scene);
-        golAudio.setTitle("Audio control panel - Game of Life");
-        golAudio.initOwner(borderpane.getScene().getWindow());
-        golAudio.showAndWait();
-        timeline.stop();
-        timeline.getKeyFrames().remove(soundFrame);
-        soundController.disposeMediaPlayers();
+            golAudio.setScene(scene);
+            golAudio.setTitle("Audio control panel - Game of Life");
+            golAudio.initOwner(borderpane.getScene().getWindow());
+            golAudio.showAndWait();
+            timeline.stop();
+            timeline.getKeyFrames().remove(soundFrame);
+            soundController.disposeMediaPlayers();
+        } catch (IOException ex) {
+            System.err.println("An error occurred...:\n" + ex);
+        }
     }
 }
