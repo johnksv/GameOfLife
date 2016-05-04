@@ -4,6 +4,7 @@ import gol.model.UsefullMethods;
 import gol.model.Board.ArrayBoard;
 import gol.model.Board.Board;
 import gol.model.Board.DynamicBoard;
+import gol.other.Configuration;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -50,6 +51,10 @@ public class PatternEditorController implements Initializable {
     private GraphicsContext gcStrip;
     private Color bgColor = Color.GRAY;
     private Color cellColor = Color.BLACK;
+    
+    
+    private final int GIFW = Integer.parseInt(Configuration.getProp("gifWidth"));
+    private final int GIFH = Integer.parseInt(Configuration.getProp("gifHeight"));
 
     @FXML
     private void handleClear() {
@@ -81,8 +86,8 @@ public class PatternEditorController implements Initializable {
                     java.awt.Color awtCellColor = new java.awt.Color((float) cellColor.getRed(), (float) cellColor.getGreen(), (float) cellColor.getBlue());
                     java.awt.Color awtBgColor = new java.awt.Color((float) bgColor.getRed(), (float) bgColor.getGreen(), (float) bgColor.getBlue());
 
-                    GifMaker.makeGif(activeBoard, new GIFWriter(140, 140, selected.toString(),
-                            500), 140, 140, awtBgColor, awtCellColor, 20);
+                    GifMaker.makeGif(activeBoard, new GIFWriter(GIFW, GIFH, selected.toString(),
+                            500), GIFW, GIFH, awtBgColor, awtCellColor, 20);
 
                 } catch (IOException ex) {
                     UsefullMethods.showErrorAlert("Oops!", "Something  went wrong during saving");

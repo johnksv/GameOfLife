@@ -48,5 +48,7 @@ public class Configuration {
         properties.setProperty("expansion", "50");
         properties.setProperty("useThreads", "true");
         properties.setProperty("arrayBoardThreshold", "500");
+        properties.setProperty("gifWidth", "200");
+        properties.setProperty("gifHeight", "200");
     }
 }
