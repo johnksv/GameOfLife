@@ -11,7 +11,7 @@ import javafx.stage.Screen;
 import javafx.util.Duration;
 
 /**
- * @author John Kasper
+ * @author s305089 - John Kasper Svergja
  */
 public class Util {
 
