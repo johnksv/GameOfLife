@@ -358,7 +358,7 @@ public class GameController implements Initializable {
         Alert alert = new Alert(AlertType.NONE);
         alert.setTitle("Place pattern");
         alert.initStyle(StageStyle.UTILITY);
-        alert.setContentText("How do you want to insert the pattern?");
+        alert.setHeaderText("How do you want to insert the pattern?");
 
         VBox container = new VBox();
         for (String line : ReadFile.getMetadata()) {
@@ -370,10 +370,10 @@ public class GameController implements Initializable {
             alert.getDialogPane().setExpanded(true);
         }
 
-        ButtonType btnGhostTiles = new ButtonType("Insert with ghost tiles");
-        ButtonType btnInsert = new ButtonType("Insert at top-left");
+        ButtonType btnGhostTiles = new ButtonType("Insert: Ghost Tiles");
+        ButtonType btnInsert = new ButtonType("Insert: Top-left");
         ButtonType btnCancel = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
-
+       
         alert.getButtonTypes().addAll(btnGhostTiles, btnInsert, btnCancel);
 
         Optional<ButtonType> result = alert.showAndWait();
@@ -899,6 +899,8 @@ public class GameController implements Initializable {
     public void handleKeyEvents(KeyEvent e) {
         btnStartPause.requestFocus();
         String key = e.getText();
+        key=key.toLowerCase();
+        
         if (e.isShiftDown()) {
             switch (key) {
                 case "a":
