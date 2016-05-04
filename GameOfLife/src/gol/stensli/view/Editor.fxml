@@ -14,7 +14,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="455.0" prefWidth="670.0" style="-fx-background-color: #7c8fa5;" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gol.s305084.PatternEditorController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="455.0" prefWidth="670.0" style="-fx-background-color: #7c8fa5;" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gol.stensli.PatternEditorController">
    <children>
       <Canvas id="canvasEditor" fx:id="canvas" height="316.0" width="437.0" />
       <VBox layoutX="446.0" layoutY="14.0" prefHeight="284.0" prefWidth="194.0" spacing="8.0">

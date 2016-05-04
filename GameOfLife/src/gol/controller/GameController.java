@@ -463,8 +463,8 @@ public class GameController implements Initializable {
             } else {
                 //Negative beacuse offset on arrayboard always is negative
                 //max values is for right and bottom sides
-                double maxValueX = -((activeBoard.getCellSize() + activeBoard.getGridSpacing()) * activeBoard.getArrayLength() - canvas.getWidth());
-                double maxValueY = -((activeBoard.getCellSize() + activeBoard.getGridSpacing()) * activeBoard.getMaxRowLength() - canvas.getHeight());
+                double maxValueX = -((activeBoard.getCellSize() + activeBoard.getGridSpacing()) * activeBoard.getMaxRowLength() - canvas.getWidth());
+                double maxValueY = -((activeBoard.getCellSize() + activeBoard.getGridSpacing()) * activeBoard.getArrayLength() - canvas.getHeight());
 
                 //If positive, board should not move
                 if (newXoffset < 0) {
@@ -820,6 +820,7 @@ public class GameController implements Initializable {
             error.setTitle("Error");
             error.setHeaderText("Could not open pattern editor. Please try again.");
             error.show();
+            System.err.println(ie);
 
         }
     }
@@ -833,10 +834,10 @@ public class GameController implements Initializable {
 
             statistics.initModality(Modality.WINDOW_MODAL);
             statistics.initOwner(canvas.getScene().getWindow());
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/gol/s305084/view/Statistics.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/gol/stensli/view/Statistics.fxml"));
 
             Parent root = loader.load();
-            gol.s305084.StatisticsController statisticsController = loader.getController();
+            gol.stensli.StatisticsController statisticsController = loader.getController();
             statisticsController.loadeBoard(activeBoard);
             statisticsController.showStats();
             Scene scene = new Scene(root);
@@ -861,10 +862,10 @@ public class GameController implements Initializable {
 
             editor.initModality(Modality.WINDOW_MODAL);
             editor.initOwner(canvas.getScene().getWindow());
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/gol/s305084/view/Editor.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/gol/stensli/view/Editor.fxml"));
 
             Parent root = loader.load();
-            gol.s305084.PatternEditorController editorController = loader.getController();
+            gol.stensli.PatternEditorController editorController = loader.getController();
             editorController.setBGColor(backgroundColor);
             editorController.setCellColor(cellColor);
 

@@ -1,4 +1,4 @@
-package gol.s305084;
+package gol.stensli;
 
 import gol.model.UsefullMethods;
 import gol.model.Board.ArrayBoard;
