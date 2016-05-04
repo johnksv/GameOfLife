@@ -2,12 +2,12 @@
  * Here comes the text of your license
  * Each line should be prefixed with  * 
  */
-package gol.s305054.controller;
+package gol.vang.controller;
 
 import gol.model.Board.ArrayBoard;
 import gol.model.Board.Board;
 import gol.model.Board.DynamicBoard;
-import gol.s305054.model.WriteRleS305054;
+import gol.vang.model.WriteRleS305054;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;

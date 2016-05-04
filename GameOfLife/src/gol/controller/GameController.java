@@ -15,8 +15,8 @@ import gol.svergja.controller.GifMakerController;
 import gol.svergja.controller.SoundController;
 import gol.svergja.controller.StatsController;
 import gol.other.Configuration;
-import gol.s305054.model.GIFWriterS305054;
-import gol.s305054.controller.EditorController;
+import gol.vang.model.GIFWriterS305054;
+import gol.vang.controller.EditorController;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -474,7 +474,7 @@ public class GameController implements Initializable {
         timeline.pause();
         try {
             Stage editor = new Stage();
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/gol/s305054/view/Editor.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/gol/vang/view/Editor.fxml"));
             Parent root = loader.load();
             Scene scene = new Scene(root);
             EditorController edController = loader.getController();
