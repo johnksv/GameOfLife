@@ -368,9 +368,11 @@ public class GameController implements Initializable {
     }
 
     /**
-     * Links different key inputs with a method, for easy access.
+     * Links different key inputs with a method, for easy access. This method is
+     * public so it can be instantiated on the scene which is instantiating this
+     * class.
      *
-     * @param e
+     * @param e The key event to respond to.
      */
     public void handleKeyEvents(KeyEvent e) {
         btnStartPause.requestFocus();
