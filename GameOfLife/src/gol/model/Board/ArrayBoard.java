@@ -1,8 +1,6 @@
 package gol.model.Board;
 
 import gol.model.Logic.Rule;
-import java.util.ArrayList;
-import java.util.Arrays;
 
 /**
  * This class implements all needed features for a Board in game of Life. The

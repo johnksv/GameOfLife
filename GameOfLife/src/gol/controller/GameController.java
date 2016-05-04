@@ -10,13 +10,13 @@ import gol.model.Logic.ConwaysRule;
 import gol.model.Logic.CustomRule;
 import gol.model.Logic.Rule;
 import gol.model.Logic.unsupportedRuleException;
-import gol.s305089.controller.PatternEditorController;
-import gol.s305089.controller.GifMakerController;
-import gol.s305089.controller.SoundController;
-import gol.s305089.controller.StatsController;
+import gol.svergja.controller.PatternEditorController;
+import gol.svergja.controller.GifMakerController;
+import gol.svergja.controller.SoundController;
+import gol.svergja.controller.StatsController;
 import gol.other.Configuration;
-import gol.s305054.model.GIFWriterS305054;
-import gol.s305054.controller.EditorController;
+import gol.vang.model.GIFWriterS305054;
+import gol.vang.controller.EditorController;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -115,11 +115,11 @@ public class GameController implements Initializable {
     @FXML
     private Button btnUseRule;
     @FXML
-    private Slider timeSliderGifTrygve;
+    private Slider s54timeSliderGif;
     @FXML
-    private Label timeLabelGifTrygve;
+    private Label s54timeLabelGif;
     @FXML
-    private TextField nPicturesGIFTrygve;
+    private TextField s54nPicturesGIF;
     @FXML
     private CheckBox cbDrawBox;
 
@@ -439,9 +439,9 @@ public class GameController implements Initializable {
     }
 
     @FXML
-    private void handleGIFTrygve() {
+    private void s54handleGIF() {
         timeline.pause();
-        String sPictures = nPicturesGIFTrygve.getText();
+        String sPictures = s54nPicturesGIF.getText();
         int pictures = Integer.parseInt(sPictures.replaceAll("\\D", ""));
         
         GIFWriterS305054 gifTrygve = new GIFWriterS305054();
@@ -457,7 +457,7 @@ public class GameController implements Initializable {
             gifTrygve.setCellSize((int) activeBoard.getCellSize());
             gifTrygve.setPictures(pictures);
             gifTrygve.setBoard(activeBoard);
-            gifTrygve.setTime(timeSliderGifTrygve.getValue());
+            gifTrygve.setTime(s54timeSliderGif.getValue());
             gifTrygve.setColor(bgColor, cColor);
             gifTrygve.prepareGIF(file.toPath());
             gifTrygve.makeGIF();
@@ -465,16 +465,16 @@ public class GameController implements Initializable {
     }
 
     @FXML
-    private void handleGifSliderTrygve() {
-        timeLabelGifTrygve.setText("Time Between Pictures: " + String.format("%.3f %s", timeSliderGifTrygve.getValue(), "s"));
+    private void s54handleGifSlider() {
+        s54timeLabelGif.setText("Time Between Pictures: " + String.format("%.3f %s", s54timeSliderGif.getValue(), "s"));
     }
 
     @FXML
-    private void openEditorTrygve() {
+    private void s54openEditor() {
         timeline.pause();
         try {
             Stage editor = new Stage();
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/gol/s305054/view/Editor.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/gol/vang/view/Editor.fxml"));
             Parent root = loader.load();
             Scene scene = new Scene(root);
             EditorController edController = loader.getController();
@@ -589,7 +589,7 @@ public class GameController implements Initializable {
     }
 
     @FXML
-    private void handleShowSStats() {
+    private void s84handleShowStats() {
         try {
             Stage statistics = new Stage();
             statistics.setResizable(false);
@@ -614,7 +614,7 @@ public class GameController implements Initializable {
     }
 
     @FXML
-    private void handleSEditor() {
+    private void s84handleEditor() {
         try {
             if (timeline.getStatus() == Status.RUNNING) {
                 handleAnimation();

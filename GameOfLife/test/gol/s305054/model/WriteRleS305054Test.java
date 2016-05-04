@@ -4,6 +4,7 @@
  */
 package gol.s305054.model;
 
+import gol.vang.model.WriteRleS305054;
 import gol.model.Board.ArrayBoard;
 import gol.model.Board.Board;
 import javafx.scene.control.TextField;
