@@ -248,16 +248,6 @@ public class GameController implements Initializable {
         }
     }
 
-    /**
-     * Sets current board as the given board.
-     *
-     * @param activeBoard Board to set.
-     */
-    public void setActiveBoard(Board activeBoard) {
-        this.activeBoard = activeBoard;
-        draw();
-    }
-
     private void draw() {
         double cellSize = activeBoard.getCellSize();
         double gridSpacing = activeBoard.getGridSpacing();
@@ -1016,4 +1006,15 @@ public class GameController implements Initializable {
             System.err.println("An error occurred...:\n" + ex);
         }
     }
+
+    /**
+     * Sets current board as the given board.
+     *
+     * @param activeBoard Board to set.
+     */
+    public void setActiveBoard(Board activeBoard) {
+        this.activeBoard = activeBoard;
+        draw();
+    }
+
 }
