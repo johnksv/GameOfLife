@@ -39,9 +39,6 @@ public class ArrayBoard extends Board {
         
     }
 
-    /* TODO javadoc
-     * Bruker gameBoard.length i stedet for getArrayLength(i/j) for å ta med ramme.
-     */
     @Override
     public void clearBoard() {
         for (int i = 0; i < gameBoard.length; i++) {
@@ -62,6 +59,9 @@ public class ArrayBoard extends Board {
         }
     }
     
+    /**
+     * Method will not be supported. Threads are not supported in ArrayBoard
+     */
     @Override
     protected void checkRulesConcurrent(Rule activeRule, int threadNr) {
         throw new UnsupportedOperationException("Threads for ArrayBoard is not supported.");
@@ -93,6 +93,9 @@ public class ArrayBoard extends Board {
         }
     }
     
+    /**
+     * Method will not be supported. Threads are not supported in ArrayBoard
+     */
     @Override
     protected void countNeighConcurrent(int threadNr) {
         throw new UnsupportedOperationException("Threads for ArrayBoard is not supported.");

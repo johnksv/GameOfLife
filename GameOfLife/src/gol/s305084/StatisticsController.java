@@ -96,7 +96,7 @@ public class StatisticsController implements Initializable {
     }
 
     /**
-     * Inserts the board witch statistics is wished to be shown.
+     * Inserts the board which statistics is wished to be shown.
      *
      * @param activeBoard
      */
@@ -111,7 +111,7 @@ public class StatisticsController implements Initializable {
      * in cells, and similarity value. Similarity value is by default defined by
      * how similar each generation is to generation 0.
      * </p>
-     * <b>Note:</b> Mouse-click on the lineChart will change witch generation
+     * <b>Note:</b> Mouse-click on the lineChart will change which generation
      * the similarity value will compare to.
      */
     public void showStats() {

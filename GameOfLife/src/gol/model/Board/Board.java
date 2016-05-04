@@ -159,7 +159,9 @@ public abstract class Board {
         }
     }
 
-    //TODO javadoc
+    /**
+     * Meassure how fast the program runs 100 generations of a given board.
+     */
     public void nextGenPrintPerformance() {
         long start = System.nanoTime();
         for (int i = 0; i < 100; i++) {
@@ -169,7 +171,9 @@ public abstract class Board {
         System.out.println("100 iterations: One thread. Counting time (ms): " + elapsed);
     }
 
-    //TODO javadoc
+    /**
+     * Meassure how fast the program runs 100 generations of a given board that uses threads.
+     */
     public void nextGenConcPrintPerformance() {
         long start = System.nanoTime();
         for (int i = 0; i < 100; i++) {
@@ -345,7 +349,7 @@ public abstract class Board {
     public abstract void setCellState(int y, int x, boolean alive);
 
     /**
-     * Sets the cell state from canvas coordinats, given from a mouse click.
+     * Sets the cell state from canvas coordinats, given from a mouse click
      *
      * @param y y coordinate of the mouse click.
      * @param x x coordinate of the mouse click.
@@ -382,7 +386,7 @@ public abstract class Board {
     public abstract byte[][] getBoundingBoxBoard();
 
     /**
-     * Calculates the smallest possible gamebord
+     * Calculates the smallest possible gamebord.
      * <p>
      * Author: Henrik Lieng (Vedlegg 1 ark 5)
      *

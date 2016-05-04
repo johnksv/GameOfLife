@@ -33,7 +33,7 @@ public class DynamicBoard extends Board {
     }
 
     /**
-     * Creates an arrayList in witch the y x index are expanded. Calls super
+     * Creates an arrayList in which the y x index are expanded. Calls super
      */
     public DynamicBoard(int y, int x) {
         this();
