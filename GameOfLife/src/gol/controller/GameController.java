@@ -589,7 +589,7 @@ public class GameController implements Initializable {
             statistics.setTitle("Gol: Statistics");
             statistics.show();
         } catch (IOException ex) {
-            Logger.getLogger(GameController.class.getName()).log(Level.SEVERE, null, ex);
+            UsefullMethods.showErrorAlert("This should never happen!", "Your program is not working properly.");
         }
     }
 
@@ -648,7 +648,7 @@ public class GameController implements Initializable {
             draw();
 
         } catch (IOException ex) {
-            Logger.getLogger(GameController.class.getName()).log(Level.SEVERE, null, ex);
+            UsefullMethods.showErrorAlert("This should never happen!", "Your program is not working properly.");
         }
     }
 
