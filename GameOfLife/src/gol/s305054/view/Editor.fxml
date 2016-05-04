@@ -86,11 +86,11 @@
    <bottom>
       <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
          <children>
-            <ScrollPane prefHeight="200.0" prefWidth="200.0">
+            <ScrollPane prefHeight="173.0" prefWidth="877.0">
                <content>
-                  <Canvas fx:id="stripCanvas" height="169.0" width="881.0" />
+                  <Canvas fx:id="stripCanvas" height="155.0" width="2500.0" />
                </content></ScrollPane>
-            <Button fx:id="updateStripBtn" mnemonicParsing="false" text="Update Strip" />
+            <Button fx:id="updateStripBtn" mnemonicParsing="false"  text="Update Strip" />
          </children>
       </VBox>
    </bottom>

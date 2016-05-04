@@ -25,6 +25,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.paint.Color;
+import javafx.scene.transform.Affine;
 import javafx.stage.FileChooser;
 
 /**
@@ -68,7 +69,7 @@ public class EditorController implements Initializable {
     private Board activeBoard = new ArrayBoard(150,150);
     private Board stripBoard;
     byte[][] patternToInsert;
-    byte[][] patternStrip;
+    byte[][] stripBoundingBox;
 
     /**
      * Initializes the controller class.
@@ -77,11 +78,12 @@ public class EditorController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         gc = editorCanvas.getGraphicsContext2D();
         stripGc = stripCanvas.getGraphicsContext2D();
+        stripGc.clearRect(0, 0, stripCanvas.widthProperty().doubleValue(), stripCanvas.heightProperty().doubleValue());
+        
         activeBoard.setCellSize(15);
         activeBoard.setGridSpacing(0.8);
 
         mouseInit();
-        stripParts();
     }
 
     @FXML
@@ -120,10 +122,10 @@ public class EditorController implements Initializable {
     }
     
     private void drawStrip() {
-        stripGc.setGlobalAlpha(1);
         stripGc.setFill(backgroundColor);
         stripGc.fillRect(0, 0, stripCanvas.getWidth(), stripCanvas.getHeight());
         stripGc.setFill(cellColor);
+        
         for (int i = 1; i < stripBoard.getArrayLength(); i++) {
             for (int j = 1; j < stripBoard.getArrayLength(i); j++) {
                 if (stripBoard.getCellState(i, j)) {
@@ -134,12 +136,28 @@ public class EditorController implements Initializable {
                 }
             }
         }
-
     }
     
-    private void stripParts() {
+    
+    private void theStrip() {
         //TODO height, width, sånn shit. Vil ha 20 patterns på en canvas. Affain klasse som er nøkkelordet
+        stripBoundingBox = activeBoard.getBoundingBoxBoard();
         stripBoard = new DynamicBoard();
+        stripBoard.insertArray(stripBoundingBox);
+        
+        Affine xForm = new Affine();
+        double tx = 0;
+        
+        //forloop
+        xForm.setTx(tx);
+        stripGc.setTransform(xForm);
+        stripBoard.nextGen();
+        drawStrip();
+        tx += stripBoundingBox.length + stripCanvas.getWidth()/20;
+        
+        //reset transform
+        xForm.setTx(0.0);
+        stripGc.setTransform(xForm);
     }
 
     private void mouseInit() {

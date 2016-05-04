@@ -171,7 +171,12 @@ public class StatsController implements Initializable {
             currentPattern.setFont(new Font(13));
             Label labelMatch = new Label(data.YValueProperty().getValue() + " % match.");
             labelMatch.setFont(new Font(14));
-            Label labelMatchWith = new Label("First/closest match on iteration number: " + simMeasureClosest.get(i));
+            Label labelMatchWith;
+            if (simMeasureClosest.get(i) == -1) {
+                labelMatchWith = new Label("No close match was found...");
+            } else {
+                labelMatchWith = new Label("First/closest match on iteration number: " + simMeasureClosest.get(i));
+            }
             labelMatchWith.setFont(new Font(14));
 
             VBox container = new VBox();
@@ -203,7 +208,7 @@ public class StatsController implements Initializable {
     public void setBoard(Board boardToSet) {
         gameStats.setBoard(boardToSet);
         originalPattern = boardToSet.getBoundingBoxBoard();
-        activeBoard = new DynamicBoard(10,10);
+        activeBoard = new DynamicBoard(10, 10);
         activeBoard.setRule(boardToSet.getRule());
         setPattern(originalPattern);
     }
