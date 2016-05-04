@@ -1,5 +1,12 @@
 package gol.controller;
 
+import gol.model.Board.ArrayBoard;
+import gol.model.Board.Board;
+import gol.model.Board.DynamicBoard;
+import gol.model.FileIO.PatternFormatException;
+import gol.model.FileIO.ReadFile;
+import gol.model.UsefullMethods;
+import gol.other.Configuration;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -12,6 +19,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 /**
@@ -63,6 +71,50 @@ public class MainController {
             Logger.getLogger(GameController.class.getName()).log(Level.SEVERE, null, ex);
         }
 
+    }
+
+    @FXML
+    private void startGamePattern() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/gol/view/Game.fxml"));
+            Parent root = loader.load();
+
+            GameController gameController = loader.getController();
+            Scene scene = new Scene(root);
+            scene.setOnKeyPressed((KeyEvent e) -> {
+                gameController.handleKeyEvents(e);
+            });
+
+            primaryStage.setScene(scene);
+            primaryStage.setResizable(true);
+            primaryStage.setMinWidth(850);
+            primaryStage.setMinHeight(650);
+
+            //Insert starting pattern
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.getExtensionFilters().addAll(
+                    new FileChooser.ExtensionFilter("Game of Life Files", "*.rle", "*.cells"),
+                    new FileChooser.ExtensionFilter("All Files", "*.*"));
+
+            File selected = fileChooser.showOpenDialog(null);
+            if (selected != null) {
+                //init board from config.
+                Board activeBoard;
+                if (Configuration.getProp("dynamicBoard").equals("true")) {
+                    activeBoard = new DynamicBoard();
+                } else {
+                    activeBoard = new ArrayBoard();
+                }
+
+                activeBoard.insertArray(ReadFile.readFileFromDisk(selected.toPath()));
+                gameController.setActiveBoard(activeBoard);
+            }
+
+        } catch (PatternFormatException ex) {
+            UsefullMethods.showErrorAlert("Pattern Error", ex.getMessage());
+        } catch (IOException ex) {
+            Logger.getLogger(GameController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
