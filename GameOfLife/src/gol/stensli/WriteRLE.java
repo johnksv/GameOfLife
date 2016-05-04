@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Contains static methods for writing a board to RLE.
  *
- * @author s305084
+ * @author s305084 - Stian Stensli
  */
 public final class WriteRLE {
 
@@ -20,12 +20,12 @@ public final class WriteRLE {
     /**
      * Converts a non empty Board to RLE format. Supports the metadata: name, author, comment
      *
-     * @param path 
-     * @param board
-     * @param name
-     * @param author
-     * @param comment
-     * @throws java.io.IOException
+     * @param path File location
+     * @param board Pattern
+     * @param name Matadata Name
+     * @param author Matadata author
+     * @param comment Matadata comment
+     * @throws java.io.IOException if problems while saving
      */
     public static void toRLE(Path path, Board board, String name, String author, String comment) throws IOException {
         byte[][] g = board.getBoundingBoxBoard();
@@ -52,7 +52,6 @@ public final class WriteRLE {
             for (byte cell : g[i]) {
                 if (cell != last) {
                     if (last == 64) {
-                        //TODO make own helping method?
                         if (counter == 1) {
                             line.append('o');
                         } else {
@@ -96,13 +95,17 @@ public final class WriteRLE {
     /**
      *  Sets all end of line signs, and handles end of file sign.
      *  If several rows are blank, this method sets the number of blank lines before the dollar sign. 
-     *  
+     *  e.g.: 
+     *        writes bob2$bob! 
+     *        not bob$3b$bob!
+     * 
      *  appendBlank makes sure the file do not end with:"$!" 
-     *  e.g.: bob$!
+     *  e.g.: 
+     *       bob$!
      * 
      */
     private static int appendBlank(StringBuilder line, byte[][] pattern, int i) {
-        // last line must end with ! and not $
+        //returns if the last line
         if (i + 1 >= pattern.length) {
             return i;
         }

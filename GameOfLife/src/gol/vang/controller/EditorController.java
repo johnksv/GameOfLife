@@ -66,7 +66,7 @@ public class EditorController implements Initializable {
     private GraphicsContext stripGc;
     private final Color cellColor = Color.BLACK;
     private final Color backgroundColor = Color.web("#F4F4F4");
-    private Board activeBoard = new DynamicBoard();
+    private Board activeBoard = new ArrayBoard();
     private Board stripBoard;
     byte[][] patternToInsert;
     byte[][] stripBoundingBox;
@@ -81,22 +81,6 @@ public class EditorController implements Initializable {
 
         mouseInit();
         
-    }
-
-    @FXML
-    private void handleZoom() {
-        double x = zoomSlider.getValue();
-        double newValue = 0.2 * Math.exp(0.05 * x);
-        if (((newValue) * activeBoard.getArrayLength() > editorCanvas.getHeight()
-                && (newValue) * activeBoard.getArrayLength(0) > editorCanvas.getWidth())) {
-
-            activeBoard.setCellSize(newValue);
-            activeBoard.setGridSpacing(newValue * 0.053333333);
-        } else {
-            zoomSlider.setValue(20 * Math.log(5 * activeBoard.getCellSize()));
-        }
-
-        draw();
     }
 
     //kopierte draw metode fra GameController, da det er nøyaktig samme greia som skjer.
@@ -136,31 +120,36 @@ public class EditorController implements Initializable {
     }
 
     public void updateStrip() {
-        //TODO height, width, sånn shit. Vil ha 20 patterns på en canvas. Affain klasse som er nøkkelordet
         stripGc.clearRect(0, 0, stripCanvas.widthProperty().doubleValue(), stripCanvas.heightProperty().doubleValue());
         stripBoundingBox = activeBoard.getBoundingBoxBoard();
-        stripBoard = new DynamicBoard();
-        stripBoard.insertArray(stripBoundingBox);
-        stripBoard.setCellSize(1);
-        stripBoard.setGridSpacing(0.01);
+        stripBoard = new ArrayBoard();
+        stripBoard.insertArray(stripBoundingBox, 1, 1);
+        
+        if(stripBoundingBox.length <= stripBoundingBox[0].length) {
+            stripBoard.setCellSize(((stripCanvas.getWidth()/20)/stripBoundingBox.length)/2);
+        } else {
+            stripBoard.setCellSize(((stripCanvas.getWidth()/20)/stripBoundingBox[0].length)/2);
+        }
+        stripBoard.setGridSpacing(0.05);
+        System.out.println(stripBoard.getCellSize() + "\n" + stripBoard.getGridSpacing());
 
         Affine xForm = new Affine();
         double tx = 0;
-
-        //Gjør denne ferdig.
-        for (int iteration = 0; iteration < 20; iteration++) {
-            xForm.setTx(tx);
+        //TODO sjekk hvorfor den ikke itererer riktig
+        for (int iteration = 0; iteration <= 20; iteration++) {
+            stripGc.strokeLine(stripCanvas.getWidth()/20, 0, stripCanvas.getWidth()/20, stripCanvas.getHeight());
             stripGc.setTransform(xForm);
             stripBoard.nextGen();
             drawStrip();
-            tx += stripBoundingBox.length + iteration*(stripCanvas.getWidth() / 20);
+            tx = stripBoundingBox.length + iteration*(stripCanvas.getWidth() / 20);
+            xForm.setTx(tx);
+            System.out.println("gen: "+iteration);
         }
         
-        //reset transform
         xForm.setTx(0.0);
         stripGc.setTransform(xForm);
     }
-
+      
     private void mouseInit() {
 
         //Registers clicks on scene
@@ -173,25 +162,11 @@ public class EditorController implements Initializable {
                     handleMouseClick(e);
 
                 });
-        /* Trenger jeg disse?
+
         editorCanvas.addEventHandler(MouseEvent.MOUSE_RELEASED,
-                (MouseEvent e) -> {
-                    if (rbMoveGrid.isSelected()) {
-                        moveGridValues[2] = -Double.MAX_VALUE;
-                        moveGridValues[3] = -Double.MAX_VALUE;
-                    }
+                (MouseEvent) -> {
+                    updateStrip();
                 });
-
-        editorCanvas.addEventHandler(MouseEvent.MOUSE_MOVED,
-                (MouseEvent e) -> {
-                    mousePositionX = (int) e.getX();
-                    mousePositionY = (int) e.getY();
-                    if (boardFromFile != null) {
-
-                        draw();
-                        drawGhostTiles();
-                    }
-                }); */
 
         editorCanvas.setOnScroll((ScrollEvent event) -> {
             editorCanvas.requestFocus();
@@ -215,14 +190,14 @@ public class EditorController implements Initializable {
         draw();
     }
 
-    public void setBoard(Board gameBoard) {
-        patternToInsert = gameBoard.getBoundingBoxBoard();
-        activeBoard.insertArray(patternToInsert, 5, 5);
-        activeBoard.setCellSize(gameBoard.getCellSize());
-        activeBoard.setGridSpacing(gameBoard.getGridSpacing());
+    @FXML
+    public void handleClearBtn() {
+        activeBoard.clearBoard();
+        stripBoard.clearBoard();
         draw();
+        drawStrip();
     }
-
+    
     @FXML
     private void handleSave() {
         FileChooser fileChooser = new FileChooser();
@@ -240,5 +215,29 @@ public class EditorController implements Initializable {
             }
         }
     }
+    
+    @FXML
+    private void handleZoom() {
+        double x = zoomSlider.getValue();
+        double newValue = 0.2 * Math.exp(0.05 * x);
+        if (((newValue) * activeBoard.getArrayLength() > editorCanvas.getHeight()
+                && (newValue) * activeBoard.getArrayLength(0) > editorCanvas.getWidth())) {
+
+            activeBoard.setCellSize(newValue);
+        } else {
+            zoomSlider.setValue(20 * Math.log(5 * activeBoard.getCellSize()));
+        }
+        draw();
+    }
+    
+    public void setBoard(Board gameBoard) {
+        patternToInsert = gameBoard.getBoundingBoxBoard();
+        activeBoard.insertArray(patternToInsert, 5, 5);
+        activeBoard.setCellSize(gameBoard.getCellSize());
+        activeBoard.setGridSpacing(gameBoard.getGridSpacing());
+        draw();
+    }
+
+    
 
 }

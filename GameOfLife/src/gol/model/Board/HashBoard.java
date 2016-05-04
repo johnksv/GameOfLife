@@ -1,6 +1,5 @@
 package gol.model.Board;
 
-import gol.model.Logic.Rule;
 import java.util.HashMap;
 
 /**
@@ -11,7 +10,7 @@ import java.util.HashMap;
  * <b>To do:</b> implement a quadtree to store all cells, this will make the board dynamic and much much faster.
  * If a quadtree is implemented a new getCellState and setCellState must be implemented.
  *
- * @author s305084
+ * @author s305084 - Stian Stensli
  */
 public class HashBoard extends ArrayBoard {
 
@@ -21,7 +20,7 @@ public class HashBoard extends ArrayBoard {
 
     private byte[][] nextBoard;
     private final HashMap<Number, byte[]> hash = new HashMap<>();
-    //TODO save macrocells as short
+    //can be save as short, but easy with int as java returns int for all bit operations
     private int macroCell;
  
     /**
