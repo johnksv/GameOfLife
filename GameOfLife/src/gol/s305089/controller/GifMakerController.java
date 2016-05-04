@@ -108,13 +108,13 @@ public class GifMakerController implements Initializable {
         spinnNumIterations.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 100, 20, 5));
         spinnNumIterations.setEditable(true);
 
-        spinnTimeBetween.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 10000, 200, 100));
+        spinnTimeBetween.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 100000, 200, 100));
         spinnTimeBetween.setEditable(true);
 
-        spinnWidth.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 10000, 200, 100));
+        spinnWidth.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 5000, 200, 100));
         spinnWidth.setEditable(true);
 
-        spinnHeight.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 10000, 200, 100));
+        spinnHeight.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 5000, 200, 100));
         spinnHeight.setEditable(true);
 
         spinnThreshold.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 100, 90, 1));

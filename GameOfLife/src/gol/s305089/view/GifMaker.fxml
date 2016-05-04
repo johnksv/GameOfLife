@@ -27,7 +27,7 @@
             <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefWidth="200.0" styleClass="pane-standard">
                     <children>
-                        <TabPane layoutY="-8.0" prefWidth="200.0" rotateGraphic="true" tabClosingPolicy="UNAVAILABLE" AnchorPane.topAnchor="0.0">
+                        <TabPane layoutY="-8.0" prefHeight="500.0" prefWidth="200.0" rotateGraphic="true" tabClosingPolicy="UNAVAILABLE" AnchorPane.topAnchor="-4.0">
                             <tabs>
                                 <Tab closable="false" text="General">
                                     <content>
@@ -47,7 +47,7 @@
                                                 </Label>
                                                 <Separator prefWidth="200.0" />
                                                 <Label text="Cellsize" />
-                                                <Slider fx:id="sliderCellSize" min="2.0" minorTickCount="5" prefWidth="4.0" showTickLabels="true" value="5">
+                                                <Slider fx:id="sliderCellSize" majorTickUnit="5.0" max="35.0" min="0.2" minorTickCount="2" prefWidth="4.0" showTickLabels="true" showTickMarks="true" value="5">
                                                     <VBox.margin>
                                                         <Insets top="-7.0" />
                                                     </VBox.margin>
@@ -182,6 +182,9 @@
                                     </VBox.margin>
                                 </Label>
                             </children>
+                     <padding>
+                        <Insets top="5.0" />
+                     </padding>
                         </VBox>
                     </children>
                     <padding>

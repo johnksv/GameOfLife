@@ -55,10 +55,10 @@ public class StatsRedoTest {
             assertEquals(0, result[iteration][1]);
 
             //For each generation, there should be a 100% match with another generation
-            //unless for the two last. Only checking for generation in future.
+            //unless for the last. Only checking for generation in future.
             if (iteration < result.length - 3) {
                 assertEquals(100, result[iteration][2], 0.0005);
-            } else if (iteration == result.length - 2) {
+            } else if (iteration == result.length - 1) {
                 assertEquals(0, result[iteration][2], 0.0005);
             }
         }

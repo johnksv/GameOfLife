@@ -37,19 +37,18 @@ public class StatsRedo {
      * @return The result from the calculations. The data has the following
      * index: Living cells: 0, Change in living cells: 1, Similarity: 3, closest
      * similar generation: 4.
-     * @see #calcCountLiving(int)
-     * @see #calcChangeInLiving(int)
-     * @see #getSimilarityMeasure(int)
      */
     public int[][] getStatistics(int iterations, boolean calcChangeLiving, boolean calcSimilarity) {
-        int[][] stats = new int[iterations + 1][4];
-        livingCells = new int[iterations + 1];
+        iterations++;
+        int[][] stats = new int[iterations][4];
+        livingCells = new int[iterations];
         changeLivingCells = new int[iterations];
-        similarityMeasure = new int[iterations + 1][2];
-        geometricFactor = new int[iterations + 1];
+        similarityMeasure = new int[iterations][2];
+        geometricFactor = new int[iterations];
 
         //Ensure we start with orginal pattern
         setPattern(originalPattern);
+        //If similarity should be calculated, then should change in living to.
         if (calcSimilarity) {
             calcChangeLiving = true;
         }
@@ -58,18 +57,18 @@ public class StatsRedo {
         for (int ite = 0; ite < iterations; ite++) {
             calcLivingAndGeometric(ite);
 
-            if (calcChangeLiving) {
-                calcChangeLiving(ite);
-            }
-
             if (livingCells != null) {
                 stats[ite][0] = livingCells[ite];
             }
-            if (changeLivingCells != null) {
-                stats[ite][1] = changeLivingCells[ite];
-            }
 
             activeBoard.nextGen();
+        }
+
+        if (calcChangeLiving) {
+            for (int ite = 0; ite < iterations - 1; ite++) {
+                calcChangeLiving(ite);
+                stats[ite][1] = changeLivingCells[ite];
+            }
         }
 
         //Can now calc similarity, then append data.
@@ -77,10 +76,8 @@ public class StatsRedo {
         if (calcSimilarity) {
             calcSimilarity(iterations);
             for (int ite = 0; ite < iterations; ite++) {
-                if (similarityMeasure != null) {
-                    stats[ite][2] = similarityMeasure[ite][0];
-                    stats[ite][3] = similarityMeasure[ite][1];
-                }
+                stats[ite][2] = similarityMeasure[ite][0];
+                stats[ite][3] = similarityMeasure[ite][1];
             }
         }
 
@@ -112,9 +109,7 @@ public class StatsRedo {
      * @param curIte current iteration
      */
     private void calcChangeLiving(int curIte) {
-        if (curIte != 0) {
-            changeLivingCells[curIte] = livingCells[curIte + 1] - livingCells[curIte];
-        }
+        changeLivingCells[curIte] = livingCells[curIte + 1] - livingCells[curIte];
     }
 
     /**

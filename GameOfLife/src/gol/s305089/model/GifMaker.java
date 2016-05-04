@@ -148,9 +148,10 @@ public final class GifMaker {
             double spacing = 5;
             byte[][] currentGenBoard = activeBoard.getBoundingBoxBoard();
             int rowLength = currentGenBoard[0].length;
-            cellSize = Math.floor(gifHeight / (activeBoard.getBoundingBoxBoard().length + spacing));
+            cellSize = gifHeight / (currentGenBoard.length + spacing);
+            
             if (cellSize > gifWidth / (rowLength + spacing)) {
-                cellSize = Math.floor(gifWidth / (rowLength + spacing));
+                cellSize = gifWidth / (rowLength + spacing);
             }
             setPattern(currentGenBoard);
         }
