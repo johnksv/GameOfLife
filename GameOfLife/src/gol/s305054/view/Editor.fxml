@@ -90,7 +90,7 @@
                <content>
                   <Canvas fx:id="stripCanvas" height="155.0" width="2500.0" />
                </content></ScrollPane>
-            <Button fx:id="updateStripBtn" mnemonicParsing="false" text="Update Strip" />
+            <Button fx:id="updateStripBtn" mnemonicParsing="false"  text="Update Strip" />
          </children>
       </VBox>
    </bottom>
