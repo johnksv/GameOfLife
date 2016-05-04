@@ -41,7 +41,6 @@ public class MainController {
      * controller. Will also
      * call{@link GameController#handleKeyEvents(javafx.scene.input.KeyEvent) setKeyEvents.}
      *
-     * @throws IOException Reads a FXML file
      */
     @FXML
     public void startGame() {

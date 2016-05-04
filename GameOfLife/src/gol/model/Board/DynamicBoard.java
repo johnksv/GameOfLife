@@ -10,8 +10,9 @@ import java.util.concurrent.atomic.AtomicInteger;
  * This class allows the game board to automatically expand as the pattern
  * expands. A max size is implemented to prevent the game from crashing. This
  * max size can be changed in the configuration file.
- * 
- * <p>Due to how java </p>
+ *
+ * <p>
+ * Due to how java </p>
  *
  * @author s305054, s305089, s305084
  */
@@ -23,11 +24,17 @@ public class DynamicBoard extends Board {
 
     private ArrayList<ArrayList<AtomicInteger>> gameBoard;
 
+    /**
+     * Creates an empty arrayList. Calls super
+     */
     public DynamicBoard() {
         super();
         gameBoard = new ArrayList<>();
     }
 
+    /**
+     * Creates an arrayList in witch the y x index are expanded. Calls super
+     */
     public DynamicBoard(int y, int x) {
         this();
         y = expandBoardY(-y);
@@ -37,6 +44,31 @@ public class DynamicBoard extends Board {
     @Override
     public void clearBoard() {
         gameBoard.clear();
+    }
+
+    @Override
+    public void insertArray(byte[][] boardToInsert) {
+        insertArray(boardToInsert, 2, 2);
+    }
+
+    @Override
+    public void insertArray(byte[][] boardToInsert, int y, int x) {
+        y = expandBoardY(y);
+        x = expandBoardX(y, x);
+
+        //Handle under max value
+        x = (x < 1) ? 1 : x;
+        y = (y < 1) ? 1 : y;
+
+        for (int i = 0; i < boardToInsert.length; i++) {
+            for (int j = 0; j < boardToInsert[i].length; j++) {
+                if (boardToInsert[i][j] == 64) {
+
+                    setCellState(y + i, x + j, true);
+
+                }
+            }
+        }
     }
 
     @Override
@@ -96,29 +128,6 @@ public class DynamicBoard extends Board {
         }
     }
 
-    private void doCountNeigConCu(int row, int col) {
-        //If cell is alive
-        if (gameBoard.get(row).get(col).intValue() >= 64) {
-
-            //Goes through surrounding neighbours
-            for (int k = -1; k <= 1; k++) {
-                for (int l = -1; l <= 1; l++) {
-
-                    //To not count itself
-                    if (!(k == 0 && l == 0)) {
-                        //Will not expand top or left
-                        //Important: will expand bottom and rigth
-                        incrementCellValueNE(row + k, col + l);
-
-                        row = (row + k < 1) ? row + 1 : row;
-                        col = (col + l < 1) ? col + 1 : col;
-
-                    }
-                }
-            }
-        }
-    }
-
     @Override
     protected void checkRules(Rule activeRule) {
         for (int row = 1; row < gameBoard.size(); row++) {
@@ -160,6 +169,70 @@ public class DynamicBoard extends Board {
         }
     }
 
+    @Override
+    protected final int expandBoardY(int row) {
+        if (row < 2) {
+            while (row < EXPANSION && gameBoard.size() < MAXHEIGHT) {
+                gameBoard.add(0, new ArrayList<>());
+                offsetValues[1] -= (cellSize + gridSpacing);
+                row++;
+            }
+        }
+        while (row >= gameBoard.size() - EXPANSION && gameBoard.size() < MAXHEIGHT) {
+            gameBoard.add(new ArrayList<>());
+        }
+        return row;
+    }
+
+    @Override
+    protected final int expandBoardX(int row, int col) {
+        if (row >= gameBoard.size() || row < 0) {
+            return -1;
+        }
+
+        if (col < 2) {
+            //For performance. Avoid calling method each time
+            int maxRow = getMaxRowLength();
+            while (col < EXPANSION && maxRow < MAXWIDTH) {
+                gameBoard.stream().forEach((rowValue) -> {
+                    rowValue.add(0, new AtomicInteger(0));
+                });
+                maxRow++;
+                offsetValues[0] -= (cellSize + gridSpacing);
+                col++;
+            }
+        }
+        while (col >= gameBoard.get(row).size() - EXPANSION && gameBoard.get(row).size() < MAXWIDTH) {
+            gameBoard.get(row).add(new AtomicInteger(0));
+        }
+        return col;
+    }
+
+    //TODO change name here too!
+    private void doCountNeigConCu(int row, int col) {
+        //If cell is alive
+        if (gameBoard.get(row).get(col).intValue() >= 64) {
+
+            //Goes through surrounding neighbours
+            for (int k = -1; k <= 1; k++) {
+                for (int l = -1; l <= 1; l++) {
+
+                    //To not count itself
+                    if (!(k == 0 && l == 0)) {
+                        //Will not expand top or left
+                        //Important: will expand bottom and rigth
+                        incrementCellValueNE(row + k, col + l);
+
+                        row = (row + k < 1) ? row + 1 : row;
+                        col = (col + l < 1) ? col + 1 : col;
+
+                    }
+                }
+            }
+        }
+    }
+
+    //TODO change name!
     private void doCheckRulesConcu(Rule activeRule, int row, int col) {
         if (gameBoard.get(row).get(col).intValue() != 0) {
             if (activeRule.setLife(gameBoard.get(row).get(col).byteValue()) == 64) {
@@ -180,24 +253,58 @@ public class DynamicBoard extends Board {
         }
     }
 
-    @Override
-    public void insertArray(byte[][] boardToInsert, int y, int x) {
+    private void incrementCellValue(int y, int x) {
+        //All zero or less cordinates will be set to 1.
+        //This is a fundamental part of DynamicBoard.
+
         y = expandBoardY(y);
         x = expandBoardX(y, x);
 
-        //Handle under max value
-        x = (x < 1) ? 1 : x;
-        y = (y < 1) ? 1 : y;
+        if (y < gameBoard.size() && y >= 0) {
+            if (x < gameBoard.get(y).size() && x >= 0) {
+                gameBoard.get(y).get(x).incrementAndGet();
 
-        for (int i = 0; i < boardToInsert.length; i++) {
-            for (int j = 0; j < boardToInsert[i].length; j++) {
-                if (boardToInsert[i][j] == 64) {
-
-                    setCellState(y + i, x + j, true);
-
-                }
             }
         }
+
+    }
+
+    /**
+     * Set cell state, no expand top left
+     */
+    private void setCellStateNE(int row, int col, boolean alive) {
+        if (alive) {
+            gameBoard.get(row).set(col, new AtomicInteger(64));
+        } else {
+            gameBoard.get(row).set(col, new AtomicInteger(0));
+        }
+    }
+
+    /**
+     * increment cell value no expand top left.
+     */
+    private void incrementCellValueNE(int y, int x) {
+        if (y < 0) {
+            return;
+        }
+        if (x < 0) {
+            return;
+        }
+        while (y >= gameBoard.size() && gameBoard.size() < MAXHEIGHT) {
+            gameBoard.add(new ArrayList<>());
+        }
+        if (y < MAXHEIGHT) {
+            while (x >= gameBoard.get(y).size() && gameBoard.get(y).size() < MAXWIDTH) {
+                gameBoard.get(y).add(new AtomicInteger(0));
+            }
+        }
+
+        if (y < gameBoard.size()) {
+            if (x < gameBoard.get(y).size()) {
+                gameBoard.get(y).get(x).incrementAndGet();
+            }
+        }
+
     }
 
     @Override
@@ -331,101 +438,4 @@ public class DynamicBoard extends Board {
         return result.toString();
     }
 
-    private void incrementCellValue(int y, int x) {
-        //All zero or less cordinates will be set to 1.
-        //This is a fundamental part of DynamicBoard.
-
-        y = expandBoardY(y);
-        x = expandBoardX(y, x);
-
-        if (y < gameBoard.size() && y >= 0) {
-            if (x < gameBoard.get(y).size() && x >= 0) {
-                gameBoard.get(y).get(x).incrementAndGet();
-
-            }
-        }
-
-    }
-
-    @Override
-    protected final int expandBoardY(int row) {
-        if (row < 2) {
-            while (row < EXPANSION && gameBoard.size() < MAXHEIGHT) {
-                gameBoard.add(0, new ArrayList<>());
-                offsetValues[1] -= (cellSize + gridSpacing);
-                row++;
-            }
-        }
-        while (row >= gameBoard.size() - EXPANSION && gameBoard.size() < MAXHEIGHT) {
-            gameBoard.add(new ArrayList<>());
-        }
-        return row;
-    }
-
-    @Override
-    protected final int expandBoardX(int row, int col) {
-        if (row >= gameBoard.size() || row < 0) {
-            return -1;
-        }
-
-        if (col < 2) {
-            //For performance. Avoid calling method each time
-            int maxRow = getMaxRowLength();
-            while (col < EXPANSION && maxRow < MAXWIDTH) {
-                gameBoard.stream().forEach((rowValue) -> {
-                    rowValue.add(0, new AtomicInteger(0));
-                });
-                maxRow++;
-                offsetValues[0] -= (cellSize + gridSpacing);
-                col++;
-            }
-        }
-        while (col >= gameBoard.get(row).size() - EXPANSION && gameBoard.get(row).size() < MAXWIDTH) {
-            gameBoard.get(row).add(new AtomicInteger(0));
-        }
-        return col;
-    }
-
-    /**
-     * Set cell state, no expand top left
-     */
-    private void setCellStateNE(int row, int col, boolean alive) {
-        if (alive) {
-            gameBoard.get(row).set(col, new AtomicInteger(64));
-        } else {
-            gameBoard.get(row).set(col, new AtomicInteger(0));
-        }
-    }
-
-    /**
-     * increment cell value no expand top left.
-     */
-    private void incrementCellValueNE(int y, int x) {
-        if (y < 0) {
-            return;
-        }
-        if (x < 0) {
-            return;
-        }
-        while (y >= gameBoard.size() && gameBoard.size() < MAXHEIGHT) {
-            gameBoard.add(new ArrayList<>());
-        }
-        if (y < MAXHEIGHT) {
-            while (x >= gameBoard.get(y).size() && gameBoard.get(y).size() < MAXWIDTH) {
-                gameBoard.get(y).add(new AtomicInteger(0));
-            }
-        }
-
-        if (y < gameBoard.size()) {
-            if (x < gameBoard.get(y).size()) {
-                gameBoard.get(y).get(x).incrementAndGet();
-            }
-        }
-
-    }
-
-    @Override
-    public void insertArray(byte[][] boardToInsert) {
-        insertArray(boardToInsert, 2, 2);
-    }
 }
