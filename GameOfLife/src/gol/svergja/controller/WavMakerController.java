@@ -103,12 +103,12 @@ public class WavMakerController implements Initializable {
 
         FileChooser filechooser = new FileChooser();
         filechooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Waveform Audio", "*.wav"),
-                new FileChooser.ExtensionFilter(" ", "*.*"));
+                new FileChooser.ExtensionFilter("All files ", "*.*"));
 
         File result = filechooser.showSaveDialog(null);
         if (result != null) {
             handleWriteMode();
-            Sound.makeSound(previewFile, durEachIt);
+            Sound.makeSound(result, durEachIt);
             labelInfo.setText("Wav file successfully generated.");
         }
     }
