@@ -40,8 +40,8 @@ public final class UsefullMethods {
     /**
      * Show an error dialogue box.
      *
-     * @param headerText specifies what the header text will commute
-     * @param contentText specifies what the content text will commute
+     * @param headerText specifies what the header text will be
+     * @param contentText specifies what the content text will be
      */
     public static void showErrorAlert(String headerText, String contentText) {
         Alert alert = new Alert(Alert.AlertType.ERROR, contentText);
