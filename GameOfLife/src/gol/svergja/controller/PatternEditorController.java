@@ -69,6 +69,9 @@ public class PatternEditorController implements Initializable {
     private final List<GraphicsContext> theStripGC = new ArrayList<>();
     private final double theStripOffset = 20;
 
+    /**
+     *
+     */
     public PatternEditorController() {
         this.backgroundColor = Color.web("#F4F4F4");
     }
@@ -148,97 +151,6 @@ public class PatternEditorController implements Initializable {
                 });
     }
 
-    @FXML
-    private void handleClearBtn() {
-        activeBoard.clearBoard();
-        draw();
-    }
-
-    @FXML
-    private void savePatternRLE() {
-        boolean fileSucsessCreated = false;
-        byte[][] boardToWrite = activeBoard.getBoundingBoxBoard();
-        if (boardToWrite[0].length != 0) {
-            WriteFile.setPatternName(tfName.getText());
-            WriteFile.setAuthor(tfAuthor.getText());
-            WriteFile.setComment(tfDescription.getText());
-            WriteFile.setRule(tfRules.getText());
-
-            FileChooser filechooser = new FileChooser();
-            filechooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("RLE-format", "*.rle"));
-            filechooser.setInitialFileName(tfName.getText());
-            File file = filechooser.showSaveDialog(null);
-            if (file != null) {
-                fileSucsessCreated = WriteFile.writeToRLE(activeBoard.getBoundingBoxBoard(), file.toPath());
-            }
-        }
-        labelWriteFileFdBck.setText(fileSucsessCreated ? "Success" : "Failed.. Try again");
-    }
-
-    @FXML
-    private void updateTheStrip() {
-        byte[][] patternToDraw = activeBoard.getBoundingBoxBoard();
-
-        //TODO for strip to be dynamic after size
-        theStripBoard = new ArrayBoard(100, 100);
-        theStripBoard.setRule(activeBoard.getRule());
-        theStripBoard.insertArray(patternToDraw, 10, 10);
-        initTheStrip();
-        theStripBoard.clearBoard();
-        theStripBoard.insertArray(patternToDraw, 10, 10);
-
-        for (int iteration = 0; iteration <= 20; iteration++) {
-            drawTheStrip(theStripGC.get(iteration));
-            theStripBoard.nextGen();
-        }
-    }
-
-    @FXML
-    private void saveAsGIF() throws IOException {
-        Stage gifMaker = new Stage();
-        FXMLLoader root = new FXMLLoader(getClass().getResource("/gol/svergja/view/GifMaker.fxml"));
-
-        Scene scene = new Scene((Parent) root.load());
-
-        GifMakerController gifcontroller = root.<GifMakerController>getController();
-        gifcontroller.setBoard(activeBoard);
-
-        gifMaker.setScene(scene);
-        gifMaker.setTitle("Generate GIF - Game of Life");
-        gifMaker.initModality(Modality.APPLICATION_MODAL);
-        gifMaker.setWidth(215);
-        gifMaker.setHeight(535);
-        gifMaker.show();
-
-    }
-
-    public void setBoard(Board gameBoardToCopy) {
-        ghostByteBoard = gameBoardToCopy.getBoundingBoxBoard();
-
-        int rows = (int) (Util.getScreenSize()[1]
-                / gameBoardToCopy.getCellSize());
-        int columns = (int) (Util.getScreenSize()[0]
-                / gameBoardToCopy.getCellSize());
-
-        activeBoard = new ArrayBoard(rows, columns);
-        activeBoard.setRule(gameBoardToCopy.getRule());
-        this.activeBoard.setCellSize(gameBoardToCopy.getCellSize());
-
-    }
-
-    public void setGameController(GameController gameController) {
-        this.gameController = gameController;
-    }
-
-    @FXML
-    private void sendCurrentBoard() {
-        if (gameController != null) {
-            Board board = new DynamicBoard();
-            board.insertArray(activeBoard.getBoundingBoxBoard());
-            gameController.setActiveBoard(board);
-        }
-    }
-
     /**
      * Draws one generation of the strip on the given GC
      */
@@ -316,5 +228,104 @@ public class PatternEditorController implements Initializable {
             activeBoard.setCellState(y, x, true, 0, 0);
         }
         draw();
+    }
+
+    @FXML
+    private void handleClearBtn() {
+        activeBoard.clearBoard();
+        draw();
+    }
+
+    @FXML
+    private void savePatternRLE() {
+        boolean fileSucsessCreated = false;
+        byte[][] boardToWrite = activeBoard.getBoundingBoxBoard();
+        if (boardToWrite[0].length != 0) {
+            WriteFile.setPatternName(tfName.getText());
+            WriteFile.setAuthor(tfAuthor.getText());
+            WriteFile.setComment(tfDescription.getText());
+            WriteFile.setRule(tfRules.getText());
+
+            FileChooser filechooser = new FileChooser();
+            filechooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("RLE-format", "*.rle"));
+            filechooser.setInitialFileName(tfName.getText());
+            File file = filechooser.showSaveDialog(null);
+            if (file != null) {
+                fileSucsessCreated = WriteFile.writeToRLE(activeBoard.getBoundingBoxBoard(), file.toPath());
+            }
+        }
+        labelWriteFileFdBck.setText(fileSucsessCreated ? "Success" : "Failed.. Try again");
+    }
+
+    @FXML
+    private void sendCurrentBoard() {
+        if (gameController != null) {
+            Board board = new DynamicBoard();
+            board.insertArray(activeBoard.getBoundingBoxBoard());
+            gameController.setActiveBoard(board);
+        }
+    }
+
+    @FXML
+    private void saveAsGIF() throws IOException {
+        Stage gifMaker = new Stage();
+        FXMLLoader root = new FXMLLoader(getClass().getResource("/gol/svergja/view/GifMaker.fxml"));
+
+        Scene scene = new Scene((Parent) root.load());
+
+        GifMakerController gifcontroller = root.<GifMakerController>getController();
+        gifcontroller.setBoard(activeBoard);
+
+        gifMaker.setScene(scene);
+        gifMaker.setTitle("Generate GIF - Game of Life");
+        gifMaker.initModality(Modality.APPLICATION_MODAL);
+        gifMaker.setWidth(215);
+        gifMaker.setHeight(535);
+        gifMaker.show();
+
+    }
+
+    @FXML
+    private void updateTheStrip() {
+        byte[][] patternToDraw = activeBoard.getBoundingBoxBoard();
+
+        //TODO for strip to be dynamic after size
+        theStripBoard = new ArrayBoard(100, 100);
+        theStripBoard.setRule(activeBoard.getRule());
+        theStripBoard.insertArray(patternToDraw, 10, 10);
+        initTheStrip();
+        theStripBoard.clearBoard();
+        theStripBoard.insertArray(patternToDraw, 10, 10);
+
+        for (int iteration = 0; iteration <= 20; iteration++) {
+            drawTheStrip(theStripGC.get(iteration));
+            theStripBoard.nextGen();
+        }
+    }
+
+    /**
+     *
+     * @param gameBoardToCopy
+     */
+    public void setBoard(Board gameBoardToCopy) {
+        ghostByteBoard = gameBoardToCopy.getBoundingBoxBoard();
+
+        int rows = (int) (Util.getScreenSize()[1]
+                / gameBoardToCopy.getCellSize());
+        int columns = (int) (Util.getScreenSize()[0]
+                / gameBoardToCopy.getCellSize());
+
+        activeBoard = new ArrayBoard(rows, columns);
+        activeBoard.setRule(gameBoardToCopy.getRule());
+        this.activeBoard.setCellSize(gameBoardToCopy.getCellSize());
+
+    }
+
+    /**
+     *
+     * @param gameController
+     */
+    public void setGameController(GameController gameController) {
+        this.gameController = gameController;
     }
 }

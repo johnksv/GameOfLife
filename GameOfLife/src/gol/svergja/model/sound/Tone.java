@@ -36,6 +36,10 @@ public enum Tone {
         this.frequency = frequency;
     }
 
+    /**
+     * Get the frequency of this tone
+     * @return the frequency given in Hz
+     */
     public double getFreq() {
         return frequency;
     }

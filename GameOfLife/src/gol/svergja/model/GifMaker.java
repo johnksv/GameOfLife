@@ -149,12 +149,58 @@ public final class GifMaker {
             byte[][] currentGenBoard = activeBoard.getBoundingBoxBoard();
             int rowLength = currentGenBoard[0].length;
             cellSize = gifHeight / (currentGenBoard.length + spacing);
-            
+
             if (cellSize > gifWidth / (rowLength + spacing)) {
                 cellSize = gifWidth / (rowLength + spacing);
             }
             setPattern(currentGenBoard);
         }
+    }
+
+    /**
+     * Calculates the maximum cell size so all cells will fill the gif.
+     * <b>NB:</b> Auto cell size will only be calculated if center pattern is
+     * true. This is due to board implementation.
+     *
+     * @param autoCalcCellSize if true a new cell size will be calculated each
+     * iteration of the gif. This will overwrite the current cell size.<p>
+     * If false the previous cell size will be used.</p>
+     * @see #setCellSize(double)
+     */
+    public void setAutoCalcCellSize(boolean autoCalcCellSize) {
+        this.autoCellSize = autoCalcCellSize;
+    }
+
+    /**
+     * Sets the background color of the GIF to this color.
+     *
+     * @param backgroundColor The background color the gif will have when
+     * generated
+     */
+    public void setBackgroundColor(Color backgroundColor) {
+        //Converts each rgb double values to int (in domain 0-255).
+        java.awt.Color newColor = new java.awt.Color((int) (backgroundColor.getRed() * 255),
+                (int) (backgroundColor.getGreen() * 255),
+                (int) (backgroundColor.getBlue() * 255));
+        this.backgroundColor = newColor;
+    }
+
+    public void setCellColor(Color cellColor) {
+        //Converts each rgb double values to int (in domain 0-255).
+        java.awt.Color newColor = new java.awt.Color((int) (cellColor.getRed() * 255),
+                (int) (cellColor.getGreen() * 255),
+                (int) (cellColor.getBlue() * 255));
+        this.cellColor = newColor;
+    }
+
+    /**
+     * Set if the originalPattern should be centered on GIF or not.
+     *
+     * @param centerPattern if false, the originalPattern will be placed at
+     * top-left corner
+     */
+    public void setCenterPattern(boolean centerPattern) {
+        this.centerPattern = centerPattern;
     }
 
     /**
@@ -179,15 +225,6 @@ public final class GifMaker {
     }
 
     /**
-     * The width that a new GIF should have.
-     *
-     * @param gifWidth set the width of the GIF, in pixels
-     */
-    public void setGifWidth(int gifWidth) {
-        this.gifWidth = gifWidth;
-    }
-
-    /**
      * * The height that a new GIF should have.
      *
      * @param gifHeight set the height of the GIF, in pixels
@@ -197,17 +234,24 @@ public final class GifMaker {
     }
 
     /**
-     * Calculates the maximum cell size so all cells will fill the gif.
-     * <b>NB:</b> Auto cell size will only be calculated if center pattern is
-     * true. This is due to board implementation.
+     * The width that a new GIF should have.
      *
-     * @param autoCalcCellSize if true a new cell size will be calculated each
-     * iteration of the gif. This will overwrite the current cell size.<p>
-     * If false the previous cell size will be used.</p>
-     * @see #setCellSize(double)
+     * @param gifWidth set the width of the GIF, in pixels
      */
-    public void setAutoCalcCellSize(boolean autoCalcCellSize) {
-        this.autoCellSize = autoCalcCellSize;
+    public void setGifWidth(int gifWidth) {
+        this.gifWidth = gifWidth;
+    }
+
+    /**
+     * Set if a random cell color should be used for each cell and generation.
+     * This option will suppress the current cell color.
+     *
+     * @param value true for random cell color each generation. False for not.
+     * Default: false.
+     * @see #setCellColor(javafx.scene.paint.Color)
+     */
+    public void setRandomColor(boolean value) {
+        this.randomCellColor = value;
     }
 
     /**
@@ -236,50 +280,6 @@ public final class GifMaker {
         } else {
             activeBoard.insertArray(patternToSet);
         }
-    }
-
-    /**
-     * Set if the originalPattern should be centered on GIF or not.
-     *
-     * @param centerPattern if false, the originalPattern will be placed at
-     * top-left corner
-     */
-    public void setCenterPattern(boolean centerPattern) {
-        this.centerPattern = centerPattern;
-    }
-
-    public void setCellColor(Color cellColor) {
-        //Converts each rgb double values to int (in domain 0-255).
-        java.awt.Color newColor = new java.awt.Color((int) (cellColor.getRed() * 255),
-                (int) (cellColor.getGreen() * 255),
-                (int) (cellColor.getBlue() * 255));
-        this.cellColor = newColor;
-    }
-
-    /**
-     * Sets the background color of the GIF to this color.
-     *
-     * @param backgroundColor The background color the gif will have when
-     * generated
-     */
-    public void setBackgroundColor(Color backgroundColor) {
-        //Converts each rgb double values to int (in domain 0-255).
-        java.awt.Color newColor = new java.awt.Color((int) (backgroundColor.getRed() * 255),
-                (int) (backgroundColor.getGreen() * 255),
-                (int) (backgroundColor.getBlue() * 255));
-        this.backgroundColor = newColor;
-    }
-
-    /**
-     * Set if a random cell color should be used for each cell and generation.
-     * This option will suppress the current cell color.
-     *
-     * @param value true for random cell color each generation. False for not.
-     * Default: false.
-     * @see #setCellColor(javafx.scene.paint.Color)
-     */
-    public void setRandomColor(boolean value) {
-        this.randomCellColor = value;
     }
 
 }

@@ -179,16 +179,21 @@ public class Stats {
     /**
      * Constructs an new Board instance, and inserts the given board bounding
      * box pattern.
-     * <b>Technical info:</b> If the pattern of the board is larger then the
-     * array board threshold (given in the config.properties file), an array
-     * board will be used instead of an dynamic board. This is due to
-     * performance. However, the use of array board can affect the board if it
-     * reaches its boarders.
+     * <b>Technical info:</b> The board constructed is of type array board. This
+     * is due to performance of array board vs dynamic board.
      *
      * @param boardToSet The board that should be copied. Copies the pattern and
      * rule
-     * @see gol.model.Board.Board#insertArray(byte[][], int, int)
+     * @see gol.model.Board.Board
      */
+    public void setCheckSimilarityPrevGen(boolean checkSimilarityPrevGen) {
+        this.checkSimilarityPrevGen = checkSimilarityPrevGen;
+    }
+
+    public void setShouldUseCustom(boolean shouldUseCustom) {
+        this.shouldUseCustom = shouldUseCustom;
+    }
+
     public void setBoard(Board boardToSet) {
         originalPattern = boardToSet.getBoundingBoxBoard();
         activeBoard = new ArrayBoard(2000, 2000);
@@ -200,13 +205,5 @@ public class Stats {
     private void setPattern(byte[][] pattern) {
         activeBoard.clearBoard();
         activeBoard.insertArray(pattern, 120, 120);
-    }
-
-    public void setCheckSimilarityPrevGen(boolean checkSimilarityPrevGen) {
-        this.checkSimilarityPrevGen = checkSimilarityPrevGen;
-    }
-
-    public void setShouldUseCustom(boolean shouldUseCustom) {
-        this.shouldUseCustom = shouldUseCustom;
     }
 }

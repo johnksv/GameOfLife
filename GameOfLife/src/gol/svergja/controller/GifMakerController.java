@@ -272,6 +272,10 @@ public class GifMakerController implements Initializable {
         }
     }
 
+    /**
+     * 
+     * @param boardToSet 
+     */
     public void setBoard(Board boardToSet) {
         activeBoard = boardToSet;
         gifmaker.setBoard(boardToSet);

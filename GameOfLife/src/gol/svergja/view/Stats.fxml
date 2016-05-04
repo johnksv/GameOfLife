@@ -17,6 +17,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
 <BorderPane prefHeight="450.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gol.svergja.controller.StatsController">
    <center>
@@ -48,6 +49,11 @@
                         <Button mnemonicParsing="false" onAction="#onActionCalculate" text="Calculate stats" />
                      </children>
                   </HBox>
+                  <Label fx:id="labelInfo">
+                     <font>
+                        <Font name="Arial Bold" size="13.0" />
+                     </font>
+                  </Label>
                   <Separator prefWidth="200.0" />
                   <Label text="Show on chart:" />
                   <CheckBox fx:id="cbLivingCells" mnemonicParsing="false" selected="true" text="Living cells" />

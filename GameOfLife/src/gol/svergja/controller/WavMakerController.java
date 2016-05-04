@@ -82,10 +82,18 @@ public class WavMakerController implements Initializable {
         });
     }
 
+    /**
+     * 
+     * @return 
+     */
     public File getPreviewFile() {
         return previewFile;
     }
 
+    /**
+     * 
+     * @param activeBoard 
+     */
     public void setBoard(Board activeBoard) {
         referenceBoard = activeBoard;
         originalPattern = activeBoard.getBoundingBoxBoard();

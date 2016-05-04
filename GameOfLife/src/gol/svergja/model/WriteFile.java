@@ -75,18 +75,34 @@ public final class WriteFile {
         return false;
     }
 
+    /**
+     * 
+     * @param newPatternName 
+     */
     public static void setPatternName(String newPatternName) {
         patternName = newPatternName;
     }
 
+    /**
+     * 
+     * @param patternAuthor 
+     */
     public static void setAuthor(String patternAuthor) {
         author = patternAuthor;
     }
 
+    /**
+     * 
+     * @param patternComment 
+     */
     public static void setComment(String patternComment) {
         comment = patternComment;
     }
 
+    /**
+     * 
+     * @param patternRule 
+     */
     public static void setRule(String patternRule) {
         rule = patternRule;
     }
