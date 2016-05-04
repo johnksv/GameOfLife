@@ -31,6 +31,11 @@ public class Configuration {
         }
     }
 
+    /**
+     * 
+     * @param property
+     * @return 
+     */
     public static String getProp(String property) {
         return properties.getProperty(property, "-1").toLowerCase();
     }
