@@ -66,7 +66,7 @@ public class EditorController implements Initializable {
     private GraphicsContext stripGc;
     private final Color cellColor = Color.BLACK;
     private final Color backgroundColor = Color.web("#F4F4F4");
-    private Board activeBoard = new ArrayBoard(150, 150);
+    private Board activeBoard = new DynamicBoard();
     private Board stripBoard;
     byte[][] patternToInsert;
     byte[][] stripBoundingBox;
@@ -78,10 +78,9 @@ public class EditorController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         gc = editorCanvas.getGraphicsContext2D();
         stripGc = stripCanvas.getGraphicsContext2D();
-        stripGc.clearRect(0, 0, stripCanvas.widthProperty().doubleValue(), stripCanvas.heightProperty().doubleValue());
 
         mouseInit();
-        theStrip();
+        
     }
 
     @FXML
@@ -136,8 +135,9 @@ public class EditorController implements Initializable {
         }
     }
 
-    private void theStrip() {
+    public void updateStrip() {
         //TODO height, width, sånn shit. Vil ha 20 patterns på en canvas. Affain klasse som er nøkkelordet
+        stripGc.clearRect(0, 0, stripCanvas.widthProperty().doubleValue(), stripCanvas.heightProperty().doubleValue());
         stripBoundingBox = activeBoard.getBoundingBoxBoard();
         stripBoard = new DynamicBoard();
         stripBoard.insertArray(stripBoundingBox);
@@ -153,7 +153,7 @@ public class EditorController implements Initializable {
             stripGc.setTransform(xForm);
             stripBoard.nextGen();
             drawStrip();
-            tx += stripBoundingBox.length + (stripCanvas.getWidth() / 20);
+            tx += stripBoundingBox.length + iteration*(stripCanvas.getWidth() / 20);
         }
         
         //reset transform
