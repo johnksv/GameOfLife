@@ -48,7 +48,7 @@ public class StatsRedoTest {
 
         instance.setBoard(patternBoard);
         int[][] result = instance.getStatistics(20, true, true);
-        System.out.println(Arrays.deepToString(result));
+
         for (int iteration = 0; iteration < result.length - 1; iteration++) {
 
             assertEquals(3, result[iteration][0]);
@@ -64,10 +64,10 @@ public class StatsRedoTest {
         }
     }
 
-   // @Test
+    @Test
     public void testTuringMachineStats() throws IOException, PatternFormatException {
         //Test the speed
-        System.out.println("TuringMachine");
+        System.out.println("Testing executing time of TuringMachine (check test result for result)");
         File url = new File("test/patternTestFiles/turingmachine.rle");
         Path file = Paths.get(url.toURI());
         byte[][] byteBoard = ReadFile.readFileFromDisk(file);

@@ -1,12 +1,16 @@
 package gol.s305089.model;
 
+import gol.model.Board.ArrayBoard;
 import gol.model.Board.Board;
 import gol.model.Board.DynamicBoard;
+import gol.other.Configuration;
 
 /**
  * @author s305089 - John Kasper Svergja
  */
 public class StatsRedo {
+
+    private final int arrayboardThreshold = Integer.parseInt(Configuration.getProp("arrayBoardThreshold"));
 
     private Board activeBoard;
     private byte[][] originalPattern;
@@ -163,6 +167,9 @@ public class StatsRedo {
     /**
      * Constructs an new Board instance, and inserts the given board bounding
      * box pattern.
+     * <b>Technical info:</b> If the pattern of the board is larger then the
+     * arrayboard threshold (given in the config.properties file), an arrayboard
+     * will be used instead of an dynamic board. This is due to preformance
      *
      * @param boardToSet The board that should be copied. Copies the pattern and
      * rule
@@ -170,7 +177,12 @@ public class StatsRedo {
      */
     public void setBoard(Board boardToSet) {
         originalPattern = boardToSet.getBoundingBoxBoard();
-        activeBoard = new DynamicBoard(5, 5);
+        if (originalPattern.length > arrayboardThreshold
+                && originalPattern[0].length > arrayboardThreshold) {
+            activeBoard = new ArrayBoard(2000, 2000);
+        } else {
+            activeBoard = new DynamicBoard(5, 5);
+        }
         activeBoard.setRule(boardToSet.getRule());
         setPattern(originalPattern);
     }

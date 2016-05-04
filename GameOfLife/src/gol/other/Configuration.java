@@ -42,5 +42,6 @@ public class Configuration {
         properties.setProperty("maxHeight", "200");
         properties.setProperty("expansion", "50");
         properties.setProperty("useThreads", "true");
+        properties.setProperty("arrayBoardThreshold", "500");
     }
 }
