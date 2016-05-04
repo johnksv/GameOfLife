@@ -1,5 +1,5 @@
 /**
- * The package that contains all controller classes for optional tasks.
+ * The package that contains all controller classes for supplement assignment.
  *
  * @author s305089 - John Kasper Svergja
  */
