@@ -1,4 +1,4 @@
-package gol.s305089.model.sound;
+package gol.svergja.model.sound;
 
 /** Wav file IO class
 * A.Greensted

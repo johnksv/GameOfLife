@@ -1,8 +1,8 @@
-package gol.s305089.controller;
+package gol.svergja.controller;
 
 import gol.model.Board.Board;
-import gol.s305089.Util;
-import static gol.s305089.Util.showTooltip;
+import gol.svergja.Util;
+import static gol.svergja.Util.showTooltip;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.Initializable;

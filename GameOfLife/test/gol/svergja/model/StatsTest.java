@@ -1,5 +1,6 @@
-package gol.s305089.model;
+package gol.svergja.model;
 
+import gol.svergja.model.Stats;
 import gol.model.Board.ArrayBoard;
 import gol.model.Board.Board;
 import gol.model.FileIO.PatternFormatException;

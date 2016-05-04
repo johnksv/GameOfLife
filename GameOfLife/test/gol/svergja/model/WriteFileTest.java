@@ -2,8 +2,9 @@
  * Here comes the text of your license
  * Each line should be prefixed with  * 
  */
-package gol.s305089.model;
+package gol.svergja.model;
 
+import gol.svergja.model.WriteFile;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;

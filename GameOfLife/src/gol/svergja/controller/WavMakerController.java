@@ -1,11 +1,11 @@
-package gol.s305089.controller;
+package gol.svergja.controller;
 
 import gol.model.Board.Board;
 import gol.model.Board.DynamicBoard;
-import gol.s305089.Util;
-import gol.s305089.model.GifMaker;
-import gol.s305089.model.sound.Sound;
-import gol.s305089.model.sound.Tone;
+import gol.svergja.Util;
+import gol.svergja.model.GifMaker;
+import gol.svergja.model.sound.Sound;
+import gol.svergja.model.sound.Tone;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;

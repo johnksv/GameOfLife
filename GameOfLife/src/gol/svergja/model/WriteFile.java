@@ -1,4 +1,4 @@
-package gol.s305089.model;
+package gol.svergja.model;
 
 import gol.model.FileIO.PatternFormatException;
 import java.io.BufferedWriter;

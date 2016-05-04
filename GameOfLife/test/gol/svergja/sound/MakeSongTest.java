@@ -2,15 +2,15 @@
  * Here comes the text of your license
  * Each line should be prefixed with  * 
  */
-package gol.s305089.sound;
+package gol.svergja.sound;
 
-import gol.s305089.model.sound.Sound;
+import gol.svergja.model.sound.Sound;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import org.junit.Before;
 import org.junit.Test;
-import gol.s305089.model.sound.Tone;
+import gol.svergja.model.sound.Tone;
 import static org.junit.Assert.*;
 
 /**

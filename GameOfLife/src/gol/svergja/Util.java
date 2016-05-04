@@ -1,4 +1,4 @@
-package gol.s305089;
+package gol.svergja;
 
 import javafx.beans.value.ObservableValue;
 import javafx.scene.Node;

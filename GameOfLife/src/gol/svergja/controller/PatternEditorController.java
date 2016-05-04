@@ -1,11 +1,11 @@
-package gol.s305089.controller;
+package gol.svergja.controller;
 
 import gol.controller.GameController;
 import gol.model.Board.ArrayBoard;
 import gol.model.Board.Board;
 import gol.model.Board.DynamicBoard;
-import gol.s305089.Util;
-import gol.s305089.model.WriteFile;
+import gol.svergja.Util;
+import gol.svergja.model.WriteFile;
 import java.io.File;
 import java.io.IOException;
 

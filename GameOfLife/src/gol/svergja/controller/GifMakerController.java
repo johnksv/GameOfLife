@@ -1,9 +1,9 @@
-package gol.s305089.controller;
+package gol.svergja.controller;
 
-import gol.s305089.model.GifMaker;
+import gol.svergja.model.GifMaker;
 import gol.model.Board.Board;
-import gol.s305089.Util;
-import gol.s305089.model.Stats;
+import gol.svergja.Util;
+import gol.svergja.model.Stats;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
