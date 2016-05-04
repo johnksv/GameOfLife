@@ -267,6 +267,7 @@ public class GameController implements Initializable {
         }
 
         draw();
+        drawGhostTiles();
     }
 
     @FXML
@@ -383,6 +384,9 @@ public class GameController implements Initializable {
             boardFromFile = null;
             updateRules();
         } else if (result.get() == btnGhostTiles) {
+             if (timeline.getStatus() == Status.RUNNING) {
+                handleAnimation();
+            }
             btnStartPause.setDisable(true);
             updateRules();
         } else {
@@ -707,7 +711,6 @@ public class GameController implements Initializable {
                     mousePositionX = (int) e.getX();
                     mousePositionY = (int) e.getY();
                     if (boardFromFile != null) {
-
                         draw();
                         drawGhostTiles();
                     }
