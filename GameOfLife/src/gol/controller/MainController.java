@@ -32,7 +32,7 @@ public class MainController {
      */
     public void setStage(Stage stage) {
         primaryStage = stage;
-        primaryStage.getIcons().add(new Image(new File("src/mics/gen1.PNG").toURI().toString()));
+        primaryStage.getIcons().add(new Image(new File("src/misc/gen1.PNG").toURI().toString()));
         primaryStage.setTitle("Game of Life");
         primaryStage.setResizable(false);
     }
