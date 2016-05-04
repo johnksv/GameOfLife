@@ -3,6 +3,7 @@ package gol.s305084;
 import gol.model.UsefullMethods;
 import gol.model.Board.Board;
 import gol.model.Board.DynamicBoard;
+import gol.other.Configuration;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -21,12 +22,13 @@ import lieng.GIFWriter;
 
 /**
  * Shows statistics for a Board through a number of generations. <br>
- *  
- * <b>Notable static functions:</b>  
+ *
+ * <b>Notable static functions:</b>
  * <ul><li>{@link #countLivingCells(gol.model.Board.Board) countLivingCells}</li>
  * <li>{@link #calcChangeCells(int, int) countLivingCells}</li>
  * <li>{@link #simValue(byte[][], int, int) calculate similarity value}</li>
  * </ul>
+ *
  * @author s305084
  */
 public class StatisticsController implements Initializable {
@@ -52,8 +54,8 @@ public class StatisticsController implements Initializable {
     private final XYChart.Series<Integer, Integer> CELLCHANGE = new XYChart.Series();
     private final XYChart.Series<Integer, Integer> SIMPERCENT = new XYChart.Series();
 
-    private final int GIFW = 200;
-    private final int GIFH = 200;
+    private final int GIFW = Integer.parseInt(Configuration.getProp("gifWidth"));
+    private final int GIFH = Integer.parseInt(Configuration.getProp("gifHeight"));
     private int selectedGen = 0;
 
     private final static double ALPHA = 0.5;
@@ -61,6 +63,7 @@ public class StatisticsController implements Initializable {
     private final static double GAMMA = 0.25;
 
     private final int genIterations = 20;
+
     private double[] simValue = new double[genIterations + 1];
 
     @Override
@@ -93,9 +96,9 @@ public class StatisticsController implements Initializable {
      * Calculates and visualise statistics. Types of data: Living cells, change
      * in cells, and similarity value. Similarity value is by default defined by
      * how similar each generation is to generation 0.
-     *</p>
-     * <b>Note:</b> Mouse-click on the lineChart will change witch generation the
-     * similarity value will compare to.
+     * </p>
+     * <b>Note:</b> Mouse-click on the lineChart will change witch generation
+     * the similarity value will compare to.
      */
     public void showStats() {
         LIVINGCELLS.getData().clear();
@@ -107,7 +110,7 @@ public class StatisticsController implements Initializable {
         copyBoard.setRule(statBoard.getRule());
         for (int i = 0; i <= genIterations; i++) {
             byte[][] pattern = copyBoard.getBoundingBoxBoard();
-            
+
             //Counting
             int living = countLivingCells(copyBoard);
             LIVINGCELLS.getData().add(new XYChart.Data(i, living));
@@ -167,8 +170,8 @@ public class StatisticsController implements Initializable {
     }
 
     /**
-     * Returns similarity value for given pattern. 
-     * Does not return a similarity to another pattern, but a value defined as:
+     * Returns similarity value for given pattern. Does not return a similarity
+     * to another pattern, but a value defined as:
      * <p>
      * <b>ALPHA * aliveCount + BETA * aliveChange + GAMMA * geoSum</b>
      * </p>

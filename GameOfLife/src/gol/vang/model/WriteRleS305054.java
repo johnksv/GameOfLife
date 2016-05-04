@@ -1,4 +1,4 @@
-package gol.s305054.model;
+package gol.vang.model;
 
 import gol.model.Board.Board;
 import java.io.BufferedWriter;
