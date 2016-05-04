@@ -820,6 +820,7 @@ public class GameController implements Initializable {
             error.setTitle("Error");
             error.setHeaderText("Could not open pattern editor. Please try again.");
             error.show();
+            System.err.println(ie);
 
         }
     }
