@@ -34,6 +34,7 @@ public class MainController {
         primaryStage = stage;
         primaryStage.getIcons().add(new Image(new File("src/mics/gen1.PNG").toURI().toString()));
         primaryStage.setTitle("Game of Life");
+        primaryStage.setResizable(false);
     }
 
     /**
@@ -55,6 +56,7 @@ public class MainController {
             });
 
             primaryStage.setScene(scene);
+            primaryStage.setResizable(true);
             primaryStage.setMinWidth(850);
             primaryStage.setMinHeight(650);
         } catch (IOException ex) {
