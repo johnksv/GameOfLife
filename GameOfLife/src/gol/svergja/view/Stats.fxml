@@ -49,7 +49,7 @@
                         <Button mnemonicParsing="false" onAction="#onActionCalculate" text="Calculate stats" />
                      </children>
                   </HBox>
-                  <Label fx:id="labelInfo">
+                  <Label fx:id="labelInfo" wrapText="true">
                      <font>
                         <Font name="Arial Bold" size="13.0" />
                      </font>

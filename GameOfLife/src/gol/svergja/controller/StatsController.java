@@ -1,5 +1,6 @@
 package gol.svergja.controller;
 
+import gol.model.Board.ArrayBoard;
 import gol.model.Board.Board;
 import gol.model.Board.DynamicBoard;
 import gol.svergja.Util;
@@ -10,7 +11,11 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
+import javafx.concurrent.Service;
+import javafx.concurrent.Task;
+import javafx.concurrent.Worker;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.chart.LineChart;
@@ -27,7 +32,8 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 
 /**
- * FXML Controller class
+ * FXML Controller class for statistics.
+ *
  *
  * @author s305089 - John Kasper Svergja
  */
@@ -47,11 +53,14 @@ public class StatsController implements Initializable {
     private RadioButton rbCheckPrev;
     @FXML
     private ImageView imgViewOriginalPattern;
+    @FXML
+    private Label labelInfo;
 
     private Stats gameStats;
     private Board activeBoard;
     private byte[][] originalPattern;
     private int[][] gameData;
+    private Service<Void> serviceCalcStats;
 
     private final XYChart.Series<String, Integer> livingCells = new XYChart.Series();
     private final XYChart.Series<String, Integer> changeLivingCells = new XYChart.Series();
@@ -63,6 +72,26 @@ public class StatsController implements Initializable {
         gameStats = new Stats();
         initView();
         intiListners();
+        initServiceWorker();
+    }
+
+    private void initServiceWorker() {
+        serviceCalcStats = new Service<Void>() {
+            @Override
+            protected Task<Void> createTask() {
+                return new Task<Void>() {
+                    @Override
+                    protected Void call() throws Exception {
+                        displayData((int) spinnerIterations.getValue());
+                        return null;
+                    }
+                };
+            }
+        };
+        serviceCalcStats.setOnSucceeded(e -> labelInfo.setText(""));
+        serviceCalcStats.setOnFailed(e -> {
+            labelInfo.setText("");
+        });
     }
 
     private void initView() {
@@ -84,29 +113,45 @@ public class StatsController implements Initializable {
     }
 
     private void calculatGameStats(ObservableValue observable, Object oldValue, Object newValue) {
-        displayData((int) spinnerIterations.getValue());
+        if (serviceCalcStats.getState() != Worker.State.RUNNING) {
+            serviceCalcStats.restart();
+            labelInfo.setText("Calculating stats.");
+        }
+    }
+
+    private void clearXYChartLists() {
+        //Removes previous data
+        livingCells.getData().clear();
+        changeLivingCells.getData().clear();
+        similarityMeasure.getData().clear();
+        simMeasureClosest.clear();
     }
 
     private void displayData(int iterations) {
 
         if (iterations < livingCells.getData().size()) {
-            plotDataOnChart(iterations);
+            Platform.runLater(() -> {
+                labelInfo.setText("Putting data up on chart!");
+                clearXYChartLists();
+                plotDataOnChart(iterations);
+                updateAllTooltips();
+            });
         } else {
             gameStats.setCheckSimilarityPrevGen(rbCheckPrev.isSelected());
 
-            //TODO Threading(?)
             gameData = gameStats.getStatistics(iterations,
                     cbChangeLiving.isSelected(), cbSimilarity.isSelected());
 
-            plotDataOnChart(gameData.length - 1);
+            //This event should be called on the FX-thread
+            Platform.runLater(() -> {
+                labelInfo.setText("Putting data up on chart!");
+                clearXYChartLists();
+                plotDataOnChart(gameData.length - 1);
+                updateAllTooltips();
+            });
+
         }
-        //TODO Threading of tooltips    
-        updateTooltips();
-        try {
-            updateTooltipSimilarity();
-        } catch (IOException ex) {
-            System.err.println("Could not update tooltips:\n" + ex);
-        }
+        updateAllTooltips();
     }
 
     private void generateTolltipGIF(GifMaker gifmaker, ImageView imgViewcurrentPattern) throws IOException {
@@ -118,6 +163,15 @@ public class StatsController implements Initializable {
         Image current = new Image(tempFileToolTip.toURI().toString());
         imgViewcurrentPattern.setImage(current);
         tempFileToolTip.delete();
+    }
+
+    private void updateAllTooltips() {
+        updateTooltips();
+        try {
+            updateTooltipSimilarity();
+        } catch (IOException ex) {
+            System.err.println("Could not update tooltips:\n" + ex);
+        }
     }
 
     private void updateTooltips() {
@@ -175,12 +229,6 @@ public class StatsController implements Initializable {
     }
 
     private void plotDataOnChart(int iterations) {
-        //Removes previous data
-        livingCells.getData().clear();
-        changeLivingCells.getData().clear();
-        similarityMeasure.getData().clear();
-        simMeasureClosest.clear();
-
         //Ignors the last iteration of the list
         for (int i = 0; i < iterations; i++) {
             if (cbLivingCells.isSelected()) {
@@ -206,17 +254,27 @@ public class StatsController implements Initializable {
         calculatGameStats(null, null, null);
     }
 
+    /**
+     * Constructs an new Board instance, and inserts the given board bounding
+     * box pattern.
+     * <b>Technical info:</b> The board constructed is of type array board. This
+     * is due to performance of array board vs dynamic board.
+     *
+     * @param boardToSet The board that should be copied. Copies the pattern and
+     * rule
+     * @see gol.model.Board.Board
+     */
     public void setBoard(Board boardToSet) {
         gameStats.setBoard(boardToSet);
         originalPattern = boardToSet.getBoundingBoxBoard();
-        activeBoard = new DynamicBoard(10, 10);
+        activeBoard = new ArrayBoard(2000, 2000);
         activeBoard.setRule(boardToSet.getRule());
         setPattern(originalPattern);
     }
 
-    private void setPattern(byte[][] Pattern) {
+    private void setPattern(byte[][] pattern) {
         activeBoard.clearBoard();
-        activeBoard.insertArray(Pattern);
+        activeBoard.insertArray(pattern, 120, 120);
     }
 
 }
