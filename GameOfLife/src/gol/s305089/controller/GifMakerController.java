@@ -108,13 +108,13 @@ public class GifMakerController implements Initializable {
         spinnNumIterations.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 100, 20, 5));
         spinnNumIterations.setEditable(true);
 
-        spinnTimeBetween.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 10000, 200, 100));
+        spinnTimeBetween.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 100000, 200, 100));
         spinnTimeBetween.setEditable(true);
 
-        spinnWidth.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 10000, 200, 100));
+        spinnWidth.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 5000, 200, 100));
         spinnWidth.setEditable(true);
 
-        spinnHeight.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 10000, 200, 100));
+        spinnHeight.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 5000, 200, 100));
         spinnHeight.setEditable(true);
 
         spinnThreshold.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 100, 90, 1));
@@ -281,13 +281,13 @@ public class GifMakerController implements Initializable {
             stats.setBoard(activeBoard);
 
             stats.setCheckSimilarityPrevGen(cbCheckPrevGen.isSelected());
-
+            stats.getStatistics(iterations, true, true);
             //Checks which iteration the 0-th generation matches best with.
-            if (stats.getSimilarityMeasure(iterations)[0][0] > threshold) {
-                closestIteration = stats.getSimilarityMeasure(iterations)[0][1];
+            if (stats.getSimilarityMeasure()[0][0] > threshold) {
+                closestIteration = stats.getSimilarityMeasure()[0][1];
             }
             //Checks if some other generation matches with the 0-th generation
-            for (int[] it : stats.getSimilarityMeasure(iterations)) {
+            for (int[] it : stats.getSimilarityMeasure()) {
                 if (it[0] > threshold && it[1] == 0) {
                     closestIteration = it[1];
                 }

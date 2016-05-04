@@ -2,6 +2,7 @@ package gol.model.Logic;
 
 /**
  * This class bear all the logic behind making a custom rule for Game of Life.
+ *
  * @author s305054, s305084, s305089
  */
 public class CustomRule implements Rule {
@@ -19,9 +20,16 @@ public class CustomRule implements Rule {
         this.toBeBorn = toBeBorn;
     }
 
+    @Override
+    public byte setLife(byte cellToCheck) {
+        if (toSurvive(cellToCheck) || toBeBorn(cellToCheck)) {
+            return 64;
+        }
+        return 0;
+    }
+
     /**
      * Determines whether a living will survive the next generation or not.
-     *
      *
      * @param cellToCheck cell that is being checked for living neighbors
      * @return true if living neighbors is two or three, else false
@@ -52,14 +60,6 @@ public class CustomRule implements Rule {
             }
         }
         return false;
-    }
-
-    @Override
-    public byte setLife(byte cellToCheck) {
-        if (toSurvive(cellToCheck) || toBeBorn(cellToCheck)) {
-            return 64;
-        }
-        return 0;
     }
 
     @Override

@@ -31,6 +31,11 @@ public class Configuration {
         }
     }
 
+    /**
+     * //TODO JAvadoc
+     * @param property
+     * @return 
+     */
     public static String getProp(String property) {
         return properties.getProperty(property, "-1").toLowerCase();
     }
@@ -42,5 +47,6 @@ public class Configuration {
         properties.setProperty("maxHeight", "200");
         properties.setProperty("expansion", "50");
         properties.setProperty("useThreads", "true");
+        properties.setProperty("arrayBoardThreshold", "500");
     }
 }

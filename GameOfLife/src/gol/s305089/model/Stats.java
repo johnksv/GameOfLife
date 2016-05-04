@@ -1,12 +1,16 @@
 package gol.s305089.model;
 
+import gol.model.Board.ArrayBoard;
 import gol.model.Board.Board;
 import gol.model.Board.DynamicBoard;
+import gol.other.Configuration;
 
 /**
  * @author s305089 - John Kasper Svergja
  */
 public class Stats {
+
+    private final int arrayboardThreshold = Integer.parseInt(Configuration.getProp("arrayBoardThreshold"));
 
     private Board activeBoard;
     private byte[][] originalPattern;
@@ -37,179 +41,153 @@ public class Stats {
      * @return The result from the calculations. The data has the following
      * index: Living cells: 0, Change in living cells: 1, Similarity: 3, closest
      * similar generation: 4.
-     * @see #calcCountLiving(int)
-     * @see #calcChangeInLiving(int)
-     * @see #getSimilarityMeasure(int)
      */
     public int[][] getStatistics(int iterations, boolean calcChangeLiving, boolean calcSimilarity) {
-        int[][] stats = new int[iterations + 1][4];
+        iterations++;
+        int[][] stats = new int[iterations][4];
+        livingCells = new int[iterations];
+        changeLivingCells = new int[iterations];
+        similarityMeasure = new int[iterations][2];
+        geometricFactor = new int[iterations];
 
-        calcCountLiving(iterations);
-        if (calcChangeLiving) {
-            calcChangeInLiving(iterations);
-        }
+        //Ensure we start with orginal pattern
+        setPattern(originalPattern);
+        //If similarity should be calculated, then should change in living to.
         if (calcSimilarity) {
-            if (changeLivingCells == null) {
-                changeLivingCells = calcChangeInLiving(iterations);
-            }
-            similarityMeasure = getSimilarityMeasure(iterations);
-        } else {
-            similarityMeasure = null;
+            calcChangeLiving = true;
         }
-        for (int i = 0; i < iterations; i++) {
-            stats[i][0] = livingCells[i];
 
-            if (changeLivingCells != null) {
-                stats[i][1] = changeLivingCells[i];
+        //First calc Living and change in living, as they are needed for similarity
+        for (int ite = 0; ite < iterations; ite++) {
+            calcLivingAndGeometric(ite);
+
+            if (getLivingCells() != null) {
+                stats[ite][0] = getLivingCells()[ite];
             }
-            if (similarityMeasure != null) {
-                stats[i][2] = similarityMeasure[i][0];
-                stats[i][3] = similarityMeasure[i][1];
+
+            activeBoard.nextGen();
+        }
+
+        if (calcChangeLiving) {
+            for (int ite = 0; ite < iterations - 1; ite++) {
+                calcChangeLiving(ite);
+                stats[ite][1] = getChangeLivingCells()[ite];
+            }
+        }
+
+        //Can now calc similarity, then append data.
+        //TODO Check first iteration of test.
+        if (calcSimilarity) {
+            calcSimilarity(iterations);
+            for (int ite = 0; ite < iterations; ite++) {
+                stats[ite][2] = getSimilarityMeasure()[ite][0];
+                stats[ite][3] = getSimilarityMeasure()[ite][1];
             }
         }
 
         return stats;
     }
 
+    public int[] getLivingCells() {
+        return livingCells;
+    }
+
+    public int[] getChangeLivingCells() {
+        return changeLivingCells;
+    }
+
+    public int[][] getSimilarityMeasure() {
+        return similarityMeasure;
+    }
+
+    public int[] getGeometricFactor() {
+        return geometricFactor;
+    }
+
     /**
-     * Calculate the living cells for the iterations given.
      *
-     * @param iterationsToCalcualte The number of iterations to calculate
-     * @return The array containing the values. The length of the array
-     * corresponds to the number of iteration. Index 0 refers to the 0-th
-     * generation.
+     * @param curIte the current iteration.
      */
-    public int[] calcCountLiving(int iterationsToCalcualte) {
-        if (iterationsToCalcualte == 0) {
-            return new int[]{0};
-        }
-
-        int[] countOfLiving = new int[iterationsToCalcualte];
-        for (int i = 0; i < countOfLiving.length; i++) {
-            if (i == 0) {
-                setPattern(originalPattern);
-            }
-
-            int livingThisGen = 0;
-            for (byte[] row : (byte[][]) activeBoard.getBoundingBoxBoard()) {
-                for (byte value : row) {
-                    if (value == 64) {
-                        livingThisGen++;
-                    }
+    private void calcLivingAndGeometric(int curIte) {
+        //Calculate Living and geometric factor
+        int livingThisGen = 0;
+        byte[][] boundedBoard = activeBoard.getBoundingBoxBoard();
+        for (int row = 0; row < boundedBoard.length; row++) {
+            for (int col = 0; col < boundedBoard[row].length; col++) {
+                if (boundedBoard[row][col] == 64) {
+                    livingThisGen++;
+                    //TODO Improve GeometricFactor
+                    geometricFactor[curIte] += row + col;
                 }
             }
-            countOfLiving[i] = livingThisGen;
-            activeBoard.nextGen();
         }
-        livingCells = countOfLiving;
-        return countOfLiving;
-    }
-
-    public int[] calcChangeInLiving(int iterationsToCalcualte) {
-        if (livingCells == null) {
-            calcCountLiving(iterationsToCalcualte + 1);
-        }
-        int[] countChangeOfLiving = new int[iterationsToCalcualte];
-        setPattern(originalPattern);
-        for (int time = 0; time < iterationsToCalcualte - 1; time++) {
-            countChangeOfLiving[time] = livingCells[time + 1] - livingCells[time];
-            activeBoard.nextGen();
-        }
-        changeLivingCells = countChangeOfLiving;
-        return countChangeOfLiving;
+        livingCells[curIte] = livingThisGen;
     }
 
     /**
-     * Calculates the similarity of a pattern in the iterations given.
-     * <p>
-     * By default this method will only calculate similarity with patterns in
-     * the future. This can be changed by calling {@link #setCheckSimilarityPrevGen(boolean)
-     * }.
-     * </p>
      *
-     * @param iterationsToCalcualte The number of iterations to calculate
-     * @return First index: similarity measure, second index: iteration number
-     * of closest match (this value is -1 if no match was found).
+     * @param curIte current iteration
      */
-    public int[][] getSimilarityMeasure(int iterationsToCalcualte) {
-        int[][] similarity = new int[iterationsToCalcualte + 1][2];
-        if (changeLivingCells == null) {
-            changeLivingCells = calcChangeInLiving(iterationsToCalcualte);
-        }
-        calculateGeometricFactor(iterationsToCalcualte);
+    private void calcChangeLiving(int curIte) {
+        changeLivingCells[curIte] = getLivingCells()[curIte + 1] - getLivingCells()[curIte];
+    }
 
-        setPattern(originalPattern);
-
-        for (int time1 = 0; time1 < iterationsToCalcualte; time1++) {
-            double thetaTime1 = Math.abs(getTheta(time1));
+    /**
+     *
+     * @param curIte current iteration
+     * @param iterationsToCalc how many iteration that should be calculated.
+     */
+    private void calcSimilarity(int iterationsToCalc) {
+        for (int ite = 0; ite < iterationsToCalc; ite++) {
+            double thetaTime1 = Math.abs(getTheta(ite));
 
             int max = 0;
             int itClosestMatch = -1;
             //Checks if future or prev generations is similar
-            for (int time2 = 0; time2 < iterationsToCalcualte; time2++) {
+            for (int time2 = 0; time2 < iterationsToCalc; time2++) {
                 if (!checkSimilarityPrevGen && time2 == 0) {
                     //Check only future generations
-                    time2 = time1;
+                    time2 = ite;
                 }
-                if (time1 != time2) {
+                if (ite != time2) {
                     double thetaTime2 = Math.abs(getTheta(time2));
                     double measure = Math.min(thetaTime1, thetaTime2) / Math.max(thetaTime1, thetaTime2);
                     if (Math.floor(measure * 100) > max) {
                         itClosestMatch = time2;
                         max = (int) Math.floor(measure * 100);
                         if (max == 100) {
-                            time2 = iterationsToCalcualte - 1;
+                            time2 = ite - 1;
                         }
                     }
                 }
             }
-            similarity[time1][0] = max;
-            similarity[time1][1] = itClosestMatch;
+            similarityMeasure[ite][0] = max;
+            similarityMeasure[ite][1] = itClosestMatch;
         }
-
-        return similarity;
     }
 
     private double getTheta(int time) {
         double theta;
         if (shouldUseCustom) {
-            theta = alphaCustom * livingCells[time]
-                    + betaCustom * changeLivingCells[time]
-                    + gammaCustom * geometricFactor[time];
+            theta = alphaCustom * getLivingCells()[time]
+                    + betaCustom * getChangeLivingCells()[time]
+                    + gammaCustom * getGeometricFactor()[time];
         } else {
-            theta = alpha * livingCells[time]
-                    + beta * changeLivingCells[time]
-                    + gamma * geometricFactor[time];
+            theta = alpha * getLivingCells()[time]
+                    + beta * getChangeLivingCells()[time]
+                    + gamma * getGeometricFactor()[time];
         }
         return theta;
     }
 
     /**
-     * Calculates the geometric factor for the pattern.
-     *
-     * @param iterationsToCalcualte the number of iterations to calculate
-     */
-    private void calculateGeometricFactor(int iterationsToCalcualte) {
-        geometricFactor = new int[iterationsToCalcualte + 1];
-        setPattern(originalPattern);
-
-        for (int iterations = 0; iterations < iterationsToCalcualte; iterations++) {
-            byte[][] boundedBoard = activeBoard.getBoundingBoxBoard();
-            for (int row = 0; row < boundedBoard.length; row++) {
-                for (int column = 0; column < boundedBoard[row].length; column++) {
-                    if (boundedBoard[row][column] == 64) {
-                        //TODO Improve GeometricFactor
-                        geometricFactor[iterations] += row + column;
-                    }
-                }
-            }
-            activeBoard.nextGen();
-        }
-    }
-
-    /**
      * Constructs an new Board instance, and inserts the given board bounding
      * box pattern.
+     * <b>Technical info:</b> If the pattern of the board is larger then the
+     * array board threshold (given in the config.properties file), an array
+     * board will be used instead of an dynamic board. This is due to
+     * performance. However, the use of array board can affect the board if it
+     * reaches its boarders.
      *
      * @param boardToSet The board that should be copied. Copies the pattern and
      * rule
@@ -217,7 +195,12 @@ public class Stats {
      */
     public void setBoard(Board boardToSet) {
         originalPattern = boardToSet.getBoundingBoxBoard();
-        activeBoard = new DynamicBoard(5, 5);
+        if (originalPattern.length > arrayboardThreshold
+                && originalPattern[0].length > arrayboardThreshold) {
+            activeBoard = new ArrayBoard(2000, 2000);
+        } else {
+            activeBoard = new DynamicBoard(5, 5);
+        }
         activeBoard.setRule(boardToSet.getRule());
         setPattern(originalPattern);
     }

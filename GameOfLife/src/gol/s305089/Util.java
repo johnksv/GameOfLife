@@ -11,7 +11,7 @@ import javafx.stage.Screen;
 import javafx.util.Duration;
 
 /**
- * @author John Kasper
+ * @author s305089 - John Kasper Svergja
  */
 public class Util {
 
@@ -27,8 +27,8 @@ public class Util {
      * Example usage:</p>
      * <code>
      * Tooltip tooltip = new Tooltip("This tooltip should be desplayed on mouse entered.");
-     * Node.setOnMouseEntered(mouseEvent -> Util.showTooltip(mouseEvent, Node, tooltip));
-     * Node.setOnMouseExited(mouseEvent -> tooltip.hide());
+     * Node.setOnMouseEntered(mouseEvent -&gt; Util.showTooltip(mouseEvent, Node, tooltip));
+     * Node.setOnMouseExited(mouseEvent -&gt; tooltip.hide());
      * </code>
      *
      * @param e the mouse event that will trigger the tooltip to show.
