@@ -374,8 +374,9 @@ public class PatternEditorController implements Initializable {
     }
 
     /**
+     * Set the gamecontroller, so the board can be sent back to main window
      *
-     * @param gameController
+     * @param gameController the gamecontroller to set.
      */
     public void setGameController(GameController gameController) {
         this.gameController = gameController;
