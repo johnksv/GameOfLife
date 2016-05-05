@@ -16,7 +16,7 @@ public class HashBoard extends ArrayBoard {
 
     private final int WIDTH;
     private final int HEIGHT;
-    private final int maxK = 4;
+    private final int maxK = 8;
 
     private byte[][] nextBoard;
     private final HashMap<Number, byte[]> hash = new HashMap<>();
@@ -28,7 +28,7 @@ public class HashBoard extends ArrayBoard {
      * will be dynamic when finished.
      */
     public HashBoard() {
-        super((int) Math.pow(2, 4), (int) Math.pow(2, 8));
+        super((int) Math.pow(2, 8), (int) Math.pow(2, 8));
         this.WIDTH = (int) Math.pow(2, maxK);
         this.HEIGHT = (int) Math.pow(2, maxK);
 

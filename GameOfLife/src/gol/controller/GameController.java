@@ -99,6 +99,8 @@ public class GameController implements Initializable {
     private TextField s54nPicturesGIF;
     @FXML
     private CheckBox cbDrawBox;
+    @FXML
+    private CheckBox cbHash;
 
     private Board activeBoard;
     private final Timeline timeline = new Timeline();
@@ -774,7 +776,7 @@ public class GameController implements Initializable {
         timeline.pause();
         String sPictures = s54nPicturesGIF.getText();
         int pictures;
-        if(sPictures.replaceAll("\\D", "").equals("")) {
+        if (sPictures.replaceAll("\\D", "").equals("")) {
             pictures = 0;
         } else {
             pictures = Integer.parseInt(sPictures.replaceAll("\\D", ""));
@@ -834,6 +836,19 @@ public class GameController implements Initializable {
     }
 
     @FXML
+    private void s84handleHash() {
+        if (cbHash.isSelected()) {
+            activeBoard = new HashBoard();
+        } else if (Configuration.getProp("dynamicBoard").equals("true")) {
+            activeBoard = new DynamicBoard();
+        } else {
+            activeBoard = new ArrayBoard();
+        }
+        handleZoom();
+        draw();
+    }
+
+    @FXML
     private void s84handleShowStats() {
         try {
             Stage statistics = new Stage();
@@ -876,12 +891,12 @@ public class GameController implements Initializable {
             gol.stensli.PatternEditorController editorController = loader.getController();
             editorController.setBGColor(backgroundColor);
             editorController.setCellColor(cellColor);
-            editorController.loadInsertBoard(activeBoard); 
-                    
+            editorController.loadInsertBoard(activeBoard);
+
             Scene scene = new Scene(root);
             editor.setScene(scene);
 
-            editor.setTitle("Gol: Pattern Editor");            
+            editor.setTitle("Gol: Pattern Editor");
             editor.showAndWait();
             //TODO ask about this code(not 100% my own).
 

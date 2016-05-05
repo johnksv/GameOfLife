@@ -162,8 +162,13 @@
                                                             <content>
                                                                 <AnchorPane minHeight="0.0" minWidth="0.0" prefWidth="200.0" styleClass="pane-standard">
                                                                     <children>
-                                                                        <Button layoutX="5"  layoutY="5.0" mnemonicParsing="false" onAction="#s84handleEditor" text="Open editor" />
+                                                                        <Button layoutX="5" layoutY="5.0" mnemonicParsing="false" onAction="#s84handleEditor" text="Open editor" />
                                                                         <Button layoutX="90.0" layoutY="5.0" mnemonicParsing="false" onAction="#s84handleShowStats" text="Show Stats" />
+                                                      <CheckBox fx:id="cbHash" layoutX="10.0" layoutY="35.0" mnemonicParsing="false" onAction="#s84handleHash"  text="HashLife prototype" AnchorPane.topAnchor="35.0">
+                                                         <opaqueInsets>
+                                                            <Insets />
+                                                         </opaqueInsets>
+                                                      </CheckBox>
                                                                     </children>
                                                                 </AnchorPane>
                                                             </content>

@@ -4,7 +4,6 @@ import gol.model.UsefullMethods;
 import gol.model.Board.ArrayBoard;
 import gol.model.Board.Board;
 import gol.model.Board.DynamicBoard;
-import gol.model.FileIO.ReadFile;
 import gol.other.Configuration;
 import java.io.File;
 import java.io.IOException;
