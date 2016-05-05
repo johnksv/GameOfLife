@@ -23,7 +23,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 /**
- * FXML Controller, controls the splash screen. This class stores the stage.
+ * Controls the splash screen. This class stores the stage.
  *
  * @author s305054, s305084, s305089
  */
