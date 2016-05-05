@@ -1,12 +1,7 @@
-/*
- * Here comes the text of your license
- * Each line should be prefixed with  * 
- */
 package gol.vang.controller;
 
 import gol.model.Board.ArrayBoard;
 import gol.model.Board.Board;
-import gol.model.Board.DynamicBoard;
 import gol.other.Configuration;
 import gol.vang.model.WriteRleS305054;
 import java.io.File;
@@ -21,18 +16,18 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
-import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.input.ScrollEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Affine;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
 /**
- * FXML Controller class
+ * FXML Controller class for the Pattern Editor, controlls editing pattern, 
+ * showing its next generations, and saving that pattern to a .rle file.
  *
- * @author Trygve Vang - s305054
+ * @author s305054 - Trygve Vang
  */
 public class EditorController implements Initializable {
 
@@ -45,7 +40,7 @@ public class EditorController implements Initializable {
     @FXML
     private Button savePatternBtn;
     @FXML
-    private Button closeBtn;
+    private Button btnClose;
     @FXML
     private TextField titleField;
     @FXML
@@ -63,28 +58,41 @@ public class EditorController implements Initializable {
 
     private GraphicsContext gc;
     private GraphicsContext stripGc;
-    
+
     private final Color cellColor = Color.BLACK;
     private final Color backgroundColor = Color.web("#F4F4F4");
-    
-    private Board activeBoard = new ArrayBoard();
+
+    private Board activeBoard = new ArrayBoard(Configuration.getPropInt("arrayLength"), Configuration.getPropInt("arrayLength"));
     private Board stripBoard;
-    
+
     byte[][] patternToInsert;
     byte[][] stripBoundingBox;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         activeBoard.setCellSize(Configuration.getPropInt("startSize"));
-        activeBoard.setGridSpacing(activeBoard.getCellSize()*0.03);
+        activeBoard.setGridSpacing(activeBoard.getCellSize() * 0.03);
         gc = editorCanvas.getGraphicsContext2D();
         stripGc = stripCanvas.getGraphicsContext2D();
 
         mouseInit();
-        
+
     }
     
-    //Directly copied from GameController
+    /**
+     * Finished pattern from PatternEditor.
+     *
+     * @return boundingbox of the finished pattern
+     */
+    public byte[][] sendPattern() {
+        if (activeBoard.getArrayLength() == 0) {
+            return null;
+        } else {
+            return activeBoard.getBoundingBoxBoard();
+        }
+    }
+
+    //Copied from GameController
     private void draw() {
         gc.setGlobalAlpha(1);
         gc.setFill(backgroundColor);
@@ -122,51 +130,48 @@ public class EditorController implements Initializable {
 
     /**
      * Refreshes the strip with an updated version of this board.
-     * @see #drawStrip() 
+     *
+     * @see #drawStrip()
      */
     public void updateStrip() {
         stripGc.clearRect(0, 0, stripCanvas.widthProperty().doubleValue(), stripCanvas.heightProperty().doubleValue());
         stripBoundingBox = activeBoard.getBoundingBoxBoard();
-        
+
         stripBoard = new ArrayBoard();
         stripBoard.insertArray(stripBoundingBox, 1, 1);
-        
-        if(stripBoundingBox.length <= stripBoundingBox[0].length) {
-            if(stripBoundingBox.length < 4) {
+
+        if (stripBoundingBox.length <= stripBoundingBox[0].length) {
+            if (stripBoundingBox.length < 4) {
                 stripBoard.setCellSize(12);
             } else {
-                stripBoard.setCellSize(((stripCanvas.getWidth()/20)/stripBoundingBox.length)/2);
+                stripBoard.setCellSize(((stripCanvas.getWidth() / 20) / stripBoundingBox.length) / 2);
             }
+        } else if (stripBoundingBox[0].length < 4) {
+            stripBoard.setCellSize(12);
         } else {
-            if(stripBoundingBox[0].length < 4) {
-                stripBoard.setCellSize(12);
-            } else {
-                stripBoard.setCellSize(((stripCanvas.getWidth()/20)/stripBoundingBox[0].length)/2);
-            }
+            stripBoard.setCellSize(((stripCanvas.getWidth() / 20) / stripBoundingBox[0].length) / 2);
         }
         stripBoard.setGridSpacing(0.05);
-        System.out.println(stripBoard.getCellSize() + "\n" + stripBoard.getGridSpacing());
 
         Affine xForm = new Affine();
         double tx = 0;
         //TODO sjekk hvorfor den ikke itererer riktig
         for (int iteration = 0; iteration < 20; iteration++) {
-            tx = stripBoundingBox.length + iteration*(stripCanvas.getWidth() / 20);
+            tx = stripBoundingBox.length + iteration * (stripCanvas.getWidth() / 20);
             xForm.setTx(tx);
 
-            stripGc.strokeLine(stripCanvas.getWidth()/20, 0, stripCanvas.getWidth()/20, stripCanvas.getHeight());
+            stripGc.strokeLine(stripCanvas.getWidth() / 20, 0, stripCanvas.getWidth() / 20, stripCanvas.getHeight());
             stripGc.setTransform(xForm);
-            
+
             stripBoard.nextGen();
             drawStrip();
-            
-            System.out.println("gen: "+iteration);
+
         }
-        
+
         xForm.setTx(0.0);
         stripGc.setTransform(xForm);
     }
-    
+
     //Same methods as in GameController, with support for updating the strip.
     private void mouseInit() {
         editorCanvas.addEventHandler(MouseEvent.MOUSE_PRESSED,
@@ -186,6 +191,7 @@ public class EditorController implements Initializable {
 
     }
 
+    //Copied from GameController
     private void handleMouseClick(MouseEvent e) {
         double x = e.getX();
         double y = e.getY();
@@ -198,6 +204,19 @@ public class EditorController implements Initializable {
         draw();
     }
 
+    /**
+     * Closes the pattern editor.
+     */
+    @FXML
+    public void handleClose() {
+        Stage stage = (Stage) btnClose.getScene().getWindow();
+        stage.close();
+    }
+
+    /**
+     * Sets all elements in this active board to 0. 
+     * See the {@link gol.model.Board.Board#clearBoard clearBoard} method.
+     */
     @FXML
     public void handleClearBtn() {
         activeBoard.clearBoard();
@@ -205,7 +224,7 @@ public class EditorController implements Initializable {
         draw();
         drawStrip();
     }
-    
+
     @FXML
     private void handleSave() {
         FileChooser fileChooser = new FileChooser();
@@ -223,9 +242,10 @@ public class EditorController implements Initializable {
             }
         }
     }
-    
+
     /**
      * Sends this gameboard to the pattern editor, and set the cell size
+     *
      * @param gameBoard Board to send
      */
     public void setBoard(Board gameBoard) {
@@ -234,7 +254,5 @@ public class EditorController implements Initializable {
 
         draw();
     }
-
-    
 
 }

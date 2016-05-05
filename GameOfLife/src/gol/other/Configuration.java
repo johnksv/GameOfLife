@@ -83,5 +83,6 @@ public class Configuration {
         properties.setProperty("gifWidth", "200");
         properties.setProperty("gifHeight", "200");
         properties.setProperty("startSize", "20");
+        properties.setProperty("arrayLength", "200");
     }
 }

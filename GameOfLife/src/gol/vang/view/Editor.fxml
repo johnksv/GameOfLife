@@ -51,7 +51,7 @@
                                                 <AnchorPane prefHeight="121.0" prefWidth="194.0" styleClass="pattern-pane">
                                                    <children>
                                                       <Button fx:id="savePatternBtn" layoutX="13.0" layoutY="14.0" mnemonicParsing="false" onAction="#handleSave" styleClass="pattern-button" text="Save Pattern" />
-                                                      <Button fx:id="closeBtn" layoutX="14.0" layoutY="49.0" mnemonicParsing="false" styleClass="pattern-button" text="Close" />
+                                                      <Button fx:id="btnClose" layoutX="14.0" layoutY="49.0" mnemonicParsing="false" onAction="#handleClose" styleClass="pattern-button" text="Close" />
                                                    </children>
                                                 </AnchorPane>
                                              </content>

@@ -1,6 +1,5 @@
 package gol.stensli;
 
-import gol.stensli.WriteRLE;
 import gol.model.Board.Board;
 import gol.model.Board.DynamicBoard;
 import gol.model.FileIO.PatternFormatException;
@@ -18,7 +17,7 @@ import static org.junit.Assert.*;
 
 /**
  *
- * @author s305084 - Stian Stensli
+ * @author s305084 - Stian H. Stensli
  */
 public class WriteRLETest {
 

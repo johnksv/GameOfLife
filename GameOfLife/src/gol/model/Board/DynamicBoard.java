@@ -9,12 +9,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * <p>
  * This class allows the game board to automatically expand as the pattern
- * grows. A max size is implemented to prevent the game from crashing. This
- * max size can be changed in the configuration file.
+ * grows. A max size is implemented to prevent the game from crashing. This max
+ * size can be changed in the configuration file.
  * </p>
- * <b>Note: </b>AtomicInteger is used to make the gameBoard thread safe. 
- * This also makes this class slower than 
- * {@link ArrayBoard ArrayBoard}, even with 4 threads.
+ * <b>Note: </b>AtomicInteger is used to make the gameBoard thread safe. This
+ * also makes this class slower than {@link ArrayBoard ArrayBoard}, even with 4
+ * threads.
+ *
  * @author s305054, s305089, s305084
  */
 public class DynamicBoard extends Board {
@@ -199,15 +200,15 @@ public class DynamicBoard extends Board {
             //For performance. Avoid calling method each time
             int maxRow = getMaxRowLength();
             while (col < EXPANSION && maxRow < MAXWIDTH) {
-                gameBoard.stream().forEach((rowValue) -> {
-                    rowValue.add(0, new AtomicInteger(0));
-                });
+                for (int i = 0; i < gameBoard.size(); i++) {
+                    gameBoard.get(i).add(0, new AtomicInteger(0));
+                }
                 maxRow++;
                 offsetValues[0] -= (cellSize + gridSpacing);
                 col++;
             }
         }
-        while (col >= gameBoard.get(row).size()  && gameBoard.get(row).size() < MAXWIDTH) {
+        while (col >= gameBoard.get(row).size() && gameBoard.get(row).size() < MAXWIDTH) {
             gameBoard.get(row).add(new AtomicInteger(0));
         }
         return col;

@@ -29,7 +29,7 @@ import lieng.GIFWriter;
  * <li>{@link #simValue(byte[][], int, int) calculate similarity value}</li>
  * </ul>
  *
- * @author s305084 - Stian Stensli
+ * @author s305084 - Stian H. Stensli
  */
 public class StatisticsController implements Initializable {
 
@@ -69,7 +69,7 @@ public class StatisticsController implements Initializable {
     private double[] simValue = new double[genIterations + 1];
 
     /**
-     * Gets all configuration values when created.
+     * Retrieves all configuration values when created.
      */
     public StatisticsController() {
         //Should never return -1
@@ -96,7 +96,8 @@ public class StatisticsController implements Initializable {
     }
 
     /**
-     * Inserts the board which statistics is wished to be shown.
+     * Inserts board and rule.
+     * Statistics are all calculated from this pattern and rule.
      *
      * @param activeBoard Inserted pattern with rule
      */
@@ -112,7 +113,7 @@ public class StatisticsController implements Initializable {
      * how similar each generation is to generation 0.
      * </p>
      * <b>Note:</b> Mouse-click on the lineChart will change which generation
-     * the similarity value will compare to.
+     * the similarity value will be compared to.
      */
     public void showStats() {
         LIVINGCELLS.getData().clear();
@@ -172,12 +173,12 @@ public class StatisticsController implements Initializable {
     }
 
     /**
-     * Returns difference of number of living cells between a pattern its next
+     * Returns the change of living cells between a pattern and its next
      * generation.
      *
      * @param cells alive
      * @param cellsNextgen alive Next generation
-     * @return change
+     * @return Change
      */
     public static int calcChangeCells(int cells, int cellsNextgen) {
         return cellsNextgen - cells;

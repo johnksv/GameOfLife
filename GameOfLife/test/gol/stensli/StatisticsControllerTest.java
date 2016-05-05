@@ -13,7 +13,7 @@ import static org.junit.Assert.*;
 
 /**
  *
- * @author s305084 - Stian Stensli
+ * @author s305084 - Stian H. Stensli
  */
 public class StatisticsControllerTest {
     
