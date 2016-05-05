@@ -18,7 +18,8 @@ public final class WriteRLE {
     }
 
     /**
-     * Converts a non empty Board to RLE format. Supports the metadata: name, author, comment
+     * Converts a non empty Board to RLE format. Supports the metadata: name,
+     * author, comment
      *
      * @param path File location
      * @param board Pattern
@@ -52,17 +53,13 @@ public final class WriteRLE {
             for (byte cell : g[i]) {
                 if (cell != last) {
                     if (last == 64) {
-                        if (counter == 1) {
-                            line.append('o');
-                        } else {
-                            line.append(counter).append('o');
-                        }
+                        appendChar(counter, 'o', line);
 
-                    } else if (counter == 1) {
-                        line.append('b');
                     } else {
-                        line.append(counter).append('b');
+                        appendChar(counter, 'b', line);
                     }
+                    
+                    //Break line if it gets too long
                     if (line.length() > 70) {
                         lines.add(line.toString());
                         line.delete(0, line.length());
@@ -76,11 +73,7 @@ public final class WriteRLE {
                 }
             }
             if (last == 64) {
-                if (counter == 1) {
-                    line.append('o');
-                } else {
-                    line.append(counter).append('o');
-                }
+                appendChar(counter, 'o', line);
             }
             counter = 0;
             i = appendBlank(line, g, i);
@@ -93,16 +86,12 @@ public final class WriteRLE {
     }
 
     /**
-     *  Sets all end of line signs, and handles end of file sign.
-     *  If several rows are blank, this method sets the number of blank lines before the dollar sign. 
-     *  e.g.: 
-     *        writes bob2$bob! 
-     *        not bob$3b$bob!
-     * 
-     *  appendBlank makes sure the file do not end with:"$!" 
-     *  e.g.: 
-     *       bob$!
-     * 
+     * Sets all end of line signs, and handles end of file sign. If several rows
+     * are blank, this method sets the number of blank lines before the dollar
+     * sign. e.g.: writes bob2$bob! not bob$3b$bob!
+     *
+     * appendBlank makes sure the file do not end with:"$!" e.g.: bob$!
+     *
      */
     private static int appendBlank(StringBuilder line, byte[][] pattern, int i) {
         //returns if the last line
@@ -128,6 +117,14 @@ public final class WriteRLE {
         } else {
             line.append(blankCount).append('$');
             return i + blankCount - 1;
+        }
+    }
+
+    private static void appendChar(int i, char letter, StringBuilder line) {
+        if (i == 1) {
+            line.append(letter);
+        } else {
+            line.append(i).append(letter);
         }
     }
 }
