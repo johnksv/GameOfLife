@@ -15,7 +15,7 @@ import java.util.ArrayList;
 public final class Sound {
 
     private static File prevSaveLoc;
-    private static boolean avoidClipping = true;
+    private static boolean avoidClipping = false;
     private static double clipValue = 0;
     private static double clipAmplitudeFactor;
     private static double lastStepDuration;
@@ -283,9 +283,7 @@ public final class Sound {
         System.out.println("Factor:" + clipAmplitudeFactor);
         for (int i = 0; i < SoundContainer.size(); i++) {
             for (double[] current : SoundContainer.get(i)) {
-                System.out.println("Old: " + current[0]);
                 current[0] = clipAmplitudeFactor * current[0];
-                System.out.println("new: " + current[0]);
             }
         }
         isAviodClipModeRunning = true;
