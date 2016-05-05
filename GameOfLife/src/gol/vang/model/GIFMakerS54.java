@@ -100,8 +100,7 @@ public class GIFMakerS54 {
     }
 
     /**
-     * Deep copies the active gameboard into a copied gameboard. When changing the
-     * copied board, the originale board will stay the same.
+     * Initilizes the GIFWriter object
      * 
      * @param saveLocation the path for the file
      */

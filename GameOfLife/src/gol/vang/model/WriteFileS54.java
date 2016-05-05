@@ -10,6 +10,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.TextField;
 
 /**
+ * This class is used for parsing a playable gameboard into a fully functional rle file.
  * @author s305054 - Trygve Vang
  *
  */
