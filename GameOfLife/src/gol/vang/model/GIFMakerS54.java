@@ -13,11 +13,11 @@ import lieng.GIFWriter;
 
 /**
  * This class is used to create a .gif file showing several generations of a GoL
- * board.
+ * board. An object of type GIFWriter (Author: Henrik Lieng)
  *
  * @author @author s305054 - Trygve Vang
  */
-public class GIFWriterS305054 {
+public class GIFMakerS54 {
 
     private Board copiedBoard; //deep copy of board - TODO check if boundBox or not.
     byte[][] originaleArray;
@@ -90,7 +90,7 @@ public class GIFWriterS305054 {
             gifWriter.flush(); //Flushing to set background color to the first image.
 
         } catch (IOException ex) {
-            Logger.getLogger(GIFWriterS305054.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(GIFMakerS54.class.getName()).log(Level.SEVERE, null, ex);
             Alert alert = new Alert(AlertType.ERROR);
             alert.setTitle("Something went wrong");
             alert.setHeaderText("There was an input/output error");

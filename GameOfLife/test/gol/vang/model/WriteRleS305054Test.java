@@ -2,7 +2,7 @@
  * Here comes the text of your license
  * Each line should be prefixed with  * 
  */
-package gol.s305054.model;
+package gol.vang.model;
 
 import gol.vang.model.WriteRleS305054;
 import gol.model.Board.ArrayBoard;
