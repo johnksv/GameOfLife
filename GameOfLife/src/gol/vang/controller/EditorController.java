@@ -243,6 +243,7 @@ public class EditorController implements Initializable {
             try {
                 WriteFileS54 writer = new WriteFileS54();
                 writer.writeRLE(activeBoard, title, author, description, file.toPath());
+                System.out.println("Save complete.");
             } catch (IOException ex) {
                 Logger.getLogger(EditorController.class.getName()).log(Level.SEVERE, null, ex);
             }
