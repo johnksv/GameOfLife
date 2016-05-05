@@ -4,7 +4,7 @@
  */
 package gol.vang.model;
 
-import gol.vang.model.WriteRleS305054;
+import gol.vang.model.WriteFileS54;
 import gol.model.Board.ArrayBoard;
 import gol.model.Board.Board;
 import javafx.scene.control.TextField;
@@ -41,7 +41,7 @@ public class WriteRleS305054Test {
     }
 
     /**
-     * Test of writeRLE method, of class WriteRleS305054.
+     * Test of writeRLE method, of class WriteFileS54.
      */
     @Test
     public void testWriteRLE() throws Exception {
@@ -61,7 +61,7 @@ public class WriteRleS305054Test {
         };
         boardToParse.insertArray(pattern, 1, 1);
         
-        WriteRleS305054 instance = new WriteRleS305054();
+        WriteFileS54 instance = new WriteFileS54();
         //instance.writeRLE(boardToParse, title, author, description);
         // TODO review the generated test code and remove the default call to fail.
         
