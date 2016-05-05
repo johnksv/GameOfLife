@@ -164,7 +164,7 @@
                                                                     <children>
                                                                         <Button layoutX="5" layoutY="5.0" mnemonicParsing="false" onAction="#s84handleEditor" text="Open editor" />
                                                                         <Button layoutX="90.0" layoutY="5.0" mnemonicParsing="false" onAction="#s84handleShowStats" text="Show Stats" />
-                                                      <CheckBox fx:id="cbHash" layoutX="10.0" layoutY="35.0" mnemonicParsing="false" onAction="#s84handleHash"  text="HashLife prototype" AnchorPane.topAnchor="35.0">
+                                                      <CheckBox fx:id="cbHash" layoutX="10.0" layoutY="35.0" mnemonicParsing="false" onAction="#s84handleHash" text="HashLife prototype" AnchorPane.topAnchor="35.0">
                                                          <opaqueInsets>
                                                             <Insets />
                                                          </opaqueInsets>
@@ -192,7 +192,7 @@
                                                                 <AnchorPane minHeight="0.0" minWidth="0.0" prefWidth="200.0" styleClass="pane-standard">
                                                                     <children>
                                                                         <Button layoutX="15.0" layoutY="14.0" mnemonicParsing="false" onAction="#s89openPatternEditor" text="Open Pattern Editor" />
-                                                                        <Button layoutX="14.0" layoutY="46.0" mnemonicParsing="false" onAction="#s89saveAsGIF" text="Save current patter to GIF" />
+                                                                        <Button layoutX="14.0" layoutY="46.0" mnemonicParsing="false" onAction="#s89saveAsGIF" text="Save current pattern to GIF" />
                                                                         <Button layoutX="14.0" layoutY="78.0" mnemonicParsing="false" onAction="#s89showStats" text="Show Stats" />
                                                                         <Button layoutX="14.0" layoutY="110.0" mnemonicParsing="false" onAction="#s89showSoundController" text="Open Audio Control Panel" />
                                                                     </children>
