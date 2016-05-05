@@ -133,9 +133,17 @@ public class EditorController implements Initializable {
         stripBoard.insertArray(stripBoundingBox, 1, 1);
         
         if(stripBoundingBox.length <= stripBoundingBox[0].length) {
-            stripBoard.setCellSize(((stripCanvas.getWidth()/20)/stripBoundingBox.length)/2);
+            if(stripBoundingBox.length < 4) {
+                stripBoard.setCellSize(12);
+            } else {
+                stripBoard.setCellSize(((stripCanvas.getWidth()/20)/stripBoundingBox.length)/2);
+            }
         } else {
-            stripBoard.setCellSize(((stripCanvas.getWidth()/20)/stripBoundingBox[0].length)/2);
+            if(stripBoundingBox[0].length < 4) {
+                stripBoard.setCellSize(12);
+            } else {
+                stripBoard.setCellSize(((stripCanvas.getWidth()/20)/stripBoundingBox[0].length)/2);
+            }
         }
         stripBoard.setGridSpacing(0.05);
         System.out.println(stripBoard.getCellSize() + "\n" + stripBoard.getGridSpacing());
@@ -143,13 +151,16 @@ public class EditorController implements Initializable {
         Affine xForm = new Affine();
         double tx = 0;
         //TODO sjekk hvorfor den ikke itererer riktig
-        for (int iteration = 0; iteration <= 20; iteration++) {
-            stripGc.strokeLine(stripCanvas.getWidth()/20, 0, stripCanvas.getWidth()/20, stripCanvas.getHeight());
-            stripGc.setTransform(xForm);
-            stripBoard.nextGen();
-            drawStrip();
+        for (int iteration = 0; iteration < 20; iteration++) {
             tx = stripBoundingBox.length + iteration*(stripCanvas.getWidth() / 20);
             xForm.setTx(tx);
+
+            stripGc.strokeLine(stripCanvas.getWidth()/20, 0, stripCanvas.getWidth()/20, stripCanvas.getHeight());
+            stripGc.setTransform(xForm);
+            
+            stripBoard.nextGen();
+            drawStrip();
+            
             System.out.println("gen: "+iteration);
         }
         
