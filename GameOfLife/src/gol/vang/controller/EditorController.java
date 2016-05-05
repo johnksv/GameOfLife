@@ -7,6 +7,7 @@ package gol.vang.controller;
 import gol.model.Board.ArrayBoard;
 import gol.model.Board.Board;
 import gol.model.Board.DynamicBoard;
+import gol.other.Configuration;
 import gol.vang.model.WriteRleS305054;
 import java.io.File;
 import java.io.IOException;
@@ -64,15 +65,20 @@ public class EditorController implements Initializable {
 
     private GraphicsContext gc;
     private GraphicsContext stripGc;
+    
     private final Color cellColor = Color.BLACK;
     private final Color backgroundColor = Color.web("#F4F4F4");
+    
     private Board activeBoard = new ArrayBoard();
     private Board stripBoard;
+    
     byte[][] patternToInsert;
     byte[][] stripBoundingBox;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        activeBoard.setCellSize(Configuration.getPropInt("startSize"));
+        activeBoard.setGridSpacing(activeBoard.getCellSize()*0.03);
         gc = editorCanvas.getGraphicsContext2D();
         stripGc = stripCanvas.getGraphicsContext2D();
 
@@ -150,10 +156,9 @@ public class EditorController implements Initializable {
         xForm.setTx(0.0);
         stripGc.setTransform(xForm);
     }
-      
+    
+    //Same methods as in GameController, with support for updating the strip.
     private void mouseInit() {
-
-        //Registers clicks on scene
         editorCanvas.addEventHandler(MouseEvent.MOUSE_PRESSED,
                 (MouseEvent e) -> {
                     handleMouseClick(e);
@@ -231,11 +236,14 @@ public class EditorController implements Initializable {
         draw();
     }
     
+    /**
+     * Sends this gameboard to the pattern editor, and set the cell size
+     * @param gameBoard Board to send
+     */
     public void setBoard(Board gameBoard) {
         patternToInsert = gameBoard.getBoundingBoxBoard();
         activeBoard.insertArray(patternToInsert, 5, 5);
-        activeBoard.setCellSize(gameBoard.getCellSize());
-        activeBoard.setGridSpacing(gameBoard.getGridSpacing());
+
         draw();
     }
 

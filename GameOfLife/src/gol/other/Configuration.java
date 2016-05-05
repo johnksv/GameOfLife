@@ -82,5 +82,6 @@ public class Configuration {
         properties.setProperty("useThreads", "true");
         properties.setProperty("gifWidth", "200");
         properties.setProperty("gifHeight", "200");
+        properties.setProperty("startSize", "20");
     }
 }
