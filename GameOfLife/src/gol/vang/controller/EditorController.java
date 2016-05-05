@@ -43,8 +43,6 @@ public class EditorController implements Initializable {
     @FXML
     private RadioButton moveGrid;
     @FXML
-    private Slider zoomSlider;
-    @FXML
     private Button savePatternBtn;
     @FXML
     private Button closeBtn;
@@ -129,6 +127,7 @@ public class EditorController implements Initializable {
     public void updateStrip() {
         stripGc.clearRect(0, 0, stripCanvas.widthProperty().doubleValue(), stripCanvas.heightProperty().doubleValue());
         stripBoundingBox = activeBoard.getBoundingBoxBoard();
+        
         stripBoard = new ArrayBoard();
         stripBoard.insertArray(stripBoundingBox, 1, 1);
         
@@ -185,14 +184,6 @@ public class EditorController implements Initializable {
                     updateStrip();
                 });
 
-        editorCanvas.setOnScroll((ScrollEvent event) -> {
-            editorCanvas.requestFocus();
-            if (event.getDeltaY() > 0) {
-                zoomSlider.increment();
-            } else {
-                zoomSlider.decrement();
-            }
-        });
     }
 
     private void handleMouseClick(MouseEvent e) {
@@ -231,20 +222,6 @@ public class EditorController implements Initializable {
                 Logger.getLogger(EditorController.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-    }
-    
-    @FXML
-    private void handleZoom() {
-        double x = zoomSlider.getValue();
-        double newValue = 0.2 * Math.exp(0.05 * x);
-        if (((newValue) * activeBoard.getArrayLength() > editorCanvas.getHeight()
-                && (newValue) * activeBoard.getArrayLength(0) > editorCanvas.getWidth())) {
-
-            activeBoard.setCellSize(newValue);
-        } else {
-            zoomSlider.setValue(20 * Math.log(5 * activeBoard.getCellSize()));
-        }
-        draw();
     }
     
     /**

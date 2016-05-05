@@ -40,7 +40,6 @@
                                                           </toggleGroup>
                                                       </RadioButton>
                                                       <RadioButton fx:id="removeCell" layoutX="14.0" layoutY="41.0" mnemonicParsing="false" styleClass="pattern-pane" text="Remove Cells" toggleGroup="$mouseActions" />
-                                                      <Slider fx:id="zoomSlider" layoutX="14.0" layoutY="95.0" onValueChange="#handleZoom" />
                                                       <Label layoutX="14.0" layoutY="71.0" styleClass="pattern-pane" text="Zoom:" />
                                                       <Button layoutX="14.0" layoutY="124.0" mnemonicParsing="false" onAction="#handleClearBtn" styleClass="pattern-button" text="Clear Board" />
                                                    </children>
