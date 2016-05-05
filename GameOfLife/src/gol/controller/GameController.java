@@ -812,10 +812,12 @@ public class GameController implements Initializable {
         timeline.pause();
         try {
             Stage editor = new Stage();
+            editor.setResizable(false);
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/gol/vang/view/Editor.fxml"));
             Parent root = loader.load();
             Scene scene = new Scene(root);
             EditorController edController = loader.getController();
+
             edController.setBoard(activeBoard);
 
             editor.setTitle("Pattern Editor");
@@ -823,7 +825,20 @@ public class GameController implements Initializable {
             editor.initOwner(borderpane.getScene().getWindow());
             editor.setScene(scene);
 
-            editor.show();
+            editor.showAndWait();
+
+            Alert importToMain = new Alert(AlertType.CONFIRMATION);
+            importToMain.setTitle(null);
+            importToMain.setHeaderText("Great pattern.");
+            importToMain.setContentText("Do you want to play it now in the main window?");
+
+            Optional<ButtonType> result = importToMain.showAndWait();
+            if (result.get() == ButtonType.OK) {
+                if (edController.sendPattern() != null) {
+                    this.activeBoard.clearBoard();
+                    boardFromFile = edController.sendPattern();
+                }
+            }
 
         } catch (IOException ie) {
             Alert error = new Alert(AlertType.ERROR);
