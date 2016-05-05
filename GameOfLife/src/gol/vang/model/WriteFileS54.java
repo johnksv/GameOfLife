@@ -28,7 +28,7 @@ public class WriteFileS54 {
      * <p> Below is an overview of the different elements that could be found in
      * a .rle file
      * </p>
-     * <table>
+     * <table summary="Table that explains what the different rle elements are.">
      *      <tr>
      *          <td>Symbol</td>
      *          <td>Meaning</td>
@@ -61,9 +61,9 @@ public class WriteFileS54 {
      *          <td>!</td>
      *          <td>End of Pattern</td>
      *      </tr>
-     *      <tr><td columnspan="2">Note that a number befor either a b, or an o
+     *      <tr><td colspan="2">Note that a number befor either a b, or an o
      *      is the equivalent of writing that number of b's or o's. E.g. 3o = ooo
-     *      </td</tr>
+     *      </td></tr>
      * </table>
      *
      * @param boardToParse a playable board
