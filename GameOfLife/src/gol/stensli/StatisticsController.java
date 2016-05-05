@@ -324,7 +324,8 @@ public class StatisticsController implements Initializable {
         lineChart.addEventHandler(MouseEvent.MOUSE_PRESSED,
                 (MouseEvent e) -> {
                     double tickSize = LIVINGCELLS.getData().get(1).getNode().getLayoutX() - LIVINGCELLS.getData().get(0).getNode().getLayoutX();
-                    //TODO Find a method to get pixel value of a node relative to the scene.
+                    //Not optimal but, I did not find a method to get  
+                    //the pixel value of a node relative to the scene.
                     double x = e.getX() - chartLength.getLayoutX() + tickSize / 2;
 
                     selectedGen = (int) (x / tickSize);

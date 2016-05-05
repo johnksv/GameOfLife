@@ -46,6 +46,7 @@ public final class WriteRLE {
         lines.add("x = " + g[0].length + ", y = " + g.length + ", Rule = B3/23S");
         int counter = 0;
 
+        //Write pattern
         StringBuilder line = new StringBuilder();
         for (int i = 0; i < g.length; i++) {
             byte last = g[i][0];
@@ -59,7 +60,7 @@ public final class WriteRLE {
                         appendChar(counter, 'b', line);
                     }
                     
-                    //Break line if it gets too long
+                    //New line if a line gets above 70 characters 
                     if (line.length() > 70) {
                         lines.add(line.toString());
                         line.delete(0, line.length());

@@ -913,8 +913,7 @@ public class GameController implements Initializable {
 
             editor.setTitle("Gol: Pattern Editor");
             editor.showAndWait();
-            //TODO ask about this code(not 100% my own).
-
+            
             boardFromFile = editorController.getPattern();
             if (boardFromFile != null) {
                 Alert alert = new Alert(AlertType.NONE);

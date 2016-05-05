@@ -326,14 +326,11 @@ public abstract class Board {
      */
     public abstract void insertArray(byte[][] boardToInsert);
 
-    //TODO remove example?
     /**
+     * <p>
      * Inserts a byte 2D-array into the current gameboard at the given (y, x)
      * position.
-     * <p>
-     * E.g: To insert boardFromFile to upper left corner of the current
-     * gameboard, insert at position (0,0).
-     * <p>
+     * </p>
      * Elements from boardFromFile that exceeds the dimensions of the current
      * gameboard is not inserted.
      *

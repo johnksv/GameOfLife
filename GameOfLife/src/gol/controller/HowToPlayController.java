@@ -31,7 +31,6 @@ public class HowToPlayController  {
      */
     public void loadStage(Stage stage) {
 
-        //TODO ICON HowToPlay
         stage.setResizable(false);
         stage.getIcons().add(new Image(new File("src/misc/gen1.PNG").toURI().toString()));
         stage.setTitle("How to play");

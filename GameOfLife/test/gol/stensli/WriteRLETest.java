@@ -52,6 +52,7 @@ public class WriteRLETest {
         try {
             System.out.println("toRLE");
             Path path = Paths.get("test.rle");
+            
             Board board = new DynamicBoard(100, 100);
             board.setCellState(5, 6, true);
             board.setCellState(8, 13, true);

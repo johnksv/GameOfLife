@@ -24,8 +24,8 @@ public class HashBoard extends ArrayBoard {
     private int macroCell;
  
     /**
-     * Creates a new hashBoard, that is now temporary set to a max width of 2^8.
-     * will be dynamic when finished.
+     * Creates a new hashBoard, that is now temporary set to a max width of 2^8. 
+     * Will be dynamic when finished.
      */
     public HashBoard() {
         super((int) Math.pow(2, 8), (int) Math.pow(2, 8));
@@ -79,16 +79,15 @@ public class HashBoard extends ArrayBoard {
                 }
                 
             } else {
+                //Normal nextgen
                 byte[] nextgen = nextGenMacro(y, x);
                 hash.put(macroCell, nextgen);
 
                 for (int i = 0; i < 4; i++) {
                     nextBoard[y + (int) (i / 2)][x + i % 2] = nextgen[i];
-
                 }
             }
             return;
-
         }
         k -= 1;
         evolve(y, x, k);//Topp Left
@@ -97,7 +96,10 @@ public class HashBoard extends ArrayBoard {
         evolve(y + (int) Math.pow(2, k), x + (int) Math.pow(2, k), k); //Bottom Rigth
     }
     
-    
+    /**
+     * Gets coordinates to the top left corner of a macrocell.
+     * Returns a 2*2 with the input coordinates a its top left corner
+     */
     private byte[] nextGenMacro(int y, int x) {
         byte[] nexGenMacro = new byte[4];
         for (int i = 0; i < 2; i++) {
