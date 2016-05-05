@@ -1,10 +1,5 @@
-/*
- * Here comes the text of your license
- * Each line should be prefixed with  * 
- */
 package gol.svergja.model;
 
-import gol.svergja.model.WriteFile;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -14,7 +9,7 @@ import static org.junit.Assert.*;
 
 /**
  *
- * @author John Kasper
+ * @author s305089 - John Kasper Svergja
  */
 public class WriteFileTest {
 

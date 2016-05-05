@@ -1,7 +1,3 @@
-/*
- * Here comes the text of your license
- * Each line should be prefixed with  * 
- */
 package gol.svergja.sound;
 
 import gol.svergja.model.sound.Sound;
@@ -15,7 +11,7 @@ import static org.junit.Assert.*;
 
 /**
  *
- * @author John Kasper
+ * @author s305089 - John Kasper Svergja
  */
 public class MakeSongTest {
 

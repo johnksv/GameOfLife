@@ -12,10 +12,12 @@ import java.net.URL;
 import java.util.HashSet;
 import java.util.ResourceBundle;
 import java.util.Set;
+import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
@@ -29,9 +31,10 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.stage.FileChooser;
 import javafx.util.Duration;
+import javafx.util.StringConverter;
 
 /**
- * FXML controller class for making WAV files
+ * FXML controller class for making WAV files.
  *
  * @author s305089 - John Kasper Svergja
  * @see gol.svergja.model.sound.Sound
@@ -51,6 +54,8 @@ public class WavMakerController implements Initializable {
     @FXML
     private RadioButton rbCountNeigh;
     @FXML
+    private CheckBox cbAvoidClip;
+    @FXML
     private ComboBox comBxRootTone;
     @FXML
     private Button btnPlayPreview;
@@ -67,6 +72,7 @@ public class WavMakerController implements Initializable {
     private double durEachIt;
     private File previewFile;
     private MediaPlayer previewPlayer;
+    Tooltip enter = new Tooltip("Press enter to apply changes");
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -76,12 +82,23 @@ public class WavMakerController implements Initializable {
     private void initView() {
         spinnIte.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 100, 20, 1));
         spinnIte.setEditable(true);
+        spinnIte.focusedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+            labelInfo.setText("Remember to hit enter  in the spinne to save value");
+        });
         spinnDur.setValueFactory(new SpinnerValueFactory.DoubleSpinnerValueFactory(0.1, 100, 1, 0.2));
         spinnDur.setEditable(true);
-        comBxRootTone.getItems().setAll(Tone.C3, Tone.D3, Tone.E3, Tone.F3, Tone.G3, Tone.A3, Tone.B3);
+        spinnDur.focusedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+            labelInfo.setText("Remember to hit enter in the spinner to save value");
+
+        });
+        comBxRootTone.getItems().setAll(Tone.C3, Tone.D3, Tone.E3, Tone.F3, Tone.G3, Tone.A3, Tone.B3, Tone.A4, Tone.A5);
         comBxRootTone.setValue(Tone.C3);
         rbCountRow.selectedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
             vboxBaseTone.setDisable(newValue);
+        });
+
+        cbAvoidClip.selectedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+            Sound.setAvoidClipping(newValue);
         });
     }
 
@@ -90,6 +107,7 @@ public class WavMakerController implements Initializable {
      * else the media player will continue to play after the window is closed.
      */
     public void disposeMediaPlayer() {
+        btnPlayPreview.setText("Play preview");
         previewPlayer.dispose();
     }
 

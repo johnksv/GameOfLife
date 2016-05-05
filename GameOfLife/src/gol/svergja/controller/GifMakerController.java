@@ -47,8 +47,6 @@ public class GifMakerController implements Initializable {
     @FXML
     private VBox vBoxThreashold;
     @FXML
-    private Label labelCurrentDest;
-    @FXML
     private Label labelLoopStatus;
     @FXML
     private Slider sliderCellSize;
@@ -103,7 +101,6 @@ public class GifMakerController implements Initializable {
         cpCellColor.setValue(Color.BLACK);
         initSpinners();
         initListners();
-        updateSaveLabels();
         setGIFValues();
     }
 
@@ -232,9 +229,17 @@ public class GifMakerController implements Initializable {
         }
     }
 
-    private void updateSaveLabels() {
-        labelCurrentDest.setText("Current: " + saveLocation);
-        tooltipSaveLoc.setText(saveLocation);
+    private boolean chooseSaveDest() {
+        FileChooser filechooser = new FileChooser();
+        filechooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Graphics Interchange Format", "*.gif"));
+        File fileSaveLocation = filechooser.showSaveDialog(null);
+
+        if (fileSaveLocation != null) {
+            saveLocation = fileSaveLocation.toPath().toString();
+            return true;
+        } else {
+            return false;
+        }
     }
 
     @FXML
@@ -259,39 +264,28 @@ public class GifMakerController implements Initializable {
     }
 
     @FXML
-    private void chooseSaveDest() {
-        FileChooser filechooser = new FileChooser();
-        filechooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Graphics Interchange Format", "*.gif"));
-        File fileSaveLocation = filechooser.showSaveDialog(null);
-
-        if (fileSaveLocation != null) {
-            saveLocation = fileSaveLocation.toPath().toString();
-        } else {
-            saveLocation = System.getProperty("user.home") + "\\golGif.gif";
-        }
-        updateSaveLabels();
-    }
-
-    @FXML
     private void generateGIF() {
         setGIFValues();
         calculateInfinity();
-
-        labelGenerateFeedback.setText("Generating gif.");
-        Task<Void> drawGif = new Task<Void>() {
-            @Override
-            protected Void call() throws Exception {
-                gifmaker.writePatternToGIF(iterations, saveLocation);
-                Platform.runLater(() -> labelGenerateFeedback.setText("GIF was successfully created"));
-                return null;
-            }
-        };
+        if (chooseSaveDest()) {
+            labelGenerateFeedback.setText("Generating gif.");
+            Task<Void> drawGif = new Task<Void>() {
+                @Override
+                protected Void call() throws Exception {
+                    gifmaker.writePatternToGIF(iterations, saveLocation);
+                    Platform.runLater(() -> labelGenerateFeedback.setText("GIF was successfully created"));
+                    return null;
+                }
+            };
+            Thread th = new Thread(drawGif);
+            th.start();
+        }
     }
 
     @FXML
     private void previewGif() {
         borderpane.getScene().getWindow().setWidth(570);
-        borderpane.getScene().getWindow().setHeight(550);
+        borderpane.getScene().getWindow().setHeight(540);
         ((Stage) borderpane.getScene().getWindow()).setResizable(false);
 
         try {
