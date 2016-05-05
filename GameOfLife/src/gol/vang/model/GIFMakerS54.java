@@ -13,7 +13,7 @@ import lieng.GIFWriter;
 
 /**
  * This class is used to create a .gif file showing several generations of a GoL
- * board. An object of type GIFWriter (Author: Henrik Lieng)
+ * gameboard, with the help of the GIFLib library (created by Henrik Lieng).
  *
  * @author @author s305054 - Trygve Vang
  */
@@ -29,6 +29,10 @@ public class GIFMakerS54 {
     private GIFWriter gifWriter;
     private int gifWriterSize;
 
+    /**
+     * Set this gameboard as the board which is to be made a .gif from
+     * @param originaleBoard Board to use for making the gif
+     */
     public void setBoard(Board originaleBoard) {        
         if (originaleBoard.getArrayLength() == 0) {
             //Error message
@@ -47,6 +51,10 @@ public class GIFMakerS54 {
         copiedBoard.insertArray(originaleArray, (int) ((copiedBoard.getArrayLength() / 2) - (originaleArray[0].length / 2)), (int) ((copiedBoard.getArrayLength() / 2) - (originaleArray.length / 2)));
     }
 
+    /**
+     * Specifies the cell size of the gif
+     * @param cellSize The double value that is to be the cell size
+     */
     public void setCellSize(int cellSize) {
         if (cellSize < 10) {
             return;
@@ -55,10 +63,20 @@ public class GIFMakerS54 {
         }
     }
 
+    /**
+     * Specifies hos long it will be between each frame in gif. The time is 
+     * measured in ms (milliseconds)
+     * @param time the time between each frame
+     */
     public void setTime(double time) {
         this.time = (int) (time * 1000);
     }
 
+    /**
+     * Is used for setting both the background color of the gif, and the cellcolor
+     * @param bgColor the backgroundcolor
+     * @param cColor the cellcolor
+     */
     public void setColor(Color bgColor, Color cColor) {
         if (bgColor != null) {
             this.bgColor = bgColor;
@@ -68,7 +86,11 @@ public class GIFMakerS54 {
             this.cColor = cColor;
         }
     }
-
+    
+    /**
+     * Used for assigning the amount of pictures that is to be used for the gif
+     * @param nPictures number of pictures
+     */
     public void setPictures(int nPictures) {
         if (nPictures < 1) {
             return;
@@ -78,9 +100,10 @@ public class GIFMakerS54 {
     }
 
     /**
-     * Deep copy the active gameboard into a copied gameboard. When changing the
+     * Deep copies the active gameboard into a copied gameboard. When changing the
      * copied board, the originale board will stay the same.
-     *
+     * 
+     * @param saveLocation the path for the file
      */
     public void prepareGIF(Path saveLocation) {
         try {
@@ -100,19 +123,19 @@ public class GIFMakerS54 {
     }
 
     /**
-     * This method is used for creating a .gif file with x generations
-     * (pictures), with dimension ixj, and speed y. makeGif() uses recursion to
-     * create pictures that is loaded into a gifstream. when there is one
+     * This method is used for creating a .gif file with a given number of generations
+     * (pictures), with dimension y*x, and speed z. makeGif() uses recursion to
+     * create pictures that is loaded into a gifstream. When there is one
      * picture left, it will create that last image, and close the stream.
      */
-    public void makeGIF() { //TODO method should be changed to propely work recursion wise
+    public void makeGIF() {
         try {
             if (nPicturesLeft == 1) { //number of pictures left == 1
-                for (int i = 0; i < copiedBoard.getArrayLength(); i++) {
-                    for (int j = 0; j < copiedBoard.getArrayLength(i); j++) {
-                        if (copiedBoard.getCellState(i, j)) {
-                            if (i * cellSize + cellSize < gifWriterSize && j * cellSize + cellSize < gifWriterSize) {
-                                gifWriter.fillRect(j * cellSize, j * cellSize + cellSize, i * cellSize, i * cellSize + cellSize, cColor);
+                for (int y = 0; y < copiedBoard.getArrayLength(); y++) {
+                    for (int x = 0; x < copiedBoard.getArrayLength(y); x++) {
+                        if (copiedBoard.getCellState(y, x)) {
+                            if (y * cellSize + cellSize < gifWriterSize && x * cellSize + cellSize < gifWriterSize) {
+                                gifWriter.fillRect(x * cellSize, x * cellSize + cellSize, y * cellSize, y * cellSize + cellSize, cColor);
                             }
                         }
                     }
@@ -124,11 +147,11 @@ public class GIFMakerS54 {
                 //return the finished gif, ready to be exported            
             } else {
 
-                for (int i = 0; i < copiedBoard.getArrayLength(); i++) {
-                    for (int j = 0; j < copiedBoard.getArrayLength(i); j++) {
-                        if (copiedBoard.getCellState(i, j) && (i * cellSize < gifWriterSize && i * cellSize + cellSize < gifWriterSize && j * cellSize < gifWriterSize && j * cellSize + cellSize < gifWriterSize)) {
+                for (int y = 0; y < copiedBoard.getArrayLength(); y++) {
+                    for (int x = 0; x < copiedBoard.getArrayLength(y); x++) {
+                        if (copiedBoard.getCellState(y, x) && (y * cellSize < gifWriterSize && y * cellSize + cellSize < gifWriterSize && x * cellSize < gifWriterSize && x * cellSize + cellSize < gifWriterSize)) {
 
-                            gifWriter.fillRect(j * cellSize, (j * cellSize + cellSize), i * cellSize, (i * cellSize + cellSize), cColor);
+                            gifWriter.fillRect(x * cellSize, (x * cellSize + cellSize), y * cellSize, (y * cellSize + cellSize), cColor);
                         }
                     }
                 }
@@ -139,14 +162,13 @@ public class GIFMakerS54 {
                 nPicturesLeft -= 1;
                 makeGIF(); //recursive call.
             }
-        } catch (IOException e) { //TODO catch stackoverflow error
-            e.printStackTrace();
-
+        } catch (IOException e) {
             Alert alert = new Alert(AlertType.ERROR);
             alert.setTitle("Something went wrong");
             alert.setHeaderText("There was an input/output error");
             alert.setContentText("Could not proceed. Please try again.");
             alert.showAndWait();
+            System.err.println(e);
         }
     }
 }
