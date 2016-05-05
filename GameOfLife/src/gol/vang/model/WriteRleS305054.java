@@ -10,7 +10,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.TextField;
 
 /**
- * @author Trygve Vang - s305054
+ * @author s305054 - Trygve Vang
  *
  */
 public class WriteRleS305054 {

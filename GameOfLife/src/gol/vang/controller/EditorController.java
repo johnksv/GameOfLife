@@ -1,7 +1,3 @@
-/*
- * Here comes the text of your license
- * Each line should be prefixed with  * 
- */
 package gol.vang.controller;
 
 import gol.model.Board.ArrayBoard;
@@ -28,9 +24,10 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 /**
- * FXML Controller class
+ * FXML Controller class for the Pattern Editor, controlls editing pattern, 
+ * showing its next generations, and saving that pattern to a .rle file.
  *
- * @author Trygve Vang - s305054
+ * @author s305054 - Trygve Vang
  */
 public class EditorController implements Initializable {
 

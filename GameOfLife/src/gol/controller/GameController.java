@@ -782,7 +782,7 @@ public class GameController implements Initializable {
             pictures = Integer.parseInt(sPictures.replaceAll("\\D", ""));
         }
 
-        GIFWriterS305054 gifTrygve = new GIFWriterS305054();
+        GIFWriterS305054 s54GIF = new GIFWriterS305054();
         java.awt.Color bgColor = new java.awt.Color((float) backgroundColor.getRed(), (float) backgroundColor.getGreen(), (float) backgroundColor.getBlue());
         java.awt.Color cColor = new java.awt.Color((float) cellColor.getRed(), (float) cellColor.getGreen(), (float) cellColor.getBlue());
 
@@ -792,13 +792,13 @@ public class GameController implements Initializable {
 
         File file = fileChooser.showSaveDialog(null);
         if (file != null) {
-            gifTrygve.setCellSize((int) activeBoard.getCellSize());
-            gifTrygve.setPictures(pictures);
-            gifTrygve.setBoard(activeBoard);
-            gifTrygve.setTime(s54timeSliderGif.getValue());
-            gifTrygve.setColor(bgColor, cColor);
-            gifTrygve.prepareGIF(file.toPath());
-            gifTrygve.makeGIF();
+            s54GIF.setCellSize((int) activeBoard.getCellSize());
+            s54GIF.setPictures(pictures);
+            s54GIF.setBoard(activeBoard);
+            s54GIF.setTime(s54timeSliderGif.getValue());
+            s54GIF.setColor(bgColor, cColor);
+            s54GIF.prepareGIF(file.toPath());
+            s54GIF.makeGIF();
         }
     }
 
