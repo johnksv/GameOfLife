@@ -112,6 +112,9 @@ public class PatternEditorController implements Initializable {
      * @param board loaded board
      */
     public void loadInsertBoard(Board board) {
+        if (activeBoard.getBoundingBox()[1] - activeBoard.getBoundingBox()[0] < 0) {
+            return;
+        }
         Alert alert = new Alert(Alert.AlertType.NONE);
         alert.setTitle("Place pattern");
         alert.initStyle(StageStyle.UTILITY);

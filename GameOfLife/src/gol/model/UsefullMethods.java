@@ -63,6 +63,6 @@ public final class UsefullMethods {
                 returnMatrix[j][i] = matrix[i][j];
             }
         }
-        return matrix;
+        return returnMatrix;
     }
 }

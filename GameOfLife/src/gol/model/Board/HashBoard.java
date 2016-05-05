@@ -79,7 +79,7 @@ public class HashBoard extends ArrayBoard {
                 for (int i = 0; i < 4; i++) {
                     nextBoard[y + (int) (i / 2)][x + i % 2] = hash.get(macroCell)[i];
                 }
-
+                
             } else {
                 byte[] nextgen = nextGenMacro(y, x);
                 hash.put(macroCell, nextgen);
