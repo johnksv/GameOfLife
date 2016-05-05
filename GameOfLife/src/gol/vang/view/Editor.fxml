@@ -22,9 +22,9 @@
          <children>
             <VBox layoutX="686.0" prefHeight="412.0" prefWidth="197.0">
                <children>
-                  <TitledPane collapsible="false" prefHeight="413.0" prefWidth="197.0">
+                  <TitledPane collapsible="false" prefHeight="413.0" prefWidth="197.0" styleClass="pattern-pane">
                      <content>
-                        <TabPane prefHeight="382.0" prefWidth="195.0" tabClosingPolicy="UNAVAILABLE">
+                        <TabPane prefHeight="382.0" prefWidth="195.0" styleClass="pattern-pane" tabClosingPolicy="UNAVAILABLE">
                           <tabs>
                             <Tab text="Pattern">
                               <content>
@@ -32,27 +32,27 @@
                                        <children>
                                           <TitledPane collapsible="false" prefHeight="202.0" prefWidth="195.0">
                                              <content>
-                                                <AnchorPane prefHeight="174.0" prefWidth="226.0" styleClass="pane-standard">
+                                                <AnchorPane prefHeight="174.0" prefWidth="226.0" styleClass="pattern-pane">
                                                    <children>
-                                                      <RadioButton fx:id="addCell" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" selected="true" styleClass="advanced-tips" text="Add Cells">
+                                                      <RadioButton fx:id="addCell" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" selected="true" styleClass="pattern-pane" text="Add Cells">
                                                           <toggleGroup>
                                                               <ToggleGroup fx:id="mouseActions" />
                                                           </toggleGroup>
                                                       </RadioButton>
-                                                      <RadioButton fx:id="removeCell" layoutX="14.0" layoutY="41.0" mnemonicParsing="false" styleClass="advanced-tips" text="Remove Cells" toggleGroup="$mouseActions" />
+                                                      <RadioButton fx:id="removeCell" layoutX="14.0" layoutY="41.0" mnemonicParsing="false" styleClass="pattern-pane" text="Remove Cells" toggleGroup="$mouseActions" />
                                                       <Slider fx:id="zoomSlider" layoutX="14.0" layoutY="95.0" onValueChange="#handleZoom" />
-                                                      <Label layoutX="14.0" layoutY="71.0" styleClass="advanced-tips" text="Zoom:" />
-                                                      <Button layoutX="14.0" layoutY="124.0" mnemonicParsing="false" onAction="#handleClearBtn" text="Clear Board" />
+                                                      <Label layoutX="14.0" layoutY="71.0" styleClass="pattern-pane" text="Zoom:" />
+                                                      <Button layoutX="14.0" layoutY="124.0" mnemonicParsing="false" onAction="#handleClearBtn" styleClass="pattern-button" text="Clear Board" />
                                                    </children>
                                                 </AnchorPane>
                                              </content>
                                           </TitledPane>
                                           <TitledPane collapsible="false" layoutY="202.0" prefHeight="149.0" prefWidth="196.0">
                                              <content>
-                                                <AnchorPane prefHeight="121.0" prefWidth="194.0" styleClass="pane-standard">
+                                                <AnchorPane prefHeight="121.0" prefWidth="194.0" styleClass="pattern-pane">
                                                    <children>
-                                                      <Button fx:id="savePatternBtn" layoutX="13.0" layoutY="14.0" mnemonicParsing="false" onAction="#handleSave" text="Save Pattern" />
-                                                      <Button fx:id="closeBtn" layoutX="14.0" layoutY="49.0" mnemonicParsing="false" text="Close" />
+                                                      <Button fx:id="savePatternBtn" layoutX="13.0" layoutY="14.0" mnemonicParsing="false" onAction="#handleSave" styleClass="pattern-button" text="Save Pattern" />
+                                                      <Button fx:id="closeBtn" layoutX="14.0" layoutY="49.0" mnemonicParsing="false" styleClass="pattern-button" text="Close" />
                                                    </children>
                                                 </AnchorPane>
                                              </content>
@@ -88,13 +88,13 @@
       </AnchorPane>
    </center>
    <bottom>
-      <VBox prefHeight="186.0" prefWidth="883.0" styleClass="pane-standard" BorderPane.alignment="CENTER">
+      <VBox prefHeight="186.0" prefWidth="883.0" styleClass="pattern-pane" BorderPane.alignment="CENTER">
          <children>
             <ScrollPane prefHeight="173.0" prefWidth="877.0" styleClass="pane-standard">
                <content>
                   <Canvas fx:id="stripCanvas" height="137.5" width="2700.0" />
                </content></ScrollPane>
-            <Button fx:id="updateStripBtn" mnemonicParsing="false" onAction="#updateStrip" text="Update Strip" />
+            <Button fx:id="updateStripBtn" mnemonicParsing="false" onAction="#updateStrip" styleClass="pattern-button" text="Update Strip" />
          </children>
       </VBox>
    </bottom>
