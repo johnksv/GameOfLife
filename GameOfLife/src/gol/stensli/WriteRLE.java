@@ -43,7 +43,7 @@ public final class WriteRLE {
             lines.add("#C " + comment);
         }
         //Pattern dimensions. No other rule then conway's are supported.
-        lines.add("x = " + g[0].length + ", y = " + g.length + ", Rule = B3/23S");
+        lines.add("x = " + g[0].length + ", y = " + g.length + ", Rule = B3/S23");
         int counter = 0;
 
         //Write pattern
