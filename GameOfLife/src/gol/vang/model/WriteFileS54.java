@@ -13,25 +13,67 @@ import javafx.scene.control.TextField;
  * @author s305054 - Trygve Vang
  *
  */
-public class WriteRleS305054 {
+public class WriteFileS54 {
     
-    public WriteRleS305054() {
+    public WriteFileS54() {
     }
 
     private byte[][] boundingBox;
     //TODO support for lagring til RLE fil
 
     /**
-     * Parses this board to a RLE file.
+     * Parses this board to a RLE file using a buffered writer. This method
+     * parses the boundingbox of a board into a playable .rle-file.
+     * 
+     * <p> Below is an overview of the different elements that could be found in
+     * a .rle file
+     * </p>
+     * <table>
+     *      <tr>
+     *          <td>Symbol</td>
+     *          <td>Meaning</td>
+     *      </tr>
+     *      <tr>
+     *          <td>#N</td>
+     *          <td>Title of pattern</td>
+     *      </tr>
+     *      <tr>
+     *          <td>#O</td>
+     *          <td>Author</td>
+     *      </tr>
+     *      <tr>
+     *           <td>#C</td>
+     *           <td>Comment</td>
+     *      </tr>
+     *      <tr>
+     *          <td>b</td>
+     *          <td>"Alive" cell</td>
+     *      </tr>
+     *      <tr>
+     *          <td>o</td>
+     *          <td>"Dead" cell</td>
+     *      </tr>
+     *      <tr>
+     *          <td>$</td>
+     *          <td>New line</td>
+     *      </tr>
+     *      <tr>
+     *          <td>!</td>
+     *          <td>End of Pattern</td>
+     *      </tr>
+     *      <tr><td columnspan="2">Note that a number befor either a b, or an o
+     *      is the equivalent of writing that number of b's or o's. E.g. 3o = ooo
+     *      </td</tr>
+     * </table>
      *
      * @param boardToParse a playable board
      * @param title title of this pattern
      * @param author author of this pattern
      * @param description description of this pattern
+     * @param sLocation path to where the file is to be saved
+     * @throws IOException if there is an input/output error
      */
     public void writeRLE(Board boardToParse, TextField title, TextField author, TextField description, Path sLocation) throws IOException {
-        //TODO title, author, etc
-        //TODO boundingboxBoard, parse rle from that
 
         if (boardToParse.getArrayLength() == 0) {
             Alert error = new Alert(AlertType.ERROR);

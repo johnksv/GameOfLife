@@ -3,7 +3,7 @@ package gol.vang.controller;
 import gol.model.Board.ArrayBoard;
 import gol.model.Board.Board;
 import gol.other.Configuration;
-import gol.vang.model.WriteRleS305054;
+import gol.vang.model.WriteFileS54;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -24,10 +24,10 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 /**
- * Controlls the Pattern Editor, like editing a pattern, 
- * showing its 20 next generations, and saving that pattern to a .rle file. 
- * EditorController imports the pattern from 
- * {@link gol.controller.GameController GameController}, and put it into this main Canvas.
+ * Controlls the Pattern Editor, like editing a pattern, showing its 20 next
+ * generations, and saving that pattern to a .rle file. EditorController imports
+ * the pattern from {@link gol.controller.GameController GameController}, and
+ * put it into this main Canvas.
  *
  * @author s305054 - Trygve Vang
  */
@@ -80,7 +80,7 @@ public class EditorController implements Initializable {
         mouseInit();
 
     }
-    
+
     /**
      * Finished pattern from PatternEditor.
      *
@@ -211,13 +211,13 @@ public class EditorController implements Initializable {
      */
     @FXML
     public void handleClose() {
-        Stage stage = (Stage) btnClose.getScene().getWindow();
-        stage.close();
+            Stage stage = (Stage) btnClose.getScene().getWindow();
+            stage.close();
     }
 
     /**
-     * Sets all elements in this active board to 0. 
-     * See the {@link gol.model.Board.Board#clearBoard clearBoard} method.
+     * Sets all elements in this active board to 0. See the
+     * {@link gol.model.Board.Board#clearBoard clearBoard} method.
      */
     @FXML
     public void handleClearBtn() {
@@ -237,7 +237,7 @@ public class EditorController implements Initializable {
         File file = fileChooser.showSaveDialog(null);
         if (file != null) {
             try {
-                WriteRleS305054 writer = new WriteRleS305054();
+                WriteFileS54 writer = new WriteFileS54();
                 writer.writeRLE(activeBoard, titleField, authorField, descriptionField, file.toPath());
             } catch (IOException ex) {
                 Logger.getLogger(EditorController.class.getName()).log(Level.SEVERE, null, ex);
