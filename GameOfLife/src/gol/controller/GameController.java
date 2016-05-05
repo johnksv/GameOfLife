@@ -6,7 +6,7 @@ import gol.model.FileIO.*;
 import gol.model.Logic.*;
 import gol.svergja.controller.*;
 import gol.other.Configuration;
-import gol.vang.model.GIFWriterS305054;
+import gol.vang.model.GIFMakerS54;
 import gol.vang.controller.EditorController;
 import java.io.File;
 import java.io.IOException;
@@ -782,7 +782,7 @@ public class GameController implements Initializable {
             pictures = Integer.parseInt(sPictures.replaceAll("\\D", ""));
         }
 
-        GIFWriterS305054 s54GIF = new GIFWriterS305054();
+        GIFMakerS54 s54GIF = new GIFMakerS54();
         java.awt.Color bgColor = new java.awt.Color((float) backgroundColor.getRed(), (float) backgroundColor.getGreen(), (float) backgroundColor.getBlue());
         java.awt.Color cColor = new java.awt.Color((float) cellColor.getRed(), (float) cellColor.getGreen(), (float) cellColor.getBlue());
 

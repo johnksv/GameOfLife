@@ -24,8 +24,10 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 /**
- * FXML Controller class for the Pattern Editor, controlls editing pattern, 
- * showing its next generations, and saving that pattern to a .rle file.
+ * Controlls the Pattern Editor, like editing a pattern, 
+ * showing its 20 next generations, and saving that pattern to a .rle file. 
+ * EditorController imports the pattern from 
+ * {@link gol.controller.GameController GameController}, and put it into this main Canvas.
  *
  * @author s305054 - Trygve Vang
  */
