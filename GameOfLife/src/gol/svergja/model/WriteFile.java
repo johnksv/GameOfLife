@@ -72,24 +72,24 @@ public final class WriteFile {
     }
 
     /**
-     * 
-     * @param newPatternName 
+     * Sets the name of the pattern to be used when writing file to RLE
+     * @param newPatternName The name of the pattern that will be written
      */
     public static void setPatternName(String newPatternName) {
         patternName = newPatternName;
     }
 
     /**
-     * 
-     * @param patternAuthor 
+     * Sets the author to be used when writing file to RLE
+     * @param patternAuthor The name of the author
      */
     public static void setAuthor(String patternAuthor) {
         author = patternAuthor;
     }
 
     /**
-     * 
-     * @param patternComment 
+     * Sets the comment to be used when writing file to RLE
+     * @param patternComment The comment to the pattern
      */
     public static void setComment(String patternComment) {
         comment = patternComment;

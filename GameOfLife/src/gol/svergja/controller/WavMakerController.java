@@ -31,7 +31,10 @@ import javafx.stage.FileChooser;
 import javafx.util.Duration;
 
 /**
+ * FXML controller class for making WAV files
+ *
  * @author s305089 - John Kasper Svergja
+ * @see gol.svergja.model.sound.Sound
  */
 public class WavMakerController implements Initializable {
 
@@ -83,87 +86,11 @@ public class WavMakerController implements Initializable {
     }
 
     /**
-     * 
-     * @return 
+     * Disposes all the media players currently playing. This must be done, or
+     * else the media player will continue to play after the window is closed.
      */
-    public File getPreviewFile() {
-        return previewFile;
-    }
-
-    /**
-     * 
-     * @param activeBoard 
-     */
-    public void setBoard(Board activeBoard) {
-        referenceBoard = activeBoard;
-        originalPattern = activeBoard.getBoundingBoxBoard();
-        this.activeBoard = new DynamicBoard();
-        this.activeBoard.setRule(activeBoard.getRule());
-        this.activeBoard.insertArray(originalPattern, 3, 3);
-
-        generateBoardGIFPreview();
-    }
-
-    @FXML
-    private void saveWav() {
-        setPattern(originalPattern);
-        getValuesFromView();
-
-        FileChooser filechooser = new FileChooser();
-        filechooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Waveform Audio", "*.wav"),
-                new FileChooser.ExtensionFilter("All files ", "*.*"));
-
-        File result = filechooser.showSaveDialog(null);
-        if (result != null) {
-            handleWriteMode();
-            Sound.makeSound(result, durEachIt);
-            labelInfo.setText("Wav file successfully generated.");
-        }
-    }
-
-    @FXML
-    private void previewWav() {
-        try {
-            setPattern(originalPattern);
-            getValuesFromView();
-
-            previewFile = File.createTempFile("golSoundPreview", ".wav");
-
-            handleWriteMode();
-            Sound.makeSound(previewFile, durEachIt);
-            labelInfo.setText("Preview file successfully generated.");
-            if (previewPlayer != null) {
-                previewPlayer.dispose();
-            }
-            previewPlayer = new MediaPlayer(new Media(previewFile.toURI().toString()));
-            previewPlayer.setOnEndOfMedia(() -> {
-                btnPlayPreview.setText("Play preview");
-                labelInfo.setText("");
-                previewPlayer.seek(Duration.ZERO);
-                previewPlayer.pause();
-            });
-
-        } catch (IOException ex) {
-            System.out.println("There was an error creating the preview...\n" + ex);
-        }
-    }
-
-    @FXML
-    private void playPreview() {
-        if (previewPlayer.statusProperty().get() == MediaPlayer.Status.STALLED
-                || previewPlayer.statusProperty().get() == MediaPlayer.Status.PLAYING) {
-            previewPlayer.pause();
-            btnPlayPreview.setText("Play preview");
-        } else {
-            previewPlayer.play();
-            Util.setTimeLabel(previewPlayer, labelInfo);
-            btnPlayPreview.setText("Pause preview");
-        }
-    }
-
-    @FXML
-    private void updateBoard() {
-        setBoard(referenceBoard);
+    public void disposeMediaPlayer() {
+        previewPlayer.dispose();
     }
 
     private void livingDeadRatio() {
@@ -228,6 +155,16 @@ public class WavMakerController implements Initializable {
         }
     }
 
+    private void handleWriteMode() {
+        if (rbLivingDead.isSelected()) {
+            livingDeadRatio();
+        } else if (rbCountRow.isSelected()) {
+            countRowCoherent();
+        } else if (rbCountNeigh.isSelected()) {
+            neighCount();
+        }
+    }
+
     private void neighCount() {
         double rootToneFreq = ((Tone) comBxRootTone.getValue()).getFreq();
 
@@ -259,26 +196,6 @@ public class WavMakerController implements Initializable {
         }
     }
 
-    private void getValuesFromView() {
-        iterationsToCalc = (int) spinnIte.getValue();
-        durEachIt = (double) spinnDur.getValue();
-    }
-
-    private void handleWriteMode() {
-        if (rbLivingDead.isSelected()) {
-            livingDeadRatio();
-        } else if (rbCountRow.isSelected()) {
-            countRowCoherent();
-        } else if (rbCountNeigh.isSelected()) {
-            neighCount();
-        }
-    }
-
-    private void setPattern(byte[][] patternToSet) {
-        activeBoard.clearBoard();
-        activeBoard.insertArray(patternToSet, 5, 5);
-    }
-
     private void generateBoardGIFPreview() {
         try {
             Tooltip tooltip = new Tooltip();
@@ -305,5 +222,96 @@ public class WavMakerController implements Initializable {
         } catch (IOException ex) {
             System.err.println("Unable to create GIF preview.\n" + ex);
         }
+    }
+
+    @FXML
+    private void saveWav() {
+        setPattern(originalPattern);
+        getValuesFromView();
+
+        FileChooser filechooser = new FileChooser();
+        filechooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Waveform Audio", "*.wav"),
+                new FileChooser.ExtensionFilter("All files ", "*.*"));
+
+        File result = filechooser.showSaveDialog(null);
+        if (result != null) {
+            handleWriteMode();
+            Sound.makeSound(result, durEachIt);
+            labelInfo.setText("Wav file successfully generated.");
+        }
+    }
+
+    @FXML
+    private void previewWav() {
+        try {
+            setPattern(originalPattern);
+            getValuesFromView();
+
+            previewFile = File.createTempFile("golSoundPreview", ".wav");
+
+            handleWriteMode();
+            Sound.makeSound(previewFile, durEachIt);
+            labelInfo.setText("Preview file successfully generated.");
+            if (previewPlayer != null) {
+                disposeMediaPlayer();
+            }
+            previewPlayer = new MediaPlayer(new Media(previewFile.toURI().toString()));
+            previewPlayer.setOnEndOfMedia(() -> {
+                btnPlayPreview.setText("Play preview");
+                labelInfo.setText("");
+                previewPlayer.seek(Duration.ZERO);
+                previewPlayer.pause();
+            });
+
+        } catch (IOException ex) {
+            System.out.println("There was an error creating the preview...\n" + ex);
+        }
+    }
+
+    @FXML
+    private void playPreview() {
+        if (previewPlayer.statusProperty().get() == MediaPlayer.Status.STALLED
+                || previewPlayer.statusProperty().get() == MediaPlayer.Status.PLAYING) {
+            previewPlayer.pause();
+            btnPlayPreview.setText("Play preview");
+        } else {
+            previewPlayer.play();
+            Util.setTimeLabel(previewPlayer, labelInfo);
+            btnPlayPreview.setText("Pause preview");
+        }
+    }
+
+    @FXML
+    private void updateBoard() {
+        setBoard(referenceBoard);
+    }
+
+    /**
+     * Constructs an new Board instance, and inserts the given board bounding
+     * box pattern.
+     * <b>Technical info:</b> The board constructed is of type dynamic board.
+     *
+     * @param boardToSet The board that should be copied. Copies the pattern and
+     * rule
+     * @see gol.model.Board.Board
+     */
+    public void setBoard(Board boardToSet) {
+        referenceBoard = boardToSet;
+        originalPattern = boardToSet.getBoundingBoxBoard();
+        this.activeBoard = new DynamicBoard();
+        this.activeBoard.setRule(boardToSet.getRule());
+        this.activeBoard.insertArray(originalPattern, 3, 3);
+
+        generateBoardGIFPreview();
+    }
+
+    private void setPattern(byte[][] patternToSet) {
+        activeBoard.clearBoard();
+        activeBoard.insertArray(patternToSet, 5, 5);
+    }
+
+    private void getValuesFromView() {
+        iterationsToCalc = (int) spinnIte.getValue();
+        durEachIt = (double) spinnDur.getValue();
     }
 }

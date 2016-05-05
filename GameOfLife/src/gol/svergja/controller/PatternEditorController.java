@@ -352,21 +352,25 @@ public class PatternEditorController implements Initializable {
     }
 
     /**
+     * Constructs an new Board instance, and inserts the given board bounding
+     * box pattern.
+     * <b>Technical info:</b> The board constructed is of type array board. This
+     * is due to the early implementation of the pattern editor.
      *
-     * @param gameBoardToCopy
+     * @param boardToSet The board that should be copied. Copies the pattern and
+     * rule
      */
-    public void setBoard(Board gameBoardToCopy) {
-        ghostByteBoard = gameBoardToCopy.getBoundingBoxBoard();
+    public void setBoard(Board boardToSet) {
+        ghostByteBoard = boardToSet.getBoundingBoxBoard();
 
         int rows = (int) (Util.getScreenSize()[1]
-                / gameBoardToCopy.getCellSize());
+                / boardToSet.getCellSize());
         int columns = (int) (Util.getScreenSize()[0]
-                / gameBoardToCopy.getCellSize());
+                / boardToSet.getCellSize());
 
         activeBoard = new ArrayBoard(rows, columns);
-        activeBoard.setRule(gameBoardToCopy.getRule());
-        this.activeBoard.setCellSize(gameBoardToCopy.getCellSize());
-
+        activeBoard.setRule(boardToSet.getRule());
+        this.activeBoard.setCellSize(boardToSet.getCellSize());
     }
 
     /**
