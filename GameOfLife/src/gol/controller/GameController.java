@@ -45,7 +45,7 @@ import javafx.stage.StageStyle;
 import javafx.util.Duration;
 
 /**
- * FXML controller, controls the main game-screen.
+ * Controls the main game-screen.
  *
  * @author s305054, s305084, s305089
  */
