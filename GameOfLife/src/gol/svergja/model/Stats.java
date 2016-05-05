@@ -84,26 +84,6 @@ public class Stats {
         return stats;
     }
 
-    public int[] getLivingCells() {
-        return livingCells;
-    }
-
-    public int[] getChangeLivingCells() {
-        return changeLivingCells;
-    }
-
-    public int[][] getSimilarityMeasure() {
-        return similarityMeasure;
-    }
-
-    public int[] getGeometricFactor() {
-        return geometricFactor;
-    }
-
-    /**
-     *
-     * @param curIte the current iteration.
-     */
     private void calcLivingAndGeometric(int curIte) {
         //Calculate Living and geometric factor
         int livingThisGen = 0;
@@ -120,22 +100,13 @@ public class Stats {
         livingCells[curIte] = livingThisGen;
     }
 
-    /**
-     *
-     * @param curIte current iteration
-     */
     private void calcChangeLiving(int curIte) {
         changeLivingCells[curIte] = getLivingCells()[curIte + 1] - getLivingCells()[curIte];
     }
 
-    /**
-     *
-     * @param curIte current iteration
-     * @param iterationsToCalc how many iteration that should be calculated.
-     */
     private void calcSimilarity(int iterationsToCalc) {
         for (int ite = 0; ite < iterationsToCalc; ite++) {
-            double thetaTime1 = Math.abs(getTheta(ite));
+            double thetaTime1 = Math.abs(calcTheta(ite));
 
             int max = 0;
             int itClosestMatch = -1;
@@ -146,7 +117,7 @@ public class Stats {
                     time2 = ite;
                 }
                 if (ite != time2) {
-                    double thetaTime2 = Math.abs(getTheta(time2));
+                    double thetaTime2 = Math.abs(calcTheta(time2));
                     double measure = Math.min(thetaTime1, thetaTime2) / Math.max(thetaTime1, thetaTime2);
                     if (Math.floor(measure * 100) > max) {
                         itClosestMatch = time2;
@@ -162,18 +133,40 @@ public class Stats {
         }
     }
 
-    private double getTheta(int time) {
+    private double calcTheta(int time) {
         double theta;
         if (shouldUseCustom) {
-            theta = alphaCustom * getLivingCells()[time]
-                    + betaCustom * getChangeLivingCells()[time]
-                    + gammaCustom * getGeometricFactor()[time];
+            theta = alphaCustom * livingCells[time]
+                    + betaCustom * changeLivingCells[time]
+                    + gammaCustom * geometricFactor[time];
         } else {
-            theta = alpha * getLivingCells()[time]
-                    + beta * getChangeLivingCells()[time]
-                    + gamma * getGeometricFactor()[time];
+            theta = alpha * livingCells[time]
+                    + beta * changeLivingCells[time]
+                    + gamma * geometricFactor[time];
         }
         return theta;
+    }
+
+    /**
+     * Set if the pattern should check similarity with a previous state of the
+     * same pattern.
+     *
+     * @param checkSimilarityPrevGen True if the pattern should check its
+     * similarity in previous states. False if pattern should only check for
+     * similarity in future patterns. Default: false
+     */
+    public void setCheckSimilarityPrevGen(boolean checkSimilarityPrevGen) {
+        this.checkSimilarityPrevGen = checkSimilarityPrevGen;
+    }
+
+    /**
+     * Sets if custom values for geometric factor should be used or not
+     *
+     * @param shouldUseCustom true if custom values by s305089 - John Kasper
+     * Svergja - should be used, false if not.
+     */
+    public void setShouldUseCustom(boolean shouldUseCustom) {
+        this.shouldUseCustom = shouldUseCustom;
     }
 
     /**
@@ -186,14 +179,6 @@ public class Stats {
      * rule
      * @see gol.model.Board.Board
      */
-    public void setCheckSimilarityPrevGen(boolean checkSimilarityPrevGen) {
-        this.checkSimilarityPrevGen = checkSimilarityPrevGen;
-    }
-
-    public void setShouldUseCustom(boolean shouldUseCustom) {
-        this.shouldUseCustom = shouldUseCustom;
-    }
-
     public void setBoard(Board boardToSet) {
         originalPattern = boardToSet.getBoundingBoxBoard();
         activeBoard = new ArrayBoard(2000, 2000);
@@ -205,5 +190,36 @@ public class Stats {
     private void setPattern(byte[][] pattern) {
         activeBoard.clearBoard();
         activeBoard.insertArray(pattern, 120, 120);
+    }
+
+    /**
+     * Get the array containing information about living cells.
+     *
+     * @return The array of living cells. If stats has not been calculated, this
+     * method will return null.
+     */
+    public int[] getLivingCells() {
+        return livingCells;
+    }
+
+    /**
+     * Get the array containing information about change in living cells.
+     *
+     * @return The array containing information about change in living cells. If
+     * stats has not been calculated, this method will return null.
+     */
+    public int[] getChangeLivingCells() {
+        return changeLivingCells;
+    }
+
+    /**
+     * Get the array containing information about the similarity between each
+     * generation of a pattern.
+     *
+     * @return The array containing information about change in living cells. If
+     * stats has not been calculated, this method will return null.
+     */
+    public int[][] getSimilarityMeasure() {
+        return similarityMeasure;
     }
 }

@@ -22,14 +22,20 @@
             </ImageView>
             <GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="179.0" prefWidth="600.0" StackPane.alignment="CENTER">
                <children>
-                  <Button contentDisplay="CENTER" layoutX="229.0" layoutY="150.0" mnemonicParsing="false" onAction="#startGame" prefWidth="170.0" text="Start with empty board" GridPane.rowIndex="2" />
-                  <Button contentDisplay="CENTER" layoutX="300.0" layoutY="237.0" mnemonicParsing="false" onAction="#startGamePattern" prefWidth="170.0" text="Start with selected pattern" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                  <Button contentDisplay="CENTER" layoutX="229.0" layoutY="150.0" mnemonicParsing="false" onAction="#startGame" prefHeight="50.0" prefWidth="170.0" text="Start with empty board" GridPane.rowIndex="2">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font></Button>
+                  <Button contentDisplay="CENTER" layoutX="300.0" layoutY="237.0" mnemonicParsing="false" onAction="#startGamePattern" prefHeight="50.0" prefWidth="170.0" text="Start with selected pattern" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font></Button>
                   <Label layoutX="164.0" layoutY="64.0" style="-fx-text-fill: black; -fx-font-weight: normal; -fx-background-color: rgb(244,244,244,0.5);" text="GAME OF LIFE" GridPane.columnSpan="2">
                      <font>
                         <Font size="46.0" />
                      </font>
                   </Label>
-                  <Button layoutX="263.0" layoutY="289.0" mnemonicParsing="false" onAction="#howToPlay" text="How to play" GridPane.columnSpan="2" GridPane.rowIndex="5" />
+                  <Button layoutX="263.0" layoutY="289.0" mnemonicParsing="false" onAction="#howToPlay" prefHeight="25.0" prefWidth="100.0" text="How to play" GridPane.columnSpan="2" GridPane.rowIndex="5" />
          </children>
                <columnConstraints>
                   <ColumnConstraints halignment="CENTER" maxWidth="146.0" minWidth="10.0" percentWidth="50.0" prefWidth="137.0" />
@@ -38,8 +44,8 @@
                <rowConstraints>
                   <RowConstraints />
                   <RowConstraints minHeight="10.0" prefHeight="30.0" />
-                  <RowConstraints minHeight="10.0" prefHeight="30.0" />
-                  <RowConstraints minHeight="10.0" prefHeight="30.0" />
+                  <RowConstraints maxHeight="36.0" minHeight="10.0" prefHeight="36.0" />
+                  <RowConstraints maxHeight="23.0" minHeight="10.0" prefHeight="20.0" />
                   <RowConstraints />
                   <RowConstraints />
                </rowConstraints>

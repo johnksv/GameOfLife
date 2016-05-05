@@ -32,21 +32,42 @@ import lieng.GIFWriter;
  * private method {@link #writeGIF(int)}.
  *
  * <h4>Hva er halerekursjon, og hva er fordelen</h4>
+ * Halerekursjon er om man har et rekursivt kall helt til slutt i metoden (og
+ * ingenting etter). Det som skjer da er at kompilatoren optimaliserer koden,
+ * slik at alle rekursive kall blir lagret på samme stack frame. Dette gjør at
+ * man slipper å bekymre seg for faren for stack overflow, og bruk av rekursjon
+ * kan dermed bli mer naturlig.
+ * <p>
+ * Metoden ville dermed ikke ha vært halerekursiv om det hadde stått:
+ * </p>
+ * <code>
+ * writeGIF(iterations);
+ * System.out.println("Last instruction of method);
+ * </code>
  *
  * <h4>Er metoden halerekursiv</h4>
+ * Metoden er halrekursiv, siden det ikke er noen instrukser etter den når
+ * tidligere kall returnerer.
  *
- * <h4>Fordeler og ulemper med halrekursjon</h4>
+ * <h4>Fordeler og ulemper med rekursjon for dette problemet</h4>
+ * Utfra hva jeg ser vil jeg si at det er større ulempe enn fordeler ved å løse
+ * dette problemet med rekursjon. Ulempen er at man risikerer stack overflow og
+ * jeg vil tro at det går tregere enn en for-løkke, i og med at man alltid må
+ * bytte/hoppe mellom stack frames.
+ *
+ * <p>
+ * Fordelen kan imidlertid være at det kan være naturlig å løse dette problemet
+ * med rekursjon, fordi man kan tenke seg at neste bilde "bygger" på det
+ * forrige. Koden kan også bli lettere å lese, siden man slipper å ha alt i en
+ * løkke (evt i en egen metode som blir kalt for hver iterasjon).</p>
  *
  *
  * <h4>Støtter Java/JVM halerekursjon</h4>
- * //TODO Svar på spørmål om halerekursjon Forstå hva halerekursjon (eng: tail
- * recursion) er og fordelen er med slik rekursjon. Test om metoden dere har
- * implementert over utfører slik halerekursjon. Ut ifra denne testen, diskuter
- * nå fordeler/ulemper med rekursjon for dette problemet. Til slutt, bruk
- * Internett til å finne ut om Java/JVM støtter halerekursjon og eventuelt
- * hvordan.
+ * Java/JVM støtter IKKE halerekursjon, noe som gjør at man burde passe på når
+ * man bruker rekursjon
  *
- * Created: 18.03.2016 Last edited: 30.04.2016
+ *
+ * Created: 18.03.2016 Last edited: 05.05.2016
  *
  * @author s305089
  */
@@ -83,7 +104,7 @@ public final class GifMaker {
      * @throws java.io.IOException if the file could not be created
      */
     public void writePatternToGIF(int iterations, String saveLocation) throws IOException {
-        
+
         gifWriter = new GIFWriter(gifWidth, gifHeight, saveLocation, durationBetweenFrames);
         if (activeBoard != null || originalPattern != null) {
             //If not called, manipulations is done on the current gen of this activeBoard.

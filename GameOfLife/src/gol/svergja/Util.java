@@ -22,6 +22,42 @@ public class Util {
     }
 
     /**
+     * This method is copied from {@link javafx.scene.control.Spinner }. THis is
+     * because it is private, and no other easy way is provided to easily commit
+     * a changed value. From Spinners Javadoc: "To make sure the model has the
+     * same value as the editor, the user must commit the edit using the Enter
+     * key."
+     * <a href="https://docs.oracle.com/javase/8/javafx/api/javafx/scene/control/Spinner.html">https://docs.oracle.com/javase/8/javafx/api/javafx/scene/control/Spinner.html</a>
+     *
+     * <p>
+     * Added modification: Only spinners with IntegerSpinnerValueFactory is
+     * calling this method. I therefor added handling for when not typing a
+     * number.
+     * </p>
+     *
+     * @param <T> The type of the spinner
+     * @param spinner The spinner to set the value on.
+     * @see javafx.scene.control.Spinner
+     */
+    public static <T> void commitEditorText(Spinner<T> spinner) {
+        String text = spinner.getEditor().getText();
+        text = text.replaceAll("\\D", "");
+        if (text.equals("")) {
+            spinner.getEditor().setText("100");
+            return;
+        }
+        spinner.getEditor().setText(text);
+        SpinnerValueFactory<T> valueFactory = spinner.getValueFactory();
+        if (valueFactory != null) {
+            StringConverter<T> converter = valueFactory.getConverter();
+            if (converter != null) {
+                T value = converter.fromString(text);
+                valueFactory.setValue(value);
+            }
+        }
+    }
+
+    /**
      * Display a tooltip right beside to the mouse position given by the mouse
      * event. This method is natural to use on Mouse_Entered or another mouse
      * event when you want to show a tooltip. The method does NOT hide the
@@ -90,39 +126,4 @@ public class Util {
         });
     }
 
-    /**
-     * This method is copied from {@link javafx.scene.control.Spinner }. THis is
-     * because it is private, and no other easy way is provided to easily commit
-     * a changed value. From Spinners Javadoc: "To make sure the model has the
-     * same value as the editor, the user must commit the edit using the Enter
-     * key."
-     * <a href="https://docs.oracle.com/javase/8/javafx/api/javafx/scene/control/Spinner.html">https://docs.oracle.com/javase/8/javafx/api/javafx/scene/control/Spinner.html</a>
-     *
-     * <p>
-     * Added modification: Only spinners with IntegerSpinnerValueFactory is
-     * calling this method. I therefor added handling for when not typing a
-     * number.
-     * </p>
-     *
-     * @param <T> The type of the spinner
-     * @param spinner The spinner to set the value on.
-     * @see javafx.scene.control.Spinner
-     */
-    public static <T> void commitEditorText(Spinner<T> spinner) {
-        String text = spinner.getEditor().getText();
-        text = text.replaceAll("\\D", "");
-        if (text.equals("")) {
-            spinner.getEditor().setText("100");
-            return;
-        }
-        spinner.getEditor().setText(text);
-        SpinnerValueFactory<T> valueFactory = spinner.getValueFactory();
-        if (valueFactory != null) {
-            StringConverter<T> converter = valueFactory.getConverter();
-            if (converter != null) {
-                T value = converter.fromString(text);
-                valueFactory.setValue(value);
-            }
-        }
-    }
 }

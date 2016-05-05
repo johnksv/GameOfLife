@@ -2,7 +2,6 @@ package gol.svergja.controller;
 
 import gol.model.Board.Board;
 import gol.svergja.Util;
-import static gol.svergja.Util.showTooltip;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.Initializable;
@@ -11,16 +10,11 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javafx.animation.Timeline;
-import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
-import javafx.scene.control.Tooltip;
 import javafx.scene.layout.AnchorPane;
 
 import javafx.scene.layout.VBox;
@@ -34,7 +28,8 @@ import javafx.stage.FileChooser;
 import javafx.util.Duration;
 
 /**
- * FXML Controller class
+ * FXML Controller class for the audio control center. Contains methods for
+ * playing custom files, and live sound of gameboard.
  *
  * @author s305089 - John Kasper Svergja
  */
@@ -88,7 +83,21 @@ public class SoundController implements Initializable {
     }
 
     /**
-     *
+     * Disposes all the media players currently playing. This must be done, or
+     * else the media player will continue to play after the window is closed.
+     */
+    public void disposeMediaPlayers() {
+        playing = false;
+        for (MediaPlayer mediaPlayer : mediaPlayerQueue) {
+            mediaPlayer.dispose();
+        }
+        mediaPlayerQueue.clear();
+        wavMakerController.disposeMediaPlayer();
+    }
+
+    /**
+     * Play live sound from gameboard. This method will only run if the correct
+     * radiobuttons is selected (dynamic sound, and form clips).
      */
     public void playSound() {
         if (!playing) {
@@ -111,27 +120,6 @@ public class SoundController implements Initializable {
                 th.start();
             }
         }
-    }
-
-    /**
-     * 
-     * @param boardToSet 
-     */
-    public void setBoard(Board boardToSet) {
-        this.activeBoard = boardToSet;
-        this.activeBoard.setRule(boardToSet.getRule());
-        wavMakerController.setBoard(boardToSet);
-    }
-
-    /**
-     * 
-     */
-    public void disposeMediaPlayers() {
-        playing = false;
-        for (MediaPlayer mediaPlayer : mediaPlayerQueue) {
-            mediaPlayer.dispose();
-        }
-        mediaPlayerQueue.clear();
     }
 
     private void initFXMLControls() {
@@ -311,5 +299,17 @@ public class SoundController implements Initializable {
             btnRewind.setDisable(true);
             disposeMediaPlayers();
         });
+    }
+
+    /**
+     * Saves the current board to be used with live sound. The board is also
+     * sent the controller for making wav files.
+     *
+     * @param boardToSet The board that should be used with live sound
+     */
+    public void setBoard(Board boardToSet) {
+        this.activeBoard = boardToSet;
+        this.activeBoard.setRule(boardToSet.getRule());
+        wavMakerController.setBoard(boardToSet);
     }
 }

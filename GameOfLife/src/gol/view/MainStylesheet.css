@@ -64,3 +64,12 @@
 .advanced-tips {
     -fx-text-fill: #000000;
 }
+
+/* S305054 Pattern Editor */
+.pattern-pane, .pattern-pane:expanded, .pattern-pane:top {
+    -fx-background-color: #90afc5;
+}
+
+.pattern-button {
+    -fx-background-color: linear-gradient(#336b87, #2a3132);
+}

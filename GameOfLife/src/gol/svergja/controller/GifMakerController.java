@@ -2,6 +2,7 @@ package gol.svergja.controller;
 
 import gol.svergja.model.GifMaker;
 import gol.model.Board.Board;
+import gol.model.Board.DynamicBoard;
 import gol.svergja.Util;
 import gol.svergja.model.Stats;
 import java.io.File;
@@ -195,6 +196,47 @@ public class GifMakerController implements Initializable {
 
     }
 
+    private void autoUpdatedPreview(ObservableValue ob, Object oldValue, Object newValue) {
+        if (cbAutoPreview.isSelected()) {
+            previewGif();
+        }
+    }
+
+    private void calculateInfinity() {
+        if (cbInfinityLoop.isSelected()) {
+
+            int threshold = (int) spinnThreshold.getValue();
+            int closestIteration = -1;
+
+            Stats stats = new Stats();
+            stats.setBoard(activeBoard);
+
+            stats.setCheckSimilarityPrevGen(cbCheckPrevGen.isSelected());
+            stats.getStatistics(iterations, true, true);
+            //Checks which iteration the 0-th generation matches best with.
+            if (stats.getSimilarityMeasure()[0][0] > threshold) {
+                closestIteration = stats.getSimilarityMeasure()[0][1];
+            }
+            //Checks if some other generation matches with the 0-th generation
+            for (int[] it : stats.getSimilarityMeasure()) {
+                if (it[0] > threshold && it[1] == 0) {
+                    closestIteration = it[1];
+                }
+            }
+            if (closestIteration != -1) {
+                iterations = closestIteration + 1;
+                labelLoopStatus.setText("Match found at iteration: " + iterations + "\n looping..");
+            } else {
+                labelLoopStatus.setText("Could not find an good enough match..");
+            }
+        }
+    }
+
+    private void updateSaveLabels() {
+        labelCurrentDest.setText("Current: " + saveLocation);
+        tooltipSaveLoc.setText(saveLocation);
+    }
+
     @FXML
     private void openStats() {
         try {
@@ -279,17 +321,15 @@ public class GifMakerController implements Initializable {
     }
 
     /**
+     * Saves the current board to be used with live sound. The board is also
+     * sent the controller for making wav files.
      *
-     * @param boardToSet
+     * @param boardToSet The board that should be used with live sound
      */
     public void setBoard(Board boardToSet) {
-        activeBoard = boardToSet;
+        activeBoard = new DynamicBoard();
+        activeBoard.insertArray(boardToSet.getBoundingBoxBoard());
         gifmaker.setBoard(boardToSet);
-    }
-
-    private void updateSaveLabels() {
-        labelCurrentDest.setText("Current: " + saveLocation);
-        tooltipSaveLoc.setText(saveLocation);
     }
 
     private void setGIFValues() {
@@ -303,42 +343,6 @@ public class GifMakerController implements Initializable {
         gifmaker.setGifHeight((int) spinnHeight.getValue());
         gifmaker.setGifWidth((int) spinnWidth.getValue());
         gifmaker.setCenterPattern(cbCenterPattern.isSelected());
-    }
-
-    private void autoUpdatedPreview(ObservableValue ob, Object oldValue, Object newValue) {
-        if (cbAutoPreview.isSelected()) {
-            previewGif();
-        }
-    }
-
-    private void calculateInfinity() {
-        if (cbInfinityLoop.isSelected()) {
-
-            int threshold = (int) spinnThreshold.getValue();
-            int closestIteration = -1;
-
-            Stats stats = new Stats();
-            stats.setBoard(activeBoard);
-
-            stats.setCheckSimilarityPrevGen(cbCheckPrevGen.isSelected());
-            stats.getStatistics(iterations, true, true);
-            //Checks which iteration the 0-th generation matches best with.
-            if (stats.getSimilarityMeasure()[0][0] > threshold) {
-                closestIteration = stats.getSimilarityMeasure()[0][1];
-            }
-            //Checks if some other generation matches with the 0-th generation
-            for (int[] it : stats.getSimilarityMeasure()) {
-                if (it[0] > threshold && it[1] == 0) {
-                    closestIteration = it[1];
-                }
-            }
-            if (closestIteration != -1) {
-                iterations = closestIteration + 1;
-                labelLoopStatus.setText("Match found at iteration: " + iterations + "\n looping..");
-            } else {
-                labelLoopStatus.setText("Could not find an good enough match..");
-            }
-        }
     }
 
 }

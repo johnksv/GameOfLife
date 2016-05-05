@@ -100,6 +100,7 @@
                                         <RowConstraints maxHeight="134.0" minHeight="10.0" prefHeight="35.0" vgrow="SOMETIMES" />
                                         <RowConstraints maxHeight="133.0" minHeight="10.0" prefHeight="35.0" vgrow="SOMETIMES" />
                               <RowConstraints maxHeight="131.0" minHeight="10.0" prefHeight="35.0" vgrow="SOMETIMES" />
+                              <RowConstraints maxHeight="131.0" minHeight="10.0" prefHeight="35.0" vgrow="SOMETIMES" />
                                     </rowConstraints>
                                     <children>
                               <Label styleClass="advanced-tips" text="q" GridPane.columnIndex="1" GridPane.rowIndex="2" />
@@ -119,8 +120,10 @@
                                         <Label styleClass="advanced-tips" text="shift + i" GridPane.columnIndex="1" GridPane.rowIndex="5" />
                                         <Label styleClass="advanced-tips" text="k" GridPane.columnIndex="1" GridPane.rowIndex="6" />
                                         <Label styleClass="advanced-tips" text="r" GridPane.columnIndex="1" GridPane.rowIndex="7" />
-                              <Label styleClass="advanced-tips" text="Open How to Play screen" GridPane.rowIndex="8" />
-                              <Label styleClass="advanced-tips" text="h" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+                              <Label styleClass="advanced-tips" text="Open How to Play screen" GridPane.rowIndex="9" />
+                              <Label styleClass="advanced-tips" text="h" GridPane.columnIndex="1" GridPane.rowIndex="9" />
+                              <Label styleClass="advanced-tips" text="Transpose matrix" GridPane.rowIndex="8" />
+                              <Label styleClass="advanced-tips" text="f" GridPane.columnIndex="1" GridPane.rowIndex="8" />
                                     </children>
                                 </GridPane>
                         <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="advanced-tips" text="WHAT:" GridPane.columnIndex="1">
