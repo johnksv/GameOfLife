@@ -28,7 +28,7 @@ public class WriteFileS54 {
      * <p> Below is an overview of the different elements that could be found in
      * a .rle file
      * </p>
-     * <table>
+     * <table summary="Table that explains what the different rle elements are.">
      *      <tr>
      *          <td>Symbol</td>
      *          <td>Meaning</td>
@@ -61,9 +61,9 @@ public class WriteFileS54 {
      *          <td>!</td>
      *          <td>End of Pattern</td>
      *      </tr>
-     *      <tr><td columnspan="2">Note that a number befor either a b, or an o
+     *      <tr><td colspan="2">Note that a number befor either a b, or an o
      *      is the equivalent of writing that number of b's or o's. E.g. 3o = ooo
-     *      </td</tr>
+     *      </td></tr>
      * </table>
      *
      * @param boardToParse a playable board
@@ -73,7 +73,7 @@ public class WriteFileS54 {
      * @param sLocation path to where the file is to be saved
      * @throws IOException if there is an input/output error
      */
-    public void writeRLE(Board boardToParse, TextField title, TextField author, TextField description, Path sLocation) throws IOException {
+    public void writeRLE(Board boardToParse, String title, String author, String description, Path sLocation) throws IOException {
 
         if (boardToParse.getArrayLength() == 0) {
             Alert error = new Alert(AlertType.ERROR);
@@ -92,20 +92,16 @@ public class WriteFileS54 {
         StringBuilder pattern = new StringBuilder();
         StringBuilder formatedPattern = new StringBuilder();
 
-        if (title.getText() != null && !title.equals("") && !title.equals(" ")) {
-            metaData.append("#N " + title.getText());
-        } else {
-            metaData.append("#N Unknown");
+        if (title != null) {
+            metaData.append("#N " + title);
         }
 
-        if (author.getText() != null && !author.equals("") && !author.equals(" ")) {
-            metaData.append("\n#O " + author.getText());
-        } else {
-            metaData.append("\n#O Unknown");
-        }
+        if (author != null) {
+            metaData.append("\n#O " + author);
+        } 
 
-        if (description.getText() != null && !description.equals("") && !description.equals(" ")) {
-            metaData.append("\n#C " + description.getText());
+        if (description != null) {
+            metaData.append("\n#C " + description);
         } 
 
         metaData.append("\nx = " + x + ", y = " + y + "\n");
@@ -153,7 +149,6 @@ public class WriteFileS54 {
             }
 
         }
-        System.out.println(formatedPattern);
         metaData.append(formatedPattern); //Add pattern to metadata and make it into a string?
         metaData.close();
 

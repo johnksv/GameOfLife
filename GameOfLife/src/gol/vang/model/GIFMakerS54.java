@@ -15,7 +15,7 @@ import lieng.GIFWriter;
  * This class is used to create a .gif file showing several generations of a GoL
  * gameboard, with the help of the GIFLib library (created by Henrik Lieng).
  *
- * @author @author s305054 - Trygve Vang
+ * @author s305054 - Trygve Vang
  */
 public class GIFMakerS54 {
 

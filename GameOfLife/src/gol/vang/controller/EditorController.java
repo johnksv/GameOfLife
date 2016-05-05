@@ -233,12 +233,17 @@ public class EditorController implements Initializable {
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("RLE", "*.rle"));
         fileChooser.setInitialFileName(titleField.getText());
         fileChooser.setTitle("Save Pattern");
-
+        
+        String title = titleField.getText();
+        String author = authorField.getText();
+        String description = descriptionField.getText();
+        
         File file = fileChooser.showSaveDialog(null);
         if (file != null) {
             try {
                 WriteFileS54 writer = new WriteFileS54();
-                writer.writeRLE(activeBoard, titleField, authorField, descriptionField, file.toPath());
+                writer.writeRLE(activeBoard, title, author, description, file.toPath());
+                System.out.println("Save complete.");
             } catch (IOException ex) {
                 Logger.getLogger(EditorController.class.getName()).log(Level.SEVERE, null, ex);
             }
