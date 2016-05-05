@@ -83,20 +83,12 @@ public class WavMakerController implements Initializable {
         spinnIte.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 100, 20, 1));
         spinnIte.setEditable(true);
         spinnIte.focusedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
-            if (!newValue) {
-                Util.commitEditorText(spinnIte);
-            }
+            labelInfo.setText("Remember to hit enter  in the spinne to save value");
         });
         spinnDur.setValueFactory(new SpinnerValueFactory.DoubleSpinnerValueFactory(0.1, 100, 1, 0.2));
         spinnDur.setEditable(true);
         spinnDur.focusedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
-            if (newValue) {
-                double anchorX = spinnDur.getScene().getWindow().getX() + 20;
-                double anchorY = spinnDur.getScene().getWindow().getY() + 40;
-                enter.show(spinnIte, anchorX + spinnDur.getLayoutX(), anchorY + spinnDur.getLayoutY());
-            } else {
-                enter.hide();
-            }
+            labelInfo.setText("Remember to hit enter in the spinner to save value");
 
         });
         comBxRootTone.getItems().setAll(Tone.C3, Tone.D3, Tone.E3, Tone.F3, Tone.G3, Tone.A3, Tone.B3, Tone.A4, Tone.A5);
