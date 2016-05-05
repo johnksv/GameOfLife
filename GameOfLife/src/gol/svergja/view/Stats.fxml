@@ -19,7 +19,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane prefHeight="450.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gol.svergja.controller.StatsController">
+<BorderPane prefHeight="450.0" stylesheets="@s305089Custom.css" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gol.svergja.controller.StatsController">
    <center>
       <StackPane>
          <children>
@@ -37,9 +37,12 @@
    <left>
       <TitledPane animated="false" collapsible="false" text="Stats settings" BorderPane.alignment="TOP_LEFT">
          <content>
-            <VBox prefHeight="200.0" prefWidth="220.0" spacing="10.0">
+            <VBox prefHeight="200.0" prefWidth="220.0" spacing="10.0" styleClass="pane-standard">
                <children>
-                  <Label alignment="CENTER" text="Iterations to calculate:" textOverrun="CENTER_ELLIPSIS" />
+                  <Label alignment="CENTER" text="Iterations to calculate:" textOverrun="CENTER_ELLIPSIS">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font></Label>
                   <HBox spacing="10.0">
                      <VBox.margin>
                         <Insets top="-7.0" />
@@ -55,7 +58,10 @@
                      </font>
                   </Label>
                   <Separator prefWidth="200.0" />
-                  <Label text="Show on chart:" />
+                  <Label text="Show on chart:">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font></Label>
                   <CheckBox fx:id="cbLivingCells" mnemonicParsing="false" selected="true" text="Living cells" />
                   <CheckBox fx:id="cbChangeLiving" mnemonicParsing="false" selected="true" text="Change in living cells" />
                   <CheckBox fx:id="cbSimilarity" mnemonicParsing="false" selected="true" text="Similarity" />

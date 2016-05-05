@@ -3,8 +3,33 @@
     Author     : s305089 - John Kasper Svergja
 */
 * {
-    -fx-defaultBackground: #ebedf3;
+
+    -fx-primary-color: #9CB5D3;
+    /*darker than primary color */
+    -fx-primary-color-2: #6D8DB2;
+    -fx-primary-color-3: #476A94;
+
+    /*lighter than primary color */
+    -fx-primary-color-4: #CAD9EC;
+    -fx-primary-color-5: #F0F5FB;
 }
+
+
+.pane-standard, .tab-pane:top .tab-header-area .tab-header-background{
+    -fx-background-color: -fx-primary-color;
+}
+.pane-standard-bright{
+        -fx-background-color: -fx-primary-color-4;
+}
+
+/* Bright text to be used on dark backgrounds. The selected tab has a dark background.*/
+.brightText,.tab-pane:top .tab-header-area .headers-region .tab:top .tab-container .tab-label,
+.color-picker .color-picker-label, .button{
+    -fx-text-fill: -fx-primary-color-5;
+}
+
+
+
 .h1{
     -fx-font-size: 16px;
 }
@@ -13,14 +38,30 @@
     -fx-underline: true;
 }
 
-.check-box{
-    -fx-text-fill: -fx-defaultBackground;
+/* Custom color on button, and tab */
+.titled-pane:expanded .title .text{
+    -fx-font-weight: bold;
+}
+
+.tab-pane:top .tab-header-area .headers-region .tab:top{
+    -fx-background-color: -fx-primary-color-2;
+}
+.button{
+        -fx-border-color:  -fx-primary-color-3 -fx-primary-color-3 -fx-primary-color-3 -fx-primary-color-3;
+}
+
+.color-picker, .button, .tab-pane:top .tab-header-area .headers-region .tab:top:selected {
+    -fx-background-color: linear-gradient(-fx-primary-color-2, -fx-primary-color-3);
 
 }
-.slider .axis:bottom{
-    -fx-tick-label-fill: -fx-defaultBackground;
+.button:hover, .tab-pane:top .tab-header-area .headers-region .tab:top:selected {
+    -fx-background-color: linear-gradient(-fx-primary-color-2 75%, -fx-primary-color-3);
 }
 
 .tab-pane:top .tab-header-area .tab-header-background{
-    -fx-background-color: -fx-defaultBackground;
+    -fx-border-color: transparent transparent -fx-primary-color-3 transparent;
 }
+.tab-pane:top .tab-header-area .headers-region .tab:top:selected{
+    -fx-border-color:  -fx-primary-color-3 -fx-primary-color-3 transparent -fx-primary-color-3;
+}
+

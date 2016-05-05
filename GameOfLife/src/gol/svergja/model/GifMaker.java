@@ -83,7 +83,7 @@ public final class GifMaker {
      * @throws java.io.IOException if the file could not be created
      */
     public void writePatternToGIF(int iterations, String saveLocation) throws IOException {
-
+        
         gifWriter = new GIFWriter(gifWidth, gifHeight, saveLocation, durationBetweenFrames);
         if (activeBoard != null || originalPattern != null) {
             //If not called, manipulations is done on the current gen of this activeBoard.

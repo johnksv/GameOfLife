@@ -16,7 +16,7 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane fx:id="rootBorderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gol.svergja.controller.PatternEditorController">
+<BorderPane stylesheets="@s305089Custom.css"  fx:id="rootBorderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gol.svergja.controller.PatternEditorController">
     <center>
         <AnchorPane BorderPane.alignment="TOP_LEFT">
             <children>
@@ -108,11 +108,11 @@
         </AnchorPane>
     </center>
     <bottom>
-        <TitledPane alignment="BOTTOM_LEFT" animated="false" prefWidth="800.0" text="Preview generations (current and next 20)" BorderPane.alignment="BOTTOM_LEFT">
+        <TitledPane alignment="BOTTOM_LEFT" animated="false" prefWidth="800.0" styleClass="pane-standard" text="Preview generations (current and next 20)" BorderPane.alignment="BOTTOM_LEFT">
             <content>
-                <VBox>
+                <VBox styleClass="pane-standard">
                     <children>
-                        <ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+                        <ToolBar prefHeight="40.0" prefWidth="200.0" styleClass="pane-standard" BorderPane.alignment="CENTER">
                             <items>
                                 <Button mnemonicParsing="false" onAction="#updateTheStrip" text="Update strip" />
                                 <Region prefHeight="30.0" prefWidth="17.0" />
