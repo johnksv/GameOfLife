@@ -29,7 +29,7 @@ public class GIFWriterS305054 {
     private GIFWriter gifWriter;
     private int gifWriterSize;
 
-    public void setBoard(Board originaleBoard) {
+    public void setBoard(Board originaleBoard) {        
         if (originaleBoard.getArrayLength() == 0) {
             //Error message
             return;

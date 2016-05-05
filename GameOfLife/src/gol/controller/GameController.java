@@ -773,7 +773,12 @@ public class GameController implements Initializable {
     private void s54handleGIF() {
         timeline.pause();
         String sPictures = s54nPicturesGIF.getText();
-        int pictures = Integer.parseInt(sPictures.replaceAll("\\D", ""));
+        int pictures;
+        if(sPictures.replaceAll("\\D", "").equals("")) {
+            pictures = 0;
+        } else {
+            pictures = Integer.parseInt(sPictures.replaceAll("\\D", ""));
+        }
 
         GIFWriterS305054 gifTrygve = new GIFWriterS305054();
         java.awt.Color bgColor = new java.awt.Color((float) backgroundColor.getRed(), (float) backgroundColor.getGreen(), (float) backgroundColor.getBlue());

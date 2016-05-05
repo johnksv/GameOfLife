@@ -71,9 +71,6 @@ public class EditorController implements Initializable {
     byte[][] patternToInsert;
     byte[][] stripBoundingBox;
 
-    /**
-     * Initializes the controller class.
-     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         gc = editorCanvas.getGraphicsContext2D();
@@ -82,8 +79,8 @@ public class EditorController implements Initializable {
         mouseInit();
         
     }
-
-    //kopierte draw metode fra GameController, da det er nøyaktig samme greia som skjer.
+    
+    //Directly copied from GameController
     private void draw() {
         gc.setGlobalAlpha(1);
         gc.setFill(backgroundColor);
@@ -119,6 +116,10 @@ public class EditorController implements Initializable {
         }
     }
 
+    /**
+     * Refreshes the strip with an updated version of this board.
+     * @see #drawStrip() 
+     */
     public void updateStrip() {
         stripGc.clearRect(0, 0, stripCanvas.widthProperty().doubleValue(), stripCanvas.heightProperty().doubleValue());
         stripBoundingBox = activeBoard.getBoundingBoxBoard();
