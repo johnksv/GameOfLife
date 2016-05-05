@@ -13,7 +13,7 @@ public final class WriteFile {
 
     private WriteFile() {
     }
-    private static String patternName, author, comment, rule;
+    private static String patternName, author, comment;
 
     /**
      * Writes this byte board to RLE-format, and saves at this path.<b>The given
@@ -54,9 +54,6 @@ public final class WriteFile {
                 writer.newLine();
             }
 
-            if (rule != null && !rule.equals("")) {
-                //TODO append rules to boardDimensions.
-            }
 
             writer.append(bordDimensions);
             writer.newLine();
@@ -65,7 +62,6 @@ public final class WriteFile {
             patternName = null;
             author = null;
             comment = null;
-            rule = null;
 
             return true;
         } catch (IOException e) {
@@ -99,13 +95,6 @@ public final class WriteFile {
         comment = patternComment;
     }
 
-    /**
-     * 
-     * @param patternRule 
-     */
-    public static void setRule(String patternRule) {
-        rule = patternRule;
-    }
 
     /**
      *

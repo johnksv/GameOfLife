@@ -6,17 +6,19 @@
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane stylesheets="@s305089Custom.css"  fx:id="rootBorderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gol.svergja.controller.PatternEditorController">
+<BorderPane fx:id="rootBorderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="800.0" stylesheets="@s305089Custom.css" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gol.svergja.controller.PatternEditorController">
     <center>
         <AnchorPane BorderPane.alignment="TOP_LEFT">
             <children>
@@ -37,14 +39,7 @@
                                     <Label text="Right click: remove cell" />
                                  </children>
                               </HBox>
-                              <HBox spacing="25.0">
-                                 <children>
-                                              <Button mnemonicParsing="false" onAction="#handleClearBtn" text="Clear board" />
-                                              <Button mnemonicParsing="false" onAction="#saveAsGIF" text="Save pattern to GIF" />
-                                 </children>
-                              </HBox>
-                                        <Separator prefWidth="200.0" />
-                              <Button mnemonicParsing="false" onAction="#sendCurrentBoard" text="Send current board to main" />
+                                        <Button mnemonicParsing="false" onAction="#handleClearBtn" text="Clear board" />
                                     </children>
                                 </VBox>
                             </content>
@@ -69,16 +64,9 @@
                                         </HBox>
                                         <HBox>
                                             <children>
-                                                <Label text="Description:" />
-                                                <Region prefHeight="25.0" prefWidth="20.0" />
+                                                <Label prefHeight="17.0" prefWidth="76.0" text="Description:" />
+                                                <Region prefHeight="25.0" prefWidth="5.0" />
                                                 <TextField fx:id="tfDescription" promptText="Description" />
-                                            </children>
-                                        </HBox>
-                                        <HBox>
-                                            <children>
-                                                <Label text="Rules:" />
-                                                <Region prefHeight="25.0" prefWidth="47.0" />
-                                                <TextField fx:id="tfRules" promptText="Survive/Birth" />
                                             </children>
                                         </HBox>
                                         <Label text="Leave &quot;Rules&quot; blank for standard rules:" />
@@ -102,6 +90,26 @@
                                 <Insets top="5.0" />
                             </padding>
                         </TitledPane>
+                  <TitledPane prefHeight="116.0" prefWidth="250.0" text="Other functionality">
+                    <content>
+                        <GridPane>
+                           <columnConstraints>
+                              <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="157.0" minWidth="10.0" prefWidth="152.0" />
+                              <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="115.0" minWidth="10.0" prefWidth="76.0" />
+                           </columnConstraints>
+                           <rowConstraints>
+                              <RowConstraints maxHeight="50.0" minHeight="10.0" prefHeight="40.0" valignment="TOP" vgrow="SOMETIMES" />
+                              <RowConstraints maxHeight="40.0" minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
+                           </rowConstraints>
+                           <children>
+                                        <Button mnemonicParsing="false" onAction="#saveAsGIF" text="Save pattern to GIF" />
+                              <Button mnemonicParsing="false" onAction="#handleShowStats" text="Show stats" GridPane.columnIndex="1" />
+                              <Button mnemonicParsing="false" onAction="#handleMakeWav" text="Make wav" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                              <Button mnemonicParsing="false" onAction="#sendCurrentBoard" text="Current board to main" GridPane.rowIndex="1" />
+                           </children>
+                        </GridPane>
+                    </content>
+                  </TitledPane>
                     </children>
                 </VBox>
             </children>
@@ -115,7 +123,7 @@
                         <ToolBar prefHeight="40.0" prefWidth="200.0" styleClass="pane-standard" BorderPane.alignment="CENTER">
                             <items>
                                 <Button mnemonicParsing="false" onAction="#updateTheStrip" text="Update strip" />
-                                <Region prefHeight="30.0" prefWidth="17.0" />
+                                <Region prefHeight="30.0" prefWidth="9.0" />
                                 <CheckBox fx:id="chboxAutoUpdateStrip" mnemonicParsing="false" text="Automatically update strip" />
                             </items>
                      <VBox.margin>

@@ -13,6 +13,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import javafx.animation.KeyFrame;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -30,6 +31,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 /**
  * FXML Controller class for pattern editor.
@@ -54,8 +56,6 @@ public class PatternEditorController implements Initializable {
     private TextField tfAuthor;
     @FXML
     private TextField tfDescription;
-    @FXML
-    private TextField tfRules;
 
     private Board activeBoard;
     private Board theStripBoard;
@@ -237,6 +237,47 @@ public class PatternEditorController implements Initializable {
     }
 
     @FXML
+    private void handleMakeWav() {
+        try {
+
+            Stage golAudio = new Stage();
+            FXMLLoader root = new FXMLLoader(getClass().getResource("/gol/svergja/view/WavMaker.fxml"));
+            Scene scene = new Scene((Parent) root.load());
+
+            WavMakerController soundController = root.<WavMakerController>getController();
+            soundController.setBoard(activeBoard);
+
+            golAudio.setScene(scene);
+            golAudio.setTitle("Wav maker - Game of Life");
+            golAudio.initOwner(rootBorderPane.getScene().getWindow());
+            golAudio.showAndWait();
+        } catch (IOException ex) {
+            System.err.println("An error occurred...:\n" + ex);
+        }
+
+    }
+
+    @FXML
+    private void handleShowStats() {
+        try {
+            Stage golStats = new Stage();
+            FXMLLoader root = new FXMLLoader(getClass().getResource("/gol/svergja/view/Stats.fxml"));
+
+            Scene scene = new Scene((Parent) root.load());
+
+            StatsController statsController = root.<StatsController>getController();
+            statsController.setBoard(activeBoard);
+
+            golStats.setScene(scene);
+            golStats.setTitle("Stats - Game of Life");
+            golStats.initOwner(rootBorderPane.getScene().getWindow());
+            golStats.show();
+        } catch (IOException ex) {
+            System.err.println("An error occurred...:\n" + ex);
+        }
+    }
+
+    @FXML
     private void savePatternRLE() {
         boolean fileSucsessCreated = false;
         byte[][] boardToWrite = activeBoard.getBoundingBoxBoard();
@@ -244,7 +285,6 @@ public class PatternEditorController implements Initializable {
             WriteFile.setPatternName(tfName.getText());
             WriteFile.setAuthor(tfAuthor.getText());
             WriteFile.setComment(tfDescription.getText());
-            WriteFile.setRule(tfRules.getText());
 
             FileChooser filechooser = new FileChooser();
             filechooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("RLE-format", "*.rle"));
@@ -254,7 +294,15 @@ public class PatternEditorController implements Initializable {
                 fileSucsessCreated = WriteFile.writeToRLE(activeBoard.getBoundingBoxBoard(), file.toPath());
             }
         }
-        labelWriteFileFdBck.setText(fileSucsessCreated ? "Success" : "Failed.. Try again");
+        if (fileSucsessCreated) {
+
+            labelWriteFileFdBck.setText("Success");
+            labelWriteFileFdBck.setStyle("-fx-text-fill: #8BA870;");
+        } else {
+
+            labelWriteFileFdBck.setText("Failed.. Try again");
+            labelWriteFileFdBck.setStyle("-fx-text-fill: #D8000C;");
+        }
     }
 
     @FXML

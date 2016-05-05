@@ -19,7 +19,7 @@
     -fx-background-color: -fx-primary-color;
 }
 .pane-standard-bright{
-        -fx-background-color: -fx-primary-color-4;
+    -fx-background-color: -fx-primary-color-4;
 }
 
 /* Bright text to be used on dark backgrounds. The selected tab has a dark background.*/
@@ -27,8 +27,6 @@
 .color-picker .color-picker-label, .button{
     -fx-text-fill: -fx-primary-color-5;
 }
-
-
 
 .h1{
     -fx-font-size: 16px;
@@ -47,7 +45,7 @@
     -fx-background-color: -fx-primary-color-2;
 }
 .button{
-        -fx-border-color:  -fx-primary-color-3 -fx-primary-color-3 -fx-primary-color-3 -fx-primary-color-3;
+    -fx-border-color:  -fx-primary-color-3 -fx-primary-color-3 -fx-primary-color-3 -fx-primary-color-3;
 }
 
 .color-picker, .button, .tab-pane:top .tab-header-area .headers-region .tab:top:selected {
