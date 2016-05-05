@@ -1,7 +1,3 @@
-/*
- * Here comes the text of your license
- * Each line should be prefixed with  * 
- */
 package gol.vang.controller;
 
 import gol.model.Board.ArrayBoard;
@@ -28,9 +24,10 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 /**
- * FXML Controller class
+ * FXML Controller class for the Pattern Editor, controlls editing pattern, 
+ * showing its next generations, and saving that pattern to a .rle file.
  *
- * @author Trygve Vang - s305054
+ * @author s305054 - Trygve Vang
  */
 public class EditorController implements Initializable {
 
@@ -65,7 +62,7 @@ public class EditorController implements Initializable {
     private final Color cellColor = Color.BLACK;
     private final Color backgroundColor = Color.web("#F4F4F4");
 
-    private Board activeBoard = new ArrayBoard();
+    private Board activeBoard = new ArrayBoard(Configuration.getPropInt("arrayLength"), Configuration.getPropInt("arrayLength"));
     private Board stripBoard;
 
     byte[][] patternToInsert;
@@ -155,7 +152,6 @@ public class EditorController implements Initializable {
             stripBoard.setCellSize(((stripCanvas.getWidth() / 20) / stripBoundingBox[0].length) / 2);
         }
         stripBoard.setGridSpacing(0.05);
-        System.out.println(stripBoard.getCellSize() + "\n" + stripBoard.getGridSpacing());
 
         Affine xForm = new Affine();
         double tx = 0;
@@ -170,7 +166,6 @@ public class EditorController implements Initializable {
             stripBoard.nextGen();
             drawStrip();
 
-            System.out.println("gen: " + iteration);
         }
 
         xForm.setTx(0.0);

@@ -15,7 +15,7 @@ import lieng.GIFWriter;
  * This class is used to create a .gif file showing several generations of a GoL
  * board.
  *
- * @author Trygve Vang - s305054
+ * @author @author s305054 - Trygve Vang
  */
 public class GIFWriterS305054 {
 

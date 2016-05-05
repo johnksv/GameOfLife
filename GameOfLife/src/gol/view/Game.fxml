@@ -180,7 +180,7 @@
                                                                         <Label fx:id="s54timeLabelGif" layoutX="13.0" text="Time Between pictures: 0.001" />
                                                                         <Slider fx:id="s54timeSliderGif" layoutX="14.0" layoutY="17.0" max="2" min="0.001" onValueChange="#s54handleGifSlider" value="0.001" />
                                                                         <Button layoutX="14.0" layoutY="86.0" mnemonicParsing="false" onAction="#s54handleGIF" text="Save as .gif" />
-                                                      <TextField fx:id="s54nPicturesGIF" layoutX="14.0" layoutY="54.0" promptText="Number of Pictures" />
+                                                                        <TextField fx:id="s54nPicturesGIF" layoutX="14.0" layoutY="54.0" promptText="Number of Pictures" />
                                                                         <Label layoutX="14.0" layoutY="36.0" text="Number of pictures in .gif: " />
                                                                         <Button layoutX="15.0" layoutY="120.0" mnemonicParsing="false" onAction="#s54openEditor" text="Pattern Editor" />
                                                                     </children>
