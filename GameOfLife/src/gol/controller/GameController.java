@@ -542,8 +542,8 @@ public class GameController implements Initializable {
      */
     private void updateOffsetValues(double newCellSize) {
         if (!(activeBoard instanceof DynamicBoard)) {
-            double maxvalueX = -(newCellSize * activeBoard.getArrayLength() - canvas.getWidth());
-            double maxvalueY = -(newCellSize * activeBoard.getMaxRowLength() - canvas.getHeight());
+            double maxvalueX = -(newCellSize * activeBoard.getMaxRowLength() - canvas.getWidth());
+            double maxvalueY = -(newCellSize * activeBoard.getArrayLength()- canvas.getHeight());
 
             activeBoard.offsetValues[0] = (activeBoard.offsetValues[0] > 0) ? 0 : activeBoard.offsetValues[0];
             activeBoard.offsetValues[1] = (activeBoard.offsetValues[1] > 0) ? 0 : activeBoard.offsetValues[1];
