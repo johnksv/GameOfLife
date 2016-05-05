@@ -33,7 +33,7 @@ import lieng.GIFWriter;
  * that the only changes from the main game is {@link #drawStrip() the strip},
  * and saving a pattern to GIF or RLE.
  *
- * @author S305084 - Stian Stensli
+ * @author S305084 - Stian H. Stensli
  */
 public class PatternEditorController implements Initializable {
 

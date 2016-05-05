@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Contains static methods for writing a board to RLE.
  *
- * @author s305084 - Stian Stensli
+ * @author s305084 - Stian H. Stensli
  */
 public final class WriteRLE {
 

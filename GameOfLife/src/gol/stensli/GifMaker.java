@@ -10,7 +10,7 @@ import lieng.GIFWriter;
  * Draws a board to GIF format for a chosen number of generations. <br>
  * Will not finish if the board becomes empty or if the board is a 100% match to the original. 
  * 
- * @author s305084 - Stian Stensli
+ * @author s305084 - Stian H. Stensli
  */
 public final class GifMaker {
 
