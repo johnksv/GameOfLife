@@ -1,11 +1,6 @@
 # GameOfLife
+Conway's game of life.
 
-##Kodestruktur
-Følgende kodestruktur SKAL følges:
+Semesteroppgave i faget Programutvikling DATS1600.
 
-###Opprettelse/endring av filer
-####Versjonsnummer
-
-###Kommentering
-
-###Bruk av blokker
+Vår 2016.
